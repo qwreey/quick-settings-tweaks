@@ -68,7 +68,7 @@ var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMen
 
         const slider = new StreamSlider(Volume.getMixerControl())
         slider.stream = stream
-        slider.style = "margin: 2px 0px 2px 0px !important;"
+        slider.style = "margin: 8px 0px 0px 0px !important;"
         this._applicationStreams[id] = slider
         if (this._showStreamIcon) {
             slider._icon.icon_name = stream.get_icon_name()
