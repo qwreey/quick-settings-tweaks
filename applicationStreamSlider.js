@@ -40,13 +40,14 @@ const QuickSlider = GObject.registerClass(
         hasMenu: true,
       })
 
-      const box = new St.BoxLayout({
+      const box = new St.BoxLayout()
+      const box2 = new St.BoxLayout({
         vertical: true,
       })
-      const box2 = new St.BoxLayout({})
-      this.set_child(box)
 
-      box.add_child(box2)
+      box2.style = 'width: 300px;'
+
+      this.set_child(box)
 
       const iconProps = {}
       if (this.gicon) iconProps['gicon'] = this.gicon
@@ -57,7 +58,7 @@ const QuickSlider = GObject.registerClass(
         ...iconProps,
       })
 
-      this._icon.style = 'icon-size: 1.4em;'
+      this._icon.style = 'icon-size: 32px;'
 
       this._label = new St.Label({
         text: 'Hi',
@@ -65,7 +66,7 @@ const QuickSlider = GObject.registerClass(
 
       this._label.style = 'padding-left: 6px;font-size: 0.92em;'
 
-      box2.add_child(this._icon)
+      box.add_child(this._icon)
       box2.add_child(this._label)
 
       // bindings are in the "wrong" direction, so we
@@ -94,32 +95,15 @@ const QuickSlider = GObject.registerClass(
         x_expand: true,
         y_align: Clutter.ActorAlign.CENTER,
       })
-      box.add_child(sliderBin)
+
+      box2.add_child(sliderBin)
+
+      box.add_child(box2)
 
       sliderBin.set_accessible(this.slider.get_accessible())
       sliderBin.connect('event', (bin, event) =>
         this.slider.event(event, false)
       )
-
-      this._menuButton = new St.Button({
-        child: new St.Icon({ icon_name: 'go-next-symbolic' }),
-        style_class: 'icon-button flat',
-        can_focus: true,
-        x_expand: false,
-        y_expand: true,
-      })
-      box.add_child(this._menuButton)
-
-      this.bind_property(
-        'menu-enabled',
-        this._menuButton,
-        'visible',
-        GObject.BindingFlags.SYNC_CREATE
-      )
-      this._menuButton.connect('clicked', () => this.menu.open())
-      this.slider.connect('popup-menu', () => {
-        if (this.menuEnabled) this.menu.open()
-      })
     }
   }
 )
