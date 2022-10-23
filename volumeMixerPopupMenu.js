@@ -25,6 +25,7 @@ var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMen
         // this.addMenuItem(this._hiddenItem)
 
         // this.addMenuItem(new PopupMenu.PopupSeparatorMenuItem())
+        // this.addMenuItem()
         
         this._control = Volume.getMixerControl()
         this._streamAddedEventId = this._control.connect("stream-added", this._streamAdded.bind(this))
@@ -66,53 +67,64 @@ var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMen
                 return
             }
         }
-        
-        // const slider = new ApplicationStreamSlider(stream, { showDesc: this._showStreamDesc, showIcon: this._showStreamIcon })
-        let slider
-        try {
-            slider = new StreamSlider(Volume.getMixerControl())
-            slider.stream = stream
+
+        const slider = new StreamSlider(Volume.getMixerControl())
+        slider.stream = stream
+        slider.style = "margin: 8px 0px 0px 0px !important;"
+        this._applicationStreams[id] = slider
+        if (this._showStreamIcon) {
             slider._icon.icon_name = stream.get_icon_name()
-            this._applicationStreams[id] = slider
-            log(slider)
-        } catch (err) { log(err) }
+        }
 
-        let box = new PopupMenu.PopupBaseMenuItem()
-        this.addMenuItem(box)
-        this._applicationMenus[id] = box
-        log(box)
+        let name = stream.get_name()
+        let description = stream.get_description()
 
-        // let label = new Label()
-        // label.text = "wow"
-        // box.add(label)
+        if (name || description) {
+            slider._vbox = new BoxLayout();
+            slider._vbox.vertical = true;
 
-        // let label2 = new Label()
-        // label2.text = "wow"
-        // box.add(label2)
+            let sliderBox = slider.first_child
+            let lastObj = sliderBox.last_child // expend button. not needed
+            let sliderObj = sliderBox.get_children()[1]
+            sliderBox.remove_child(sliderObj)
+            sliderBox.remove_child(lastObj)
+            sliderBox.add(slider._vbox)
+            
+            slider._label = new Label()
+            slider._label.style = "padding-left: 6px; font-size: 0.92em;"
+            slider._label.text = name && this._showStreamDesc ? `${name} - ${description}` : (name || description)
+            slider._vbox.add(slider._label)
+            slider._vbox.add(sliderObj)
+        }
 
-        // let label3 = new Label()
-        // label3.text = "wow"
-        // box.add(label3)
-
+        // let box = new PopupMenu.PopupBaseMenuItem()
+        // this.style = "padding: 0px !important; margin: 0px !important; spacing: 0px !important;"
+        // this.addMenuItem(box)
+        // this._applicationMenus[id] = box
+        // log(box)
+        this.addMenuItem(slider)
         slider.show()
-        box.add(slider)
+
+        // slider.width = box.width
+        // box.add(slider)
+        // log(this)
     }
 
     _streamRemoved(_control, id) {
         if (id in this._applicationStreams) {
             this._applicationStreams[id].destroy()
-            this._applicationMenus[id].destroy()
+            // this._applicationMenus[id].destroy()
             delete this._applicationMenus[id]
-            delete this._applicationStreams[id]
+            // delete this._applicationStreams[id]
         }
     }
 
     _updateStreams() {
         for (const id in this._applicationStreams) {
             this._applicationStreams[id].destroy()
-            this._applicationMenus[id].destroy()
+            // this._applicationMenus[id].destroy()
             delete this._applicationMenus[id]
-            delete this._applicationStreams[id]
+            // delete this._applicationStreams[id]
         }
         
         this._filteredApps = this.settings.get_strv("filtered-apps")
