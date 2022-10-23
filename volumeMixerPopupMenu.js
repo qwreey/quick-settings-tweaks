@@ -87,7 +87,19 @@ var VolumeMixerPopupMenu = GObject.registerClass(
 
       const slider = new ApplicationStreamSlider(Volume.getMixerControl())
 
-      slider._icon.icon_name = stream.get_icon_name()
+      if (this._showStreamIcon) {
+        slider._icon.icon_name = stream.get_icon_name()
+      }
+
+      const name = stream.get_name(),
+        description = stream.get_description()
+
+      if (name || description) {
+        slider._label.text =
+          name && this._showStreamDesc
+            ? `${name} - ${description}`
+            : name || description
+      }
 
       slider.stream = stream
 
