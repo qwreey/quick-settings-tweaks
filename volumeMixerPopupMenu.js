@@ -96,14 +96,15 @@ var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMen
             slider._vbox.add(slider._label)
             slider._vbox.add(sliderObj)
         }
-
+        
         // let box = new PopupMenu.PopupBaseMenuItem()
         // this.style = "padding: 0px !important; margin: 0px !important; spacing: 0px !important;"
         // this.addMenuItem(box)
         // this._applicationMenus[id] = box
         // log(box)
-        this.addMenuItem(slider)
-        slider.show()
+        this.actor.add(slider) //.addMenuItem(slider)
+        slider.visible = true
+
 
         // slider.width = box.width
         // box.add(slider)
