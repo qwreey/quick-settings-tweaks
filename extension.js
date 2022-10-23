@@ -10,14 +10,8 @@ var volumeMixer = null
 
 function enable() {
     volumeMixer = new VolumeMixerPopupMenu()
-    // Main.panel.statusArea.quickSettings.menu.addMenuItem
-    // Main._test = volumeMixer
-    // let menu = new PopupMenu.PopupMenuSection()
-    // imports.ui.main.panel.statusArea.quickSettings.menu.box.add_child(menu.actor) 
-    // menu.addMenuItem(volumeMixer)
-    // menu.actor.add_child(volumeMixer.actor)
 
-    function log(e) { if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(e) }
+    // function log(e) { if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(e) }
 
     let inputSliderIndex
     let gridChildren = Grid.get_children()
