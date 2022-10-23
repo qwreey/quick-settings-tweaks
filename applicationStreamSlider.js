@@ -1,16 +1,17 @@
 const { BoxLayout, Label } = imports.gi.St
+const { GObject } = imports.gi
 
 // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
 const Volume = imports.ui.status.volume
 
-var ApplicationStreamSlider = class ApplicationStreamSlider extends Volume.StreamSlider {
+var ApplicationStreamSlider = GObject.registerClass({},class ApplicationStreamSlider extends Volume.StreamSlider {
   constructor(stream, opts) {
-    try {
+    // try {
       super(Volume.getMixerControl())
-    } catch (err) {
-      if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(err.toString())
-    }
-    if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push("OK")
+    // } catch (err) {
+      // if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(err.toString())
+    // }
+    // if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push("OK")
     
     // this.stream = stream
     
@@ -36,4 +37,4 @@ var ApplicationStreamSlider = class ApplicationStreamSlider extends Volume.Strea
       this.item.actor.add(this._vbox)
     }
   }
-}
+})
