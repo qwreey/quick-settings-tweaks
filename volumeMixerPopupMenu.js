@@ -1,7 +1,8 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
-const { ApplicationStreamSlider } = Me.imports.applicationStreamSlider
+const { StreamSlider } = Me.imports.applicationStreamSlider
 
+const { BoxLayout, Label } = imports.gi.St
 const { Settings, SettingsSchemaSource } = imports.gi.Gio
 const { MixerSinkInput } = imports.gi.Gvc
 
@@ -10,17 +11,20 @@ const PopupMenu = imports.ui.popupMenu
 // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
 const Volume = imports.ui.status.volume
 
+function log(e) { if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(e) }
+
 var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMenuSection {
     constructor() {
         super()
         this._applicationStreams = {}
+        this._applicationMenus = {}
 
         // The PopupSeparatorMenuItem needs something above and below it or it won't display
-        this._hiddenItem = new PopupMenu.PopupBaseMenuItem()
-        this._hiddenItem.set_height(0)
-        this.addMenuItem(this._hiddenItem)
+        // this._hiddenItem = new PopupMenu.PopupBaseMenuItem()
+        // this._hiddenItem.set_height(0)
+        // this.addMenuItem(this._hiddenItem)
 
-        this.addMenuItem(new PopupMenu.PopupSeparatorMenuItem())
+        // this.addMenuItem(new PopupMenu.PopupSeparatorMenuItem())
         
         this._control = Volume.getMixerControl()
         this._streamAddedEventId = this._control.connect("stream-added", this._streamAdded.bind(this))
@@ -63,30 +67,51 @@ var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMen
             }
         }
         
-        const slider = new ApplicationStreamSlider(stream, { showDesc: this._showStreamDesc, showIcon: this._showStreamIcon })
-        this._applicationStreams[id] = slider
-        // this.addMenuItem(this._applicationStreams[id].item)
-        // this.add(this.item.actor)
-        // log(id)
-        // imports.ui.main.__test = id
-        // this.addMenuItem(slider)
-        // let test = 
-        this.addMenuItem(slider)
-        // volumeMixer.actor.add(this._applicationStreams[id].item.actor)
-        // this.box.add_child(this._applicationStreams[id].item.actor)
-        // this.actor.add_child(this._applicationStreams[id].item.actor)
+        // const slider = new ApplicationStreamSlider(stream, { showDesc: this._showStreamDesc, showIcon: this._showStreamIcon })
+        let slider
+        try {
+            slider = new StreamSlider(Volume.getMixerControl())
+            slider.stream = stream
+            slider._icon.icon_name = stream.get_icon_name()
+            this._applicationStreams[id] = slider
+            log(slider)
+        } catch (err) { log(err) }
+
+        let box = new PopupMenu.PopupBaseMenuItem()
+        this.addMenuItem(box)
+        this._applicationMenus[id] = box
+        log(box)
+
+        // let label = new Label()
+        // label.text = "wow"
+        // box.add(label)
+
+        // let label2 = new Label()
+        // label2.text = "wow"
+        // box.add(label2)
+
+        // let label3 = new Label()
+        // label3.text = "wow"
+        // box.add(label3)
+
+        slider.show()
+        box.add(slider)
     }
 
     _streamRemoved(_control, id) {
         if (id in this._applicationStreams) {
-            this._applicationStreams[id].item.destroy()
+            this._applicationStreams[id].destroy()
+            this._applicationMenus[id].destroy()
+            delete this._applicationMenus[id]
             delete this._applicationStreams[id]
         }
     }
 
     _updateStreams() {
         for (const id in this._applicationStreams) {
-            this._applicationStreams[id].item.destroy()
+            this._applicationStreams[id].destroy()
+            this._applicationMenus[id].destroy()
+            delete this._applicationMenus[id]
             delete this._applicationStreams[id]
         }
         
