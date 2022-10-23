@@ -4,7 +4,7 @@ const { VolumeMixerPopupMenu } = Me.imports.volumeMixerPopupMenu
 const PopupMenu = imports.ui.popupMenu;
 const Main = imports.ui.main
 const Grid = Main.panel.statusArea.quickSettings.menu._grid
-const outputSliderName = "OutputStreamSlider"
+const inputSliderName = "InputStreamSlider"
 
 var volumeMixer = null
 
@@ -19,17 +19,17 @@ function enable() {
 
     function log(e) { if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(e) }
 
-    let outputSliderIndex
+    let inputSliderIndex
     let gridChildren = Grid.get_children()
     for (let index = 0; index<gridChildren.length; index++) {
-        if (gridChildren[index]?.constructor?.name == outputSliderName) {
-            outputSliderIndex = index
+        if (gridChildren[index]?.constructor?.name == inputSliderName) {
+            inputSliderIndex = index
         }
     }
 
-    if (outputSliderIndex) {
+    if (inputSliderIndex) {
         let tmp = []
-        for (let index = outputSliderIndex+1; index<gridChildren.length; index++) {
+        for (let index = inputSliderIndex+1; index<gridChildren.length; index++) {
             let obj = gridChildren[index]
             tmp.push(obj)
             Grid.remove_child(obj)
