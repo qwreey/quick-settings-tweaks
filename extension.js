@@ -4,6 +4,7 @@ const { VolumeMixerPopupMenu } = Me.imports.volumeMixerPopupMenu
 const PopupMenu = imports.ui.popupMenu;
 const Main = imports.ui.main
 const Grid = Main.panel.statusArea.quickSettings.menu._grid
+const outputSliderName = "OutputStreamSlider"
 
 var volumeMixer = null
 
@@ -16,7 +17,30 @@ function enable() {
     // menu.addMenuItem(volumeMixer)
     // menu.actor.add_child(volumeMixer.actor)
 
-    Grid.add_child(volumeMixer.actor);
+    function log(e) { if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(e) }
+
+    let outputSliderIndex
+    let gridChildren = Grid.get_children()
+    for (let index = 0; index<gridChildren.length; index++) {
+        if (gridChildren[index]?.constructor?.name == outputSliderName) {
+            outputSliderIndex = index
+        }
+    }
+
+    if (outputSliderIndex) {
+        let tmp = []
+        for (let index = outputSliderIndex+1; index<gridChildren.length; index++) {
+            let obj = gridChildren[index]
+            tmp.push(obj)
+            Grid.remove_child(obj)
+        }
+        Grid.add_child(volumeMixer.actor);
+        for (let index = 0; index<tmp.length; index++) {
+            Grid.add_child(tmp[index])
+        }
+    } else {
+        Grid.add_child(volumeMixer.actor);
+    }
     Grid.layout_manager.child_set_property(
         Grid, volumeMixer.actor, 'column-span', 2
     )
