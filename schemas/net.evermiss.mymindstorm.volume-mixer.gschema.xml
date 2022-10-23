@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="net.evermiss.mymindstorm.volume-mixer" path="/net/evermiss/mymindstorm/volume-mixer/">
+    <key name="filtered-apps" type="as">
+      <default>[]</default>
+    </key>
+    <key name="show-description" type="b">
+      <default>false</default>
+    </key>
+    <key name="show-icon" type="b">
+      <default>true</default>
+    </key>
+    <key name="filter-mode" type="s">
+      <choices>
+        <choice value='block'/>
+        <choice value='allow'/>
+      </choices>
+      <default>'block'</default>
+    </key>
+  </schema>
+</schemalist>

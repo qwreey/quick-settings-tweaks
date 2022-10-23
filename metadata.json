@@ -1,0 +1,11 @@
+{
+  "description": "Fork and rewrite of https://github.com/mymindstorm/gnome-volume-mixer",
+  "name": "Application Volume Mixer For Gnome 43",
+  "shell-version": [
+    "42",
+    "43"
+  ],
+  "url": "https://github.com/qwreey75/app-volume-mixer",
+  "uuid": "app-volume-mixer@qwreey",
+  "version": 1
+}
