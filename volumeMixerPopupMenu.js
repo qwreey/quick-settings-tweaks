@@ -11,8 +11,6 @@ const PopupMenu = imports.ui.popupMenu
 // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
 const Volume = imports.ui.status.volume
 
-function log(e) { if(!imports.ui.main._log){imports.ui.main._log=[]} imports.ui.main._log.push(e) }
-
 var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMenuSection {
     constructor() {
         super()
