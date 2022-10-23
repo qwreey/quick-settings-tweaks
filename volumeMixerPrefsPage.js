@@ -16,7 +16,7 @@ var VolumeMixerPrefsPage = GObject.registerClass({
         // TODO: Move most of this into a .ui file.
         super()
 
-        this.settings = ExtensionUtils.getSettings("net.evermiss.mymindstorm.volume-mixer")
+        this.settings = ExtensionUtils.getSettings("app-volume-mixer.gschema.xml")
         this.filterListData = this.settings.get_strv("filtered-apps")
 
         // Group for general settings

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="net.evermiss.mymindstorm.volume-mixer" path="/net/evermiss/mymindstorm/volume-mixer/">
+  <schema id="app-volume-mixer.gschema.xml" path="/org/gnome/shell/extensions/app-volume-mixer/">
     <key name="filtered-apps" type="as">
       <default>[]</default>
     </key>

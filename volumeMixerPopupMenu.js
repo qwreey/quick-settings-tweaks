@@ -36,7 +36,7 @@ var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMen
         )
 
         this.settings = new Settings({
-            settings_schema: gschema.lookup('net.evermiss.mymindstorm.volume-mixer', true)
+            settings_schema: gschema.lookup('app-volume-mixer.gschema.xml', true)
         })
 
         this._settingsChangedId = this.settings.connect('changed', () => this._updateStreams())
