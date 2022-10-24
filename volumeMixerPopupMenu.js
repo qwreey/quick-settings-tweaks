@@ -28,7 +28,18 @@ var VolumeMixerPopupMenu = GObject.registerClass(
         layout_manager: lm,
       })
 
-      Main.panel.statusArea.quickSettings.menu.addItem(this._container, 2)
+      const menu = Main.panel.statusArea.quickSettings.menu
+
+      // Main.panel.statusArea.quickSettings.menu.addItem(this._container, 2)
+
+      menu._grid.insert_child_at_index(this._container, 3)
+
+      menu._grid.layout_manager.child_set_property(
+        menu._grid,
+        this._container,
+        'column-span',
+        2
+      )
 
       this._applicationStreams = {}
 
@@ -162,6 +173,8 @@ var VolumeMixerPopupMenu = GObject.registerClass(
       this._control.disconnect(this._streamAddedEventId)
       this._control.disconnect(this._streamRemovedEventId)
       this.settings.disconnect(this._settingsChangedId)
+      this._container.destroy()
+      this._container = null
       super.destroy()
     }
   }
