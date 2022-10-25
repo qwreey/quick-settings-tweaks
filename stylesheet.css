@@ -1,0 +1,59 @@
+/* notifications */
+.qwreey-notifications .message-content {
+    /* notification text sizing */
+    font-size: 0.9em;
+    text-overflow: ellipsis;
+    width: 110px;
+}
+.qwreey-notifications .message-list-section-list,
+.qwreey-notifications .message-list-section {
+    /* scrolling list margin/padding/spacing */
+    margin: 0px;
+    spacing: 0px;
+    padding: 0px;
+}
+.qwreey-notifications .message {
+    /* message margin / round */
+    margin: 6px 0px 2px 0px;
+    border-radius: 18px;
+}
+.qwreey-notifications {
+    /* notification box sizing */
+    padding: 10px 8px 10px 8px;
+    max-height: 292px;
+}
+.qwreey-notifications .message-list-section-list {
+    /* scrollbar take place, for symmetry, adding left margin make it looks better */
+    margin-left: 10px !important;
+}
+.qwreey-notifications .message-list-clear-button {
+    /* clear button */
+    font-size: 0.87em;
+    padding: 3px 6px;
+    margin-right: 12px;
+    border-radius: 99px;
+}
+.qwreey-notifications .qwreey-notifications-title {
+    /* notifications title */
+    font-size: 0.93em; margin-left: 12px;
+}
+
+/* media control on quick settings */
+.quick-settings .qwreey-media .message {
+    /* margin / round */
+    margin: 2px 0px 0px 0px;
+    border-radius: 22px;
+    padding: 0px;
+    width: 100px;
+}
+.quick-settings .qwreey-media .message-content {
+    /* text sizing */
+    font-size: 0.89em;
+    text-overflow: ellipsis;
+    width: 60px;
+}
+.quick-settings .qwreey-media .message-media-control {
+    /* control button sizing */
+    padding-left: 5px;
+    padding-right: 5px;
+}

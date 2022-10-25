@@ -1,17 +1,15 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
-const { StreamSlider } = Me.imports.applicationStreamSlider
+const { StreamSlider } = Me.imports.streamSlider
 
 const { BoxLayout, Label } = imports.gi.St
 const { Settings, SettingsSchemaSource } = imports.gi.Gio
 const { MixerSinkInput } = imports.gi.Gvc
 
-// https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/popupMenu.js
-const PopupMenu = imports.ui.popupMenu
-// https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
-const Volume = imports.ui.status.volume
+const PopupMenu = imports.ui.popupMenu // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/popupMenu.js
+const Volume = imports.ui.status.volume // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
 
-var VolumeMixerPopupMenu = class VolumeMixerPopupMenu extends PopupMenu.PopupMenuSection {
+var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
     constructor() {
         super()
         this._applicationStreams = {}
