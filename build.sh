@@ -14,6 +14,6 @@ cp applicationStreamSlider.js dist/$name/
 mkdir dist/$name/schemas
 cp schemas/app-volume-mixer.gschema.xml dist/$name/schemas/
 cp schemas/gschemas.compiled dist/$name/schemas/
-cd dist
-zip -r output.zip "$name"
-cd ..
+cd dist/$name
+zip -r ../output.zip ./
+cd ../..
