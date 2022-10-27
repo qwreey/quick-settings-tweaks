@@ -12,8 +12,9 @@ var Notifications = GObject.registerClass(
 
             let datemenu = new imports.ui.dateMenu.DateMenuButton()
             this.notificationList = datemenu._messageList._notificationSection
-            Main.test = this
 
+            // Main.test._messageList._dndS
+            // Main.test._messageList._dndSwitch
             this.clearBtn = datemenu._messageList._clearButton
             this.clearBtn.get_parent().remove_child(this.clearBtn)
 

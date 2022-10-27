@@ -20,6 +20,7 @@ var StreamSlider = GObject.registerClass({
     _init(control) {
         super._init();
 
+        this._connections = [];  // ADDED BY QWREEY
         this._control = control;
 
         this._inDrag = false;
@@ -28,17 +29,31 @@ var StreamSlider = GObject.registerClass({
         this._soundSettings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.sound',
         });
-        this._soundSettings.connect(`changed::${ALLOW_AMPLIFIED_VOLUME_KEY}`,
-            () => this._amplifySettingsChanged());
+
+        // MODED BY QWREEY
+        this._connections.push([
+            this._soundSettings,
+            this._soundSettings.connect(`changed::${ALLOW_AMPLIFIED_VOLUME_KEY}`,
+                () => this._amplifySettingsChanged())
+        ]);
         this._amplifySettingsChanged();
 
         this._sliderChangedId = this.slider.connect('notify::value',
             () => this._sliderChanged());
-        this.slider.connect('drag-begin', () => (this._inDrag = true));
-        this.slider.connect('drag-end', () => {
-            this._inDrag = false;
-            this._notifyVolumeChange();
-        });
+        this._connections.push([ // ADDED BY QWREEY
+            this.slider,this._sliderChangedId
+        ]);
+        this._connections.push([ // MODED BY QWREEY
+            this.slider,
+            this.slider.connect('drag-begin', () => (this._inDrag = true))
+        ]);
+        this._connections.push([ // MODED BY QWREEY
+            this.slider,
+            this.slider.connect('drag-end', () => {
+                this._inDrag = false;
+                this._notifyVolumeChange();
+            })
+        ]);
 
         this._deviceItems = new Map();
 
@@ -53,6 +68,10 @@ var StreamSlider = GObject.registerClass({
         this._icons = [];
 
         this._sync();
+        this._connections.push([ // ADDED BY QWREEY
+            this,
+            this.connect('destroy', this._destroy.bind(this))
+        ]);
     }
 
     get stream() {
@@ -75,6 +94,7 @@ var StreamSlider = GObject.registerClass({
     }
 
     _connectStream(stream) {
+        imports.ui.main.test = stream
         stream.connectObject(
             'notify::is-muted', this._updateVolume.bind(this),
             'notify::volume', this._updateVolume.bind(this), this);
@@ -103,7 +123,10 @@ var StreamSlider = GObject.registerClass({
             ? `${description} – ${origin}`
             : description;
         const item = new PopupMenu.PopupImageMenuItem(name, device.get_gicon());
-        item.connect('activate', () => this._activateDevice(device));
+        this._connections.push([
+            item,
+            item.connect('activate', () => this._activateDevice(device))
+        ]);
 
         this._deviceSection.addMenuItem(item);
         this._deviceItems.set(id, item);
@@ -230,5 +253,13 @@ var StreamSlider = GObject.registerClass({
             maxVolume = this._control.get_vol_max_amplified();
 
         return maxVolume / this._control.get_vol_max_norm();
+    }
+
+    // ADDED BY QWREEY
+    _destroy() {
+        for (item of this._connections) {
+            item[0].disconnect(item[1])
+        }
+        this._connections = null
     }
 });

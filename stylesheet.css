@@ -20,6 +20,7 @@
 .qwreey-notifications {
     /* notification box sizing */
     padding: 10px 8px 10px 8px;
+    margin: 12px 0px;
     max-height: 292px;
 }
 .qwreey-notifications .message-list-section-list {
@@ -56,4 +57,46 @@
     /* control button sizing */
     padding-left: 5px;
     padding-right: 5px;
+}
+
+/* media control compact */
+.qwreey-media-compact-mode .message-icon-bin {
+    padding: 0px;
+}
+.qwreey-media-compact-mode .message {
+    margin: 0px;
+}
+.qwreey-media-compact-mode .media-message-cover-icon {
+    background-color: transparent;
+    padding: 0px;
+    margin: 16px 0px 0px 12px;
+    /* border-radius: 99px; */
+}
+
+/* weather box overflow fix */
+.qwreey-fixed-weather .weather-button {
+    margin-bottom: 6px !important;
+}
+.qwreey-fixed-weather .weather-button .weather-box {
+    spacing: 7px;
+}
+.qwreey-fixed-weather .weather-button .weather-header-box {
+    spacing: 4px;
+}
+.qwreey-fixed-weather .weather-button .weather-header.location {
+    font-weight: normal !important;
+    font-size: 9pt !important;
+}
+.qwreey-fixed-weather .weather-button .weather-grid {
+    spacing-rows: 4px !important;
+    spacing-columns: 8px !important;
+}
+.qwreey-fixed-weather .weather-button .weather-forecast-icon {
+    icon-size: 32px !important;
+}
+.qwreey-fixed-weather .weather-button .weather-forecast-time {
+    font-size: 8pt !important;
+    font-weight: normal !important;
+    padding-top: 0.2em !important;
+    padding-bottom: 0.4em !important;
 }

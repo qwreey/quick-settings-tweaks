@@ -5,6 +5,66 @@ const { VolumeMixerAddFilterDialog } = Me.imports.volumeMixerAddFilterDialog
 
 const { Adw, Gio, Gtk, GObject } = imports.gi
 
+function makeRow(options={parent: null,title: null, subtitle: null}) {
+    const row = new Adw.ActionRow({
+        title: options.title,
+        subtitle: options.subtitle
+    })
+    if (options.parent) {
+        options.parent.add(row)
+    }
+    return row
+}
+
+function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null}) {
+    const row = new Adw.ActionRow({
+        title: options.title,
+        subtitle: options.subtitle
+    })
+
+    const toggle = new Gtk.Switch({
+        active: options.value,
+        valign: Gtk.Align.CENTER,
+    });
+
+    if (options.action) {
+        toggle.connect("notify::active",()=>{
+            options.action(toggle.get_active())
+        })
+    }
+
+    row.add_suffix(toggle)
+    row.activatable_widget = toggle
+    row.toggle = toggle
+
+    if (options.parent) {
+        options.parent.add(row)
+    }
+
+    if (options.bind) {
+        options.bind[0].bind(
+            options.bind[1],
+            toggle,'active',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+    }
+
+    return row
+}
+
+function setFeatureEnabled(enabledFeatures,name,value) {
+    if (value) {
+        enabledFeatures.push(name)
+    } else {
+        while (true) {
+            let index = enabledFeatures.indexOf(name)
+            if (index != -1) {
+                enabledFeatures.splice(index,1)
+            } else break
+        }
+    }
+}
+
 var FilterMode = GObject.registerClass({
     Properties: {
         'name': GObject.ParamSpec.string(
@@ -22,59 +82,76 @@ var FilterMode = GObject.registerClass({
     }
 })
 
-var prefsPage = GObject.registerClass({
-    GTypeName: 'prefsPage',
-}, class prefsPage extends Adw.PreferencesPage {
+var volumeMixerPage = GObject.registerClass({
+    GTypeName: 'volumeMixerPage',
+}, class volumeMixerPage extends Adw.PreferencesPage {
     filterListData = []
     filteredAppsGroup
     settings
     addFilteredAppButtonRow
 
-    constructor() {
-        super()
+    constructor(settings) {
+        // group config
+        super({
+            name: 'volumeMixer',
+            title: 'Volume Mixer',
+            iconName: 'audio-volume-high-symbolic'
+        })
 
-        this.settings = ExtensionUtils.getSettings("app-volume-mixer.gschema.xml")
-        this.filterListData = this.settings.get_strv("filtered-apps")
+        this.settings = settings
+        this.filterListData = this.settings.get_strv("volume-mixer-filtered-apps")
+
+        // description / enable
+        const descriptionGroup = new Adw.PreferencesGroup()
+        makeRow({
+            parent: descriptionGroup,
+            title: "Add volume mixer (PulseAudio)",
+            subtitle: "Fork from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature tested on PulseAudio only, Pipewire isn't tested yet!"
+        })
+        let enabledFeatures = settings.get_strv("enabled-features")
+        makeSwitch({
+            parent: descriptionGroup,
+            title: "Enabled",
+            value: enabledFeatures.includes("volumeMixer"),
+            subtitle: "Whether volume mixer is visible",
+            action: value=>{
+                enabledFeatures = settings.get_strv("enabled-features")
+                setFeatureEnabled(enabledFeatures,"volumeMixer",value)
+                settings.set_strv("enabled-features",enabledFeatures)
+            }
+        })
+        this.add(descriptionGroup)
 
         // Group for general settings
-        const generalGroup = new Adw.PreferencesGroup()
+        const generalGroup = new Adw.PreferencesGroup({ title: "General" })
         this.add(generalGroup)
 
-        // show-description
-        const showDescRow = new Adw.ActionRow({ title: 'Show Audio Stream Description' })
-        generalGroup.add(showDescRow)
-
-        const showDescToggle = new Gtk.Switch({
-            active: this.settings.get_boolean('show-description'),
-            valign: Gtk.Align.CENTER,
+        // move to bottom
+        makeSwitch({
+            title: 'Move to bottom',
+            subtitle: 'move to bottom of quick settings modal',
+            value: this.settings.get_boolean('volume-mixer-move-to-bottom'),
+            parent: generalGroup,
+            bind: [this.settings, 'volume-mixer-move-to-bottom']
         })
-        this.settings.bind(
-            'show-description',
-            showDescToggle,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
 
-        showDescRow.add_suffix(showDescToggle)
-        showDescRow.activatable_widget = showDescToggle
+        // show-description
+        makeSwitch({
+            title: 'Stream Description',
+            subtitle: 'Show audio stream description on slider',
+            value: this.settings.get_boolean('volume-mixer-show-description'),
+            parent: generalGroup,
+            bind: [this.settings, 'volume-mixer-show-description']
+        })
 
         // show-icon
-        const showIconRow = new Adw.ActionRow({ title: 'Show Application Icon' })
-        generalGroup.add(showIconRow)
-
-        const showIconToggle = new Gtk.Switch({
-            active: this.settings.get_boolean('show-icon'),
-            valign: Gtk.Align.CENTER
+        makeSwitch({
+            title: 'Stream Icon',
+            subtitle: 'Show application icon on slider',
+            value: this.settings.get_boolean('volume-mixer-show-icon'),
+            parent: generalGroup,
+            bind: [this.settings, 'volume-mixer-show-icon']
         })
-        this.settings.bind(
-            'show-icon',
-            showIconToggle,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
-
-        showIconRow.add_suffix(showIconToggle)
-        showIconRow.activatable_widget = showIconToggle
 
         // Application filter settings group
         const filterGroup = new Adw.PreferencesGroup({
@@ -90,7 +167,7 @@ var prefsPage = GObject.registerClass({
 
         const findCurrentFilterMode = () => {
             for (let i = 0; i < filterModeModel.get_n_items(); i++) {
-                if (filterModeModel.get_item(i).value === this.settings.get_string('filter-mode')) {
+                if (filterModeModel.get_item(i).value === this.settings.get_string('volume-mixer-filter-mode')) {
                     return i
                 }
             }
@@ -106,7 +183,7 @@ var prefsPage = GObject.registerClass({
         filterGroup.add(filterModeRow)
 
         filterModeRow.connect('notify::selected', () => {
-            this.settings.set_string('filter-mode', filterModeRow.selectedItem.value)
+            this.settings.set_string('volume-mixer-filter-mode', filterModeRow.selectedItem.value)
         })
 
         // group to act as spacer for filter list
@@ -211,8 +288,206 @@ var prefsPage = GObject.registerClass({
     }
 })
 
+var notificationsPage = GObject.registerClass({
+    GTypeName: 'notificationsPage',
+}, class notificationsPage extends Adw.PreferencesPage {
+    filterListData = []
+    filteredAppsGroup
+    settings
+    addFilteredAppButtonRow
+
+    constructor(settings) {
+        // group config
+        super({
+            name: 'notifications',
+            title: 'Notifications',
+            iconName: 'user-available-symbolic'
+        })
+
+        // description / enable
+        const descriptionGroup = new Adw.PreferencesGroup()
+        makeRow({
+            parent: descriptionGroup,
+            title: "Add notifications widget",
+            subtitle: "Reference from https://github.com/Aylur/gnome-extensions"
+        })
+        let enabledFeatures = settings.get_strv("enabled-features")
+        makeSwitch({
+            parent: descriptionGroup,
+            title: "Enabled",
+            value: enabledFeatures.includes("notifications"),
+            subtitle: "Whether notification widget is visible",
+            action: value=>{
+                enabledFeatures = settings.get_strv("enabled-features")
+                setFeatureEnabled(enabledFeatures,"notifications",value)
+                settings.set_strv("enabled-features",enabledFeatures)
+            }
+        })
+        this.add(descriptionGroup)
+
+        // general
+        const generalGroup = new Adw.PreferencesGroup({ title: "General" })
+        this.add(generalGroup)
+        makeSwitch({
+            parent: generalGroup,
+            title: "Move to top",
+            value: settings.get_boolean("notifications-move-to-top"),
+            subtitle: "Move notification widget to top. quick settings panel will goes down\nThis feature will be useful if you use dash to panel",
+            bind: [settings, "notifications-move-to-top"]
+        })
+
+        // other
+        const otherGroup = new Adw.PreferencesGroup({ title: "Other" })
+        this.add(otherGroup)
+        makeSwitch({
+            parent: otherGroup,
+            title: "Remove Date Menu Notifications",
+            value: settings.get_boolean("datemenu-remove-notifications"),
+            subtitle: "Hide date menu's notifications",
+            bind: [settings, "datemenu-remove-notifications"]
+        })
+        makeSwitch({
+            parent: otherGroup,
+            title: "Fix Weather Widget Overflow",
+            value: settings.get_boolean("datemenu-fix-weather-widget"),
+            subtitle: "Fix date menu's weather widget overflow",
+            bind: [settings, "datemenu-fix-weather-widget"]
+        })
+    }
+})
+
+var mediaControlPage = GObject.registerClass({
+    GTypeName: 'mediaControlPage',
+}, class mediaControlPage extends Adw.PreferencesPage {
+    filterListData = []
+    filteredAppsGroup
+    settings
+    addFilteredAppButtonRow
+
+    constructor(settings) {
+        // group config
+        super({
+            name: 'mediaControl',
+            title: 'Media Control',
+            iconName: 'folder-music-symbolic'
+        })
+
+        // description / enable
+        const descriptionGroup = new Adw.PreferencesGroup()
+        makeRow({
+            parent: descriptionGroup,
+            title: "Add media control widget",
+            subtitle: "Reference from https://github.com/Aylur/gnome-extensions"
+        })
+        let enabledFeatures = settings.get_strv("enabled-features")
+        makeSwitch({
+            parent: descriptionGroup,
+            title: "Enabled",
+            value: enabledFeatures.includes("mediaControl"),
+            subtitle: "Whether notification widget is visible",
+            action: value=>{
+                enabledFeatures = settings.get_strv("enabled-features")
+                setFeatureEnabled(enabledFeatures,"mediaControl",value)
+                settings.set_strv("enabled-features",enabledFeatures)
+            }
+        })
+        this.add(descriptionGroup)
+
+        // general
+        const generalGroup = new Adw.PreferencesGroup({ title: "General" })
+        this.add(generalGroup)
+        makeSwitch({
+            parent: generalGroup,
+            title: "Compact Mode",
+            value: settings.get_boolean("media-control-compact-mode"),
+            subtitle: "Make media control widget smaller",
+            bind: [settings, "media-control-compact-mode"]
+        })
+    }
+})
+
+var buttonRemoverPage = GObject.registerClass({
+    GTypeName: 'buttonRemoverPage',
+}, class notificationsPage extends Adw.PreferencesPage {
+    filterListData = []
+    filteredAppsGroup
+    settings
+    addFilteredAppButtonRow
+
+    constructor(settings) {
+        // group config
+        super({
+            name: 'buttonRemover',
+            title: 'Button Remover',
+            iconName: 'edit-clear-all-symbolic'
+        })
+
+        // description / enable
+        const descriptionGroup = new Adw.PreferencesGroup()
+        makeRow({
+            parent: descriptionGroup,
+            title: "Remove some buttons from quick panel",
+            subtitle: "Forked from https://github.com/qwreey75/gnome-quick-settings-button-remover"
+        })
+        this.add(descriptionGroup)
+
+        // general
+        const removeGroup = new Adw.PreferencesGroup({
+            title: 'Remove button',
+            description: 'List of button should be removed.'
+        })
+        this.add(removeGroup)
+
+        let allButtons = settings.get_strv("list-buttons") || []
+        let removedButtons = settings.get_strv("user-removed-buttons") || []
+        let defaultInvisibleButtons = settings.get_strv("default-invisible-buttons") || []
+        let buttonsLabel
+        try {
+            buttonsLabel = JSON.parse(settings.get_string("button-labels"))
+        } catch {}
+        buttonsLabel ||= {}
+    
+        for (let name of allButtons) {
+            const row = new Adw.ActionRow({
+                title: name + (
+                    defaultInvisibleButtons.includes(name) ? " (invisible by system)" : ""
+                ),
+                subtitle: buttonsLabel[name] || null
+            })
+            removeGroup.add(row);
+    
+            const toggle = new Gtk.Switch({
+                active: removedButtons.includes(name),
+                valign: Gtk.Align.CENTER,
+            });
+    
+            toggle.connect("notify::active",()=>{
+                if (toggle.get_active()) {
+                    removedButtons.push(name)
+                } else {
+                    while (true) {
+                        let index = removedButtons.indexOf(name)
+                        if (index != -1) {
+                            removedButtons.splice(index,1)
+                        } else break
+                    }
+                }
+                settings.set_strv("user-removed-buttons",removedButtons)
+            })
+    
+            row.add_suffix(toggle);
+            row.activatable_widget = toggle;
+        }
+    }
+})
+
 function fillPreferencesWindow(window) {
-    window.add(new prefsPage())
+
+    let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
+    window.add(new volumeMixerPage(settings))
+    window.add(new notificationsPage(settings))
+    window.add(new mediaControlPage(settings))
+    window.add(new buttonRemoverPage(settings))
 }
 
 function init() {

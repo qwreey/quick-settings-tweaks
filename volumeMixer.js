@@ -14,14 +14,6 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         super()
         this._applicationStreams = {}
         this._applicationMenus = {}
-
-        // The PopupSeparatorMenuItem needs something above and below it or it won't display
-        // this._hiddenItem = new PopupMenu.PopupBaseMenuItem()
-        // this._hiddenItem.set_height(0)
-        // this.addMenuItem(this._hiddenItem)
-
-        // this.addMenuItem(new PopupMenu.PopupSeparatorMenuItem())
-        // this.addMenuItem()
         
         this._control = Volume.getMixerControl()
         this._streamAddedEventId = this._control.connect("stream-added", this._streamAdded.bind(this))
@@ -34,10 +26,10 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         )
 
         this.settings = new Settings({
-            settings_schema: gschema.lookup('app-volume-mixer.gschema.xml', true)
+            settings_schema: gschema.lookup(Me.metadata['settings-schema'], true)
         })
 
-        this._settingsChangedId = this.settings.connect('changed', () => this._updateStreams())
+        // this._settingsChangedId = this.settings.connect('changed', () => this._updateStreams())
 
         this._updateStreams()
     }
@@ -100,24 +92,20 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
     _streamRemoved(_control, id) {
         if (id in this._applicationStreams) {
             this._applicationStreams[id].destroy()
-            // this._applicationMenus[id].destroy()
             delete this._applicationMenus[id]
-            // delete this._applicationStreams[id]
         }
     }
 
     _updateStreams() {
         for (const id in this._applicationStreams) {
             this._applicationStreams[id].destroy()
-            // this._applicationMenus[id].destroy()
             delete this._applicationMenus[id]
-            // delete this._applicationStreams[id]
         }
         
-        this._filteredApps = this.settings.get_strv("filtered-apps")
-        this._filterMode = this.settings.get_string("filter-mode")
-        this._showStreamDesc = this.settings.get_boolean("show-description")
-        this._showStreamIcon = this.settings.get_boolean("show-icon")
+        this._filteredApps = this.settings.get_strv("volume-mixer-filtered-apps")
+        this._filterMode = this.settings.get_string("volume-mixer-filter-mode")
+        this._showStreamDesc = this.settings.get_boolean("volume-mixer-show-description")
+        this._showStreamIcon = this.settings.get_boolean("volume-mixer-show-icon")
 
         for (const stream of this._control.get_streams()) {
             this._streamAdded(this._control, stream.get_id())
@@ -125,9 +113,15 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
     }
 
     destroy() {
+        // Destroy all of sliders
+        for (const id in this._applicationStreams) {
+            this._applicationStreams[id].destroy()
+            delete this._applicationMenus[id]
+        }
+
         this._control.disconnect(this._streamAddedEventId)
         this._control.disconnect(this._streamRemovedEventId)
-        this.settings.disconnect(this._settingsChangedId)
+        // this.settings.disconnect(this._settingsChangedId)
         super.destroy()
     }
 }
