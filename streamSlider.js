@@ -94,7 +94,6 @@ var StreamSlider = GObject.registerClass({
     }
 
     _connectStream(stream) {
-        imports.ui.main.test = stream
         stream.connectObject(
             'notify::is-muted', this._updateVolume.bind(this),
             'notify::volume', this._updateVolume.bind(this), this);
@@ -257,9 +256,10 @@ var StreamSlider = GObject.registerClass({
 
     // ADDED BY QWREEY
     _destroy() {
+        GLib.Source.remove(this._notifyVolumeChangeId);
         for (item of this._connections) {
-            item[0].disconnect(item[1])
+            item[0].disconnect(item[1]);
         }
-        this._connections = null
+        this._connections = null;
     }
 });

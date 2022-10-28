@@ -13,9 +13,10 @@ cp notifications.js dist/$name/
 cp streamSlider.js dist/$name/
 cp volumeMixer.js dist/$name/
 cp volumeMixerAddFilterDialog.js dist/$name/
+cp stylesheet.css dist/$name/
 
 mkdir dist/$name/schemas
-cp schemas/quick-settings-tweaks.gschema.xml dist/$name/schemas/
+cp schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml dist/$name/schemas/
 cp schemas/gschemas.compiled dist/$name/schemas/
 cd dist/$name
 zip -r ../output.zip ./

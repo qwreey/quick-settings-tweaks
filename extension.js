@@ -82,7 +82,7 @@ class ExtensionClass {
         if (this.isEnabled("notifications")) {
             let box = QuickSettings.menu.box
             box.style_class = ""
-            Grid.style_class = "popup-menu-content quick-settings " + Grid.style_class
+            Grid.style_class = "popup-menu-content quick-settings qwreey-quick-settings " + Grid.style_class
             if (this.settings.get_boolean("notifications-move-to-top")) {
                 let quickSettingsModal = box.first_child
                 box.remove_child(quickSettingsModal)

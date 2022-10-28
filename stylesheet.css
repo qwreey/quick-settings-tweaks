@@ -6,7 +6,7 @@
     width: 110px;
 }
 .qwreey-notifications .message-list-section-list,
-.qwreey-notifications .message-list-section {
+.qwreey-notifications .message-list-sections {
     /* scrolling list margin/padding/spacing */
     margin: 0px;
     spacing: 0px;
@@ -19,24 +19,28 @@
 }
 .qwreey-notifications {
     /* notification box sizing */
-    padding: 10px 8px 10px 8px;
-    margin: 12px 0px;
+    padding: 12px 4px 16px 16px;
+    margin: 0px 12px;
     max-height: 292px;
 }
-.qwreey-notifications .message-list-section-list {
-    /* scrollbar take place, for symmetry, adding left margin make it looks better */
-    margin-left: 10px !important;
+.qwreey-notifications .message-list-sections {
+    margin-right: 12px;
 }
 .qwreey-notifications .message-list-clear-button {
     /* clear button */
     font-size: 0.87em;
     padding: 3px 6px;
-    margin-right: 12px;
     border-radius: 99px;
+    margin-right: 4px;
 }
 .qwreey-notifications .qwreey-notifications-title {
     /* notifications title */
-    font-size: 0.93em; margin-left: 12px;
+    font-size: 0.93em;
+    margin-left: 4px;
+}
+
+.qwreey-quick-settings {
+    margin: 12px 12px;
 }
 
 /* media control on quick settings */
