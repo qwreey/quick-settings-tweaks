@@ -1,0 +1,3 @@
+# Quick settings notifications title text
+msgid "Notifications"
+msgstr "알림"

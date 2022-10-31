@@ -37,7 +37,7 @@ class ExtensionClass {
         }
         if (this.isEnabled("notifications") || this.isEnabled("mediaControl")) {
             this.notifications = new Notifications({
-                dndButton: this.settings.get_boolean("notifications-dnd-switch")
+                dndSwitch: this.settings.get_boolean("notifications-dnd-switch")
             })
         }
         this.buttonRemover = new ButtonRemover()

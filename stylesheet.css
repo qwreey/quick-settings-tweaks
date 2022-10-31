@@ -38,9 +38,32 @@
     font-size: 0.93em;
     margin-left: 4px;
 }
-
 .qwreey-quick-settings {
     margin: 12px 12px;
+}
+
+/* add dnd button */
+.qwreey-notifications-with-dnd .dnd-button {
+    margin-bottom: 0px;
+    height: 20px;
+}
+.qwreey-notifications-with-dnd .qwreey-notifications-dnd-box StLabel {
+    font-size: 0.92em;
+    margin-right: 8px;
+    margin-bottom: 0px;
+}
+.qwreey-notifications-with-dnd .message-list-clear-button {
+    margin-right: 8px;
+}
+.qwreey-notifications.qwreey-notifications-with-dnd {
+    padding-bottom: 10px;
+}
+.qwreey-notifications-with-dnd .qwreey-notifications-dnd-box {
+    margin-top: 6px;
+    padding: 0px 4px;
+}
+.qwreey-notifications-with-dnd .qwreey-notifications-title {
+    margin-bottom: 4px;
 }
 
 /* media control on quick settings */

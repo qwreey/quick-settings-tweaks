@@ -8,23 +8,32 @@ var Notifications = GObject.registerClass(
             super._init({
                 vertical: true,
                 style_class: 'popup-menu-content quick-settings qwreey-notifications'
+                    + (options.dndSwitch ? " qwreey-notifications-with-dnd" : "")
             })
 
             let datemenu = new imports.ui.dateMenu.DateMenuButton()
-            Main.test = this
-            this.notificationList = datemenu._messageList._notificationSection
+            let messageList = datemenu._messageList
+            this.notificationList = messageList._notificationSection
 
-            this.dndButton = datemenu._messageList._dndButton
-            this.dndSwitch = datemenu._messageList._dndSwitch
-            this.clearButton = datemenu._messageList._clearButton
-            this.clearButton.get_parent().remove_child(this.clearButton)
+            // notification buttons
+            this.dndSwitch = messageList._dndButton
+            this.clearButton = messageList._clearButton
+            {
+                let parent = this.clearButton.get_parent()
+                parent.remove_child(this.clearButton)
+                parent.remove_child(this.dndSwitch)
+                this.dndText = parent.first_child
+                parent.remove_child(this.dndText)
+            }
 
-            this.list = datemenu._messageList._scrollView
-            this.list.get_parent().remove_child(this.list)
-
-            this.mediaSection = datemenu._messageList._mediaSection
+            // media controls
+            this.mediaSection = messageList._mediaSection
             this.mediaSection.get_parent().remove_child(this.mediaSection)
             this.mediaSection.style_class += " qwreey-media"
+
+            // notification list scroll
+            this.list = messageList._scrollView
+            this.list.get_parent().remove_child(this.list)
 
             let headerBox = new St.BoxLayout()
             let label = new St.Label({ text: _('Notifications'), y_align: Clutter.ActorAlign.CENTER })
@@ -36,14 +45,14 @@ var Notifications = GObject.registerClass(
             // dnd button
             if (options.dndSwitch) {
                 let dndBox = new St.BoxLayout()
-                dndBox.add_child(this.dndButton)
+                dndBox.style_class = "qwreey-notifications-dnd-box"
+                dndBox.add_child(this.dndText)
                 dndBox.add_child(this.dndSwitch)
                 dndBox.add_child(this.clearButton)
                 this.add_child(dndBox)
             } else {
                 headerBox.add_child(this.clearButton)
             }
-
 
             //sync notifications
             let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
