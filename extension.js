@@ -6,7 +6,6 @@ const Grid = Main.panel.statusArea.quickSettings.menu._grid
 const QuickSettings = Main.panel.statusArea.quickSettings
 const InputSliderName = "InputStreamSlider"
 const DateMenuMessageList = "CalendarMessageList"
-const { GLib } = imports.gi
 
 const { ButtonRemover } = Me.imports.buttonRemover
 const { VolumeMixer } = Me.imports.volumeMixer
