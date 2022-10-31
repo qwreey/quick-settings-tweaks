@@ -4,19 +4,20 @@ const Calendar = imports.ui.calendar;
 
 var Notifications = GObject.registerClass(
     class Notifications extends St.BoxLayout{
-        _init(){
+        _init(options={}){
             super._init({
                 vertical: true,
                 style_class: 'popup-menu-content quick-settings qwreey-notifications'
             })
 
             let datemenu = new imports.ui.dateMenu.DateMenuButton()
+            Main.test = this
             this.notificationList = datemenu._messageList._notificationSection
 
-            // Main.test._messageList._dndS
-            // Main.test._messageList._dndSwitch
-            this.clearBtn = datemenu._messageList._clearButton
-            this.clearBtn.get_parent().remove_child(this.clearBtn)
+            this.dndButton = datemenu._messageList._dndButton
+            this.dndSwitch = datemenu._messageList._dndSwitch
+            this.clearButton = datemenu._messageList._clearButton
+            this.clearButton.get_parent().remove_child(this.clearButton)
 
             this.list = datemenu._messageList._scrollView
             this.list.get_parent().remove_child(this.list)
@@ -25,14 +26,24 @@ var Notifications = GObject.registerClass(
             this.mediaSection.get_parent().remove_child(this.mediaSection)
             this.mediaSection.style_class += " qwreey-media"
 
-            let hbox = new St.BoxLayout()
+            let headerBox = new St.BoxLayout()
             let label = new St.Label({ text: _('Notifications'), y_align: Clutter.ActorAlign.CENTER })
             label.style_class = "qwreey-notifications-title"
-            hbox.add_child(label)
-            hbox.add_child(this.clearBtn)
-
-            this.add_child(hbox)
+            headerBox.add_child(label)
+            this.add_child(headerBox)
             this.add_child(this.list)
+
+            // dnd button
+            if (options.dndSwitch) {
+                let dndBox = new St.BoxLayout()
+                dndBox.add_child(this.dndButton)
+                dndBox.add_child(this.dndSwitch)
+                dndBox.add_child(this.clearButton)
+                this.add_child(dndBox)
+            } else {
+                headerBox.add_child(this.clearButton)
+            }
+
 
             //sync notifications
             let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
@@ -43,10 +54,10 @@ var Notifications = GObject.registerClass(
             })
 
             //hide on zero notifs
-            this.clearBtn.connect('notify::reactive', () => {
-                this.clearBtn.reactive ? this.show() : this.hide()
+            this.clearButton.connect('notify::reactive', () => {
+                this.clearButton.reactive ? this.show() : this.hide()
             })
-            if(!this.clearBtn.reactive) this.hide()
+            if(!this.clearButton.reactive) this.hide()
 
             this.connect('destroy', () => {
                 datemenu.destroy()

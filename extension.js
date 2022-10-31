@@ -36,13 +36,17 @@ class ExtensionClass {
             this.volumeMixer = new VolumeMixer()
         }
         if (this.isEnabled("notifications") || this.isEnabled("mediaControl")) {
-            this.notifications = new Notifications()
+            this.notifications = new Notifications({
+                dndButton: this.settings.get_boolean("notifications-dnd-switch")
+            })
         }
         this.buttonRemover = new ButtonRemover()
     }
 
+    // reload when setting was changed
     settingListenKeys = [
         "notifications-move-to-top",
+        "notifications-dnd-switch",
         "datemenu-remove-notifications",
         "datemenu-fix-weather-widget",
         "media-control-compact-mode",
@@ -81,6 +85,8 @@ class ExtensionClass {
         // enable notifications
         if (this.isEnabled("notifications")) {
             let box = QuickSettings.menu.box
+            this.boxBackupClass = box.style_class
+            this.gridBackupClass = Grid.style_class
             box.style_class = ""
             Grid.style_class = "popup-menu-content quick-settings qwreey-quick-settings " + Grid.style_class
             if (this.settings.get_boolean("notifications-move-to-top")) {
@@ -89,7 +95,6 @@ class ExtensionClass {
                 box.add_child(this.notifications)
                 box.add_child(quickSettingsModal)
             } else box.add_child(this.notifications)
-            // Grid.get_parent().add(this.notifications)
         }
 
         // remove datemenu notifications
@@ -104,7 +109,7 @@ class ExtensionClass {
 
         // datemenu fix weather widget
         if (this.settings.get_boolean("datemenu-fix-weather-widget")) {
-            this.weatherFix = Main.panel.statusArea.dateMenu.menu.box.style_class
+            this.weatherFixBackupClass = Main.panel.statusArea.dateMenu.menu.box.style_class
             Main.panel.statusArea.dateMenu.menu.box.style_class += " qwreey-fixed-weather"
         }
 
@@ -164,6 +169,14 @@ class ExtensionClass {
             this.notifications.mediaSection.destroy()
             this.notifications = null
         }
+        if (this.boxBackupClass) {
+            box.style_class = this.boxBackupClass
+            this.boxBackupClass = null
+        }
+        if (this.gridBackupClass) {
+            Grid.style_class = this.gridBackupClass
+            this.gridBackupClass = null
+        }
 
         // destroy volumeMixer 
         if (this.volumeMixer) {
@@ -192,9 +205,10 @@ class ExtensionClass {
             this.dateMenuNotifications = null
         }
 
-        if (this.weatherFix) {
-            Main.panel.statusArea.dateMenu.menu.box.style_class = this.weatherFix
-            this.weatherFix = null
+        // restore weather fix
+        if (this.weatherFixBackupClass) {
+            Main.panel.statusArea.dateMenu.menu.box.style_class = this.weatherFixBackupClass
+            this.weatherFixBackupClass = null
         }
 
         // disconnect all events
