@@ -6,6 +6,7 @@ const Grid = Main.panel.statusArea.quickSettings.menu._grid
 const QuickSettings = Main.panel.statusArea.quickSettings
 const InputSliderName = "InputStreamSlider"
 const DateMenuMessageList = "CalendarMessageList"
+const { GLib } = imports.gi
 
 const { ButtonRemover } = Me.imports.buttonRemover
 const { VolumeMixer } = Me.imports.volumeMixer
@@ -117,7 +118,6 @@ class ExtensionClass {
         if (this.isEnabled("mediaControl")) {
             Grid.add_child(this.notifications.mediaSection)
             if (this.settings.get_boolean("media-control-compact-mode")) {
-                Main.media = this
                 this.notifications.mediaSection.style_class += " qwreey-media-compact-mode"
             }
             Grid.layout_manager.child_set_property(
@@ -170,6 +170,7 @@ class ExtensionClass {
             this.notifications = null
         }
         if (this.boxBackupClass) {
+            let box = QuickSettings.menu.box
             box.style_class = this.boxBackupClass
             this.boxBackupClass = null
         }
