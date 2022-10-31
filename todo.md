@@ -1,5 +1,2 @@
-
-노티피캐이션 텍스트를 유저가 바꿀 수 있도록 (직접 로컬라이징)
-기능마다 껏다 켰다 구현
-
-더 작은 미디어컨트롤
+add po file compiling for translate
+renew setting screen for more clear to see
