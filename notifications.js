@@ -7,7 +7,10 @@ var Notifications = GObject.registerClass(
         _init(options={}){
             super._init({
                 vertical: true,
-                style_class: 'popup-menu-content quick-settings qwreey-notifications'
+                style_class: 
+                    (options.integrated ? "" : "popup-menu-content quick-settings ")
+                    + (options.integrated ? "qwreey-notifications-integrated " : "")
+                    + 'qwreey-notifications'
                     + (options.dndSwitch ? " qwreey-notifications-with-dnd" : "")
             })
 
@@ -35,12 +38,26 @@ var Notifications = GObject.registerClass(
             this.list = messageList._scrollView
             this.list.get_parent().remove_child(this.list)
 
+            // header
             let headerBox = new St.BoxLayout()
-            let label = new St.Label({ text: _('Notifications'), y_align: Clutter.ActorAlign.CENTER })
-            label.style_class = "qwreey-notifications-title"
-            headerBox.add_child(label)
+            let titleLabel = new St.Label({ text: _('Notifications'), y_align: Clutter.ActorAlign.CENTER })
+            titleLabel.style_class = "qwreey-notifications-title"
+            headerBox.add_child(titleLabel)
             this.add_child(headerBox)
             this.add_child(this.list)
+
+            // no notifications text
+            let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
+            let noNotiLabel = new St.Label({
+                text: _("No Notifications"),
+                y_align: Clutter.ActorAlign.CENTER,
+                
+            })
+            noNotiBox.style_class = "qwreey-notifications-no-notifications-box"
+            noNotiLabel.style_class = "qwreey-notifications-no-notifications"
+            noNotiBox.add_child(noNotiLabel)
+            noNotiBox.hide()
+            this.add_child(noNotiBox)
 
             // dnd button
             if (options.dndSwitch) {
@@ -54,7 +71,7 @@ var Notifications = GObject.registerClass(
                 headerBox.add_child(this.clearButton)
             }
 
-            //sync notifications
+            // sync notifications
             let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
             let notifications = stockNotifications._messages
             notifications.forEach(n => {
@@ -62,11 +79,18 @@ var Notifications = GObject.registerClass(
                 this.notificationList.addMessage(notification)
             })
 
-            //hide on zero notifs
-            this.clearButton.connect('notify::reactive', () => {
-                this.clearButton.reactive ? this.show() : this.hide()
-            })
-            if(!this.clearButton.reactive) this.hide()
+            // show no notifications label
+            const updateNoNotifications = ()=>{
+                if (this.clearButton.reactive) {
+                    this.list.show()
+                    noNotiBox.hide()
+                } else {
+                    this.list.hide()
+                    noNotiBox.show()
+                }
+            }
+            this.clearButton.connect('notify::reactive', updateNoNotifications)
+            updateNoNotifications()
 
             this.connect('destroy', () => {
                 datemenu.destroy()

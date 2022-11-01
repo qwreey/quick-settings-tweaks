@@ -37,7 +37,8 @@ class ExtensionClass {
         }
         if (this.isEnabled("notifications") || this.isEnabled("mediaControl")) {
             this.notifications = new Notifications({
-                dndSwitch: this.settings.get_boolean("notifications-dnd-switch")
+                dndSwitch: this.settings.get_boolean("notifications-dnd-switch"),
+                integrated: this.settings.get_boolean("notifications-integrated")
             })
         }
         this.buttonRemover = new ButtonRemover()
@@ -47,6 +48,7 @@ class ExtensionClass {
     settingListenKeys = [
         "notifications-move-to-top",
         "notifications-dnd-switch",
+        "notifications-integrated",
         "datemenu-remove-notifications",
         "datemenu-fix-weather-widget",
         "media-control-compact-mode",
@@ -82,21 +84,6 @@ class ExtensionClass {
         // enable buttonRemover
         this.buttonRemover.enable(Grid)
 
-        // enable notifications
-        if (this.isEnabled("notifications")) {
-            let box = QuickSettings.menu.box
-            this.boxBackupClass = box.style_class
-            this.gridBackupClass = Grid.style_class
-            box.style_class = ""
-            Grid.style_class = "popup-menu-content quick-settings qwreey-quick-settings " + Grid.style_class
-            if (this.settings.get_boolean("notifications-move-to-top")) {
-                let quickSettingsModal = box.first_child
-                box.remove_child(quickSettingsModal)
-                box.add_child(this.notifications)
-                box.add_child(quickSettingsModal)
-            } else box.add_child(this.notifications)
-        }
-
         // remove datemenu notifications
         if (this.settings.get_boolean("datemenu-remove-notifications")) {
             this.dateMenuHolder = Main.panel.statusArea.dateMenu.menu.box.first_child.first_child
@@ -122,6 +109,43 @@ class ExtensionClass {
             Grid.layout_manager.child_set_property(
                 Grid, this.notifications.mediaSection, 'column-span', 2
             )
+        }
+
+        // enable notifications
+        if (this.isEnabled("notifications")) {
+            if (this.settings.get_boolean("notifications-integrated")) {
+                // integrated
+                // let box = QuickSettings.menu.box
+                // box.add_child(this.notifications)
+                Grid.add_child(this.notifications)
+                Grid.layout_manager.child_set_property(
+                    Grid, this.notifications, 'column-span', 2
+                )
+            } else {
+                // separated
+                let box = QuickSettings.menu.box
+                let actor = QuickSettings.menu.actor
+                let shutdownItem = box.first_child
+                    ?.get_children()?.find(i=>i.constructor?.name=="SystemItem")
+                    ?.first_child?.get_children()?.find(i=>i.constructor?.name=="ShutdownItem")
+                    ?.menu?.box?.get_parent()
+                this.qsBoxBackupClass = box.style_class
+                this.qsActorBackupClass = actor.style_class
+                this.gridBackupClass = Grid.style_class
+                box.style_class = ""
+                actor.style_class = "qwreey-panel-menu " + actor.style_class
+                Grid.style_class = Grid.style_class + " popup-menu-content quick-settings qwreey-quick-settings"
+                if (shutdownItem) {
+                    this.qsShutdownItemBackupClass = shutdownItem.style_class
+                    shutdownItem.style_class = "qwreey-quick-settings-shutdown-item " + shutdownItem.style_class
+                }
+                if (this.settings.get_boolean("notifications-move-to-top")) {
+                    let quickSettingsModal = box.first_child
+                    box.remove_child(quickSettingsModal)
+                    box.add_child(this.notifications)
+                    box.add_child(quickSettingsModal)
+                } else box.add_child(this.notifications)
+            }
         }
 
         // enable volumeMixer
@@ -168,10 +192,15 @@ class ExtensionClass {
             this.notifications.mediaSection.destroy()
             this.notifications = null
         }
-        if (this.boxBackupClass) {
+        if (this.qsBoxBackupClass) {
             let box = QuickSettings.menu.box
-            box.style_class = this.boxBackupClass
-            this.boxBackupClass = null
+            box.style_class = this.qsBoxBackupClass
+            this.qsBoxBackupClass = null
+        }
+        if (this.qsActorBackupClass) {
+            let actor = QuickSettings.menu.actor
+            actor.style_class = this.qsActorBackupClass
+            this.qsActorBackupClass = null
         }
         if (this.gridBackupClass) {
             Grid.style_class = this.gridBackupClass

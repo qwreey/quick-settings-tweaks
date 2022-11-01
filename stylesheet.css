@@ -19,12 +19,33 @@
 }
 .qwreey-notifications {
     /* notification box sizing */
-    padding: 12px 4px 16px 16px;
+    padding: 16px 4px 16px 16px;
     margin: 0px 12px;
     max-height: 292px;
 }
+.qwreey-notifications.qwreey-notifications-integrated {
+    /* integrated sizing */
+    padding: 0px !important;
+    margin: 4px 0px 0px 0px !important;
+}
+.qwreey-notifications-no-notifications {
+    /* no notifications text */
+    font-size: 1em;
+    margin: 22px;
+    width: 100%;
+}
+.qwreey-notifications.qwreey-notifications-integrated .qwreey-notifications-no-notifications {
+    margin: 16px !important;
+}
+.qwreey-notifications-no-notifications-box {
+    width: 100%;
+    margin-top: 6px;
+}
 .qwreey-notifications .message-list-sections {
     margin-right: 12px;
+}
+.qwreey-notifications.qwreey-notifications-integrated .message-list-sections {
+    margin-right: 0px;
 }
 .qwreey-notifications .message-list-clear-button {
     /* clear button */
@@ -40,6 +61,19 @@
 }
 .qwreey-quick-settings {
     margin: 12px 12px;
+}
+.qwreey-panel-menu .quick-toggle-menu-container {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+.qwreey-quick-settings-shutdown-item {
+    margin-top: 20px;
+}
+.qwreey-panel-menu .quick-toggle-menu {
+    margin: 0;
 }
 
 /* add dnd button */

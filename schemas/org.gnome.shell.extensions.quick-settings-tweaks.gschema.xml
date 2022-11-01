@@ -38,6 +38,9 @@
     <key name="notifications-dnd-switch" type="b">
       <default>true</default>
     </key>
+    <key name="notifications-integrated" type="b">
+      <default>true</default>
+    </key>
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
     </key>
