@@ -337,7 +337,7 @@ var notificationsPage = GObject.registerClass({
         })
         makeSwitch({
             parent: generalGroup,
-            title: "Move to top (Not work with Integrated mode)",
+            title: "Move to top (Not working with Integrated mode)",
             value: settings.get_boolean("notifications-move-to-top"),
             subtitle: "Move notification widget to top. quick settings panel will goes down\nThis feature will be useful if you use dash to panel",
             bind: [settings, "notifications-move-to-top"]
