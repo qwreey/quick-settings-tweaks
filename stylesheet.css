@@ -161,13 +161,3 @@
     padding-top: 0.2em !important;
     padding-bottom: 0.4em !important;
 }
-
-/* remove media control on date menu */
-.qwreey-date-menu-remove-media-control Gjs_ui_mpris_MediaMessage,
-.qwreey-date-menu-remove-media-control Gjs_ui_mpris_MediaSection {
-    display: none !important;
-    height: 0px !important;
-    margin: 0px !important;
-    spacing: 0px !important;
-    padding: 0px !important;
-}
