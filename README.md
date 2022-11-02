@@ -1,8 +1,6 @@
-<div style="display: flex;"><div style="width: 100%;">
+# Quick Settings Tweaker [<img src="images/quick-settings-tweaker.png" width="200px" align="right" alt="QuickSettings-Tweaker SkeletonUI">]("https://extensions.gnome.org/extension/5446/quick-settings-tweaker/")
 
-# Quick Settings Tweaker
-
-<div style="text-align: center;">
+<div align="center">
 
 ### Let's tweak Gnome 43 quick settings!
 
@@ -11,8 +9,8 @@
 Quick Settings Tweaker is a Gnome 43+ extension which allows you to customize the new Quick Settings Panel to your liking!
 
 </div>
-</div>
-<div style="width: 400px;"><img src="images/quick-settings-tweaker.png" alt="QuickSettings-Tweaker SkeletonUI"></div></div>
+<br>
+<br>
 
 ## Features
 
