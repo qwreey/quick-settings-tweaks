@@ -4,6 +4,7 @@ const PopupMenu = imports.ui.popupMenu;
 const Main = imports.ui.main
 const Grid = Main.panel.statusArea.quickSettings.menu._grid
 const QuickSettings = Main.panel.statusArea.quickSettings
+const DateMenu = Main.panel.statusArea.dateMenu
 const InputSliderName = "InputStreamSlider"
 const DateMenuMessageList = "CalendarMessageList"
 
@@ -52,6 +53,7 @@ class ExtensionClass {
         "datemenu-remove-notifications",
         "datemenu-fix-weather-widget",
         "media-control-compact-mode",
+        "datemenu-remove-media-control",
         "volume-mixer-move-to-bottom",
         "volume-mixer-filtered-apps",
         "volume-mixer-show-description",
@@ -84,20 +86,29 @@ class ExtensionClass {
         // enable buttonRemover
         this.buttonRemover.enable(Grid)
 
-        // remove datemenu notifications
-        if (this.settings.get_boolean("datemenu-remove-notifications")) {
-            this.dateMenuHolder = Main.panel.statusArea.dateMenu.menu.box.first_child.first_child
-            this.dateMenuNotifications =
-                this.dateMenuHolder.get_children()
-                .find(item=>item.constructor.name==DateMenuMessageList)
-            this.dateMenuHolder.remove_child(this.dateMenuNotifications)
-            Main.panel.statusArea.dateMenu.menu.box.style = "padding: 4px 6px 4px 0px;"
-        }
+        // remove datemenu mediaControl/notifications
+        this.dateMenuHolder = DateMenu.menu.box.first_child.first_child
+        this.dateMenuNotifications =
+            this.dateMenuHolder.get_children()
+            .find(item=>item.constructor.name==DateMenuMessageList)
+        if (this.settings.get_boolean("datemenu-remove-media-control")) {
+            // this.dateMenuBoxBackupClass = DateMenu.menu.box.style_class;
+            // DateMenu.menu.box.style_class = "qwreey-date-menu-remove-media-control " + DateMenu.menu.box.style_class
 
+            this.dateMenuMediaControl = this.dateMenuNotifications
+                .last_child.first_child.last_child.first_child
+            this.dateMenuMediaControl.get_parent().remove_child(this.dateMenuMediaControl)
+        }
+        if (this.settings.get_boolean("datemenu-remove-notifications")) {
+            this.dateMenuNotificationsRemoved = true
+            this.dateMenuHolder.remove_child(this.dateMenuNotifications)
+            DateMenu.menu.box.style = "padding: 4px 6px 4px 0px;"
+        }
+        
         // datemenu fix weather widget
         if (this.settings.get_boolean("datemenu-fix-weather-widget")) {
-            this.weatherFixBackupClass = Main.panel.statusArea.dateMenu.menu.box.style_class
-            Main.panel.statusArea.dateMenu.menu.box.style_class += " qwreey-fixed-weather"
+            this.weatherFixBackupClass = DateMenu.menu.box.style_class
+            DateMenu.menu.box.style_class += " qwreey-fixed-weather"
         }
 
         // enable media control
@@ -114,9 +125,6 @@ class ExtensionClass {
         // enable notifications
         if (this.isEnabled("notifications")) {
             if (this.settings.get_boolean("notifications-integrated")) {
-                // integrated
-                // let box = QuickSettings.menu.box
-                // box.add_child(this.notifications)
                 Grid.add_child(this.notifications)
                 Grid.layout_manager.child_set_property(
                     Grid, this.notifications, 'column-span', 2
@@ -202,10 +210,6 @@ class ExtensionClass {
             actor.style_class = this.qsActorBackupClass
             this.qsActorBackupClass = null
         }
-        if (this.gridBackupClass) {
-            Grid.style_class = this.gridBackupClass
-            this.gridBackupClass = null
-        }
 
         // destroy volumeMixer 
         if (this.volumeMixer) {
@@ -220,7 +224,7 @@ class ExtensionClass {
         }
 
         // restore date menu notifications
-        if (this.dateMenuNotifications) {
+        if (this.dateMenuNotificationsRemoved) {
             let children = this.dateMenuHolder.get_children()
             for (const item of children) {
                 this.dateMenuHolder.remove_child(item)
@@ -231,8 +235,28 @@ class ExtensionClass {
             }
             Main.panel.statusArea.dateMenu.menu.box.style = ""
             this.dateMenuHolder = null
-            this.dateMenuNotifications = null
+            this.dateMenuNotificationsRemoved = null
         }
+        if (this.dateMenuBoxBackupClass) {
+            DateMenu.menu.box.style_class = this.dateMenuBoxBackupClass
+            this.dateMenuBoxBackupClass = null
+        }
+
+        // restore date menu media control
+        if (this.dateMenuMediaControl) {
+            let list = this.dateMenuNotifications
+                .last_child.first_child.last_child
+            let listItems = list.get_children()
+            list.add_child(this.dateMenuMediaControl)
+            for (const item of listItems) {
+                list.remove_child(item)
+            }
+            for (const item of listItems) {
+                list.add_child(item)
+            }
+            this.dateMenuMediaControl = null
+        }
+        this.dateMenuNotifications = null
 
         // restore weather fix
         if (this.weatherFixBackupClass) {
