@@ -106,14 +106,14 @@ var volumeMixerPage = GObject.registerClass({
         makeRow({
             parent: descriptionGroup,
             title: "Add volume mixer (PulseAudio)",
-            subtitle: "Fork from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature tested on PulseAudio only, Pipewire isn't tested yet!"
+            subtitle: "Forked from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature has only been tested with PulseAudio, Pipewire hasn't been tested yet!"
         })
         let enabledFeatures = settings.get_strv("enabled-features")
         makeSwitch({
             parent: descriptionGroup,
             title: "Enabled",
             value: enabledFeatures.includes("volumeMixer"),
-            subtitle: "Whether volume mixer is visible",
+            subtitle: "Turn on to make the volume mixer visible",
             action: value=>{
                 enabledFeatures = settings.get_strv("enabled-features")
                 setFeatureEnabled(enabledFeatures,"volumeMixer",value)
@@ -129,7 +129,7 @@ var volumeMixerPage = GObject.registerClass({
         // move to bottom
         makeSwitch({
             title: 'Move to bottom',
-            subtitle: 'move to bottom of quick settings modal',
+            subtitle: 'Move to bottom of quick settings modal',
             value: this.settings.get_boolean('volume-mixer-move-to-bottom'),
             parent: generalGroup,
             bind: [this.settings, 'volume-mixer-move-to-bottom']
@@ -137,8 +137,8 @@ var volumeMixerPage = GObject.registerClass({
 
         // show-description
         makeSwitch({
-            title: 'Stream Description',
-            subtitle: 'Show audio stream description on slider',
+            title: 'Show stream Description',
+            subtitle: 'Show audio stream description above the slider',
             value: this.settings.get_boolean('volume-mixer-show-description'),
             parent: generalGroup,
             bind: [this.settings, 'volume-mixer-show-description']
@@ -146,8 +146,8 @@ var volumeMixerPage = GObject.registerClass({
 
         // show-icon
         makeSwitch({
-            title: 'Stream Icon',
-            subtitle: 'Show application icon on slider',
+            title: 'Show stream Icon',
+            subtitle: 'Show application icon in front of the slider',
             value: this.settings.get_boolean('volume-mixer-show-icon'),
             parent: generalGroup,
             bind: [this.settings, 'volume-mixer-show-icon']
@@ -156,14 +156,14 @@ var volumeMixerPage = GObject.registerClass({
         // Application filter settings group
         const filterGroup = new Adw.PreferencesGroup({
             title: 'Application Filtering',
-            description: 'Hide applications from the volume mixer.'
+            description: 'Filter applications shown in the volume mixer.'
         })
         this.add(filterGroup)
 
         // filter-mode
         const filterModeModel = new Gio.ListStore({ item_type: FilterMode })
-        filterModeModel.append(new FilterMode('Block', 'block'))
-        filterModeModel.append(new FilterMode('Allow', 'allow'))
+        filterModeModel.append(new FilterMode('Blacklist', 'block'))
+        filterModeModel.append(new FilterMode('Whitelist', 'allow'))
 
         const findCurrentFilterMode = () => {
             for (let i = 0; i < filterModeModel.get_n_items(); i++) {
@@ -316,7 +316,7 @@ var notificationsPage = GObject.registerClass({
             parent: descriptionGroup,
             title: "Enabled",
             value: enabledFeatures.includes("notifications"),
-            subtitle: "Whether notification widget is visible",
+            subtitle: "Turn on to make the notification widget visible",
             action: value=>{
                 enabledFeatures = settings.get_strv("enabled-features")
                 setFeatureEnabled(enabledFeatures,"notifications",value)
@@ -330,41 +330,41 @@ var notificationsPage = GObject.registerClass({
         this.add(generalGroup)
         makeSwitch({
             parent: generalGroup,
-            title: "Integrated popup",
+            title: "Attach to QS panel",
             value: settings.get_boolean("notifications-integrated"),
-            subtitle: "Do not separate popup quick settings and notifications, this is better option because separated popup make many visual bugs",
+            subtitle: "Do not separate Quick Settings and Notifications widgets, you should enable this option because separated panels can make many visual bugs",
             bind: [settings, "notifications-integrated"]
         })
         makeSwitch({
             parent: generalGroup,
-            title: "Move to top (Not working with Integrated mode)",
+            title: "Put above QS Panel (Doesn't work with 'Attach to QS panel' enabled)",
             value: settings.get_boolean("notifications-move-to-top"),
-            subtitle: "Move notification widget to top. quick settings panel will goes down\nThis feature will be useful if you use dash to panel",
+            subtitle: "Put the Notifications widget above the Quick Settings one.\nThis feature could be useful if you use Dash to Panel",
             bind: [settings, "notifications-move-to-top"]
         })
         makeSwitch({
             parent: generalGroup,
-            title: "Show dnd switch",
+            title: "Show DnD switch",
             value: settings.get_boolean("notifications-dnd-switch"),
-            subtitle: "Add dnd button on notification widget",
+            subtitle: "Add a DnD button on the notification widget",
             bind: [settings, "notifications-dnd-switch"]
         })
 
         // other
-        const otherGroup = new Adw.PreferencesGroup({ title: "Other" })
+        const otherGroup = new Adw.PreferencesGroup({ title: "Miscellaneous" })
         this.add(otherGroup)
         makeSwitch({
             parent: otherGroup,
-            title: "Remove Date Menu Notifications",
+            title: "Remove the Stock Notifications Center",
             value: settings.get_boolean("datemenu-remove-notifications"),
-            subtitle: "Hide date menu's notifications",
+            subtitle: "Hide the Notifications panel from the Stock Gnome Notifications Center",
             bind: [settings, "datemenu-remove-notifications"]
         })
         makeSwitch({
             parent: otherGroup,
             title: "Fix Weather Widget Overflow",
             value: settings.get_boolean("datemenu-fix-weather-widget"),
-            subtitle: "Fix date menu's weather widget overflow",
+            subtitle: "Fix the weather widget overflow in the Gnome Notifications Center",
             bind: [settings, "datemenu-fix-weather-widget"]
         })
     }
@@ -382,7 +382,7 @@ var mediaControlPage = GObject.registerClass({
         // group config
         super({
             name: 'mediaControl',
-            title: 'Media Control',
+            title: 'Media Controls',
             iconName: 'folder-music-symbolic'
         })
 
@@ -390,7 +390,7 @@ var mediaControlPage = GObject.registerClass({
         const descriptionGroup = new Adw.PreferencesGroup()
         makeRow({
             parent: descriptionGroup,
-            title: "Add media control widget",
+            title: "Add Media Controls widget",
             subtitle: "Reference from https://github.com/Aylur/gnome-extensions"
         })
         let enabledFeatures = settings.get_strv("enabled-features")
@@ -398,7 +398,7 @@ var mediaControlPage = GObject.registerClass({
             parent: descriptionGroup,
             title: "Enabled",
             value: enabledFeatures.includes("mediaControl"),
-            subtitle: "Whether notification widget is visible",
+            subtitle: "Turn on to make the notification widget visible",
             action: value=>{
                 enabledFeatures = settings.get_strv("enabled-features")
                 setFeatureEnabled(enabledFeatures,"mediaControl",value)
@@ -414,7 +414,7 @@ var mediaControlPage = GObject.registerClass({
             parent: generalGroup,
             title: "Compact Mode",
             value: settings.get_boolean("media-control-compact-mode"),
-            subtitle: "Make media control widget smaller",
+            subtitle: "Make Media Controls widget smaller",
             bind: [settings, "media-control-compact-mode"]
         })
     }
@@ -440,15 +440,15 @@ var buttonRemoverPage = GObject.registerClass({
         const descriptionGroup = new Adw.PreferencesGroup()
         makeRow({
             parent: descriptionGroup,
-            title: "Remove some buttons from quick panel",
+            title: "Remove chosen buttons from quick panel",
             subtitle: "Forked from https://github.com/qwreey75/gnome-quick-settings-button-remover"
         })
         this.add(descriptionGroup)
 
         // general
         const removeGroup = new Adw.PreferencesGroup({
-            title: 'Remove button',
-            description: 'List of button should be removed.'
+            title: 'Buttons to remove',
+            description: 'Turn on the buttons you want to remove from Quick Settings'
         })
         this.add(removeGroup)
 

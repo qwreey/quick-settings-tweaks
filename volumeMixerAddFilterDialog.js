@@ -13,7 +13,7 @@ var VolumeMixerAddFilterDialog = GObject.registerClass({
             destroy_with_parent: true,
             modal: true,
             resizable: false,
-            title: "Add Filtered Application"
+            title: "Add Application to filtering"
         })
 
         this.filterListData = filterListData
