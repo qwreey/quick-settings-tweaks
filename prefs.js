@@ -4,6 +4,7 @@ const Me = ExtensionUtils.getCurrentExtension()
 const { VolumeMixerAddFilterDialog } = Me.imports.volumeMixerAddFilterDialog
 
 const { Adw, Gio, Gtk, GObject } = imports.gi
+const baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
 
 function makeRow(options={parent: null,title: null, subtitle: null}) {
     const row = new Adw.ActionRow({
@@ -105,13 +106,13 @@ var volumeMixerPage = GObject.registerClass({
         const descriptionGroup = new Adw.PreferencesGroup()
         makeRow({
             parent: descriptionGroup,
-            title: "Add volume mixer (PulseAudio)",
-            subtitle: "Fork from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature tested on PulseAudio only, Pipewire isn't tested yet!"
+            title: "Add volume mixer (PulseAudio, Pipewire)",
+            subtitle: "Fork from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature works well PulseAudio and Pipewire"
         })
         let enabledFeatures = settings.get_strv("enabled-features")
         makeSwitch({
             parent: descriptionGroup,
-            title: "Enabled",
+            title: "Visible",
             value: enabledFeatures.includes("volumeMixer"),
             subtitle: "Whether volume mixer is visible",
             action: value=>{
@@ -129,7 +130,7 @@ var volumeMixerPage = GObject.registerClass({
         // move to bottom
         makeSwitch({
             title: 'Move to bottom',
-            subtitle: 'move to bottom of quick settings modal',
+            subtitle: 'Place volume mixer on bottom of quick settings modal',
             value: this.settings.get_boolean('volume-mixer-move-to-bottom'),
             parent: generalGroup,
             bind: [this.settings, 'volume-mixer-move-to-bottom']
@@ -289,7 +290,7 @@ var volumeMixerPage = GObject.registerClass({
 })
 
 var notificationsPage = GObject.registerClass({
-    GTypeName: 'notificationsPage',
+    GTypeName: baseGTypeName+'notificationsPage',
 }, class notificationsPage extends Adw.PreferencesPage {
     filterListData = []
     filteredAppsGroup
@@ -314,9 +315,9 @@ var notificationsPage = GObject.registerClass({
         let enabledFeatures = settings.get_strv("enabled-features")
         makeSwitch({
             parent: descriptionGroup,
-            title: "Enabled",
+            title: "Visible",
             value: enabledFeatures.includes("notifications"),
-            subtitle: "Whether notification widget is visible",
+            subtitle: "Whether notification widget on quick settings is visible",
             action: value=>{
                 enabledFeatures = settings.get_strv("enabled-features")
                 setFeatureEnabled(enabledFeatures,"notifications",value)
@@ -332,7 +333,7 @@ var notificationsPage = GObject.registerClass({
             parent: generalGroup,
             title: "Integrated popup",
             value: settings.get_boolean("notifications-integrated"),
-            subtitle: "Do not separate popup quick settings and notifications, this is better option because separated popup make many visual bugs",
+            subtitle: "Do not separate popup quick settings and notifications,\bthis is better option because separated popup make many visual bugs\n(such as margin, padding is not match with theme)",
             bind: [settings, "notifications-integrated"]
         })
         makeSwitch({
@@ -346,32 +347,25 @@ var notificationsPage = GObject.registerClass({
             parent: generalGroup,
             title: "Show dnd switch",
             value: settings.get_boolean("notifications-dnd-switch"),
-            subtitle: "Add dnd button on notification widget",
+            subtitle: "Add dnd switch on notification widget",
             bind: [settings, "notifications-dnd-switch"]
         })
 
         // other
-        const otherGroup = new Adw.PreferencesGroup({ title: "Other" })
-        this.add(otherGroup)
-        makeSwitch({
-            parent: otherGroup,
-            title: "Remove Date Menu Notifications",
-            value: settings.get_boolean("datemenu-remove-notifications"),
-            subtitle: "Hide date menu's notifications",
-            bind: [settings, "datemenu-remove-notifications"]
-        })
-        makeSwitch({
-            parent: otherGroup,
-            title: "Fix Weather Widget Overflow",
-            value: settings.get_boolean("datemenu-fix-weather-widget"),
-            subtitle: "Fix date menu's weather widget overflow",
-            bind: [settings, "datemenu-fix-weather-widget"]
-        })
+        // const otherGroup = new Adw.PreferencesGroup({ title: "Other" })
+        // this.add(otherGroup)
+        // makeSwitch({
+        //     parent: otherGroup,
+        //     title: "Remove Notifications On Date Menu",
+        //     value: settings.get_boolean("datemenu-remove-notifications"),
+        //     subtitle: "Hide notifications on date menu.\n*this option removes media control on date menu too*",
+        //     bind: [settings, "datemenu-remove-notifications"]
+        // })
     }
 })
 
 var mediaControlPage = GObject.registerClass({
-    GTypeName: 'mediaControlPage',
+    GTypeName: baseGTypeName+'mediaControlPage',
 }, class mediaControlPage extends Adw.PreferencesPage {
     filterListData = []
     filteredAppsGroup
@@ -396,9 +390,9 @@ var mediaControlPage = GObject.registerClass({
         let enabledFeatures = settings.get_strv("enabled-features")
         makeSwitch({
             parent: descriptionGroup,
-            title: "Enabled",
+            title: "Visible",
             value: enabledFeatures.includes("mediaControl"),
-            subtitle: "Whether notification widget is visible",
+            subtitle: "Whether media control widget on quick settings is visible",
             action: value=>{
                 enabledFeatures = settings.get_strv("enabled-features")
                 setFeatureEnabled(enabledFeatures,"mediaControl",value)
@@ -414,9 +408,16 @@ var mediaControlPage = GObject.registerClass({
             parent: generalGroup,
             title: "Compact Mode",
             value: settings.get_boolean("media-control-compact-mode"),
-            subtitle: "Make media control widget smaller",
+            subtitle: "Make media control widget smaller\nMake it more similar in size to the notification message",
             bind: [settings, "media-control-compact-mode"]
         })
+        // makeSwitch({
+        //     parent: otherGroup,
+        //     title: "Remove Media Control On Date Menu",
+        //     value: settings.get_boolean("datemenu-remove-media-control"),
+        //     subtitle: "Hide media control on date menu.",
+        //     bind: [settings, "datemenu-remove-media-control"]
+        // })
     }
 })
 
@@ -442,6 +443,11 @@ var buttonRemoverPage = GObject.registerClass({
             parent: descriptionGroup,
             title: "Remove some buttons from quick panel",
             subtitle: "Forked from https://github.com/qwreey75/gnome-quick-settings-button-remover"
+        })
+        makeRow({
+            parent: descriptionGroup,
+            title: "This feature is unstable sometime",
+            subtitle: "When lock/unlock with gnome-screensaver, unexpected behavior occurs; button doesn't remove"
         })
         this.add(descriptionGroup)
 
@@ -495,13 +501,63 @@ var buttonRemoverPage = GObject.registerClass({
     }
 })
 
-function fillPreferencesWindow(window) {
+var otherPage = GObject.registerClass({
+    GTypeName: baseGTypeName+'otherPage',
+}, class notificationsPage extends Adw.PreferencesPage {
+    filterListData = []
+    filteredAppsGroup
+    settings
+    addFilteredAppButtonRow
 
+    constructor(settings) {
+        // group config
+        super({
+            name: 'other',
+            title: 'Other',
+            iconName: 'non-starred-symbolic'
+        })
+
+        // description / enable
+        const group = new Adw.PreferencesGroup()
+        makeSwitch({
+            parent: group,
+            title: "Fix Weather Widget Overflow",
+            value: settings.get_boolean("datemenu-fix-weather-widget"),
+            subtitle: "Fix overflow visual bug of weather widget in datemenu",
+            bind: [settings, "datemenu-fix-weather-widget"]
+        })
+        makeSwitch({
+            parent: group,
+            title: "Remove Notifications On Date Menu",
+            value: settings.get_boolean("datemenu-remove-notifications"),
+            subtitle: "Hide notifications on date menu.\n*this option removes media control on date menu too*",
+            bind: [settings, "datemenu-remove-notifications"]
+        })
+        makeSwitch({
+            parent: group,
+            title: "Remove Media Control On Date Menu",
+            value: settings.get_boolean("datemenu-remove-media-control"),
+            subtitle: "Hide media control on date menu.",
+            bind: [settings, "datemenu-remove-media-control"]
+        })
+        this.add(group)
+    }
+})
+
+var pageList = [
+    volumeMixerPage,
+    notificationsPage,
+    mediaControlPage,
+    buttonRemoverPage,
+    otherPage
+]
+
+function fillPreferencesWindow(window) {
     let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
-    window.add(new volumeMixerPage(settings))
-    window.add(new notificationsPage(settings))
-    window.add(new mediaControlPage(settings))
-    window.add(new buttonRemoverPage(settings))
+    
+    for (const page of pageList) {
+        window.add(new page(settings))
+    }
 }
 
 function init() {

@@ -52,6 +52,9 @@
     <key name="media-control-compact-mode" type="b">
       <default>true</default>
     </key>
+    <key name="datemenu-remove-media-control" type="b">
+      <default>true</default>
+    </key>
 
     <!-- volume mixer -->
     <key name="volume-mixer-move-to-bottom" type="b">
