@@ -70,7 +70,6 @@ var Notifications = GObject.registerClass(
                     this.clearButton.show()
                 }
             };
-
             placeholder.connect('notify::visible', updateNoNotifications)
             updateNoNotifications()
 

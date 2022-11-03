@@ -29,6 +29,12 @@ var QuickTogglesManager = class QuickTogglesManager {
         if (quickSettingsBox) this.quickSettingsBox = quickSettingsBox
         this.settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
 
+        // Add DND Quick Toggle
+        const qs = imports.ui.main.panel.statusArea.quickSettings;
+        this._dndToggle = new Me.imports.quickToggles.DND.Indicator();
+        qs._indicators.add_child(this._dndToggle);
+        qs._addItems(this._dndToggle.quickSettingsItems);
+
         {
             let allButtons = []
             let buttonsLabel = {}
@@ -43,7 +49,6 @@ var QuickTogglesManager = class QuickTogglesManager {
             this.settings.set_strv("default-invisible-buttons",defaultInvisibleButtons)
             this.settings.set_string("button-labels",JSON.stringify(buttonsLabel))
         }
-
 
         let items; {
             items = this.settings.get_strv("user-removed-buttons")
@@ -65,5 +70,12 @@ var QuickTogglesManager = class QuickTogglesManager {
         this._unload()
         this.settings.disconnect(this._removedItemsConnection)
         this.settings = null
+
+        // Remove DND Quick Toggle
+        const dndQSItems = this._dndToggle.quickSettingsItems[0];
+        dndQSItems.get_parent().remove_child(dndQSItems);
+        this._dndToggle.get_parent().remove_child(this._dndToggle);
+        this._dndToggle.destroy();
+        this._dndToggle = null;
     }
 }

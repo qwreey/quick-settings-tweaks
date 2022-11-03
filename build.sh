@@ -14,6 +14,7 @@ cp streamSlider.js dist/$name/
 cp volumeMixer.js dist/$name/
 cp volumeMixerAddFilterDialog.js dist/$name/
 cp stylesheet.css dist/$name/
+cp -r quickToggles/ dist/$name/
 
 mkdir dist/$name/schemas
 cp schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml dist/$name/schemas/
