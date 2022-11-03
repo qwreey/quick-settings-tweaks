@@ -28,9 +28,16 @@ var Notifications = GObject.registerClass(
 
             // header
             let headerBox = new St.BoxLayout()
-            let titleLabel = new St.Label({ text: _('Notifications'), y_align: Clutter.ActorAlign.CENTER })
-            titleLabel.style_class = "qwreey-notifications-title"
+            let titleLabel = new St.Label({
+                text: _('Notifications'),
+                style_class: "qwreey-notifications-title",
+                y_align: Clutter.ActorAlign.CENTER,
+                x_align: Clutter.ActorAlign.START,
+                x_expand: true
+            })
             headerBox.add_child(titleLabel)
+            this.clearButton = new ClearNotificationsButton();
+            headerBox.add_child(this.clearButton);
             this.add_child(headerBox)
             this.add_child(this.list)
 
@@ -49,6 +56,23 @@ var Notifications = GObject.registerClass(
                 let notification = new Calendar.NotificationMessage(n.notification)
                 this.notificationList.addMessage(notification)
             })
+
+            // sync no-notification placeholder and clear button
+            const placeholder = Main.panel.statusArea.dateMenu._messageList._placeholder;
+            const updateNoNotifications = () => {
+                if (placeholder.visible) {
+                    this.list.hide()
+                    noNotiBox.show()
+                    this.clearButton.hide()
+                } else {
+                    this.list.show()
+                    noNotiBox.hide()
+                    this.clearButton.show()
+                }
+            };
+
+            placeholder.connect('notify::visible', updateNoNotifications)
+            updateNoNotifications()
 
             this.connect('destroy', () => {
                 datemenu.destroy()
@@ -76,5 +100,32 @@ class NoNotifPlaceholder extends St.BoxLayout {
             text: _('No Notifications')
         });
         this.add_child(this._label);
+    }
+});
+
+const ClearNotificationsButton = GObject.registerClass(
+class ClearNotificationsButton extends St.BoxLayout {
+    _init() {
+        super._init({
+            style_class: 'qwreey-notifications-clear-button',
+            reactive: true,
+            track_hover: true,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+
+        this._icon = new St.Icon({
+            icon_name: 'user-trash-symbolic',
+            icon_size: 12
+        });
+        this.add_child(this._icon);
+
+        this._label = new St.Label({ text: _('Clear') });
+        this.add_child(this._label);
+
+        this.connect('button-press-event', () => {
+            // Misuse GNOME's existing objects...
+            const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList;
+            messageList._sectionList.get_children().forEach(s => s.clear())
+        });
     }
 });

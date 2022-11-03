@@ -45,17 +45,11 @@
 .qwreey-notifications.qwreey-notifications-integrated .message-list-sections {
     margin-right: 0px;
 }
-.qwreey-notifications .message-list-clear-button {
-    /* clear button */
-    font-size: 0.87em;
-    padding: 3px 6px;
-    border-radius: 99px;
-    margin-right: 4px;
-}
 .qwreey-notifications .qwreey-notifications-title {
     /* notifications title */
     font-weight: bold;
     margin-left: 4px;
+    padding: 12px 0px;
 }
 .qwreey-quick-settings {
     margin: 12px 12px;
@@ -73,7 +67,16 @@
 .qwreey-panel-menu .quick-toggle-menu {
     margin: 0;
 }
-
+/* clear-notifications-button */
+.qwreey-notifications-clear-button {
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 8px;
+    spacing: 4px;
+}
+.qwreey-notifications-clear-button:hover {
+    background-color: rgba(127, 127, 127, .2);
+}
 /* media control on quick settings */
 .quick-settings .qwreey-media .message {
     /* margin / round */
