@@ -28,11 +28,9 @@
     padding: 0px !important;
     margin: 4px 0px 0px 0px !important;
 }
-.qwreey-notifications-no-notifications {
-    /* no notifications text */
-    font-size: 1em;
-    margin: 22px;
-    width: 100%;
+.qwreey-notifications-no-notifications-placeholder {
+    font-weight: bold;
+    margin: 24px;
 }
 .qwreey-notifications.qwreey-notifications-integrated .qwreey-notifications-no-notifications {
     margin: 16px !important;

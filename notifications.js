@@ -48,14 +48,9 @@ var Notifications = GObject.registerClass(
 
             // no notifications text
             let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
-            let noNotiLabel = new St.Label({
-                text: _("No Notifications"),
-                y_align: Clutter.ActorAlign.CENTER,
-                
-            })
             noNotiBox.style_class = "qwreey-notifications-no-notifications-box"
-            noNotiLabel.style_class = "qwreey-notifications-no-notifications"
-            noNotiBox.add_child(noNotiLabel)
+            const noNotiPlaceholder = new NoNotifPlaceholder();
+            noNotiBox.add_child(noNotiPlaceholder)
             noNotiBox.hide()
             this.add_child(noNotiBox)
 
@@ -99,3 +94,24 @@ var Notifications = GObject.registerClass(
         }
     }
 )
+
+const NoNotifPlaceholder = GObject.registerClass(
+class NoNotifPlaceholder extends St.BoxLayout {
+    _init() {
+        super._init({
+            style_class: 'qwreey-notifications-no-notifications-placeholder',
+            vertical: true,
+            opacity: 60
+        });
+
+        this._icon = new St.Icon({
+            icon_name: 'no-notifications-symbolic'
+        });
+        this.add_child(this._icon);
+
+        this._label = new St.Label({
+            text: _('No Notifications')
+        });
+        this.add_child(this._label);
+    }
+});
