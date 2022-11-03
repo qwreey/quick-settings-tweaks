@@ -11,23 +11,11 @@ var Notifications = GObject.registerClass(
                     (options.integrated ? "" : "popup-menu-content quick-settings ")
                     + (options.integrated ? "qwreey-notifications-integrated " : "")
                     + 'qwreey-notifications'
-                    + (options.dndSwitch ? " qwreey-notifications-with-dnd" : "")
             })
 
             let datemenu = new imports.ui.dateMenu.DateMenuButton()
             let messageList = datemenu._messageList
             this.notificationList = messageList._notificationSection
-
-            // notification buttons
-            this.dndSwitch = messageList._dndButton
-            this.clearButton = messageList._clearButton
-            {
-                let parent = this.clearButton.get_parent()
-                parent.remove_child(this.clearButton)
-                parent.remove_child(this.dndSwitch)
-                this.dndText = parent.first_child
-                parent.remove_child(this.dndText)
-            }
 
             // media controls
             this.mediaSection = messageList._mediaSection
@@ -54,18 +42,6 @@ var Notifications = GObject.registerClass(
             noNotiBox.hide()
             this.add_child(noNotiBox)
 
-            // dnd button
-            if (options.dndSwitch) {
-                let dndBox = new St.BoxLayout()
-                dndBox.style_class = "qwreey-notifications-dnd-box"
-                dndBox.add_child(this.dndText)
-                dndBox.add_child(this.dndSwitch)
-                dndBox.add_child(this.clearButton)
-                this.add_child(dndBox)
-            } else {
-                headerBox.add_child(this.clearButton)
-            }
-
             // sync notifications
             let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
             let notifications = stockNotifications._messages
@@ -73,19 +49,6 @@ var Notifications = GObject.registerClass(
                 let notification = new Calendar.NotificationMessage(n.notification)
                 this.notificationList.addMessage(notification)
             })
-
-            // show no notifications label
-            const updateNoNotifications = ()=>{
-                if (this.clearButton.reactive) {
-                    this.list.show()
-                    noNotiBox.hide()
-                } else {
-                    this.list.hide()
-                    noNotiBox.show()
-                }
-            }
-            this.clearButton.connect('notify::reactive', updateNoNotifications)
-            updateNoNotifications()
 
             this.connect('destroy', () => {
                 datemenu.destroy()
