@@ -421,8 +421,8 @@ var mediaControlPage = GObject.registerClass({
     }
 })
 
-var buttonRemoverPage = GObject.registerClass({
-    GTypeName: 'buttonRemoverPage',
+var quickTogglesManagerPage = GObject.registerClass({
+    GTypeName: 'quickTogglesManagerPage',
 }, class notificationsPage extends Adw.PreferencesPage {
     filterListData = []
     filteredAppsGroup
@@ -432,9 +432,9 @@ var buttonRemoverPage = GObject.registerClass({
     constructor(settings) {
         // group config
         super({
-            name: 'buttonRemover',
-            title: 'Button Remover',
-            iconName: 'edit-clear-all-symbolic'
+            name: 'quickTogglesManager',
+            title: 'Quick Toggles',
+            iconName: 'org.gnome.Settings-symbolic'
         })
 
         // description / enable
@@ -548,7 +548,7 @@ var pageList = [
     volumeMixerPage,
     notificationsPage,
     mediaControlPage,
-    buttonRemoverPage,
+    quickTogglesManagerPage,
     otherPage
 ]
 

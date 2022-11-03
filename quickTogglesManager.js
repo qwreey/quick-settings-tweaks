@@ -3,7 +3,7 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-var ButtonRemover = class ButtonRemover {
+var QuickTogglesManager = class QuickTogglesManager {
     constructor() {
         this.removedItems = []
         this.quickSettingsBox = imports.ui.main.panel.statusArea.quickSettings.menu.box.first_child

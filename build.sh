@@ -8,7 +8,7 @@ cp extension.js dist/$name/
 cp prefs.js dist/$name/
 cp metadata.json dist/$name/
 
-cp buttonRemover.js dist/$name/
+cp quickTogglesManager.js dist/$name/
 cp notifications.js dist/$name/
 cp streamSlider.js dist/$name/
 cp volumeMixer.js dist/$name/
