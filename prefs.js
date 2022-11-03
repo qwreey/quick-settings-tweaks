@@ -343,13 +343,6 @@ var notificationsPage = GObject.registerClass({
             subtitle: "Put the Notifications widget above the Quick Settings one.\nThis feature could be useful if you use Dash to Panel",
             bind: [settings, "notifications-move-to-top"]
         })
-        makeSwitch({
-            parent: generalGroup,
-            title: "Show DnD switch",
-            value: settings.get_boolean("notifications-dnd-switch"),
-            subtitle: "Add a DnD switch on the notification widget",
-            bind: [settings, "notifications-dnd-switch"]
-        })
 
         // other
         // const otherGroup = new Adw.PreferencesGroup({ title: "Other" })
