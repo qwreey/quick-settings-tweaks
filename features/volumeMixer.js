@@ -15,7 +15,7 @@ var volumeMixerFeature = class {
         let settings = this.settings
 
         // setup reloader
-        featureReloader.enableWithSettingIds(this,[
+        featureReloader.enableWithSettingKeys(this,[
             "volume-mixer-move-to-bottom",
             "volume-mixer-filtered-apps",
             "volume-mixer-show-description",
@@ -57,5 +57,6 @@ var volumeMixerFeature = class {
     unload() {
         // disable feature reloader
         featureReloader.disable(this)
+        this.volumeMixer.destroy()
     }
 }
