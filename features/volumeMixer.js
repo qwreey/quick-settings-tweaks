@@ -47,10 +47,13 @@ var volumeMixerFeature = class {
         if ((!settings.get_boolean("volume-mixer-move-to-bottom")) && inputSliderIndex) {
             addChildWithIndex(QuickSettingsGrid,this.volumeMixer.actor,inputSliderIndex)
         } else {
-            Grid.add_child(this.volumeMixer.actor);
+            // When 'move to bottom' enabled
+            QuickSettingsGrid.add_child(this.volumeMixer.actor);
         }
-        Grid.layout_manager.child_set_property(
-            Grid, this.volumeMixer.actor, 'column-span', 2
+
+        // Allow volume mixer taking 2 space
+        QuickSettingsGrid.layout_manager.child_set_property(
+            QuickSettingsGrid, this.volumeMixer.actor, 'column-span', 2
         )
     }
 
