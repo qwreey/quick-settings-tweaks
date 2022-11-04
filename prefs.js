@@ -113,13 +113,9 @@ var volumeMixerPage = GObject.registerClass({
         makeSwitch({
             parent: descriptionGroup,
             title: "Visible",
-            value: enabledFeatures.includes("volumeMixer"),
             subtitle: "Turn on to make the volume mixer visible",
-            action: value=>{
-                enabledFeatures = settings.get_strv("enabled-features")
-                setFeatureEnabled(enabledFeatures,"volumeMixer",value)
-                settings.set_strv("enabled-features",enabledFeatures)
-            }
+            value: settings.get_boolean("volume-mixer-enabled"),
+            bind: [settings, "volume-mixer-enabled"]
         })
         this.add(descriptionGroup)
 
@@ -316,13 +312,9 @@ var notificationsPage = GObject.registerClass({
         makeSwitch({
             parent: descriptionGroup,
             title: "Visible",
-            value: enabledFeatures.includes("notifications"),
             subtitle: "Turn on to make the notification widget visible on the Quick Settings panel",
-            action: value=>{
-                enabledFeatures = settings.get_strv("enabled-features")
-                setFeatureEnabled(enabledFeatures,"notifications",value)
-                settings.set_strv("enabled-features",enabledFeatures)
-            }
+            value: settings.get_boolean("notifications-enabled"),
+            bind: [settings, "notifications-enabled"]
         })
         this.add(descriptionGroup)
 
@@ -343,17 +335,6 @@ var notificationsPage = GObject.registerClass({
             subtitle: "Put the Notifications widget above the Quick Settings one.\nThis feature could be useful if you use Dash to Panel",
             bind: [settings, "notifications-move-to-top"]
         })
-
-        // other
-        // const otherGroup = new Adw.PreferencesGroup({ title: "Other" })
-        // this.add(otherGroup)
-        // makeSwitch({
-        //     parent: otherGroup,
-        //     title: "Remove Notifications On Date Menu",
-        //     value: settings.get_boolean("datemenu-remove-notifications"),
-        //     subtitle: "Hide notifications on date menu.\n*this option removes media control on date menu too*",
-        //     bind: [settings, "datemenu-remove-notifications"]
-        // })
     }
 })
 
@@ -384,13 +365,9 @@ var mediaControlPage = GObject.registerClass({
         makeSwitch({
             parent: descriptionGroup,
             title: "Visible",
-            value: enabledFeatures.includes("mediaControl"),
             subtitle: "Turn on to make the Media Control widget visible on the Quick Settings panel",
-            action: value=>{
-                enabledFeatures = settings.get_strv("enabled-features")
-                setFeatureEnabled(enabledFeatures,"mediaControl",value)
-                settings.set_strv("enabled-features",enabledFeatures)
-            }
+            value: settings.get_boolean("media-control-enabled"),
+            bind: [settings, "media-control-enabled"]
         })
         this.add(descriptionGroup)
 
@@ -404,13 +381,6 @@ var mediaControlPage = GObject.registerClass({
             subtitle: "Make Media Controls widget smaller\nMake it more similar in size to the notification message",
             bind: [settings, "media-control-compact-mode"]
         })
-        // makeSwitch({
-        //     parent: otherGroup,
-        //     title: "Remove Media Control On Date Menu",
-        //     value: settings.get_boolean("datemenu-remove-media-control"),
-        //     subtitle: "Hide media control on date menu.",
-        //     bind: [settings, "datemenu-remove-media-control"]
-        // })
     }
 })
 
@@ -430,8 +400,24 @@ var quickTogglesManagerPage = GObject.registerClass({
             iconName: 'org.gnome.Settings-symbolic'
         })
 
+        const newTogglesGroup = new Adw.PreferencesGroup({
+            title: 'Add more buttons',
+            description: 'Turn on the buttons you want to add on Quick Settings'
+        })
+        makeSwitch({
+            parent: newTogglesGroup,
+            title: "DND Quick Toggle",
+            subtitle: "Turn on to make the DND quick toggle visible on the Quick Settings panel",
+            value: settings.get_boolean("add-dnd-quick-toggle-enabled"),
+            bind: [settings, "add-dnd-quick-toggle-enabled"]
+        })
+        this.add(newTogglesGroup)
+
         // description / enable
-        const descriptionGroup = new Adw.PreferencesGroup()
+        const descriptionGroup = new Adw.PreferencesGroup({
+            title: 'Buttons to remove',
+            description: 'Turn on the buttons you want to remove from Quick Settings'
+        })
         makeRow({
             parent: descriptionGroup,
             title: "Remove chosen buttons from quick panel",
@@ -445,10 +431,7 @@ var quickTogglesManagerPage = GObject.registerClass({
         this.add(descriptionGroup)
 
         // general
-        const removeGroup = new Adw.PreferencesGroup({
-            title: 'Buttons to remove',
-            description: 'Turn on the buttons you want to remove from Quick Settings'
-        })
+        const removeGroup = new Adw.PreferencesGroup()
         this.add(removeGroup)
 
         let allButtons = settings.get_strv("list-buttons") || []
@@ -509,7 +492,7 @@ var otherPage = GObject.registerClass({
             title: 'Other',
             iconName: 'non-starred-symbolic'
         })
-
+        
         // description / enable
         const group = new Adw.PreferencesGroup()
         makeSwitch({

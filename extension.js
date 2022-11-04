@@ -9,8 +9,10 @@ function enable() {
 
     // load features
     loaded = [
+        new Features.dndQuickToggle.dndQuickToggleFeature(settings),
+        new Features.buttonRemover.buttonRemoverFeature(settings),
         new Features.notifications.notificationsFeature(settings),
-        new Features.volumeMixer.volumeMixerFeature(settings),
+        new Features.volumeMixer.volumeMixerFeature(settings)
         // new Features.other.otherFeature(settings)
         // new Features.buttonRemover.buttonRemoverFeature(settings),
     ]

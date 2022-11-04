@@ -109,7 +109,6 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
 
         this._control.disconnect(this._streamAddedEventId)
         this._control.disconnect(this._streamRemovedEventId)
-        // this.settings.disconnect(this._settingsChangedId)
         super.destroy()
     }
 }

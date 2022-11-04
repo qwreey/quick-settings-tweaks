@@ -29,8 +29,8 @@ var notificationsFeature = class {
         ])
 
         // check is feature enabled
-        let notificationsEnabled = featureReloader.checkFeatureEnabled(this,"notifications")
-        let mediaControlEnabled = featureReloader.checkFeatureEnabled(this,"mediaControl")
+        let notificationsEnabled = this.settings.get_boolean("notifications-enabled")
+        let mediaControlEnabled = this.settings.get_boolean("media-control-enabled")
         if ( !notificationsEnabled && !mediaControlEnabled ) return
 
         // Make notification handler
