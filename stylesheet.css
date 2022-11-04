@@ -30,7 +30,8 @@
 }
 .qwreey-notifications-no-notifications-placeholder {
     font-weight: bold;
-    margin: 24px;
+    margin: 18px;
+    spacing: 6px;
 }
 .qwreey-notifications.qwreey-notifications-integrated .qwreey-notifications-no-notifications {
     margin: 16px !important;

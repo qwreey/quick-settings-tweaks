@@ -90,14 +90,10 @@ class NoNotifPlaceholder extends St.BoxLayout {
             opacity: 60
         });
 
-        this._icon = new St.Icon({
-            icon_name: 'no-notifications-symbolic'
-        });
+        this._icon = new St.Icon({ icon_name: 'no-notifications-symbolic' });
         this.add_child(this._icon);
 
-        this._label = new St.Label({
-            text: _('No Notifications')
-        });
+        this._label = new St.Label({ text: _('No Notifications') });
         this.add_child(this._label);
     }
 });
