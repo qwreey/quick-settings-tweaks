@@ -10,7 +10,7 @@ const PopupMenu = imports.ui.popupMenu // https://gitlab.gnome.org/GNOME/gnome-s
 const Volume = imports.ui.status.volume // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
 
 var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
-    constructor() {
+    constructor(settings) {
         super()
         this._applicationStreams = {}
         this._applicationMenus = {}
@@ -19,17 +19,10 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         this._streamAddedEventId = this._control.connect("stream-added", this._streamAdded.bind(this))
         this._streamRemovedEventId = this._control.connect("stream-removed", this._streamRemoved.bind(this))
 
-        let gschema = SettingsSchemaSource.new_from_directory(
-            Me.dir.get_child('schemas').get_path(),
-            SettingsSchemaSource.get_default(),
-            false
-        )
-
-        this.settings = new Settings({
-            settings_schema: gschema.lookup(Me.metadata['settings-schema'], true)
-        })
-
-        // this._settingsChangedId = this.settings.connect('changed', () => this._updateStreams())
+        this._filteredApps = settings["volume-mixer-filtered-apps"]
+        this._filterMode = settings["volume-mixer-filter-mode"]
+        this._showStreamDesc = settings["volume-mixer-show-description"]
+        this._showStreamIcon = settings["volume-mixer-show-icon"]
 
         this._updateStreams()
     }
@@ -101,11 +94,6 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
             this._applicationStreams[id].destroy()
             delete this._applicationMenus[id]
         }
-        
-        this._filteredApps = this.settings.get_strv("volume-mixer-filtered-apps")
-        this._filterMode = this.settings.get_string("volume-mixer-filter-mode")
-        this._showStreamDesc = this.settings.get_boolean("volume-mixer-show-description")
-        this._showStreamIcon = this.settings.get_boolean("volume-mixer-show-icon")
 
         for (const stream of this._control.get_streams()) {
             this._streamAdded(this._control, stream.get_id())

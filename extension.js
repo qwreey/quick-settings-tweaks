@@ -2,34 +2,23 @@ const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 const Libs = Me.imports.libs
 const Features = Me.imports.features
+var loaded
 
 // handling extension
-var ExtensionGlobal
 function enable() {
-    // provide widely used things
-    ExtensionGlobal = {
-        settings: ExtensionUtils.getSettings(Me.metadata['settings-schema']),
-
-        // libs
-        gnome: Libs.gnome,
-        lang: Libs.lang,
-        featureReloader: Libs.featureReloader,
-        libs: Libs
-    }
+    let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
 
     // load features
-    let featureList = [
-        new Features.notifications.notificationsFeature(ExtensionGlobal),
-        new Features.buttonRemover.buttonRemoverFeature(ExtensionGlobal),
-        new Features.volumeMixer.volumeMixerFeature(ExtensionGlobal)
+    loaded = [
+        new Features.notifications.notificationsFeature(settings),
+        new Features.buttonRemover.buttonRemoverFeature(settings),
+        new Features.volumeMixer.volumeMixerFeature(settings)
     ]
-    for (const feature of featureList) feature.load()
-    ExtensionGlobal.loaded = featureList
+    for (const feature of loaded) feature.load()
 }
 
 function disable() {
-    if (!ExtensionGlobal) return
-    for (const feature of ExtensionGlobal.loaded) {
-        feature.unload()
-    }
+    if (!loaded) return
+    for (const feature of loaded) feature.unload()
+    loaded = null
 }
