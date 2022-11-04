@@ -2,7 +2,7 @@ const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
 const featureReloader = Me.imports.libs.featureReloader
-const { VolumeMixer } = Me.imports.libs.volumeMixer
+const { VolumeMixer } = Me.imports.libs.volumeMixerHandler
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 const { addChildWithIndex } = Me.imports.libs.utility
 
@@ -16,7 +16,7 @@ var volumeMixerFeature = class {
 
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
-            "enabled-features",
+            "volume-mixer-enabled",
             "volume-mixer-move-to-bottom",
             "volume-mixer-filtered-apps",
             "volume-mixer-show-description",

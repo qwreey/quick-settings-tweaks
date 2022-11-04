@@ -3,7 +3,7 @@ const Me = ExtensionUtils.getCurrentExtension()
 
 const featureReloader = Me.imports.libs.featureReloader
 const { QuickSettings } = Me.imports.libs.gnome
-const { Indicator } = Me.imports.libs.dndQuickToogle
+const { Indicator } = Me.imports.libs.dndQuickToogleHandler
 
 var dndQuickToggleFeature = class {
     constructor(settings) {
@@ -13,7 +13,7 @@ var dndQuickToggleFeature = class {
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
-            "enabled-features"
+            "add-dnd-quick-toggle-enabled"
         ])
 
         // check is feature enabled

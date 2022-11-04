@@ -21,10 +21,11 @@ var notificationsFeature = class {
 
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
-            "enabled-features",
+            "notifications-enabled",
             "notifications-move-to-top",
             "notifications-dnd-switch",
             "notifications-integrated",
+            "media-control-enabled",
             "media-control-compact-mode",
         ])
 

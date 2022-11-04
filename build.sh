@@ -9,7 +9,7 @@ cp extension.js dist/$name/
 cp prefs.js dist/$name/
 cp metadata.json dist/$name/
 cp stylesheet.css dist/$name/
-cp -r quickToggles/ dist/$name/
+cp -r prefPages/ dist/$name/
 cp -r features/ dist/$name/
 cp -r libs/ dist/$name/
 
