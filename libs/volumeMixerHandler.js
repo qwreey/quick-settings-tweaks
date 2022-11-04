@@ -71,9 +71,9 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
             sliderBox.remove_child(lastObj)
             sliderBox.add(slider._vbox)
             
-            slider._label = new Label()
-            slider._label.style = "padding-left: 6px; font-size: 0.92em;"
-            slider._label.text = name && this._showStreamDesc ? `${name} - ${description}` : (name || description)
+            slider._label = new Label({ x_expand: true })
+            slider._label.style_class = "QSTWEAKS-volume-mixer-label"
+            slider._label.text = name && this._showStreamDesc ? `${name} - ${description}asdfasdfsadfsadfsadfasdfsadfasdfasdfasdasfd` : (name || description)
             slider._vbox.add(slider._label)
             slider._vbox.add(sliderObj)
         }
