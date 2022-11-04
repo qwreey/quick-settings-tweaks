@@ -16,6 +16,7 @@ var volumeMixerFeature = class {
 
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
+            "enabled-features",
             "volume-mixer-move-to-bottom",
             "volume-mixer-filtered-apps",
             "volume-mixer-show-description",

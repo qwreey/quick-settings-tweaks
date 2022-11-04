@@ -4,13 +4,9 @@ const Calendar = imports.ui.calendar;
 
 var Notifications = GObject.registerClass(
     class Notifications extends St.BoxLayout{
-        _init(options={}){
+        _init(){
             super._init({
                 vertical: true,
-                style_class: 
-                    (options.integrated ? "" : "popup-menu-content quick-settings ")
-                    + (options.integrated ? "qwreey-notifications-integrated " : "")
-                    + 'qwreey-notifications'
             })
 
             let datemenu = new imports.ui.dateMenu.DateMenuButton()
@@ -20,7 +16,6 @@ var Notifications = GObject.registerClass(
             // media controls
             this.mediaSection = messageList._mediaSection
             this.mediaSection.get_parent().remove_child(this.mediaSection)
-            this.mediaSection.style_class += " qwreey-media"
 
             // notification list scroll
             this.list = messageList._scrollView
@@ -30,7 +25,7 @@ var Notifications = GObject.registerClass(
             let headerBox = new St.BoxLayout()
             let titleLabel = new St.Label({
                 text: _('Notifications'),
-                style_class: "qwreey-notifications-title",
+                style_class: "QSTWEAKS-notifications-title",
                 y_align: Clutter.ActorAlign.CENTER,
                 x_align: Clutter.ActorAlign.START,
                 x_expand: true
@@ -56,7 +51,7 @@ var Notifications = GObject.registerClass(
 
             // no notifications text
             let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
-            noNotiBox.style_class = "qwreey-notifications-no-notifications-box"
+            noNotiBox.style_class = "QSTWEAKS-notifications-no-notifications-box"
             const noNotiPlaceholder = new NoNotifPlaceholder();
             noNotiBox.add_child(noNotiPlaceholder)
             noNotiBox.hide()

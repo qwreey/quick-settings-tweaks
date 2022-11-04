@@ -1,111 +1,111 @@
 /* notifications */
-.qwreey-notifications .message-content {
+.QSTWEAKS-notifications .message-content {
     /* notification text sizing */
     font-size: 0.9em;
     text-overflow: ellipsis;
     width: 110px;
 }
-.qwreey-notifications .message-list-section-list,
-.qwreey-notifications .message-list-sections {
+.QSTWEAKS-notifications .message-list-section-list,
+.QSTWEAKS-notifications .message-list-sections {
     /* scrolling list margin/padding/spacing */
     margin: 0px;
     spacing: 0px;
     padding: 0px;
 }
-.qwreey-notifications .message {
+.QSTWEAKS-notifications .message {
     /* message margin / round */
     margin: 6px 0px 2px 0px;
     border-radius: 18px;
 }
-.qwreey-notifications {
+.QSTWEAKS-notifications {
     /* notification box sizing */
     padding: 16px 4px 16px 16px;
     margin: 0px 12px;
     max-height: 292px;
 }
-.qwreey-notifications.qwreey-notifications-integrated {
+.QSTWEAKS-notifications.QSTWEAKS-notifications-integrated {
     /* integrated sizing */
     padding: 0px !important;
     margin: 4px 0px 0px 0px !important;
 }
-.qwreey-notifications-no-notifications-placeholder {
+.QSTWEAKS-notifications-no-notifications-placeholder {
     font-weight: bold;
     margin: 18px;
     spacing: 6px;
 }
-.qwreey-notifications.qwreey-notifications-integrated .qwreey-notifications-no-notifications {
+.QSTWEAKS-notifications.QSTWEAKS-notifications-integrated .QSTWEAKS-notifications-no-notifications {
     margin: 16px !important;
 }
-.qwreey-notifications-no-notifications-box {
+.QSTWEAKS-notifications-no-notifications-box {
     width: 100%;
     margin-top: 6px;
 }
-.qwreey-notifications .message-list-sections {
+.QSTWEAKS-notifications .message-list-sections {
     margin-right: 12px;
 }
-.qwreey-notifications.qwreey-notifications-integrated .message-list-sections {
+.QSTWEAKS-notifications.QSTWEAKS-notifications-integrated .message-list-sections {
     margin-right: 0px;
 }
-.qwreey-notifications .qwreey-notifications-title {
+.QSTWEAKS-notifications .QSTWEAKS-notifications-title {
     /* notifications title */
     font-weight: bold;
     margin-left: 4px;
     padding: 12px 0px;
 }
-.qwreey-quick-settings {
+.QSTWEAKS-quick-settings {
     margin: 12px 12px;
 }
-.qwreey-panel-menu .quick-toggle-menu-container {
+.QSTWEAKS-panel-menu .quick-toggle-menu-container {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 20px;
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
-.qwreey-quick-settings-shutdown-item {
+.QSTWEAKS-quick-settings-shutdown-item {
     margin-top: 20px;
 }
-.qwreey-panel-menu .quick-toggle-menu {
+.QSTWEAKS-panel-menu .quick-toggle-menu {
     margin: 0;
 }
 /* clear-notifications-button */
-.qwreey-notifications-clear-button {
+.QSTWEAKS-notifications-clear-button {
     font-weight: bold;
     padding: 6px 12px;
     border-radius: 8px;
     spacing: 4px;
 }
-.qwreey-notifications-clear-button:hover {
+.QSTWEAKS-notifications-clear-button:hover {
     background-color: rgba(127, 127, 127, .2);
 }
 /* media control on quick settings */
-.quick-settings .qwreey-media .message {
+.quick-settings .QSTWEAKS-media .message {
     /* margin / round */
     margin: 2px 0px 0px 0px;
     border-radius: 22px;
     padding: 0px;
     width: 100px;
 }
-.quick-settings .qwreey-media .message-content {
+.quick-settings .QSTWEAKS-media .message-content {
     /* text sizing */
     font-size: 0.89em;
     text-overflow: ellipsis;
     width: 60px;
 }
-.quick-settings .qwreey-media .message-media-control {
+.quick-settings .QSTWEAKS-media .message-media-control {
     /* control button sizing */
     padding-left: 5px;
     padding-right: 5px;
 }
 
 /* media control compact */
-.qwreey-media-compact-mode .message-icon-bin {
+.QSTWEAKS-media-compact-mode .message-icon-bin {
     padding: 0px;
 }
-.qwreey-media-compact-mode .message {
+.QSTWEAKS-media-compact-mode .message {
     margin: 0px;
 }
-.qwreey-media-compact-mode .media-message-cover-icon {
+.QSTWEAKS-media-compact-mode .media-message-cover-icon {
     background-color: transparent;
     padding: 0px;
     margin: 16px 0px 0px 12px;
@@ -113,27 +113,27 @@
 }
 
 /* weather box overflow fix */
-.qwreey-fixed-weather .weather-button {
+.QSTWEAKS-fixed-weather .weather-button {
     margin-bottom: 6px !important;
 }
-.qwreey-fixed-weather .weather-button .weather-box {
+.QSTWEAKS-fixed-weather .weather-button .weather-box {
     spacing: 7px;
 }
-.qwreey-fixed-weather .weather-button .weather-header-box {
+.QSTWEAKS-fixed-weather .weather-button .weather-header-box {
     spacing: 4px;
 }
-.qwreey-fixed-weather .weather-button .weather-header.location {
+.QSTWEAKS-fixed-weather .weather-button .weather-header.location {
     font-weight: normal !important;
     font-size: 9pt !important;
 }
-.qwreey-fixed-weather .weather-button .weather-grid {
+.QSTWEAKS-fixed-weather .weather-button .weather-grid {
     spacing-rows: 4px !important;
     spacing-columns: 8px !important;
 }
-.qwreey-fixed-weather .weather-button .weather-forecast-icon {
+.QSTWEAKS-fixed-weather .weather-button .weather-forecast-icon {
     icon-size: 32px !important;
 }
-.qwreey-fixed-weather .weather-button .weather-forecast-time {
+.QSTWEAKS-fixed-weather .weather-button .weather-forecast-time {
     font-size: 8pt !important;
     font-weight: normal !important;
     padding-top: 0.2em !important;

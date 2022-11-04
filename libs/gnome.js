@@ -16,6 +16,11 @@ var QuickSettings = Main.panel.statusArea.quickSettings
 var QuickSettingsGrid = QuickSettings.menu._grid
 var QuickSettingsBox =  QuickSettings.menu.box
 var QuickSettingsActor = QuickSettings.menu.actor
+var QuickSettingsShutdownMenuBox =
+    QuickSettingsBox.first_child
+    ?.get_children()?.find(i=>i.constructor?.name=="SystemItem")
+    ?.first_child?.get_children()?.find(i=>i.constructor?.name=="ShutdownItem")
+    ?.menu?.box
 
 // Date Menu
 var DateMenu = Main.panel.statusArea.dateMenu
