@@ -3,7 +3,7 @@
     /* notification text sizing */
     font-size: 0.9em;
     text-overflow: ellipsis;
-    width: 110px;
+    width: 0px;
 }
 .QSTWEAKS-notifications .message-list-section-list,
 .QSTWEAKS-notifications .message-list-sections {
@@ -76,6 +76,7 @@
     border-radius: 8px;
     spacing: 4px;
 }
+/* .QSTWEAKS-adjust-border-radius */
 .QSTWEAKS-notifications-clear-button:hover {
     background-color: rgba(127, 127, 127, .2);
 }
@@ -92,7 +93,7 @@
     /* text sizing */
     font-size: 0.89em;
     text-overflow: ellipsis;
-    width: 60px;
+    width: 0px;
 }
 .quick-settings .QSTWEAKS-media .message-media-control {
     /* control button sizing */

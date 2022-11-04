@@ -107,12 +107,13 @@ class NoNotifPlaceholder extends St.BoxLayout {
 });
 
 const ClearNotificationsButton = GObject.registerClass(
-class ClearNotificationsButton extends St.BoxLayout {
+class ClearNotificationsButton extends St.Button {
     _init() {
         super._init({
-            style_class: 'qwreey-notifications-clear-button',
+            style_class: 'QSTWEAKS-notifications-clear-button',
             reactive: true,
             track_hover: true,
+            can_focus: true,
             y_align: Clutter.ActorAlign.CENTER,
         });
 
@@ -125,7 +126,7 @@ class ClearNotificationsButton extends St.BoxLayout {
         this._label = new St.Label({ text: _('Clear') });
         this.add_child(this._label);
 
-        this.connect('button-press-event', () => {
+        this.connect('clicked', () => {
             // Misuse GNOME's existing objects...
             const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList;
             messageList._sectionList.get_children().forEach(s => s.clear())
