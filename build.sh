@@ -8,12 +8,13 @@ cp extension.js dist/$name/
 cp prefs.js dist/$name/
 cp metadata.json dist/$name/
 
-cp buttonRemover.js dist/$name/
+cp quickTogglesManager.js dist/$name/
 cp notifications.js dist/$name/
 cp streamSlider.js dist/$name/
 cp volumeMixer.js dist/$name/
 cp volumeMixerAddFilterDialog.js dist/$name/
 cp stylesheet.css dist/$name/
+cp -r quickToggles/ dist/$name/
 
 mkdir dist/$name/schemas
 cp schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml dist/$name/schemas/

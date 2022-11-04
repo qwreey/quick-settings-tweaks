@@ -8,7 +8,7 @@ const DateMenu = Main.panel.statusArea.dateMenu
 const InputSliderName = "InputStreamSlider"
 const DateMenuMessageList = "CalendarMessageList"
 
-const { ButtonRemover } = Me.imports.buttonRemover
+const { QuickTogglesManager } = Me.imports.quickTogglesManager
 const { VolumeMixer } = Me.imports.volumeMixer
 const { Notifications } = Me.imports.notifications
 
@@ -42,7 +42,7 @@ class ExtensionClass {
                 integrated: this.settings.get_boolean("notifications-integrated")
             })
         }
-        this.buttonRemover = new ButtonRemover()
+        this.quickTogglesManager = new QuickTogglesManager()
     }
 
     // reload when setting was changed
@@ -83,8 +83,8 @@ class ExtensionClass {
     load() {
         this.init()
 
-        // enable buttonRemover
-        this.buttonRemover.enable(Grid)
+        // enable quickTogglesManager
+        this.quickTogglesManager.enable(Grid)
 
         // remove datemenu mediaControl/notifications
         this.dateMenuHolder = DateMenu.menu.box.first_child.first_child
@@ -217,10 +217,10 @@ class ExtensionClass {
             this.volumeMixer = null
         }
 
-        // destroy buttonRemover
-        if (this.buttonRemover) {
-            this.buttonRemover.destroy()
-            this.buttonRemover = null
+        // destroy quickTogglesManager
+        if (this.quickTogglesManager) {
+            this.quickTogglesManager.destroy()
+            this.quickTogglesManager = null
         }
 
         // restore date menu notifications

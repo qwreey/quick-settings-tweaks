@@ -11,23 +11,11 @@ var Notifications = GObject.registerClass(
                     (options.integrated ? "" : "popup-menu-content quick-settings ")
                     + (options.integrated ? "qwreey-notifications-integrated " : "")
                     + 'qwreey-notifications'
-                    + (options.dndSwitch ? " qwreey-notifications-with-dnd" : "")
             })
 
             let datemenu = new imports.ui.dateMenu.DateMenuButton()
             let messageList = datemenu._messageList
             this.notificationList = messageList._notificationSection
-
-            // notification buttons
-            this.dndSwitch = messageList._dndButton
-            this.clearButton = messageList._clearButton
-            {
-                let parent = this.clearButton.get_parent()
-                parent.remove_child(this.clearButton)
-                parent.remove_child(this.dndSwitch)
-                this.dndText = parent.first_child
-                parent.remove_child(this.dndText)
-            }
 
             // media controls
             this.mediaSection = messageList._mediaSection
@@ -40,9 +28,16 @@ var Notifications = GObject.registerClass(
 
             // header
             let headerBox = new St.BoxLayout()
-            let titleLabel = new St.Label({ text: _('Notifications'), y_align: Clutter.ActorAlign.CENTER })
-            titleLabel.style_class = "qwreey-notifications-title"
+            let titleLabel = new St.Label({
+                text: _('Notifications'),
+                style_class: "qwreey-notifications-title",
+                y_align: Clutter.ActorAlign.CENTER,
+                x_align: Clutter.ActorAlign.START,
+                x_expand: true
+            })
             headerBox.add_child(titleLabel)
+            this.clearButton = new ClearNotificationsButton();
+            headerBox.add_child(this.clearButton);
             this.add_child(headerBox)
             this.add_child(this.list)
 
@@ -54,18 +49,6 @@ var Notifications = GObject.registerClass(
             noNotiBox.hide()
             this.add_child(noNotiBox)
 
-            // dnd button
-            if (options.dndSwitch) {
-                let dndBox = new St.BoxLayout()
-                dndBox.style_class = "qwreey-notifications-dnd-box"
-                dndBox.add_child(this.dndText)
-                dndBox.add_child(this.dndSwitch)
-                dndBox.add_child(this.clearButton)
-                this.add_child(dndBox)
-            } else {
-                headerBox.add_child(this.clearButton)
-            }
-
             // sync notifications
             let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
             let notifications = stockNotifications._messages
@@ -74,17 +57,20 @@ var Notifications = GObject.registerClass(
                 this.notificationList.addMessage(notification)
             })
 
-            // show no notifications label
-            const updateNoNotifications = ()=>{
-                if (this.clearButton.reactive) {
-                    this.list.show()
-                    noNotiBox.hide()
-                } else {
+            // sync no-notification placeholder and clear button
+            const placeholder = Main.panel.statusArea.dateMenu._messageList._placeholder;
+            const updateNoNotifications = () => {
+                if (placeholder.visible) {
                     this.list.hide()
                     noNotiBox.show()
+                    this.clearButton.hide()
+                } else {
+                    this.list.show()
+                    noNotiBox.hide()
+                    this.clearButton.show()
                 }
-            }
-            this.clearButton.connect('notify::reactive', updateNoNotifications)
+            };
+            placeholder.connect('notify::visible', updateNoNotifications)
             updateNoNotifications()
 
             this.connect('destroy', () => {
@@ -104,14 +90,37 @@ class NoNotifPlaceholder extends St.BoxLayout {
             opacity: 60
         });
 
+        this._icon = new St.Icon({ icon_name: 'no-notifications-symbolic' });
+        this.add_child(this._icon);
+
+        this._label = new St.Label({ text: _('No Notifications') });
+        this.add_child(this._label);
+    }
+});
+
+const ClearNotificationsButton = GObject.registerClass(
+class ClearNotificationsButton extends St.BoxLayout {
+    _init() {
+        super._init({
+            style_class: 'qwreey-notifications-clear-button',
+            reactive: true,
+            track_hover: true,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+
         this._icon = new St.Icon({
-            icon_name: 'no-notifications-symbolic'
+            icon_name: 'user-trash-symbolic',
+            icon_size: 12
         });
         this.add_child(this._icon);
 
-        this._label = new St.Label({
-            text: _('No Notifications')
-        });
+        this._label = new St.Label({ text: _('Clear') });
         this.add_child(this._label);
+
+        this.connect('button-press-event', () => {
+            // Misuse GNOME's existing objects...
+            const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList;
+            messageList._sectionList.get_children().forEach(s => s.clear())
+        });
     }
 });
