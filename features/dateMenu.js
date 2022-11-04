@@ -62,7 +62,14 @@ var dateMenuFeature = class {
 
         // restore notifications to date menu
         if (this.dateMenuNotificationsRemoved) {
+            let children = DateMenuHolder.get_children()
+            for (const item of children) {
+                DateMenuHolder.remove_child(item)
+            }
             DateMenuHolder.add_child(DateMenuNotifications)
+            for (const item of children) {
+                DateMenuHolder.add_child(item)
+            }
             DateMenuBox.style = ""
             this.dateMenuNotificationsRemoved = null
         }
