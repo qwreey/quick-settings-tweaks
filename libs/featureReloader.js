@@ -1,6 +1,6 @@
 
-function checkFeatureEnabled(featureName) {
-    return this.settings
+function checkFeatureEnabled(feature,featureName) {
+    return feature.settings
         .get_strv("enabled-features")
         .includes(featureName)
 }

@@ -1,11 +1,11 @@
 // this module exports many useful functions
 // for simplify main codes
 
-function addChildWithIndex(parent,child,index) {
+function addChildWithIndex(parent,child,addIndex) {
     let children = parent.get_children()
     let tmp = []
     let tmp_visible = []
-    for (let index = index+1; index<children.length; index++) {
+    for (let index = addIndex+1; index<children.length; index++) {
         let item = children[index]
         tmp.push(item)
         tmp_visible.push(item.visible)

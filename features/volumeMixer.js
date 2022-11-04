@@ -24,7 +24,7 @@ var volumeMixerFeature = class {
         ])
 
         // check is feature enabled
-        if (!featureReloader.checkFeatureEnabled("volumeMixer")) return
+        if (!featureReloader.checkFeatureEnabled(this,"volumeMixer")) return
 
         // Make volume mixer
         this.volumeMixer = new VolumeMixer({
