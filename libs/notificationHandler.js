@@ -1,6 +1,6 @@
-const { GObject, St, Clutter } = imports.gi;
+const { GObject, St, Clutter } = imports.gi
 const Main = imports.ui.main
-const Calendar = imports.ui.calendar;
+const Calendar = imports.ui.calendar
 
 var Notifications = GObject.registerClass(
     class Notifications extends St.BoxLayout{
@@ -22,7 +22,7 @@ var Notifications = GObject.registerClass(
             this.list.get_parent().remove_child(this.list)
 
             // header
-            let headerBox = new St.BoxLayout()
+            let headerBox = new St.BoxLayout({ style_class: "QSTWEAKS-notifications-header" })
             let titleLabel = new St.Label({
                 text: _('Notifications'),
                 style_class: "QSTWEAKS-notifications-title",
@@ -31,8 +31,8 @@ var Notifications = GObject.registerClass(
                 x_expand: true
             })
             headerBox.add_child(titleLabel)
-            this.clearButton = new ClearNotificationsButton();
-            headerBox.add_child(this.clearButton);
+            this.clearButton = new ClearNotificationsButton()
+            headerBox.add_child(this.clearButton)
             this.add_child(headerBox)
             this.add_child(this.list)
 
@@ -52,7 +52,7 @@ var Notifications = GObject.registerClass(
             // no notifications text
             let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
             noNotiBox.style_class = "QSTWEAKS-notifications-no-notifications-box"
-            const noNotiPlaceholder = new NoNotifPlaceholder();
+            const noNotiPlaceholder = new NoNotifPlaceholder()
             noNotiBox.add_child(noNotiPlaceholder)
             noNotiBox.hide()
             this.add_child(noNotiBox)
@@ -66,7 +66,7 @@ var Notifications = GObject.registerClass(
             })
 
             // sync no-notification placeholder and clear button
-            const placeholder = Main.panel.statusArea.dateMenu._messageList._placeholder;
+            const placeholder = Main.panel.statusArea.dateMenu._messageList._placeholder
             const updateNoNotifications = () => {
                 if (placeholder.visible) {
                     this.list.hide()
@@ -77,7 +77,7 @@ var Notifications = GObject.registerClass(
                     noNotiBox.hide()
                     this.clearButton.show()
                 }
-            };
+            }
             placeholder.connect('notify::visible', updateNoNotifications)
             updateNoNotifications()
 
@@ -93,43 +93,53 @@ const NoNotifPlaceholder = GObject.registerClass(
 class NoNotifPlaceholder extends St.BoxLayout {
     _init() {
         super._init({
-            style_class: 'qwreey-notifications-no-notifications-placeholder',
+            style_class: 'QSTWEAKS-notifications-no-notifications-placeholder',
             vertical: true,
             opacity: 60
-        });
+        })
 
-        this._icon = new St.Icon({ icon_name: 'no-notifications-symbolic' });
-        this.add_child(this._icon);
+        this._icon = new St.Icon({
+            style_class: 'QSTWEAKS-notifications-no-notifications-placeholder-icon',
+            icon_name: 'no-notifications-symbolic'
+        })
+        this.add_child(this._icon)
 
-        this._label = new St.Label({ text: _('No Notifications') });
-        this.add_child(this._label);
+        this._label = new St.Label({ text: _('No Notifications') })
+        this.add_child(this._label)
     }
-});
+})
 
 const ClearNotificationsButton = GObject.registerClass(
 class ClearNotificationsButton extends St.Button {
     _init() {
+        let container = new St.BoxLayout({
+            x_expand: true,
+            y_expand: true,
+        })
+
         super._init({
             style_class: 'QSTWEAKS-notifications-clear-button',
+            button_mask: St.ButtonMask.ONE,
+            child: container,
             reactive: true,
-            track_hover: true,
             can_focus: true,
             y_align: Clutter.ActorAlign.CENTER,
-        });
+        })
 
         this._icon = new St.Icon({
+            style_class: 'QSTWEAKS-notifications-clear-button-icon',
             icon_name: 'user-trash-symbolic',
             icon_size: 12
-        });
-        this.add_child(this._icon);
+        })
+        container.add_child(this._icon)
 
-        this._label = new St.Label({ text: _('Clear') });
-        this.add_child(this._label);
+        this._label = new St.Label({ text: _('Clear') })
+        container.add_child(this._label)
 
         this.connect('clicked', () => {
             // Misuse GNOME's existing objects...
-            const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList;
+            const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList
             messageList._sectionList.get_children().forEach(s => s.clear())
-        });
+        })
     }
-});
+})

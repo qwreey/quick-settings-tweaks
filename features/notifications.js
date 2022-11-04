@@ -39,7 +39,7 @@ var notificationsFeature = class {
         this.notificationHandler = new Notifications()
         this.notificationHandler.style_class =
             (isIntegrated ? "" : "popup-menu-content quick-settings ")
-            + (isIntegrated ? "QSTWEAKS-notifications-integrated " : "")
+            + (isIntegrated ? "QSTWEAKS-notifications-integrated " : "QSTWEAKS-notifications-separated ")
             + 'QSTWEAKS-notifications'
 
         // Insert media control
@@ -85,20 +85,20 @@ var notificationsFeature = class {
 
                 this.actorBackupClass = QuickSettingsActor.style_class
                 QuickSettingsActor.style_class =
-                    "QSTWEAKS-panel-menu "
+                    "QSTWEAKS-panel-menu-separated "
                     + QuickSettingsActor.style_class
 
                 this.gridBackupClass = QuickSettingsGrid.style_class
                 QuickSettingsGrid.style_class =
                     QuickSettingsGrid.style_class
-                    + " popup-menu-content quick-settings QSTWEAKS-quick-settings"
+                    + " popup-menu-content quick-settings QSTWEAKS-quick-settings-separated"
 
                 // Move shutdown menu box to proper position
                 let shutdownMenuHolder = QuickSettingsShutdownMenuBox.get_parent()
                 if (shutdownMenuHolder) {
                     this.shutdownBackupClass = shutdownMenuHolder.style_class
                     shutdownMenuHolder.style_class =
-                        "QSTWEAKS-quick-settings-shutdown-item "
+                        "QSTWEAKS-quick-settings-separated-shutdown-item "
                         + shutdownMenuHolder.style_class
                 }
 
