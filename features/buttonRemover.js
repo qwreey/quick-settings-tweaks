@@ -19,12 +19,13 @@ var buttonRemoverFeature = class {
         for (let index=0; index<boxItems.length; index++) {
             let item = boxItems[index]
             let name = item.constructor.name.toString()
-            if (name && item.visible && items.includes(name)) {
+            if (name && item.visible && items.includes(name) && name!="Clutter_Actor") {
                 item.visible = false
                 this.removedItems.push(item)
+                // THIS CODE MAKE GNOME SHELL CRASH WHEN EXTENSION UNLOADED
                 this.visibleListeners.push([item,
                     item.connect("notify::visible",()=>{
-                        this._unapply(); this._apply()
+                        this._unapply(); this._apply(items)
                     })
                 ])
             }
@@ -35,6 +36,10 @@ var buttonRemoverFeature = class {
             this.removedItems[index].visible = true
         }
         this.removedItems = []
+        for (const connection of this.visibleListeners) {
+            connection[0].disconnect(connection[1])
+        }
+        this.visibleListeners = []
     }
     load() {
         {
@@ -72,12 +77,5 @@ var buttonRemoverFeature = class {
         this._unapply()
         this.settings.disconnect(this._removedItemsConnection)
         this.settings = null
-
-        // Remove DND Quick Toggle
-        const dndQSItems = this._dndToggle.quickSettingsItems[0];
-        dndQSItems.get_parent().remove_child(dndQSItems);
-        this._dndToggle.get_parent().remove_child(this._dndToggle);
-        this._dndToggle.destroy();
-        this._dndToggle = null;
     }
 }

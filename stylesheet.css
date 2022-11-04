@@ -39,6 +39,7 @@
 .QSTWEAKS-notifications-no-notifications-box {
     width: 100%;
     margin-top: 6px;
+    margin-bottom: 6px;
 }
 .QSTWEAKS-notifications .message-list-sections {
     margin-right: 12px;
@@ -50,7 +51,7 @@
     /* notifications title */
     font-weight: bold;
     margin-left: 4px;
-    padding: 12px 0px;
+    padding: 6px 0px;
 }
 .QSTWEAKS-quick-settings {
     margin: 12px 12px;

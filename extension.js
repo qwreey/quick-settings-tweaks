@@ -12,9 +12,8 @@ function enable() {
         new Features.dndQuickToggle.dndQuickToggleFeature(settings),
         new Features.buttonRemover.buttonRemoverFeature(settings),
         new Features.notifications.notificationsFeature(settings),
-        new Features.volumeMixer.volumeMixerFeature(settings)
-        // new Features.other.otherFeature(settings)
-        // new Features.buttonRemover.buttonRemoverFeature(settings),
+        new Features.volumeMixer.volumeMixerFeature(settings),
+        new Features.dateMenu.dateMenuFeature(settings)
     ]
     for (const feature of loaded) feature.load()
 }

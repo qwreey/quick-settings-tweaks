@@ -24,6 +24,7 @@ var QuickSettingsShutdownMenuBox =
 
 // Date Menu
 var DateMenu = Main.panel.statusArea.dateMenu
+var DateMenuBox = DateMenu.menu.box
 var DateMenuHolder = DateMenu.menu.box.first_child.first_child
 var DateMenuNotifications =
     DateMenuHolder.get_children()
