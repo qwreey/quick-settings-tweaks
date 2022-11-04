@@ -57,7 +57,22 @@ var notificationsFeature = class {
         // Insert notifications
         if (notificationsEnabled) {
             if (this.settings.get_boolean("notifications-integrated")) {
-                QuickSettingsGrid.add_child(this.notificationHandler)
+                // get system item index
+                let gridChildren = QuickSettingsGrid.get_children()
+                let systemItemIndex = null
+                for (let index = 0; index<gridChildren.length; index++) {
+                    if (gridChildren[index]?.constructor?.name == "SystemItem") {
+                        systemItemIndex = index
+                    }
+                }
+
+                // Insert notification modal
+                if (this.settings.get_boolean("notifications-move-to-top") && (systemItemIndex != null)) {
+                    // insert on top
+                    addChildWithIndex(QuickSettingsGrid,this.notificationHandler,systemItemIndex)
+                } else {
+                    QuickSettingsGrid.add_child(this.notificationHandler)
+                }
                 QuickSettingsGrid.layout_manager.child_set_property(
                     QuickSettingsGrid, this.notificationHandler, 'column-span', 2
                 )
@@ -79,7 +94,7 @@ var notificationsFeature = class {
 
                 // Move shutdown menu box to proper position
                 let shutdownMenuHolder = QuickSettingsShutdownMenuBox.get_parent()
-                if (shutdownItem) {
+                if (shutdownMenuHolder) {
                     this.shutdownBackupClass = shutdownMenuHolder.style_class
                     shutdownMenuHolder.style_class =
                         "QSTWEAKS-quick-settings-shutdown-item "
@@ -118,6 +133,10 @@ var notificationsFeature = class {
         if (this.gridBackupClass) {
             QuickSettingsGrid.style_class = this.gridBackupClass
             this.gridBackupClass = null
+        }
+        if (this.shutdownBackupClass) {
+            QuickSettingsShutdownMenuBox.get_parent().style_class = this.shutdownBackupClass
+            this.shutdownBackupClass = null
         }
     }
 }
