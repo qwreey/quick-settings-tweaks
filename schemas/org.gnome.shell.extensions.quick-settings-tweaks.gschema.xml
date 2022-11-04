@@ -30,13 +30,13 @@
       <default>true</default>
     </key>
     <key name="volume-mixer-enabled" type="b">
-      <defult>true</defult>
+      <default>true</default>
     </key>
     <key name="notifications-enabled" type="b">
-      <defult>true</defult>
+      <default>true</default>
     </key>
     <key name="media-control-enabled" type="b">
-      <defult>true</defult>
+      <default>true</default>
     </key>
 
     <!-- notifications -->
