@@ -18,7 +18,9 @@ var dateMenuFeature = class {
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
-            "add-dnd-quick-toggle-enabled"
+            "datemenu-remove-media-control",
+            "datemenu-remove-notifications",
+            "datemenu-fix-weather-widget"
         ])
 
         // remove media control from date menu
