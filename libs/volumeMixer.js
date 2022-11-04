@@ -1,6 +1,6 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
-const { StreamSlider } = Me.imports.streamSlider
+const { StreamSlider } = Me.imports.libs.streamSlider
 
 const { BoxLayout, Label } = imports.gi.St
 const { Settings, SettingsSchemaSource } = imports.gi.Gio

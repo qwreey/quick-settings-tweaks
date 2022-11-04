@@ -41,6 +41,19 @@ var Notifications = GObject.registerClass(
             this.add_child(headerBox)
             this.add_child(this.list)
 
+            // Add "System Default Style DND Switch Option" in Settings
+            // dnd button
+            // if (options.dndSwitch) {
+            //     let dndBox = new St.BoxLayout()
+            //     dndBox.style_class = "qwreey-notifications-dnd-box"
+            //     dndBox.add_child(this.dndText)
+            //     dndBox.add_child(this.dndSwitch)
+            //     dndBox.add_child(this.clearButton)
+            //     this.add_child(dndBox)
+            // } else {
+            //     headerBox.add_child(this.clearButton)
+            // }
+
             // no notifications text
             let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
             noNotiBox.style_class = "qwreey-notifications-no-notifications-box"
