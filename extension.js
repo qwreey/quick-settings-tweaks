@@ -1,6 +1,5 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
-const Libs = Me.imports.libs
 const Features = Me.imports.features
 var loaded
 
@@ -10,8 +9,8 @@ function enable() {
 
     // load features
     loaded = [
-        new Features.notifications.notificationsFeature(settings),
-        new Features.buttonRemover.buttonRemoverFeature(settings),
+        // new Features.notifications.notificationsFeature(settings),
+        // new Features.buttonRemover.buttonRemoverFeature(settings),
         new Features.volumeMixer.volumeMixerFeature(settings)
     ]
     for (const feature of loaded) feature.load()

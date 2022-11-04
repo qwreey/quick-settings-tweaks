@@ -1,6 +1,5 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
-const Libs = Me.imports.libs
 
 const featureReloader = Me.imports.libs.featureReloader
 const { VolumeMixer } = Me.imports.libs.volumeMixer
