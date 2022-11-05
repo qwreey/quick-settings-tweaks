@@ -51,7 +51,7 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
 
         const slider = new StreamSlider(Volume.getMixerControl())
         slider.stream = stream
-        slider.style = "margin: 8px 0px 0px 0px !important;"
+        slider.style_class = slider.style_class + " QSTWEAKS-volume-mixer-slider"
         this._applicationStreams[id] = slider
         if (this._showStreamIcon) {
             slider._icon.icon_name = stream.get_icon_name()

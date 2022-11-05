@@ -55,6 +55,9 @@
     <key name="notifications-use-native-controls" type="b">
       <default>false</default>
     </key>
+    <key name="notifications-hide-when-no-notifications" type="b">
+      <default>true</default>
+    </key>
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
     </key>

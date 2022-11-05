@@ -59,6 +59,13 @@ var notificationsPage = GObject.registerClass({
         })
         makeSwitch({
             parent: generalGroup,
+            title: "Auto Hide",
+            value: settings.get_boolean("notifications-hide-when-no-notifications"),
+            subtitle: "Hide the Notifications widget when have no notifications",
+            bind: [settings, "notifications-hide-when-no-notifications"]
+        })
+        makeSwitch({
+            parent: generalGroup,
             title: "Use native controls",
             value: settings.get_boolean("notifications-use-native-controls"),
             subtitle: "Use native dnd switch and clear button",

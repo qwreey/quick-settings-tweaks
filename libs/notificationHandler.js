@@ -6,6 +6,7 @@ var Notifications = GObject.registerClass(
     class Notifications extends St.BoxLayout{
         _init(options){
             let useNativeControls = options.useNativeControls
+            let hideWhenNoNotifications = options.hideWhenNoNotifications
 
             super._init({
                 vertical: true,
@@ -57,11 +58,12 @@ var Notifications = GObject.registerClass(
                     parent.remove_child(this.nativeDndText)
                 }
 
-                let dndBox = new St.BoxLayout()
-                dndBox.add_child(this.nativeDndText)
-                dndBox.add_child(this.nativeDndSwitch)
-                dndBox.add_child(this.nativeClearButton)
-                this.add_child(dndBox)
+                let nativeControlBox = new St.BoxLayout()
+                nativeControlBox.add_child(this.nativeDndText)
+                nativeControlBox.add_child(this.nativeDndSwitch)
+                nativeControlBox.add_child(this.nativeClearButton)
+                this.nativeControlBox = nativeControlBox
+                this.add_child(nativeControlBox)
             } else {
                 this.clearButton = new ClearNotificationsButton()
                 this.clearButton.connect("clicked",()=>{
@@ -84,10 +86,12 @@ var Notifications = GObject.registerClass(
                     this.list.show()
                     noNotiBox.hide()
                     if (this.clearButton) this.clearButton.show()
+                    if (hideWhenNoNotifications) this.show()
                 } else {
                     this.list.hide()
                     noNotiBox.show()
                     if (this.clearButton) this.clearButton.hide()
+                    if (hideWhenNoNotifications) this.hide()
                 }
             }
             this.nativeClearButton.connect('notify::reactive', updateNoNotifications)
@@ -145,13 +149,9 @@ class ClearNotificationsButton extends St.Button {
         })
         container.add_child(this._icon)
 
-        this._label = new St.Label({ text: _('Clear') })
+        this._label = new St.Label({
+            text: _('Clear')
+        })
         container.add_child(this._label)
-
-        // this.connect('clicked', () => {
-        //     // Misuse GNOME's existing objects...
-        //     const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList
-        //     messageList._sectionList.get_children().forEach(s => s.clear())
-        // })
     }
 })

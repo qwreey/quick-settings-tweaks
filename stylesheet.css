@@ -14,16 +14,17 @@
         .QSTWEAKS-notifications .QSTWEAKS-notifications-title {
             /* notifications title */
             font-weight: bold;
+            font-size: 0.98em;
             margin-left: 4px;
-            padding: 6px 0px 8px 0px;
+            padding: 2px 0px 6px 0px;
         }
         /* clear button */
             .QSTWEAKS-notifications-clear-button {
                 /* clear-notifications-button */
                 font-weight: bold;
-                padding: 6px 4px;
+                font-size: 0.98em;
+                padding: 4px 4px;
                 border-radius: 8px;
-                spacing: 4px;
                 margin-right: 4px;
             }
             .QSTWEAKS-notifications-clear-button:hover {
@@ -36,30 +37,27 @@
 
     /* use native controls */
         .QSTWEAKS-notifications-use-native-controls .QSTWEAKS-notifications-title {
-            padding: 6px 0px 4px 0px;
+            padding: 0px 0px 6px 0px;
         }
         /* dnd switch */
-        .qwreey-notifications-with-dnd .dnd-button {
+        .QSTWEAKS-notifications-native-dnd-switch {
             margin-bottom: 0px;
             height: 20px;
         }
-        .qwreey-notifications-with-dnd .qwreey-notifications-dnd-box StLabel {
+        .QSTWEAKS-notifications-native-dnd-text {
             font-size: 0.92em;
-            margin-right: 8px;
+            margin-right: 4px;
             margin-bottom: 0px;
         }
-        .qwreey-notifications-with-dnd .message-list-clear-button {
-            margin-right: 8px;
+        .QSTWEAKS-notifications-native-clear-button {
+            font-size: 0.92em;
+            padding: 4px 4px;
         }
-        .qwreey-notifications.qwreey-notifications-with-dnd {
-            padding-bottom: 10px;
+        .QSTWEAKS-notifications-use-native-controls {
+            padding-bottom: 0px;
         }
-        .qwreey-notifications-with-dnd .qwreey-notifications-dnd-box {
-            margin-top: 6px;
-            padding: 0px 4px;
-        }
-        .qwreey-notifications-with-dnd .qwreey-notifications-title {
-            margin-bottom: 4px;
+        .QSTWEAKS-notifications-native-control-box {
+            padding: 8px 4px 0px 4px;
         }
 
     /* scrolling list margin/padding/spacing */    
@@ -193,6 +191,9 @@
         font-size: 0.92em;
         text-overflow: ellipsis;
         width: 0px;
+    }
+    .QSTWEAKS-volume-mixer-slider {
+        margin: 4px 0px;
     }
 
 /* .QSTWEAKS-adjust-border-radius */

@@ -41,7 +41,8 @@ var notificationsFeature = class {
         // Make notification handler
         let isIntegrated = settings.get_boolean("notifications-integrated")
         this.notificationHandler = new Notifications({
-            useNativeControls: this.settings.get_boolean("notifications-use-native-controls")
+            useNativeControls: nativeControls,
+            hideWhenNoNotifications: this.settings.get_boolean("notifications-hide-when-no-notifications")
         })
         this.notificationHandler.style_class =
             // If separated, style as popup menu
@@ -72,9 +73,14 @@ var notificationsFeature = class {
 
         // Insert Native DND Switch
         if (nativeControls && notificationsEnabled) {
-            this.notificationHandler.nativeClearButton
-            this.notificationHandler.nativeDndSwitch
-            this.notificationHandler.nativeDndText
+            this.notificationHandler.nativeClearButton.style_class
+            += " QSTWEAKS-notifications-native-clear-button"
+            this.notificationHandler.nativeDndSwitch.style_class
+            += " QSTWEAKS-notifications-native-dnd-switch"
+            this.notificationHandler.nativeDndText.style_class
+            += " QSTWEAKS-notifications-native-dnd-text"
+            this.notificationHandler.nativeControlBox.style_class
+            = " QSTWEAKS-notifications-native-control-box"
         }
 
         // Insert notifications
