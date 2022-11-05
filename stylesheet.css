@@ -15,10 +15,7 @@
             /* notifications title */
             font-weight: bold;
             margin-left: 4px;
-            padding: 6px 0px;
-        }
-        .QSTWEAKS-notifications .QSTWEAKS-notifications-header {
-            margin-bottom: 8px;
+            padding: 6px 0px 8px 0px;
         }
         /* clear button */
             .QSTWEAKS-notifications-clear-button {
@@ -36,6 +33,34 @@
             .QSTWEAKS-notifications-clear-button-icon {
                 margin-right: 4px;
             }
+
+    /* use native controls */
+        .QSTWEAKS-notifications-use-native-controls .QSTWEAKS-notifications-title {
+            padding: 6px 0px 4px 0px;
+        }
+        /* dnd switch */
+        .qwreey-notifications-with-dnd .dnd-button {
+            margin-bottom: 0px;
+            height: 20px;
+        }
+        .qwreey-notifications-with-dnd .qwreey-notifications-dnd-box StLabel {
+            font-size: 0.92em;
+            margin-right: 8px;
+            margin-bottom: 0px;
+        }
+        .qwreey-notifications-with-dnd .message-list-clear-button {
+            margin-right: 8px;
+        }
+        .qwreey-notifications.qwreey-notifications-with-dnd {
+            padding-bottom: 10px;
+        }
+        .qwreey-notifications-with-dnd .qwreey-notifications-dnd-box {
+            margin-top: 6px;
+            padding: 0px 4px;
+        }
+        .qwreey-notifications-with-dnd .qwreey-notifications-title {
+            margin-bottom: 4px;
+        }
 
     /* scrolling list margin/padding/spacing */    
         .QSTWEAKS-notifications .message-list-section-list,
@@ -56,35 +81,35 @@
         }
 
     /* integrated */
-        .QSTWEAKS-notifications.QSTWEAKS-notifications-integrated {
+        .QSTWEAKS-notifications-integrated {
             /* sizing */
-            padding: 0px !important;
-            margin: 4px 0px 0px 0px !important;
+            padding: 0px;
+            margin: 4px 0px 0px 0px;
         }
         /* notifications */
-            .QSTWEAKS-notifications.QSTWEAKS-notifications-integrated .QSTWEAKS-notifications-no-notifications-placeholder {
+            .QSTWEAKS-notifications-integrated .QSTWEAKS-notifications-no-notifications-placeholder {
                 /* notifications placeholder */
-                margin: 10px 0px !important;
+                margin: 10px 0px;
             }
-            .QSTWEAKS-notifications.QSTWEAKS-notifications-integrated .message-list-sections {
+            .QSTWEAKS-notifications-integrated .message-list-sections {
                 margin-right: 0px;
             }
 
     /* separated */
-        .QSTWEAKS-notifications.QSTWEAKS-notifications-separated .QSTWEAKS-notifications-clear-button {
+        .QSTWEAKS-notifications-separated .QSTWEAKS-notifications-clear-button {
             margin-right: 18px;
         }
-        .QSTWEAKS-notifications.QSTWEAKS-notifications-separated {
+        .QSTWEAKS-notifications-separated {
             padding: 16px 4px 16px 16px;
             margin: 6px 12px 6px 12px;
         }
         .QSTWEAKS-quick-settings-separated {
             margin: 6px 12px 6px 12px;
         }
-        .QSTWEAKS-notifications.QSTWEAKS-notifications-separated .QSTWEAKS-notifications-no-notifications-placeholder {
+        .QSTWEAKS-notifications-separated .QSTWEAKS-notifications-no-notifications-placeholder {
             margin: 16px 0px;
         }
-        .QSTWEAKS-notifications.QSTWEAKS-notifications-separated .message-list-sections {
+        .QSTWEAKS-notifications-separated .message-list-sections {
             margin-right: 12px;
         }
         /* Fix menu margin bugs */
@@ -106,7 +131,6 @@
     .quick-settings .QSTWEAKS-media .message {
         /* margin / round */
         margin: 2px 0px 0px 0px;
-        border-radius: 22px;
         padding: 0px;
         width: 100px;
     }
@@ -137,7 +161,7 @@
 
 /* weather box overflow fix */
     .QSTWEAKS-fixed-weather .weather-button {
-        margin-bottom: 6px !important;
+        margin-bottom: 6px;
     }
     .QSTWEAKS-fixed-weather .weather-button .weather-box {
         spacing: 7px;
@@ -146,21 +170,21 @@
         spacing: 4px;
     }
     .QSTWEAKS-fixed-weather .weather-button .weather-header.location {
-        font-weight: normal !important;
-        font-size: 9pt !important;
+        font-weight: normal;
+        font-size: 9pt;
     }
     .QSTWEAKS-fixed-weather .weather-button .weather-grid {
-        spacing-rows: 4px !important;
-        spacing-columns: 8px !important;
+        spacing-rows: 4px;
+        spacing-columns: 8px;
     }
     .QSTWEAKS-fixed-weather .weather-button .weather-forecast-icon {
-        icon-size: 32px !important;
+        icon-size: 32px;
     }
     .QSTWEAKS-fixed-weather .weather-button .weather-forecast-time {
-        font-size: 8pt !important;
-        font-weight: normal !important;
-        padding-top: 0.2em !important;
-        padding-bottom: 0.4em !important;
+        font-size: 8pt;
+        font-weight: normal;
+        padding-top: 0.2em;
+        padding-bottom: 0.4em;
     }
 
 /* volume mixer label */
@@ -176,4 +200,7 @@
         /* notification message margin / round */
         margin: 6px 0px 2px 0px;
         border-radius: 18px;
+    }
+    .quick-settings .QSTWEAKS-media.QSTWEAKS-adjust-border-radius .message {
+        border-radius: 22px;
     }

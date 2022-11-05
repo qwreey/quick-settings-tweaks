@@ -4,7 +4,9 @@ const Calendar = imports.ui.calendar
 
 var Notifications = GObject.registerClass(
     class Notifications extends St.BoxLayout{
-        _init(){
+        _init(options){
+            let useNativeControls = options.useNativeControls
+
             super._init({
                 vertical: true,
             })
@@ -12,6 +14,8 @@ var Notifications = GObject.registerClass(
             let datemenu = new imports.ui.dateMenu.DateMenuButton()
             let messageList = datemenu._messageList
             this.notificationList = messageList._notificationSection
+            this.nativeDndSwitch = messageList._dndButton
+            this.nativeClearButton = messageList._clearButton
 
             // media controls
             this.mediaSection = messageList._mediaSection
@@ -21,8 +25,10 @@ var Notifications = GObject.registerClass(
             this.list = messageList._scrollView
             this.list.get_parent().remove_child(this.list)
 
-            // header
+            // header / title
             let headerBox = new St.BoxLayout({ style_class: "QSTWEAKS-notifications-header" })
+            this.add_child(headerBox)
+            this.add_child(this.list)
             let titleLabel = new St.Label({
                 text: _('Notifications'),
                 style_class: "QSTWEAKS-notifications-title",
@@ -31,23 +37,6 @@ var Notifications = GObject.registerClass(
                 x_expand: true
             })
             headerBox.add_child(titleLabel)
-            this.clearButton = new ClearNotificationsButton()
-            headerBox.add_child(this.clearButton)
-            this.add_child(headerBox)
-            this.add_child(this.list)
-
-            // Add "System Default Style DND Switch Option" in Settings
-            // dnd button
-            // if (options.dndSwitch) {
-            //     let dndBox = new St.BoxLayout()
-            //     dndBox.style_class = "qwreey-notifications-dnd-box"
-            //     dndBox.add_child(this.dndText)
-            //     dndBox.add_child(this.dndSwitch)
-            //     dndBox.add_child(this.clearButton)
-            //     this.add_child(dndBox)
-            // } else {
-            //     headerBox.add_child(this.clearButton)
-            // }
 
             // no notifications text
             let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
@@ -56,6 +45,30 @@ var Notifications = GObject.registerClass(
             noNotiBox.add_child(noNotiPlaceholder)
             noNotiBox.hide()
             this.add_child(noNotiBox)
+
+            // clear button / dnd switch
+            if (useNativeControls) {
+                // if use native controls
+                {
+                    let parent = this.nativeClearButton.get_parent()
+                    parent.remove_child(this.nativeClearButton)
+                    parent.remove_child(this.nativeDndSwitch)
+                    this.nativeDndText = parent.first_child
+                    parent.remove_child(this.nativeDndText)
+                }
+
+                let dndBox = new St.BoxLayout()
+                dndBox.add_child(this.nativeDndText)
+                dndBox.add_child(this.nativeDndSwitch)
+                dndBox.add_child(this.nativeClearButton)
+                this.add_child(dndBox)
+            } else {
+                this.clearButton = new ClearNotificationsButton()
+                this.clearButton.connect("clicked",()=>{
+                    messageList._sectionList.get_children().forEach(s => s.clear())
+                })
+                headerBox.add_child(this.clearButton)
+            }
 
             // sync notifications
             let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
@@ -66,19 +79,18 @@ var Notifications = GObject.registerClass(
             })
 
             // sync no-notification placeholder and clear button
-            const placeholder = Main.panel.statusArea.dateMenu._messageList._placeholder
-            const updateNoNotifications = () => {
-                if (placeholder.visible) {
-                    this.list.hide()
-                    noNotiBox.show()
-                    this.clearButton.hide()
-                } else {
+            const updateNoNotifications = ()=>{
+                if (this.nativeClearButton.reactive) {
                     this.list.show()
                     noNotiBox.hide()
-                    this.clearButton.show()
+                    if (this.clearButton) this.clearButton.show()
+                } else {
+                    this.list.hide()
+                    noNotiBox.show()
+                    if (this.clearButton) this.clearButton.hide()
                 }
             }
-            placeholder.connect('notify::visible', updateNoNotifications)
+            this.nativeClearButton.connect('notify::reactive', updateNoNotifications)
             updateNoNotifications()
 
             this.connect('destroy', () => {
@@ -136,10 +148,10 @@ class ClearNotificationsButton extends St.Button {
         this._label = new St.Label({ text: _('Clear') })
         container.add_child(this._label)
 
-        this.connect('clicked', () => {
-            // Misuse GNOME's existing objects...
-            const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList
-            messageList._sectionList.get_children().forEach(s => s.clear())
-        })
+        // this.connect('clicked', () => {
+        //     // Misuse GNOME's existing objects...
+        //     const messageList = imports.ui.main.panel.statusArea.dateMenu._messageList
+        //     messageList._sectionList.get_children().forEach(s => s.clear())
+        // })
     }
 })

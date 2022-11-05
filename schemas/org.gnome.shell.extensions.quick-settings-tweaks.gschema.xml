@@ -38,6 +38,9 @@
     <key name="media-control-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="disable-adjust-content-border-radius" type="b">
+      <default>false</default>
+    </key>
 
     <!-- notifications -->
     <key name="notifications-move-to-top" type="b">
@@ -48,6 +51,9 @@
     </key>
     <key name="notifications-integrated" type="b">
       <default>true</default>
+    </key>
+    <key name="notifications-use-native-controls" type="b">
+      <default>false</default>
     </key>
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>

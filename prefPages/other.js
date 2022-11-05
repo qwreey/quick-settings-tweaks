@@ -47,6 +47,13 @@ var otherPage = GObject.registerClass({
             subtitle: "Hide media control on date menu.",
             bind: [settings, "datemenu-remove-media-control"]
         })
+        makeSwitch({
+            parent: group,
+            title: "Do not adjust the border radius of contents.",
+            subtitle: "Don't adjust the border of messages and media controls.",
+            value: settings.get_boolean("disable-adjust-content-border-radius"),
+            bind: [settings, "disable-adjust-content-border-radius"]
+        })
         this.add(group)
     }
 })

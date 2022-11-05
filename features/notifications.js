@@ -27,20 +27,32 @@ var notificationsFeature = class {
             "notifications-integrated",
             "media-control-enabled",
             "media-control-compact-mode",
+            "disable-adjust-content-border-radius",
+            "notifications-use-native-controls"
         ])
 
         // check is feature enabled
         let notificationsEnabled = this.settings.get_boolean("notifications-enabled")
         let mediaControlEnabled = this.settings.get_boolean("media-control-enabled")
+        let adjustBorder = this.settings.get_boolean("disable-adjust-content-border-radius")
+        let nativeControls = this.settings.get_boolean("notifications-use-native-controls")
         if ( !notificationsEnabled && !mediaControlEnabled ) return
 
         // Make notification handler
         let isIntegrated = settings.get_boolean("notifications-integrated")
-        this.notificationHandler = new Notifications()
+        this.notificationHandler = new Notifications({
+            useNativeControls: this.settings.get_boolean("notifications-use-native-controls")
+        })
         this.notificationHandler.style_class =
+            // If separated, style as popup menu
             (isIntegrated ? "" : "popup-menu-content quick-settings ")
+            // Integrated or separated
             + (isIntegrated ? "QSTWEAKS-notifications-integrated " : "QSTWEAKS-notifications-separated ")
-            + 'QSTWEAKS-notifications'
+            // Is use native controls
+            + (nativeControls ? "QSTWEAKS-notifications-use-native-controls " : "")
+            // adjust border radius of messages
+            + (adjustBorder ? "" : "QSTWEAKS-adjust-border-radius ")
+            + "QSTWEAKS-notifications"
 
         // Insert media control
         if (mediaControlEnabled) {
@@ -50,9 +62,19 @@ var notificationsFeature = class {
             if (this.settings.get_boolean("media-control-compact-mode")) {
                 mediaSection.style_class += " QSTWEAKS-media-compact-mode"
             }
+            if (!adjustBorder) {
+                mediaSection.style_class += " QSTWEAKS-adjust-border-radius"
+            }
             QuickSettingsGrid.layout_manager.child_set_property(
                 QuickSettingsGrid, mediaSection, 'column-span', 2
             )
+        }
+
+        // Insert Native DND Switch
+        if (nativeControls && notificationsEnabled) {
+            this.notificationHandler.nativeClearButton
+            this.notificationHandler.nativeDndSwitch
+            this.notificationHandler.nativeDndText
         }
 
         // Insert notifications

@@ -52,10 +52,17 @@ var notificationsPage = GObject.registerClass({
         })
         makeSwitch({
             parent: generalGroup,
-            title: "Put above QS Panel (Doesn't work with 'Attach to QS panel' enabled)",
+            title: "Put above QS Panel",
             value: settings.get_boolean("notifications-move-to-top"),
-            subtitle: "Put the Notifications widget above the Quick Settings one.\nThis feature could be useful if you use Dash to Panel",
+            subtitle: "Put the Notifications widget above the Quick Settings one.",
             bind: [settings, "notifications-move-to-top"]
+        })
+        makeSwitch({
+            parent: generalGroup,
+            title: "Use native controls",
+            value: settings.get_boolean("notifications-use-native-controls"),
+            subtitle: "Use native dnd switch and clear button",
+            bind: [settings, "notifications-use-native-controls"]
         })
     }
 })
