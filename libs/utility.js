@@ -19,6 +19,6 @@ function addChildWithIndex(parent,child,addIndex) {
     }
 }
 
-function logging(str) {
+function logger(str) {
     log("[EXTENSION QSTweaks] " + str)
 }

@@ -3,5 +3,3 @@
 # Notifications title
 msgid "Notifications"
 msgstr "Notifications"
-
-

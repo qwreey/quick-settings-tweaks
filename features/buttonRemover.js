@@ -20,11 +20,10 @@ var buttonRemoverFeature = class {
             let item = boxItems[index]
             let name = item.constructor.name.toString()
             if (name && item.visible && items.includes(name) && name!="Clutter_Actor") {
-                item.visible = false
+                item.hide()
                 this.removedItems.push(item)
-                // THIS CODE MAKE GNOME SHELL CRASH WHEN EXTENSION UNLOADED
                 this.visibleListeners.push([item,
-                    item.connect("notify::visible",()=>{
+                    item.connect("show",()=>{
                         this._unapply(); this._apply(items)
                     })
                 ])
@@ -32,14 +31,14 @@ var buttonRemoverFeature = class {
         }
     }
     _unapply() {
-        for (let index=0; index<this.removedItems.length; index++) {
-            this.removedItems[index].visible = true
-        }
-        this.removedItems = []
         for (const connection of this.visibleListeners) {
             connection[0].disconnect(connection[1])
         }
         this.visibleListeners = []
+        for (let index=0; index<this.removedItems.length; index++) {
+            this.removedItems[index].show()
+        }
+        this.removedItems = []
     }
     load() {
         {
