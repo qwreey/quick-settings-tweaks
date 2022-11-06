@@ -3,7 +3,6 @@ const Main = imports.ui.main
 const Calendar = imports.ui.calendar
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
-const _ = Me._
 
 var Notifications = GObject.registerClass(
     class Notifications extends St.BoxLayout{
@@ -34,7 +33,7 @@ var Notifications = GObject.registerClass(
             this.add_child(headerBox)
             this.add_child(this.list)
             let titleLabel = new St.Label({
-                text: _('Notifications'),
+                text: ExtensionUtils.gettext('Notifications'),
                 style_class: "QSTWEAKS-notifications-title",
                 y_align: Clutter.ActorAlign.CENTER,
                 x_align: Clutter.ActorAlign.START,

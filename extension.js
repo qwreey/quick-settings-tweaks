@@ -9,6 +9,7 @@ function enable() {
     logging("Enabled")
 
     let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
+    ExtensionUtils.initTranslations()
 
     // load features
     loaded = [
