@@ -1,6 +1,8 @@
 build:
 	mkdir dist -p
 	gnome-extensions pack\
+		--extra-source=LICENSE\
+		--extra-source=LICENSE-gnome-volume-mixer\
 		--extra-source=features\
 		--extra-source=libs\
 		--extra-source=prefPages\

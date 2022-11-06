@@ -40,7 +40,7 @@ var quickTogglesPage = GObject.registerClass({
         makeRow({
             parent: descriptionGroup,
             title: "Remove chosen buttons from quick panel",
-            subtitle: "Forked from https://github.com/qwreey75/gnome-quick-settings-button-remover"
+            subtitle: "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
         })
         makeRow({
             parent: descriptionGroup,

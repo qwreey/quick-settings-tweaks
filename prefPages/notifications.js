@@ -25,7 +25,7 @@ var notificationsPage = GObject.registerClass({
         makeRow({
             parent: descriptionGroup,
             title: "Add notifications widget",
-            subtitle: "Reference from https://github.com/Aylur/gnome-extensions"
+            subtitle: "Reference from https://github.com/Aylur/gnome-extensions\nSource code of that is not used on this extension"
         })
         makeSwitch({
             parent: descriptionGroup,

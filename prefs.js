@@ -7,7 +7,8 @@ var pageList = [
     Me.imports.prefPages.notifications.notificationsPage,
     Me.imports.prefPages.mediaControl.mediaControlPage,
     Me.imports.prefPages.quickToggles.quickTogglesPage,
-    Me.imports.prefPages.other.otherPage
+    Me.imports.prefPages.other.otherPage,
+    Me.imports.prefPages.about.aboutPage
 ]
 
 function fillPreferencesWindow(window) {

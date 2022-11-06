@@ -2,13 +2,30 @@
 const { Adw, Gio, Gtk, GObject } = imports.gi
 var baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
 
-function makeRow(options={parent: null,title: null, subtitle: null}) {
+function makeRow(options={parent: null,title: null, subtitle: null,uri: null}) {
     const row = new Adw.ActionRow({
         title: options.title,
         subtitle: options.subtitle || null
     })
     if (options.parent) {
         options.parent.add(row)
+    }
+    if (options.uri) {
+        // row.uri = options.uri
+        row.set_child(new Gtk.LinkButton({
+            uri: options.uri,
+            visited: true, // for disable coloring
+            child: new Adw.ActionRow({
+                title: options.title,
+                subtitle: options.subtitle || null
+            })
+        }))
+    }
+    if (options.suffix) {
+        row.add_suffix(options.suffix)
+    }
+    if (options.prefix) {
+        row.add_prefix(options.prefix)
     }
     return row
 }

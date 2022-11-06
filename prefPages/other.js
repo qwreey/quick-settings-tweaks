@@ -10,7 +10,7 @@ const {
 
 var otherPage = GObject.registerClass({
     GTypeName: baseGTypeName+'otherPage',
-}, class notificationsPage extends Adw.PreferencesPage {
+}, class otherPagePage extends Adw.PreferencesPage {
     constructor(settings) {
         // group config
         super({
