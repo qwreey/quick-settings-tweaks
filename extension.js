@@ -9,7 +9,6 @@ function enable() {
     logging("Enabled")
 
     let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
-    imports.ui.main.settings = settings
 
     // load features
     loaded = [

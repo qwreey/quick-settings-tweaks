@@ -1,6 +1,9 @@
 const { GObject, St, Clutter } = imports.gi
 const Main = imports.ui.main
 const Calendar = imports.ui.calendar
+const ExtensionUtils = imports.misc.extensionUtils
+const Me = ExtensionUtils.getCurrentExtension()
+const _ = Me._
 
 var Notifications = GObject.registerClass(
     class Notifications extends St.BoxLayout{
