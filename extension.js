@@ -1,7 +1,7 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 const Features = Me.imports.features
-const { logging } = Me.imports.utility
+const { logging } = Me.imports.libs.utility
 var loaded
 
 // handling extension
@@ -9,6 +9,7 @@ function enable() {
     logging("Enabled")
 
     let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
+    imports.ui.main.settings = settings
 
     // load features
     loaded = [

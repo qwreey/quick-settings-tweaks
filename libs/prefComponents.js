@@ -5,7 +5,7 @@ var baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
 function makeRow(options={parent: null,title: null, subtitle: null}) {
     const row = new Adw.ActionRow({
         title: options.title,
-        subtitle: options.subtitle
+        subtitle: options.subtitle || null
     })
     if (options.parent) {
         options.parent.add(row)
@@ -16,7 +16,7 @@ function makeRow(options={parent: null,title: null, subtitle: null}) {
 function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null}) {
     const row = new Adw.ActionRow({
         title: options.title,
-        subtitle: options.subtitle
+        subtitle: options.subtitle || null
     })
 
     const toggle = new Gtk.Switch({
@@ -62,7 +62,7 @@ function makeAdjustment(options={
 }) {
     const row = new Adw.ActionRow({
         title: options.title,
-        subtitle: options.subtitle
+        subtitle: options.subtitle || null
     })
 
     const spinButton = new Gtk.SpinButton({
@@ -120,7 +120,8 @@ function makeDropdown(options={
     value: false,
     title: "default",
     subtitle: null,
-    action: null
+    action: null,
+    type: null
 }) {
     let filterModeModel = new Gio.ListStore({ item_type: DropdownItems })
     for (item of options.items) {
@@ -130,16 +131,17 @@ function makeDropdown(options={
     let selected = null
     for (let i = 0; i < filterModeModel.get_n_items(); i++) {
         if (filterModeModel.get_item(i).value === options.value) {
-            selected = null
+            selected = i
             break
         }
     }
     if (selected === null) selected = -1
 
     let filterModeRow = new Adw.ComboRow({
-        title: 'Filter Mode',
+        title: options.title,
+        subtitle: options.subtitle || null,
         model: filterModeModel,
-        expression: new Gtk.PropertyExpression(FilterMode, null, 'name'),
+        expression: new Gtk.PropertyExpression(DropdownItems, null, 'name'),
         selected: selected
     })
     if (options.parent) {
@@ -148,7 +150,13 @@ function makeDropdown(options={
 
     if (options.bind) {
         filterModeRow.connect('notify::selected', () => {
-            this.settings.set_string('volume-mixer-filter-mode', filterModeRow.selectedItem.value)
+            options.bind[0]["set_"+options.type](options.bind[1], filterModeRow.selectedItem.value)
+        })
+    }
+
+    if (options.action) {
+        filterModeRow.connect('notify::selected', () => {
+            action(filterModeRow.selectedItem.value)
         })
     }
 

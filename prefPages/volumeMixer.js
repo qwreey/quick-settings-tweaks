@@ -5,7 +5,8 @@ const { Adw, Gio, Gtk, GObject } = imports.gi
 const {
     baseGTypeName,
     makeRow,
-    makeSwitch
+    makeSwitch,
+    makeDropdown
 } = Me.imports.libs.prefComponents
 
 var VolumeMixerAddFilterDialog = GObject.registerClass({
@@ -125,12 +126,17 @@ var volumeMixerPage = GObject.registerClass({
         this.add(generalGroup)
 
         // move to bottom
-        makeSwitch({
-            title: 'Move to bottom',
-            subtitle: 'Place volume mixer on bottom of quick settings modal',
-            value: this.settings.get_boolean('volume-mixer-move-to-bottom'),
+        makeDropdown({
             parent: generalGroup,
-            bind: [this.settings, 'volume-mixer-move-to-bottom']
+            title: "Position",
+            subtitle: "Set volume mixer position",
+            value: this.settings.get_string('volume-mixer-position'),
+            type: "string",
+            bind: [this.settings, 'volume-mixer-position'],
+            items: [
+                {name: "Top", value: "top"},
+                {name: "Bottom", value: "bottom"}
+            ]
         })
 
         // show-description
@@ -159,29 +165,16 @@ var volumeMixerPage = GObject.registerClass({
         this.add(filterGroup)
 
         // filter-mode
-        const filterModeModel = new Gio.ListStore({ item_type: FilterMode })
-        filterModeModel.append(new FilterMode('Blacklist', 'block'))
-        filterModeModel.append(new FilterMode('Whitelist', 'allow'))
-
-        const findCurrentFilterMode = () => {
-            for (let i = 0; i < filterModeModel.get_n_items(); i++) {
-                if (filterModeModel.get_item(i).value === this.settings.get_string('volume-mixer-filter-mode')) {
-                    return i
-                }
-            }
-            return -1
-        }
-
-        const filterModeRow = new Adw.ComboRow({
-            title: 'Filter Mode',
-            model: filterModeModel,
-            expression: new Gtk.PropertyExpression(FilterMode, null, 'name'),
-            selected: findCurrentFilterMode()
-        })
-        filterGroup.add(filterModeRow)
-
-        filterModeRow.connect('notify::selected', () => {
-            this.settings.set_string('volume-mixer-filter-mode', filterModeRow.selectedItem.value)
+        makeDropdown({
+            parent: filterGroup,
+            title: "Filter Mode",
+            value: this.settings.get_string('volume-mixer-filter-mode'),
+            type: "string",
+            bind: [this.settings, 'volume-mixer-filter-mode'],
+            items: [
+                {name: "Blacklist", value: "block"},
+                {name: "Whitelist", value: "allow"}
+            ]
         })
 
         // group to act as spacer for filter list
@@ -261,13 +254,13 @@ var volumeMixerPage = GObject.registerClass({
 
     removeFilteredApp(filteredAppName, filterListRow) {
         this.filterListData.splice(this.filterListData.indexOf(filteredAppName), 1)
-        this.settings.set_strv("filtered-apps", this.filterListData)
+        this.settings.set_strv("volume-mixer-filtered-apps", this.filterListData)
         this.filteredAppsGroup.remove(filterListRow)
     }
 
     addFilteredApp(filteredAppName) {
         this.filterListData.push(filteredAppName)
-        this.settings.set_strv("filtered-apps", this.filterListData)
+        this.settings.set_strv("volume-mixer-filtered-apps", this.filterListData)
         this.filteredAppsGroup.remove(this.addFilteredAppButtonRow)
         this.filteredAppsGroup.add(this.buildFilterListRow(filteredAppName))
         this.filteredAppsGroup.add(this.addFilteredAppButtonRow)

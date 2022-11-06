@@ -17,7 +17,7 @@ var volumeMixerFeature = class {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
             "volume-mixer-enabled",
-            "volume-mixer-move-to-bottom",
+            "volume-mixer-position",
             "volume-mixer-filtered-apps",
             "volume-mixer-show-description",
             "volume-mixer-show-icon",
@@ -45,11 +45,10 @@ var volumeMixerFeature = class {
         }
 
         // Insert volume mixer into Quick Settings
-        if ((!settings.get_boolean("volume-mixer-move-to-bottom")) && inputSliderIndex) {
-            addChildWithIndex(QuickSettingsGrid,this.volumeMixer.actor,inputSliderIndex)
-        } else {
-            // When 'move to bottom' enabled
-            QuickSettingsGrid.add_child(this.volumeMixer.actor);
+        let position = settings.get_string("volume-mixer-position")
+        switch (position) {
+            case "top": addChildWithIndex(QuickSettingsGrid,this.volumeMixer.actor,inputSliderIndex)
+            case "bottom": QuickSettingsGrid.add_child(this.volumeMixer.actor)
         }
 
         // Allow volume mixer taking 2 space

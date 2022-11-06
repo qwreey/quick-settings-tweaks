@@ -46,9 +46,6 @@
     <key name="notifications-move-to-top" type="b">
       <default>false</default>
     </key>
-    <key name="notifications-dnd-switch" type="b">
-      <default>true</default>
-    </key>
     <key name="notifications-integrated" type="b">
       <default>true</default>
     </key>
@@ -77,8 +74,9 @@
     </key>
 
     <!-- volume mixer -->
-    <key name="volume-mixer-move-to-bottom" type="b">
-      <default>false</default>
+    <key name="volume-mixer-position" type="s">
+      <!-- "bottom" / "top" -->
+      <default>"top"</default>
     </key>
     <key name="volume-mixer-filtered-apps" type="as">
       <default>[]</default>

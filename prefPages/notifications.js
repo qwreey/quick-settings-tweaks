@@ -59,13 +59,13 @@ var notificationsPage = GObject.registerClass({
             subtitle: "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n(such as margin or padding not matching with the theme)",
             bind: [settings, "notifications-integrated"]
         })
-        makeSwitch({
-            parent: generalGroup,
-            title: "Put above QS Panel",
-            value: settings.get_boolean("notifications-move-to-top"),
-            subtitle: "Put the Notifications widget above the Quick Settings one.",
-            bind: [settings, "notifications-move-to-top"]
-        })
+        // makeSwitch({
+        //     parent: generalGroup,
+        //     title: "Put above QS Panel",
+        //     value: settings.get_boolean("notifications-move-to-top"),
+        //     subtitle: "Put the Notifications widget above the Quick Settings one.",
+        //     bind: [settings, "notifications-move-to-top"]
+        // })
         makeSwitch({
             parent: generalGroup,
             title: "Auto Hide",
