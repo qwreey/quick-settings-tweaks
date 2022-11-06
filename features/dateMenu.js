@@ -1,5 +1,6 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
+const { GLib } = imports.gi
 
 const featureReloader = Me.imports.libs.featureReloader
 const {
@@ -25,15 +26,21 @@ var dateMenuFeature = class {
 
         // remove media control from date menu
         if (this.settings.get_boolean("datemenu-remove-media-control")) {
-            this.mediaControlParent = DateMenuMediaControl.get_parent()
-            this.mediaControlParent.remove_child(DateMenuMediaControl)
+            this.dateMenuMediaControlRemoved = true
+            DateMenuMediaControl.hide()
+            this.dateMenuMediaControlConnection = DateMenuMediaControl.connect("show", ()=>{
+                DateMenuMediaControl.hide()
+            })
         }
 
         // remove notifications from date menu
         if (this.settings.get_boolean("datemenu-remove-notifications")) {
             this.dateMenuNotificationsRemoved = true
-            DateMenuHolder.remove_child(DateMenuNotifications)
+            DateMenuNotifications.hide()
             DateMenuBox.style = "padding: 4px 6px 4px 0px;"
+            this.dateMenuConnection = DateMenuNotifications.connect("show", ()=>{
+                DateMenuNotifications.hide()
+            })
         }
         
         // datemenu fix weather widget
@@ -47,33 +54,21 @@ var dateMenuFeature = class {
         // disable feature reloader
         featureReloader.disable(this)
 
-        // restore media control to date menu
-        if (this.mediaControlParent) {
-            let listItems = this.mediaControlParent.get_children()
-            this.mediaControlParent.add_child(DateMenuMediaControl)
-            for (const item of listItems) {
-                this.mediaControlParent.remove_child(item)
-            }
-            for (const item of listItems) {
-                this.mediaControlParent.add_child(item)
-            }
-            this.mediaControlParent = null
+        // restore media control
+        if (this.dateMenuMediaControlRemoved) {
+            DateMenuMediaControl.disconnect(this.dateMenuMediaControlConnection)
+            if (DateMenuMediaControl._shouldShow()) DateMenuMediaControl.show()
+            this.dateMenuMediaControlRemoved = null
+            this.dateMenuMediaControlConnection = null
         }
 
         // restore notifications to date menu
         if (this.dateMenuNotificationsRemoved) {
-            let children = DateMenuHolder.get_children()
-            for (const item of children) {
-                DateMenuHolder.remove_child(item)
-            }
-            DateMenuHolder.add_child(DateMenuNotifications)
-            for (const item of children) {
-                DateMenuHolder.add_child(item)
-            }
+            DateMenuNotifications.disconnect(this.dateMenuConnection)
+            DateMenuNotifications.show()
             DateMenuBox.style = ""
             this.dateMenuNotificationsRemoved = null
         }
-
         // undo weather fix
         if (this.weatherFixBackupClass) {
             DateMenuBox.style_class = this.weatherFixBackupClass

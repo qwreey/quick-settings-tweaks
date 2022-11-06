@@ -1,5 +1,5 @@
 
-const { Adw, Gio, Gtk } = imports.gi
+const { Adw, Gio, Gtk, GObject } = imports.gi
 var baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
 
 function makeRow(options={parent: null,title: null, subtitle: null}) {
@@ -95,4 +95,62 @@ function makeAdjustment(options={
     }
 
     return row
+}
+
+var DropdownItems = GObject.registerClass({
+    Properties: {
+        'name': GObject.ParamSpec.string(
+            'name', 'name', 'name',
+            GObject.ParamFlags.READWRITE,
+            null),
+        'value': GObject.ParamSpec.string(
+            'value', 'value', 'value',
+            GObject.ParamFlags.READWRITE,
+            null),
+    },
+}, class DropdownItems extends GObject.Object {
+    _init(name, value) {
+        super._init({ name, value })
+    }
+})
+function makeDropdown(options={
+    items:[{name:"",value:""}],
+    bind: null,
+    parent: null,
+    value: false,
+    title: "default",
+    subtitle: null,
+    action: null
+}) {
+    let filterModeModel = new Gio.ListStore({ item_type: DropdownItems })
+    for (item of options.items) {
+        filterModeModel.append(new DropdownItems(item.name, item.value))
+    }
+
+    let selected = null
+    for (let i = 0; i < filterModeModel.get_n_items(); i++) {
+        if (filterModeModel.get_item(i).value === options.value) {
+            selected = null
+            break
+        }
+    }
+    if (selected === null) selected = -1
+
+    let filterModeRow = new Adw.ComboRow({
+        title: 'Filter Mode',
+        model: filterModeModel,
+        expression: new Gtk.PropertyExpression(FilterMode, null, 'name'),
+        selected: selected
+    })
+    if (options.parent) {
+        options.parent.add(filterModeRow)
+    }
+
+    if (options.bind) {
+        filterModeRow.connect('notify::selected', () => {
+            this.settings.set_string('volume-mixer-filter-mode', filterModeRow.selectedItem.value)
+        })
+    }
+
+    return filterModeRow
 }
