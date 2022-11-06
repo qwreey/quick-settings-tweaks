@@ -4,7 +4,7 @@ function enableWithSettingKeys(feature,settingKeys) {
     let settingsListeners = feature.settingsListeners
     if (!settingsListeners) {
         settingsListeners = []
-        feature.settingsListener = settingsListeners
+        feature.settingsListeners = settingsListeners
     }
 
     const reload = ()=>{

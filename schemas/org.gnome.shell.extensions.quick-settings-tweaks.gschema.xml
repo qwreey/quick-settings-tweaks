@@ -58,6 +58,9 @@
     <key name="notifications-hide-when-no-notifications" type="b">
       <default>true</default>
     </key>
+    <key name="notifications-max-height" type="i">
+      <default>292</default>
+    </key>
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
     </key>

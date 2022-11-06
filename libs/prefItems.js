@@ -48,3 +48,51 @@ function makeSwitch(options={bind: null,parent: null,value: false,title: "defaul
 
     return row
 }
+
+function makeAdjustment(options={
+    max: 100,
+    stepIncrement: 1,
+    pageIncrement: 10,
+    bind: null,
+    parent: null,
+    value: 1,
+    title: "default",
+    subtitle: null,
+    action: null
+}) {
+    const row = new Adw.ActionRow({
+        title: options.title,
+        subtitle: options.subtitle
+    })
+
+    const spinButton = new Gtk.SpinButton({
+        adjustment: new Gtk.Adjustment({
+            upper: options.max,
+            stepIncrement: options.stepIncrement || 1,
+            pageIncrement: options.pageIncrement || 10
+        }),
+        valign: Gtk.Align.CENTER
+    });
+
+    if (options.action) {
+        spinButton.connect("notify::value",()=>{
+            options.action(toggle.get_value())
+        })
+    }
+    row.add_suffix(spinButton)
+    row.spinButton = spinButton
+
+    if (options.parent) {
+        options.parent.add(row)
+    }
+
+    if (options.bind) {
+        options.bind[0].bind(
+            options.bind[1],
+            spinButton,'value',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+    }
+
+    return row
+}

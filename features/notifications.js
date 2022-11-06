@@ -28,7 +28,9 @@ var notificationsFeature = class {
             "media-control-enabled",
             "media-control-compact-mode",
             "disable-adjust-content-border-radius",
-            "notifications-use-native-controls"
+            "notifications-use-native-controls",
+            // "notifications-max-height",
+            "notifications-hide-when-no-notifications"
         ])
 
         // check is feature enabled
@@ -54,6 +56,12 @@ var notificationsFeature = class {
             // adjust border radius of messages
             + (adjustBorder ? "" : "QSTWEAKS-adjust-border-radius ")
             + "QSTWEAKS-notifications"
+        this.notificationHandler.style
+        = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
+        this.maxHeigthListen = this.settings.connect("changed::notifications-max-height",()=>{
+            this.notificationHandler.style
+            = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
+        })
 
         // Insert media control
         if (mediaControlEnabled) {
@@ -143,6 +151,7 @@ var notificationsFeature = class {
 
     unload() {
         // disable feature reloader
+        this.settings.disconnect(this.maxHeigthListen)
         featureReloader.disable(this)
 
         // destroy mediaControl/notifications

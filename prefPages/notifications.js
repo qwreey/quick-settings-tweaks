@@ -5,7 +5,8 @@ const { Adw, GObject } = imports.gi
 const {
     baseGTypeName,
     makeRow,
-    makeSwitch
+    makeSwitch,
+    makeAdjustment
 } = Me.imports.libs.prefItems
 
 var notificationsPage = GObject.registerClass({
@@ -43,6 +44,14 @@ var notificationsPage = GObject.registerClass({
         // general
         const generalGroup = new Adw.PreferencesGroup({ title: "General" })
         this.add(generalGroup)
+        makeAdjustment({
+            parent: generalGroup,
+            max: 1280,
+            title: "Max height",
+            subtitle: "Set maximum height of the Notifications widget. default is 292",
+            value: settings.get_int("notifications-max-height"),
+            bind: [settings, "notifications-max-height"],
+        })
         makeSwitch({
             parent: generalGroup,
             title: "Attach to QS panel",
