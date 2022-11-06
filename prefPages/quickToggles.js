@@ -11,11 +11,6 @@ const {
 var quickTogglesPage = GObject.registerClass({
     GTypeName: baseGTypeName+'quickTogglesPage',
 }, class quickTogglesPage extends Adw.PreferencesPage {
-    filterListData = []
-    filteredAppsGroup
-    settings
-    addFilteredAppButtonRow
-
     constructor(settings) {
         // group config
         super({

@@ -11,11 +11,6 @@ const {
 var otherPage = GObject.registerClass({
     GTypeName: baseGTypeName+'otherPage',
 }, class notificationsPage extends Adw.PreferencesPage {
-    filterListData = []
-    filteredAppsGroup
-    settings
-    addFilteredAppButtonRow
-
     constructor(settings) {
         // group config
         super({

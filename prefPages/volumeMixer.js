@@ -89,11 +89,6 @@ var FilterMode = GObject.registerClass({
 var volumeMixerPage = GObject.registerClass({
     GTypeName: baseGTypeName+'volumeMixerPage',
 }, class volumeMixerPage extends Adw.PreferencesPage {
-    filterListData = []
-    filteredAppsGroup
-    settings
-    addFilteredAppButtonRow
-
     constructor(settings) {
         // group config
         super({
