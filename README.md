@@ -22,14 +22,7 @@ Quick Settings Tweaker is a Gnome 43+ extension which allows you to customize th
 
 ## TODO
 
-- [ ] Add native style notification dnd/clear option  
-- [ ] Renew stylesheet  
-- [ ] Renew build system  
 - [ ] Fix notification scrollbar visual bug
 - [ ] Fix buttonRemover bugs
-- [ ] Allow user can set max height of notification
-- [ ] Add option to remove styling(round / coloring etc) notification message or media control
-- [ ] Change some settings (Switch => dropdown such as position of notification)
-- [ ] Add option that allow notification box can be hidden when have no notifications
 - [ ] Add option to remove system buttons (Remove screenshot button or more)
  
