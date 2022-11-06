@@ -45,7 +45,7 @@ var quickTogglesPage = GObject.registerClass({
         makeRow({
             parent: descriptionGroup,
             title: "This feature is unstable sometime",
-            subtitle: "When lock/unlock with gnome-screensaver, unexpected behavior occurs; button doesn't remove"
+            subtitle: "When lock/unlock with gnome-screensaver, unexpected behavior occurs\nPlease do not report issue about known issue, Almost duplicated\nKnown issue:\n  button doesn't remove after lockscreen\n  modal get bigger after lockscreen"
         })
         this.add(descriptionGroup)
 
@@ -53,35 +53,26 @@ var quickTogglesPage = GObject.registerClass({
         const removeGroup = new Adw.PreferencesGroup()
         this.add(removeGroup)
 
-        let allButtons = settings.get_strv("list-buttons") || []
-        let removedButtons = settings.get_strv("user-removed-buttons") || []
-        let defaultInvisibleButtons = settings.get_strv("default-invisible-buttons") || []
-        let buttonsLabel
-        try {
-            buttonsLabel = JSON.parse(settings.get_string("button-labels"))
-        } catch {}
-        buttonsLabel ||= {}
-    
-        for (let name of allButtons) {
+        let listButtons = JSON.parse(settings.get_string("list-buttons"))
+        let removedButtons = settings.get_strv("user-removed-buttons")
+        for (let button of listButtons) {
             const row = new Adw.ActionRow({
-                title: name + (
-                    defaultInvisibleButtons.includes(name) ? " (invisible by system)" : ""
-                ),
-                subtitle: buttonsLabel[name] || null
+                title: (button.name || "Unknown") + (button.visible ? "" : " (invisible by system)"),
+                subtitle: button.label
             })
             removeGroup.add(row);
     
             const toggle = new Gtk.Switch({
-                active: removedButtons.includes(name),
+                active: removedButtons.includes(button.name),
                 valign: Gtk.Align.CENTER,
             });
     
             toggle.connect("notify::active",()=>{
                 if (toggle.get_active()) {
-                    removedButtons.push(name)
+                    removedButtons.push(button.name)
                 } else {
                     while (true) {
-                        let index = removedButtons.indexOf(name)
+                        let index = removedButtons.indexOf(button.name)
                         if (index != -1) {
                             removedButtons.splice(index,1)
                         } else break

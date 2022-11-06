@@ -60,6 +60,6 @@ var volumeMixerFeature = class {
     unload() {
         // disable feature reloader
         featureReloader.disable(this)
-        this.volumeMixer.destroy()
+        if (this.volumeMixer) this.volumeMixer.destroy()
     }
 }

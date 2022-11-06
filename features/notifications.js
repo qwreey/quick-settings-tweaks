@@ -149,13 +149,15 @@ var notificationsFeature = class {
 
     unload() {
         // disable feature reloader
-        this.settings.disconnect(this.maxHeigthListen)
+        if (this.maxHeigthListen) this.settings.disconnect(this.maxHeigthListen)
         featureReloader.disable(this)
 
         // destroy mediaControl/notifications
-        this.notificationHandler.mediaSection.destroy()
-        this.notificationHandler.destroy()
-        this.notificationHandler = null
+        if (this.notificationHandler) {
+            this.notificationHandler.mediaSection.destroy()
+            this.notificationHandler.destroy()
+            this.notificationHandler = null
+        }
 
         // restore style
         if (this.boxBackupClass) {

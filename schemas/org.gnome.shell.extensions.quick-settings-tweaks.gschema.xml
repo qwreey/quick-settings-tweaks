@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.quick-settings-tweaks" path="/org/gnome/shell/extensions/quick-settings-tweaks/">
-    <!-- Array of button class names -->
     <key name="user-removed-buttons" type="as">
       <default>[]</default>
     </key>
-
-    <!-- Array that including all of buttons on quick settings -->
-    <!-- For creating checkboxes on prefs, extension automatically generate this value -->
-    <key name="list-buttons" type="as">
-      <default>[]</default>
-    </key>
-
-    <!-- Array of buttons that are hidden by default by the system.  -->
-    <!-- This value is automatically generated and used for shows what button is hidden by system -->
-    <key name="default-invisible-buttons" type="as">
-      <default>[]</default>
-    </key>
-
-    <!-- JSON string that including displaying labels of button -->
-    <!-- This value is automatically generated and shows what label
-         each button has for the convenience of the user in the settings. -->
-    <key name="button-labels" type="s">
-      <default>"{}"</default>
+    <key name="list-buttons" type="s">
+      <default>"[]"</default>
     </key>
 
     <!-- list of enabled features -->
