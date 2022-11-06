@@ -1,6 +1,6 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
-const { StreamSlider } = Me.imports.streamSlider
+const { StreamSlider } = Me.imports.libs.streamSlider
 
 const { BoxLayout, Label } = imports.gi.St
 const { Settings, SettingsSchemaSource } = imports.gi.Gio
@@ -10,7 +10,7 @@ const PopupMenu = imports.ui.popupMenu // https://gitlab.gnome.org/GNOME/gnome-s
 const Volume = imports.ui.status.volume // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
 
 var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
-    constructor() {
+    constructor(settings) {
         super()
         this._applicationStreams = {}
         this._applicationMenus = {}
@@ -19,17 +19,10 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         this._streamAddedEventId = this._control.connect("stream-added", this._streamAdded.bind(this))
         this._streamRemovedEventId = this._control.connect("stream-removed", this._streamRemoved.bind(this))
 
-        let gschema = SettingsSchemaSource.new_from_directory(
-            Me.dir.get_child('schemas').get_path(),
-            SettingsSchemaSource.get_default(),
-            false
-        )
-
-        this.settings = new Settings({
-            settings_schema: gschema.lookup(Me.metadata['settings-schema'], true)
-        })
-
-        // this._settingsChangedId = this.settings.connect('changed', () => this._updateStreams())
+        this._filteredApps = settings["volume-mixer-filtered-apps"]
+        this._filterMode = settings["volume-mixer-filter-mode"]
+        this._showStreamDesc = settings["volume-mixer-show-description"]
+        this._showStreamIcon = settings["volume-mixer-show-icon"]
 
         this._updateStreams()
     }
@@ -58,7 +51,7 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
 
         const slider = new StreamSlider(Volume.getMixerControl())
         slider.stream = stream
-        slider.style = "margin: 8px 0px 0px 0px !important;"
+        slider.style_class = slider.style_class + " QSTWEAKS-volume-mixer-slider"
         this._applicationStreams[id] = slider
         if (this._showStreamIcon) {
             slider._icon.icon_name = stream.get_icon_name()
@@ -78,8 +71,8 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
             sliderBox.remove_child(lastObj)
             sliderBox.add(slider._vbox)
             
-            slider._label = new Label()
-            slider._label.style = "padding-left: 6px; font-size: 0.92em;"
+            slider._label = new Label({ x_expand: true })
+            slider._label.style_class = "QSTWEAKS-volume-mixer-label"
             slider._label.text = name && this._showStreamDesc ? `${name} - ${description}` : (name || description)
             slider._vbox.add(slider._label)
             slider._vbox.add(sliderObj)
@@ -101,11 +94,6 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
             this._applicationStreams[id].destroy()
             delete this._applicationMenus[id]
         }
-        
-        this._filteredApps = this.settings.get_strv("volume-mixer-filtered-apps")
-        this._filterMode = this.settings.get_string("volume-mixer-filter-mode")
-        this._showStreamDesc = this.settings.get_boolean("volume-mixer-show-description")
-        this._showStreamIcon = this.settings.get_boolean("volume-mixer-show-icon")
 
         for (const stream of this._control.get_streams()) {
             this._streamAdded(this._control, stream.get_id())
@@ -121,7 +109,6 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
 
         this._control.disconnect(this._streamAddedEventId)
         this._control.disconnect(this._streamRemovedEventId)
-        // this.settings.disconnect(this._settingsChangedId)
         super.destroy()
     }
 }

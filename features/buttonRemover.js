@@ -1,40 +1,47 @@
 // forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
 
+// ! NEED TO REWRITE
+
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-var QuickTogglesManager = class QuickTogglesManager {
-    constructor() {
+const featureReloader = Me.imports.libs.featureReloader
+const { QuickSettingsGrid } = Me.imports.libs.gnome
+
+var buttonRemoverFeature = class {
+    constructor(settings) {
+        this.settings = settings
         this.removedItems = []
-        this.quickSettingsBox = imports.ui.main.panel.statusArea.quickSettings.menu.box.first_child
+        this.visibleListeners = []
     }
-    _load(items) {
-        let boxItems = this.quickSettingsBox.get_children()
+    _apply(items) {
+        let boxItems = QuickSettingsGrid.get_children()
         for (let index=0; index<boxItems.length; index++) {
             let item = boxItems[index]
             let name = item.constructor.name.toString()
-            if (name && item.visible && items.includes(name)) {
+            if (name && item.visible && items.includes(name) && name!="Clutter_Actor") {
                 item.visible = false
                 this.removedItems.push(item)
+                // THIS CODE MAKE GNOME SHELL CRASH WHEN EXTENSION UNLOADED
+                this.visibleListeners.push([item,
+                    item.connect("notify::visible",()=>{
+                        this._unapply(); this._apply(items)
+                    })
+                ])
             }
         }
     }
-    _unload() {
+    _unapply() {
         for (let index=0; index<this.removedItems.length; index++) {
             this.removedItems[index].visible = true
         }
         this.removedItems = []
+        for (const connection of this.visibleListeners) {
+            connection[0].disconnect(connection[1])
+        }
+        this.visibleListeners = []
     }
-    enable(quickSettingsBox) {
-        if (quickSettingsBox) this.quickSettingsBox = quickSettingsBox
-        this.settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
-
-        // Add DND Quick Toggle
-        const qs = imports.ui.main.panel.statusArea.quickSettings;
-        this._dndToggle = new Me.imports.quickToggles.DND.Indicator();
-        qs._indicators.add_child(this._dndToggle);
-        qs._addItems(this._dndToggle.quickSettingsItems);
-
+    load() {
         {
             let allButtons = []
             let buttonsLabel = {}
@@ -58,24 +65,17 @@ var QuickTogglesManager = class QuickTogglesManager {
             }
         }
 
-        this._load(items)
+        this._apply(items)
 
         this._removedItemsConnection =
         this.settings.connect('changed::user-removed-buttons', (settings, key) => {
-            this._unload()
-            this._load(this.settings.get_strv("user-removed-buttons"))
+            this._unapply()
+            this._apply(this.settings.get_strv("user-removed-buttons"))
         })
     }
-    destroy() {
-        this._unload()
+    unload() {
+        this._unapply()
         this.settings.disconnect(this._removedItemsConnection)
         this.settings = null
-
-        // Remove DND Quick Toggle
-        const dndQSItems = this._dndToggle.quickSettingsItems[0];
-        dndQSItems.get_parent().remove_child(dndQSItems);
-        this._dndToggle.get_parent().remove_child(this._dndToggle);
-        this._dndToggle.destroy();
-        this._dndToggle = null;
     }
 }

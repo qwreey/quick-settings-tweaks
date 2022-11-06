@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.quick-settings-tweaks" path="/org/gnome/shell/extensions/quick-settings-tweaks/">
-
     <!-- Array of button class names -->
     <key name="user-removed-buttons" type="as">
       <default>[]</default>
@@ -27,10 +26,22 @@
     </key>
 
     <!-- list of enabled features -->
-    <key name="enabled-features" type="as">
-      <default>["volumeMixer","notifications","mediaControl"]</default>
+    <key name="add-dnd-quick-toggle-enabled" type="b">
+      <default>true</default>
     </key>
-    
+    <key name="volume-mixer-enabled" type="b">
+      <default>true</default>
+    </key>
+    <key name="notifications-enabled" type="b">
+      <default>true</default>
+    </key>
+    <key name="media-control-enabled" type="b">
+      <default>true</default>
+    </key>
+    <key name="disable-adjust-content-border-radius" type="b">
+      <default>false</default>
+    </key>
+
     <!-- notifications -->
     <key name="notifications-move-to-top" type="b">
       <default>false</default>
@@ -40,6 +51,15 @@
     </key>
     <key name="notifications-integrated" type="b">
       <default>true</default>
+    </key>
+    <key name="notifications-use-native-controls" type="b">
+      <default>false</default>
+    </key>
+    <key name="notifications-hide-when-no-notifications" type="b">
+      <default>true</default>
+    </key>
+    <key name="notifications-max-height" type="i">
+      <default>292</default>
     </key>
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
