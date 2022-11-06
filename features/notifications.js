@@ -29,7 +29,6 @@ var notificationsFeature = class {
             "media-control-compact-mode",
             "disable-adjust-content-border-radius",
             "notifications-use-native-controls",
-            // "notifications-max-height",
             "notifications-hide-when-no-notifications"
         ])
 

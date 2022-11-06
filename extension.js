@@ -1,10 +1,13 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 const Features = Me.imports.features
+const { logging } = Me.imports.utility
 var loaded
 
 // handling extension
 function enable() {
+    logging("Enabled")
+
     let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
 
     // load features
@@ -16,10 +19,16 @@ function enable() {
         new Features.dateMenu.dateMenuFeature(settings)
     ]
     for (const feature of loaded) feature.load()
+
+    logging("Loaded")
 }
 
 function disable() {
+    logging("Unloading ...")
+
     if (!loaded) return
     for (const feature of loaded) feature.unload()
     loaded = null
+
+    logging("Diabled")
 }

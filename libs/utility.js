@@ -18,3 +18,7 @@ function addChildWithIndex(parent,child,addIndex) {
         item.visible = tmp_visible[index]
     }
 }
+
+function logging(str) {
+    log("[EXTENSION QSTweaks] " + str)
+}
