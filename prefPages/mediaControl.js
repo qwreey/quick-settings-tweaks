@@ -6,7 +6,7 @@ const {
     baseGTypeName,
     makeRow,
     makeSwitch
-} = Me.imports.libs.prefItems
+} = Me.imports.libs.prefComponents
 
 var mediaControlPage = GObject.registerClass({
     GTypeName: baseGTypeName+'mediaControlPage',

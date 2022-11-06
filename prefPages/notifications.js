@@ -7,7 +7,7 @@ const {
     makeRow,
     makeSwitch,
     makeAdjustment
-} = Me.imports.libs.prefItems
+} = Me.imports.libs.prefComponents
 
 var notificationsPage = GObject.registerClass({
     GTypeName: baseGTypeName+'notificationsPage',

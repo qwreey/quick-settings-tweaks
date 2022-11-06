@@ -6,7 +6,7 @@ const {
     baseGTypeName,
     makeRow,
     makeSwitch
-} = Me.imports.libs.prefItems
+} = Me.imports.libs.prefComponents
 
 var quickTogglesPage = GObject.registerClass({
     GTypeName: baseGTypeName+'quickTogglesPage',

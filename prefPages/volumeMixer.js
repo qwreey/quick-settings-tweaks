@@ -6,7 +6,7 @@ const {
     baseGTypeName,
     makeRow,
     makeSwitch
-} = Me.imports.libs.prefItems
+} = Me.imports.libs.prefComponents
 
 var VolumeMixerAddFilterDialog = GObject.registerClass({
     GTypeName: baseGTypeName+'VolumeMixerAddFilterDialog',
