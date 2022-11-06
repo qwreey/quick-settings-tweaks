@@ -4,6 +4,7 @@ const Features = Me.imports.features
 const { logger } = Me.imports.libs.utility
 const { GLib } = imports.gi
 var loaded
+var timeout
 
 // handling extension
 function enable() {
@@ -21,7 +22,9 @@ function enable() {
         new Features.buttonRemover.buttonRemoverFeature(settings)
     ]
 
-    this.timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 300, () => {
+    // Add timeout for waitting other extensions such as GSConnect
+    // This is necessary behavior due to ordering qs panel
+    timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 300, () => {
         for (const feature of loaded) {
             logger(`Loading feature '${feature.constructor.name}'`)
             feature.load()
@@ -34,9 +37,9 @@ function enable() {
 function disable() {
     logger("Unloading ...")
 
-    if (this.timeout) {
-        GLib.Source.remove(this.timeout)
-        this.timeout = null
+    if (timeout) {
+        GLib.Source.remove(timeout)
+        timeout = null
     }
     if (!loaded) return
     for (const feature of loaded) {
