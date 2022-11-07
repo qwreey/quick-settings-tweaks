@@ -30,7 +30,7 @@ var aboutPage = GObject.registerClass({
             parent: group,
             title: "Version",
             suffix: new Gtk.Label({
-                label: Me.metadata.version.toString() || "Unknown"
+                label: Me.metadata.version?.toString() || "Unknown"
             })
         })
 
