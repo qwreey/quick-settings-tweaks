@@ -205,3 +205,9 @@
     .quick-settings .QSTWEAKS-media.QSTWEAKS-adjust-border-radius .message {
         border-radius: 22px;
     }
+
+/* .QSTWEAKS-remove-shadow */
+    .QSTWEAKS-notifications.QSTWEAKS-remove-shadow .message,
+    .quick-settings .QSTWEAKS-media.QSTWEAKS-remove-shadow .message {
+        box-shadow: none;
+    }

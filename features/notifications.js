@@ -27,6 +27,7 @@ var notificationsFeature = class {
             "media-control-enabled",
             "media-control-compact-mode",
             "disable-adjust-content-border-radius",
+            "disable-remove-shadow",
             "notifications-use-native-controls",
             "notifications-hide-when-no-notifications"
         ])
@@ -34,7 +35,8 @@ var notificationsFeature = class {
         // check is feature enabled
         let notificationsEnabled = this.settings.get_boolean("notifications-enabled")
         let mediaControlEnabled = this.settings.get_boolean("media-control-enabled")
-        let adjustBorder = this.settings.get_boolean("disable-adjust-content-border-radius")
+        let disableAdjustBorder = this.settings.get_boolean("disable-adjust-content-border-radius")
+        let disableRemoveShadow = this.settings.get_boolean("disable-remove-shadow")
         let nativeControls = this.settings.get_boolean("notifications-use-native-controls")
         if ( !notificationsEnabled && !mediaControlEnabled ) return
 
@@ -52,7 +54,9 @@ var notificationsFeature = class {
             // Is use native controls
             + (nativeControls ? "QSTWEAKS-notifications-use-native-controls " : "")
             // adjust border radius of messages
-            + (adjustBorder ? "" : "QSTWEAKS-adjust-border-radius ")
+            + (disableAdjustBorder ? "" : "QSTWEAKS-adjust-border-radius ")
+            // remove shadows
+            + (disableRemoveShadow ? "" : "QSTWEAKS-remove-shadow ")
             + "QSTWEAKS-notifications"
         this.notificationHandler.style
         = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
@@ -69,8 +73,11 @@ var notificationsFeature = class {
             if (this.settings.get_boolean("media-control-compact-mode")) {
                 mediaSection.style_class += " QSTWEAKS-media-compact-mode"
             }
-            if (!adjustBorder) {
+            if (!disableAdjustBorder) {
                 mediaSection.style_class += " QSTWEAKS-adjust-border-radius"
+            }
+            if (!disableRemoveShadow) {
+                mediaSection.style_class += " QSTWEAKS-remove-shadow"
             }
             QuickSettingsGrid.layout_manager.child_set_property(
                 QuickSettingsGrid, mediaSection, 'column-span', 2

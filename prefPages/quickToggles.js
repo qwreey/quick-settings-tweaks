@@ -47,6 +47,10 @@ var quickTogglesPage = GObject.registerClass({
             title: "This feature is unstable sometime",
             subtitle: "When lock/unlock with gnome-screensaver, unexpected behavior occurs\nPlease do not report issue about known issue, Almost duplicated\nKnown issue:\n  button doesn't remove after lockscreen\n  modal get bigger after lockscreen"
         })
+        makeRow({
+            parent: descriptionGroup,
+            title: "Please turn off if some bug occurred"
+        })
         this.add(descriptionGroup)
 
         // general

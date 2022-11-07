@@ -49,6 +49,13 @@ var otherPage = GObject.registerClass({
             value: settings.get_boolean("disable-adjust-content-border-radius"),
             bind: [settings, "disable-adjust-content-border-radius"]
         })
+        makeSwitch({
+            parent: group,
+            title: "Do not remove the shadow of contents.",
+            subtitle: "Don't remove the shadow of messages and media controls.",
+            value: settings.get_boolean("disable-remove-shadow"),
+            bind: [settings, "disable-remove-shadow"]
+        })
         this.add(group)
     }
 })

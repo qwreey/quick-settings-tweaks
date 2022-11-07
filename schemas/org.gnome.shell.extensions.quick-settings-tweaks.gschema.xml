@@ -24,6 +24,9 @@
     <key name="disable-adjust-content-border-radius" type="b">
       <default>false</default>
     </key>
+    <key name="disable-remove-shadow" type="b">
+      <default>false</default>
+    </key>
 
     <!-- notifications -->
     <key name="notifications-move-to-top" type="b">
