@@ -6,7 +6,8 @@ const {
     baseGTypeName,
     makeRow,
     makeSwitch,
-    makeAdjustment
+    makeAdjustment,
+    makeDropdown
 } = Me.imports.libs.prefComponents
 
 var notificationsPage = GObject.registerClass({
@@ -46,6 +47,18 @@ var notificationsPage = GObject.registerClass({
             subtitle: "Set maximum height of the Notifications widget. default is 292",
             value: settings.get_int("notifications-max-height"),
             bind: [settings, "notifications-max-height"],
+        })
+        makeDropdown({
+            parent: generalGroup,
+            title: "Position",
+            subtitle: "Set Notifications widget position",
+            value: settings.get_string('notifications-position'),
+            type: "string",
+            bind: [settings, 'notifications-position'],
+            items: [
+                {name: "Top", value: "top"},
+                {name: "Bottom", value: "bottom"}
+            ]
         })
         makeSwitch({
             parent: generalGroup,

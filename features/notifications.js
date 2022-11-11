@@ -22,7 +22,7 @@ var notificationsFeature = class {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
             "notifications-enabled",
-            "notifications-move-to-top",
+            "notifications-position",
             "notifications-integrated",
             "media-control-enabled",
             "media-control-compact-mode",
@@ -109,11 +109,13 @@ var notificationsFeature = class {
                 }
 
                 // Insert notification modal
-                if (this.settings.get_boolean("notifications-move-to-top") && (systemItemIndex != null)) {
-                    // insert on top
-                    addChildWithIndex(QuickSettingsGrid,this.notificationHandler,systemItemIndex)
-                } else {
-                    QuickSettingsGrid.add_child(this.notificationHandler)
+                switch (this.settings.get_string("notifications-position")) {
+                    case "top":
+                        addChildWithIndex(QuickSettingsGrid,this.notificationHandler,systemItemIndex)
+                        break
+                    case "bottom":
+                        QuickSettingsGrid.add_child(this.notificationHandler)
+                        break
                 }
                 QuickSettingsGrid.layout_manager.child_set_property(
                     QuickSettingsGrid, this.notificationHandler, 'column-span', 2
@@ -144,12 +146,17 @@ var notificationsFeature = class {
                 }
 
                 // Insert notification modal
-                if (this.settings.get_boolean("notifications-move-to-top")) {
-                    let quickSettingsModal = QuickSettingsBox.first_child
-                    QuickSettingsBox.remove_child(quickSettingsModal)
-                    QuickSettingsBox.add_child(this.notificationHandler)
-                    QuickSettingsBox.add_child(quickSettingsModal)
-                } else QuickSettingsBox.add_child(this.notificationHandler)
+                switch (this.settings.get_string("notifications-position")) {
+                    case "top":
+                        let quickSettingsModal = QuickSettingsBox.first_child
+                        QuickSettingsBox.remove_child(quickSettingsModal)
+                        QuickSettingsBox.add_child(this.notificationHandler)
+                        QuickSettingsBox.add_child(quickSettingsModal)
+                        break
+                    case "bottom":
+                        QuickSettingsBox.add_child(this.notificationHandler)
+                        break
+                }
             }
         }
     }

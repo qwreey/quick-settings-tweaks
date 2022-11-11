@@ -29,8 +29,8 @@
     </key>
 
     <!-- notifications -->
-    <key name="notifications-move-to-top" type="b">
-      <default>false</default>
+    <key name="notifications-position" type="s">
+      <default>"bottom"</default>
     </key>
     <key name="notifications-integrated" type="b">
       <default>true</default>

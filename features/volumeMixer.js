@@ -47,8 +47,12 @@ var volumeMixerFeature = class {
         // Insert volume mixer into Quick Settings
         let position = settings.get_string("volume-mixer-position")
         switch (position) {
-            case "top": addChildWithIndex(QuickSettingsGrid,this.volumeMixer.actor,inputSliderIndex)
-            case "bottom": QuickSettingsGrid.add_child(this.volumeMixer.actor)
+            case "top":
+                addChildWithIndex(QuickSettingsGrid,this.volumeMixer.actor,inputSliderIndex)
+                break
+            case "bottom":
+                QuickSettingsGrid.add_child(this.volumeMixer.actor)
+                break
         }
 
         // Allow volume mixer taking 2 space
