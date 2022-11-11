@@ -48,7 +48,6 @@ var buttonRemoverFeature = class {
                     visible: item.visible
                 })
             }
-            imports.ui.main.test = this.settings
             this.settings.set_string("list-buttons",JSON.stringify(listButtons))
         }
 

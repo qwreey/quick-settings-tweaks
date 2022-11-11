@@ -53,10 +53,12 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         let hasFiltered = false
         for (const matchStr of this._filteredApps) {
             let matchExp = this._useRegex ? new RegExp(matchStr) : matchStr
-            if (this._checkMatch(name,matchExp))
-                { hasFiltered = true; break }
-            if (this._checkDescription && this._checkMatch(description,matchExp))
-                { hasFiltered = true; break }
+            if (
+                // Check name
+                this._checkMatch(name,matchExp) 
+                // Check description
+                || this._checkDescription && this._checkMatch(description,matchExp)
+            ) { hasFiltered = true; break }
         }
         if (this._filterMode === "block" && hasFiltered) return
         if (this._filterMode === "allow" && !hasFiltered) return

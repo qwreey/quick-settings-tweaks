@@ -24,7 +24,7 @@ function enable() {
 
     // Add timeout for waitting other extensions such as GSConnect
     // This is necessary behavior due to ordering qs panel
-    timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 300, () => {
+    timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 400, () => {
         for (const feature of loaded) {
             logger(`Loading feature '${feature.constructor.name}'`)
             feature.load()

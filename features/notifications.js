@@ -46,7 +46,8 @@ var notificationsFeature = class {
             useNativeControls: nativeControls,
             hideWhenNoNotifications: this.settings.get_boolean("notifications-hide-when-no-notifications")
         })
-        this.notificationHandler.style_class =
+
+        let notificationStyle = this.notificationHandler.style_class =
             // If separated, style as popup menu
             (isIntegrated ? "" : "popup-menu-content quick-settings ")
             // Integrated or separated
@@ -58,8 +59,10 @@ var notificationsFeature = class {
             // remove shadows
             + (disableRemoveShadow ? "" : "QSTWEAKS-remove-shadow ")
             + "QSTWEAKS-notifications"
+
+        // Max height
         this.notificationHandler.style
-        = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
+            = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
         this.maxHeigthListen = this.settings.connect("changed::notifications-max-height",()=>{
             this.notificationHandler.style
             = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
@@ -99,18 +102,17 @@ var notificationsFeature = class {
         // Insert notifications
         if (notificationsEnabled) {
             if (this.settings.get_boolean("notifications-integrated")) {
-                // get system item index
-                let gridChildren = QuickSettingsGrid.get_children()
-                let systemItemIndex = null
-                for (let index = 0; index<gridChildren.length; index++) {
-                    if (gridChildren[index]?.constructor?.name == "SystemItem") {
-                        systemItemIndex = index
-                    }
-                }
-
                 // Insert notification modal
                 switch (this.settings.get_string("notifications-position")) {
                     case "top":
+                        // get system item index
+                        let gridChildren = QuickSettingsGrid.get_children()
+                        let systemItemIndex = null
+                        for (let index = 0; index<gridChildren.length; index++) {
+                            if (gridChildren[index]?.constructor?.name == "SystemItem") {
+                                systemItemIndex = index
+                            }
+                        }
                         addChildWithIndex(QuickSettingsGrid,this.notificationHandler,systemItemIndex)
                         break
                     case "bottom":
@@ -121,7 +123,6 @@ var notificationsFeature = class {
                     QuickSettingsGrid, this.notificationHandler, 'column-span', 2
                 )
             } else { // separated mode
-
                 // Restyle Box/Actor/Grid
                 this.boxBackupClass = QuickSettingsBox.style_class
                 QuickSettingsBox.style_class = ""
