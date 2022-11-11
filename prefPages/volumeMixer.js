@@ -129,11 +129,11 @@ var volumeMixerPage = GObject.registerClass({
             type: "string",
             bind: [this.settings, 'volume-mixer-position'],
             items: [
-                {name: "Top", value: "top"},
+                {name: "Top (Below Output/Input slider)", value: "top"},
                 {name: "Bottom", value: "bottom"}
             ]
         })
-
+        
         // show-description
         makeSwitch({
             title: 'Show stream Description',
@@ -151,7 +151,7 @@ var volumeMixerPage = GObject.registerClass({
             parent: generalGroup,
             bind: [this.settings, 'volume-mixer-show-icon']
         })
-
+        
         // Application filter settings group
         const filterGroup = new Adw.PreferencesGroup({
             title: 'Application Filtering',
@@ -170,6 +170,20 @@ var volumeMixerPage = GObject.registerClass({
                 {name: "Blacklist", value: "block"},
                 {name: "Whitelist", value: "allow"}
             ]
+        })
+        makeSwitch({
+            parent: filterGroup,
+            title: 'Using Javascript Regex',
+            subtitle: 'Use Javascript RegExp for filtering app name or description',
+            value: this.settings.get_boolean('volume-mixer-use-regex'),
+            bind: [this.settings, 'volume-mixer-use-regex']
+        })
+        makeSwitch({
+            parent: filterGroup,
+            title: "Check Stream Description",
+            subtitle: "Check Description also",
+            value: this.settings.get_boolean('volume-mixer-check-description'),
+            bind: [this.settings, 'volume-mixer-check-description']
         })
 
         // group to act as spacer for filter list

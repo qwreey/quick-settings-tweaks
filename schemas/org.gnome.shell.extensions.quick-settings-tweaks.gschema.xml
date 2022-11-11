@@ -30,6 +30,7 @@
 
     <!-- notifications -->
     <key name="notifications-position" type="s">
+      <!-- "bottom" or "top" -->
       <default>"bottom"</default>
     </key>
     <key name="notifications-integrated" type="b">
@@ -60,6 +61,12 @@
     </key>
 
     <!-- volume mixer -->
+    <key name="volume-mixer-use-regex" type="b">
+      <default>false</default>
+    </key>
+    <key name="volume-mixer-check-description" type="b">
+      <default>true</default>
+    </key>
     <key name="volume-mixer-position" type="s">
       <!-- "bottom" / "top" -->
       <default>"top"</default>

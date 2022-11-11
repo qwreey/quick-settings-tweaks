@@ -23,8 +23,16 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         this._filterMode = settings["volume-mixer-filter-mode"]
         this._showStreamDesc = settings["volume-mixer-show-description"]
         this._showStreamIcon = settings["volume-mixer-show-icon"]
+        this._useRegex = settings["volume-mixer-use-regex"]
+        this._checkDescription = settings["volume-mixer-check-description"]
 
         this._updateStreams()
+    }
+
+    _checkMatch(str,matchStr) {
+        if (!str) return
+        if (matchStr instanceof RegExp) return str.match(matchStr)
+        return str === matchStr
     }
 
     _streamAdded(control, id) {
@@ -38,16 +46,20 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         if (stream.is_event_stream || !(stream instanceof MixerSinkInput)) {
             return
         }
-        
-        if (this._filterMode === "block") {
-            if (this._filteredApps.indexOf(stream.get_name()) !== -1) {
-                return
-            }
-        } else if (this._filterMode === "allow") {
-            if (this._filteredApps.indexOf(stream.get_name()) === -1) {
-                return
-            }
+
+        let name = stream.get_name()
+        let description = stream.get_description()
+
+        let hasFiltered = false
+        for (const matchStr of this._filteredApps) {
+            let matchExp = this._useRegex ? new RegExp(matchStr) : matchStr
+            if (this._checkMatch(name,matchExp))
+                { hasFiltered = true; break }
+            if (this._checkDescription && this._checkMatch(description,matchExp))
+                { hasFiltered = true; break }
         }
+        if (this._filterMode === "block" && hasFiltered) return
+        if (this._filterMode === "allow" && !hasFiltered) return
 
         const slider = new StreamSlider(Volume.getMixerControl())
         slider.stream = stream
@@ -56,9 +68,6 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         if (this._showStreamIcon) {
             slider._icon.icon_name = stream.get_icon_name()
         }
-
-        let name = stream.get_name()
-        let description = stream.get_description()
 
         if (name || description) {
             slider._vbox = new BoxLayout();

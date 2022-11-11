@@ -21,7 +21,9 @@ var volumeMixerFeature = class {
             "volume-mixer-filtered-apps",
             "volume-mixer-show-description",
             "volume-mixer-show-icon",
-            "volume-mixer-filter-mode"
+            "volume-mixer-filter-mode",
+            "volume-mixer-use-regex",
+            "volume-mixer-check-description"
         ])
 
         // check is feature enabled
@@ -32,7 +34,9 @@ var volumeMixerFeature = class {
             'volume-mixer-filtered-apps': settings.get_strv("volume-mixer-filtered-apps"),
             'volume-mixer-filter-mode': settings.get_string("volume-mixer-filter-mode"),
             'volume-mixer-show-description': settings.get_boolean("volume-mixer-show-description"),
-            'volume-mixer-show-icon': settings.get_boolean("volume-mixer-show-icon")
+            'volume-mixer-show-icon': settings.get_boolean("volume-mixer-show-icon"),
+            'volume-mixer-check-description': settings.get_boolean("volume-mixer-check-description"),
+            'volume-mixer-use-regex': settings.get_boolean("volume-mixer-use-regex")
         })
 
         // Find Input slider index
