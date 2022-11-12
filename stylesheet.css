@@ -214,3 +214,8 @@
     .quick-settings .QSTWEAKS-media.QSTWEAKS-remove-shadow .message {
         box-shadow: none;
     }
+
+/* input output labels */
+    .QSTWEAWKS-input-output-label {
+        width: auto;
+    }
