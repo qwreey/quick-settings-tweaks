@@ -9,8 +9,7 @@ const featureReloader = Me.imports.libs.featureReloader
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 
 var buttonRemoverFeature = class {
-    constructor(settings) {
-        this.settings = settings
+    constructor() {
         this.removedItems = []
         this.visibleListeners = []
     }
@@ -70,6 +69,5 @@ var buttonRemoverFeature = class {
     unload() {
         this._unapply()
         this.settings.disconnect(this._removedItemsConnection)
-        this.settings = null
     }
 }

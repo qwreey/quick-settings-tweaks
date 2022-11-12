@@ -12,10 +12,6 @@ const {
 } = Me.imports.libs.gnome
 
 var notificationsFeature = class {
-    constructor(settings) {
-        this.settings = settings
-    }
-
     load() {
         let settings = this.settings
 

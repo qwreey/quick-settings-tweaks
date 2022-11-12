@@ -7,10 +7,6 @@ const { QuickSettingsGrid } = Me.imports.libs.gnome
 const { addChildWithIndex } = Me.imports.libs.utility
 
 var volumeMixerFeature = class {
-    constructor(settings) {
-        this.settings = settings
-    }
-
     load() {
         let settings = this.settings
 

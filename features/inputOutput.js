@@ -9,10 +9,6 @@ const Volume = imports.ui.status.volume
 const PopupMenu = imports.ui.popupMenu;
 
 var inputOutputFeature = class {
-    constructor(settings) {
-        this.settings = settings
-    }
-
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[

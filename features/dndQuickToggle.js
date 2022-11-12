@@ -6,10 +6,6 @@ const { QuickSettings } = Me.imports.libs.gnome
 const { Indicator } = Me.imports.libs.dndQuickToogleHandler
 
 var dndQuickToggleFeature = class {
-    constructor(settings) {
-        this.settings = settings
-    }
-
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[

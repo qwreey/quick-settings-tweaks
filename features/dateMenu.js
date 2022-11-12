@@ -12,10 +12,6 @@ const {
 const { Indicator } = Me.imports.libs.dndQuickToogleHandler
 
 var dateMenuFeature = class {
-    constructor(settings) {
-        this.settings = settings
-    }
-
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[

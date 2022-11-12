@@ -3,51 +3,54 @@ const Me = ExtensionUtils.getCurrentExtension()
 const Features = Me.imports.features
 const { logger } = Me.imports.libs.utility
 const { GLib } = imports.gi
-var loaded
-var timeout
 
-// handling extension
-function enable() {
-    logger("Loading ...")
-
-    let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
-    ExtensionUtils.initTranslations()
-
-    // load features
-    loaded = [
-        new Features.dndQuickToggle.dndQuickToggleFeature(settings),
-        new Features.notifications.notificationsFeature(settings),
-        new Features.volumeMixer.volumeMixerFeature(settings),
-        new Features.dateMenu.dateMenuFeature(settings),
-        new Features.buttonRemover.buttonRemoverFeature(settings),
-        new Features.inputOutput.inputOutputFeature(settings)
-    ]
-
-    // Add timeout for waitting other extensions such as GSConnect
-    // This is necessary behavior due to ordering qs panel
-    timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 400, () => {
-        for (const feature of loaded) {
-            logger(`Loading feature '${feature.constructor.name}'`)
-            feature.load()
+class Extension {
+    constructor() {
+        logger("Init")
+        this.features = [
+            new Features.dndQuickToggle.dndQuickToggleFeature(),
+            new Features.notifications.notificationsFeature(),
+            new Features.volumeMixer.volumeMixerFeature(),
+            new Features.dateMenu.dateMenuFeature(),
+            new Features.buttonRemover.buttonRemoverFeature(),
+            new Features.inputOutput.inputOutputFeature()
+        ]
+    }
+    disable() {
+        logger("Unloading ...")
+    
+        if (this.timeout) {
+            GLib.Source.remove(this.timeout)
+            this.timeout = null
         }
-        logger("Loaded")
-        return GLib.SOURCE_REMOVE;
-    });
+        for (const feature of this.features) {
+            logger(`Unload feature '${feature.constructor.name}'`)
+            feature.unload()
+            feature.settings = null
+        }
+    
+        logger("Diabled")
+    }
+    enable() {
+        logger("Loading ...")
+    
+        let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
+        ExtensionUtils.initTranslations(Me.metadata['gettext-domain'])
+    
+        // Add timeout for waitting other extensions such as GSConnect
+        // This is necessary behavior due to ordering qs panel
+        this.timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 400, () => {
+            for (const feature of this.features) {
+                logger(`Loading feature '${feature.constructor.name}'`)
+                feature.settings = settings
+                feature.load()
+            }
+            logger("Loaded")
+            return GLib.SOURCE_REMOVE
+        })
+    }
 }
 
-function disable() {
-    logger("Unloading ...")
-
-    if (timeout) {
-        GLib.Source.remove(timeout)
-        timeout = null
-    }
-    if (!loaded) return
-    for (const feature of loaded) {
-        logger(`Unload feature '${feature.constructor.name}'`)
-        feature.unload()
-    }
-    loaded = null
-
-    logger("Diabled")
+function init(meta) {
+    return new Extension()
 }
