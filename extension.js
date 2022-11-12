@@ -19,7 +19,8 @@ function enable() {
         new Features.notifications.notificationsFeature(settings),
         new Features.volumeMixer.volumeMixerFeature(settings),
         new Features.dateMenu.dateMenuFeature(settings),
-        new Features.buttonRemover.buttonRemoverFeature(settings)
+        new Features.buttonRemover.buttonRemoverFeature(settings),
+        new Features.inputOutput.inputOutputFeature(settings)
     ]
 
     // Add timeout for waitting other extensions such as GSConnect

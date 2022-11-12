@@ -87,5 +87,16 @@
       </choices>
       <default>'block'</default>
     </key>
+
+    <!-- input output -->
+    <key name="output-show-selected" type="b">
+      <default>false</default>
+    </key>
+    <key name="input-show-selected" type="b">
+      <default>false</default>
+    </key>
+    <key name="input-always-show" type="b">
+      <default>false</default>
+    </key>
   </schema>
 </schemalist>

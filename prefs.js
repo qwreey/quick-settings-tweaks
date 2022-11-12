@@ -4,6 +4,7 @@ const Me = ExtensionUtils.getCurrentExtension()
 
 var pageList = [
     Me.imports.prefPages.volumeMixer.volumeMixerPage,
+    Me.imports.prefPages.inputOutput.inputOutputPage,
     Me.imports.prefPages.notifications.notificationsPage,
     Me.imports.prefPages.mediaControl.mediaControlPage,
     Me.imports.prefPages.quickToggles.quickTogglesPage,
