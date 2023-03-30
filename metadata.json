@@ -3,7 +3,8 @@
   "name": "Quick Settings Tweaker",
   "url": "https://github.com/qwreey75/quick-settings-tweaks",
   "shell-version": [
-    "43"
+    "43",
+    "44"
   ],
   "uuid": "quick-settings-tweaks@qwreey",
   "settings-schema": "org.gnome.shell.extensions.quick-settings-tweaks",
