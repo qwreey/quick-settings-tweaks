@@ -1,6 +1,7 @@
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const QuickSettingsMenu = imports.ui.main.panel.statusArea.quickSettings;
 const featureReloader = Me.imports.libs.featureReloader;
 const { QuickSettings } = Me.imports.libs.gnome;
 const { Indicator } = Me.imports.libs.dndQuickToggleHandler;
@@ -21,6 +22,23 @@ var dndQuickToggleFeature = class {
     this.dndToggle = new Indicator();
     QuickSettings._indicators.add_child(this.dndToggle);
     QuickSettings._addItems(this.dndToggle.quickSettingsItems);
+
+    // This is a bit of a hack, but it works for now. I took this from the
+    // gjs guide on how to position items above the background apps menu.
+    function addQuickSettingsItems(items) {
+      // Add the items with the built-in function
+      QuickSettingsMenu._addItems(items);
+
+      // Ensure the tile(s) are above the background apps menu
+      for (const item of items) {
+        QuickSettingsMenu.menu._grid.set_child_below_sibling(
+          item,
+          QuickSettingsMenu._backgroundApps.quickSettingsItems[0]
+        );
+      }
+    }
+
+    addQuickSettingsItems(this.dndToggle.quickSettingsItems);
 
     //remove DND button from datemenu
     this.datemenu_dnd = DateMenu.last_child.last_child;
