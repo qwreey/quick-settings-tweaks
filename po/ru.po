@@ -1,0 +1,5 @@
+# Quick settings notifications title text
+
+# Notifications title
+msgid "Notifications"
+msgstr "Уведомления"
