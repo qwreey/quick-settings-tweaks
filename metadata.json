@@ -1,11 +1,9 @@
 {
-  "description": "Let's tweak gnome 43's quick settings! You can add Media Controls, Notifications, Volume Mixer on quick settings and remove useless buttons!",
-  "name": "Quick Settings Tweaker",
-  "url": "https://github.com/qwreey75/quick-settings-tweaks",
-  "shell-version": [
-    "43"
-  ],
-  "uuid": "quick-settings-tweaks@qwreey",
+  "description": "This is a fork of Quick Settings Tweaker by qwreey75, with GNOME 44 support in mind. The original extension can be found here: https://extensions.gnome.org/extension/5446/quick-settings-tweaker/.\n\nLet's tweak gnome 43's quick settings! You can add Media Controls, Notifications, Volume Mixer on quick settings and remove useless buttons!",
+  "name": "Quick Settings Retweaked",
+  "url": "https://github.com/kgdn/quick-settings-tweaks",
+  "shell-version": ["43", "44"],
+  "uuid": "quick-settings-tweaks@kgdn",
   "settings-schema": "org.gnome.shell.extensions.quick-settings-tweaks",
   "gettext-domain": "quick-settings-tweaks"
 }
