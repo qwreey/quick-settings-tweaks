@@ -18,27 +18,35 @@ var inputOutputFeature = class {
         ])
 
         this._inputStreamSlider = this._getInputStreamSlider()
-        this._setupOutputChangedListener()
-        this._setupInputChangedListener()
-        this._setupInputVisibilityObserver()
+        if (this._inputStreamSlider) {
+            this._setupInputChangedListener()
+            this._setupInputVisibilityObserver()
+        }
+        this._outputStreamSlider = this._getOutputStreamSlider()
+        if (this._outputStreamSlider) {
+            this._setupOutputChangedListener()
+        }
     }
 
     unload() {
         // disable feature reloader
         featureReloader.disable(this)
 
-        this._detachOutputLabel()
-        Volume.getMixerControl().disconnect(this._outputListener)
-        this._outputListener = null
+        if (this._inputStreamSlider) {
+            this._detachInputLabel()
+            Volume.getMixerControl().disconnect(this._inputListener)
+            this._inputListener = null
 
-        this._detachInputLabel()
-        Volume.getMixerControl().disconnect(this._inputListener)
-        this._inputListener = null
-
-        this._inputStreamSlider.disconnect(this._inputVisibilityListener)
-        this._inputVisibilityListener = null
-        this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible()
-        this._inputStreamSlider = null
+            this._inputStreamSlider.disconnect(this._inputVisibilityListener)
+            this._inputVisibilityListener = null
+            this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible()
+            this._inputStreamSlider = null
+        }
+        if (this._outputStreamSlider) {
+            this._detachOutputLabel()
+            Volume.getMixerControl().disconnect(this._outputListener)
+            this._outputListener = null
+        }
     }
 
     // =========================================== Ouput ===========================================
@@ -58,7 +66,7 @@ var inputOutputFeature = class {
         addChildWithIndex(QuickSettingsGrid, this.outputLabel, this._getOutputStreamSliderIndex() - 1);
         this._spanTwoColumns(this.outputLabel)
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
-        this.outputLabel.text = this._findActiveDevice(this._getOutputStreamSlider())
+        this.outputLabel.text = this._findActiveDevice(this._outputStreamSlider)
     }
 
     _detachOutputLabel() {
