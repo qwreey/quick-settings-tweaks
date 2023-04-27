@@ -28,6 +28,7 @@ class Extension {
             feature.unload()
             feature.settings = null
         }
+        this.features = null;
     
         logger("Diabled")
     }
