@@ -17,6 +17,7 @@ var inputOutputFeature = class {
             "input-always-show"
         ])
 
+        this._inputStreamSlider = this._getInputStreamSlider()
         this._setupOutputChangedListener()
         this._setupInputChangedListener()
         this._setupInputVisibilityObserver()
@@ -34,9 +35,10 @@ var inputOutputFeature = class {
         Volume.getMixerControl().disconnect(this._inputListener)
         this._inputListener = null
 
-        this._getInputStreamSlider().disconnect(this._inputVisibilityListener)
+        this._inputStreamSlider.disconnect(this._inputVisibilityListener)
         this._inputVisibilityListener = null
-        this._getInputStreamSlider().visible = this._getInputStreamSlider()._shouldBeVisible()
+        this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible()
+        this._inputStreamSlider = null
     }
 
     // =========================================== Ouput ===========================================
@@ -78,7 +80,7 @@ var inputOutputFeature = class {
         addChildWithIndex(QuickSettingsGrid, this.inputLabel, this._getInputStreamSliderIndex() - 1)
         this._spanTwoColumns(this.inputLabel)
         this._setInputLabelVisibility()
-        this.inputLabel.text = this._findActiveDevice(this._getInputStreamSlider())
+        this.inputLabel.text = this._findActiveDevice(this._inputStreamSlider)
     }
 
     _onInputDeviceChanged(deviceId) {
@@ -96,7 +98,7 @@ var inputOutputFeature = class {
 
     // =========================================== Input Visbility ===========================================
     _setupInputVisibilityObserver() {
-        this._inputVisibilityListener = this._getInputStreamSlider().connect("notify::visible", () => this._onInputStreamSliderSynced())
+        this._inputVisibilityListener = this._inputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
         this._onInputStreamSliderSynced()
     }
 
@@ -106,11 +108,11 @@ var inputOutputFeature = class {
     }
 
     _setInputStreamSliderVisibility() {
-        this._getInputStreamSlider().visible = this._getInputStreamSlider()._shouldBeVisible() || this.settings.get_boolean("input-always-show")
+        this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
     }
 
     _setInputLabelVisibility() {
-        this.inputLabel.visible = this._getInputStreamSlider().visible && this.settings.get_boolean("input-show-selected")
+        this.inputLabel.visible = this._inputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
     }
 
 
