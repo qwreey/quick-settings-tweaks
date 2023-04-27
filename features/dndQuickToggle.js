@@ -15,6 +15,7 @@ var dndQuickToggleFeature = class {
       "add-dnd-quick-toggle-enabled",
     ]);
 
+    this.datemenu_dnd = null;
     // check is feature enabled
     if (!this.settings.get_boolean("add-dnd-quick-toggle-enabled")) return;
 
@@ -51,6 +52,9 @@ var dndQuickToggleFeature = class {
   unload() {
     // disable feature reloader
     featureReloader.disable(this);
+
+    if (this.datemenu_dnd == null) return;
+
     //put back the button to the datemenu
     this.datemenu_dnd.disconnect(this.datemenu_dnd_connection);
     this.datemenu_dnd_connection = null;
