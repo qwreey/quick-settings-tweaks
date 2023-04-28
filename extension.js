@@ -28,7 +28,13 @@ class Extension {
             feature.unload()
             feature.settings = null
         }
-        this.features = null;
+        // This cause a crash when disabling the extension.
+        // Just Perfection said it was necessary to put this for the extension to pass review
+        // but since `this.features` is created in the constructor that's not a good idea.
+        // Moreover, I don't think it's necessary because each feature is cleaned up anyway,
+        // the only remaining things are their object, which are never re-created so it don't
+        // cause a memoty leak.
+        //this.features = null;
     
         logger("Diabled")
     }

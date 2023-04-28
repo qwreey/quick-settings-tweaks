@@ -79,7 +79,7 @@ var inputOutputFeature = class {
     // =========================================== Input ===========================================
     _setupInputChangedListener() {
         this._attachInputLabel()
-        this._outputListener = Volume.getMixerControl().connect('active-input-update', (c, id) => this._onInputDeviceChanged(id))
+        this._inputListener = Volume.getMixerControl().connect('active-input-update', (c, id) => this._onInputDeviceChanged(id))
     }
 
     _attachInputLabel() {
