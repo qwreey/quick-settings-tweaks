@@ -5,107 +5,109 @@ const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
 var Notifications = GObject.registerClass(
-    class Notifications extends St.BoxLayout{
-        _init(options){
-            let useNativeControls = options.useNativeControls
-            let hideWhenNoNotifications = options.hideWhenNoNotifications
+class Notifications extends St.BoxLayout{
+    _init(options){
+        // options {
+        //     hideWhenNoNotifications
+        //     useNativeControls
+        // }
+        super._init({
+            vertical: true,
+        })
+        this.options = options
 
-            super._init({
-                vertical: true,
-            })
+        let datemenu = new imports.ui.dateMenu.DateMenuButton()
+        let messageList = datemenu._messageList
+        this.notificationList = messageList._notificationSection
+        this.nativeDndSwitch = messageList._dndButton
+        this.nativeClearButton = messageList._clearButton
 
-            let datemenu = new imports.ui.dateMenu.DateMenuButton()
-            let messageList = datemenu._messageList
-            this.notificationList = messageList._notificationSection
-            this.nativeDndSwitch = messageList._dndButton
-            this.nativeClearButton = messageList._clearButton
+        // media controls
+        this.mediaSection = messageList._mediaSection
+        this.mediaSection.get_parent().remove_child(this.mediaSection)
 
-            // media controls
-            this.mediaSection = messageList._mediaSection
-            this.mediaSection.get_parent().remove_child(this.mediaSection)
+        // notification list scroll
+        this.list = messageList._scrollView
+        this.list.get_parent().remove_child(this.list)
+        this.list.overlay_scrollbars
 
-            // notification list scroll
-            this.list = messageList._scrollView
-            this.list.get_parent().remove_child(this.list)
+        // header / title
+        let headerBox = new St.BoxLayout({ style_class: "QSTWEAKS-notifications-header" })
+        this.add_child(headerBox)
+        this.add_child(this.list)
+        let titleLabel = new St.Label({
+            text: ExtensionUtils.gettext('Notifications'),
+            style_class: "QSTWEAKS-notifications-title",
+            y_align: Clutter.ActorAlign.CENTER,
+            x_align: Clutter.ActorAlign.START,
+            x_expand: true
+        })
+        headerBox.add_child(titleLabel)
 
-            // header / title
-            let headerBox = new St.BoxLayout({ style_class: "QSTWEAKS-notifications-header" })
-            this.add_child(headerBox)
-            this.add_child(this.list)
-            let titleLabel = new St.Label({
-                text: ExtensionUtils.gettext('Notifications'),
-                style_class: "QSTWEAKS-notifications-title",
-                y_align: Clutter.ActorAlign.CENTER,
-                x_align: Clutter.ActorAlign.START,
-                x_expand: true
-            })
-            headerBox.add_child(titleLabel)
+        // no notifications text
+        let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
+        noNotiBox.style_class = "QSTWEAKS-notifications-no-notifications-box"
+        const noNotiPlaceholder = new NoNotifPlaceholder()
+        noNotiBox.add_child(noNotiPlaceholder)
+        noNotiBox.hide()
+        this.add_child(noNotiBox)
+        this.noNotiBox = noNotiBox
 
-            // no notifications text
-            let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
-            noNotiBox.style_class = "QSTWEAKS-notifications-no-notifications-box"
-            const noNotiPlaceholder = new NoNotifPlaceholder()
-            noNotiBox.add_child(noNotiPlaceholder)
-            noNotiBox.hide()
-            this.add_child(noNotiBox)
-
-            // clear button / dnd switch
-            if (useNativeControls) {
-                // if use native controls
-                {
-                    let parent = this.nativeClearButton.get_parent()
-                    parent.remove_child(this.nativeClearButton)
-                    parent.remove_child(this.nativeDndSwitch)
-                    this.nativeDndText = parent.first_child
-                    parent.remove_child(this.nativeDndText)
-                }
-
-                let nativeControlBox = new St.BoxLayout()
-                nativeControlBox.add_child(this.nativeDndText)
-                nativeControlBox.add_child(this.nativeDndSwitch)
-                nativeControlBox.add_child(this.nativeClearButton)
-                this.nativeControlBox = nativeControlBox
-                this.add_child(nativeControlBox)
-            } else {
-                this.clearButton = new ClearNotificationsButton()
-                this.clearButton.connect("clicked",()=>{
-                    messageList._sectionList.get_children().forEach(s => s.clear())
-                })
-                headerBox.add_child(this.clearButton)
+        // clear button / dnd switch
+        if (options.useNativeControls) {
+            // if use native controls
+            {
+                let parent = this.nativeClearButton.get_parent()
+                parent.remove_child(this.nativeClearButton)
+                parent.remove_child(this.nativeDndSwitch)
+                this.nativeDndText = parent.first_child
+                parent.remove_child(this.nativeDndText)
             }
 
-            // sync notifications
-            let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
-            let notifications = stockNotifications._messages
-            notifications.forEach(n => {
-                let notification = new Calendar.NotificationMessage(n.notification)
-                this.notificationList.addMessage(notification)
+            let nativeControlBox = new St.BoxLayout()
+            nativeControlBox.add_child(this.nativeDndText)
+            nativeControlBox.add_child(this.nativeDndSwitch)
+            nativeControlBox.add_child(this.nativeClearButton)
+            this.nativeControlBox = nativeControlBox
+            this.add_child(nativeControlBox)
+        } else {
+            this.clearButton = new ClearNotificationsButton()
+            this.clearButton.connect("clicked",()=>{
+                messageList._sectionList.get_children().forEach(s => s.clear())
             })
+            headerBox.add_child(this.clearButton)
+        }
 
-            // sync no-notification placeholder and clear button
-            const updateNoNotifications = ()=>{
-                if (this.nativeClearButton.reactive) {
-                    this.list.show()
-                    noNotiBox.hide()
-                    if (this.clearButton) this.clearButton.show()
-                    if (hideWhenNoNotifications) this.show()
-                } else {
-                    this.list.hide()
-                    noNotiBox.show()
-                    if (this.clearButton) this.clearButton.hide()
-                    if (hideWhenNoNotifications) this.hide()
-                }
-            }
-            this.nativeClearButton.connect('notify::reactive', updateNoNotifications)
-            updateNoNotifications()
+        // sync notifications
+        let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
+        let notifications = stockNotifications._messages
+        notifications.forEach(n => {
+            let notification = new Calendar.NotificationMessage(n.notification)
+            this.notificationList.addMessage(notification)
+        })
 
-            this.connect('destroy', () => {
-                datemenu.destroy()
-                datemenu = null
-            })
+        // sync no-notification placeholder and clear button
+        this.nativeClearButton.connect('notify::reactive', this._updateNoNotifications.bind(this))
+        this._updateNoNotifications()
+
+        this.connect('destroy', datemenu.destroy.bind(datemenu))
+    }
+
+    // sync no-notification placeholder and clear button
+    _updateNoNotifications() {
+        if (this.nativeClearButton.reactive) {
+            this.list.show()
+            this.noNotiBox.hide()
+            if (this.clearButton) this.clearButton.show()
+            if (this.options. hideWhenNoNotifications) this.show()
+        } else {
+            this.list.hide()
+            this.noNotiBox.show()
+            if (this.clearButton) this.clearButton.hide()
+            if (this.options.hideWhenNoNotifications) this.hide()
         }
     }
-)
+})
 
 const NoNotifPlaceholder = GObject.registerClass(
 class NoNotifPlaceholder extends St.BoxLayout {
