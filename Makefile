@@ -12,7 +12,7 @@ build:
 
 install: build
 	gnome-extensions install\
-		dist/quick-settings-tweaks@kgdn.shell-extension.zip\
+		dist/quick-settings-tweaks@qwreey.shell-extension.zip\
 		--force
 
 dev: install
