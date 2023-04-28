@@ -17,13 +17,19 @@ var inputOutputFeature = class {
             "input-always-show"
         ])
 
+        this._outputListener = null
+        this._inputListener = null
+        this._inputVisibilityListener = null
+
         this._inputStreamSlider = this._getInputStreamSlider()
-        if (this._inputStreamSlider) {
+        if (this._inputStreamSlider && this.settings.get_boolean("input-show-selected")) {
             this._setupInputChangedListener()
+        }
+        if (this._inputStreamSlider && this.settings.get_boolean("input-always-show")) {
             this._setupInputVisibilityObserver()
         }
         this._outputStreamSlider = this._getOutputStreamSlider()
-        if (this._outputStreamSlider) {
+        if (this._outputStreamSlider && this.settings.get_boolean("output-show-selected")) {
             this._setupOutputChangedListener()
         }
     }
@@ -32,17 +38,17 @@ var inputOutputFeature = class {
         // disable feature reloader
         featureReloader.disable(this)
 
-        if (this._inputStreamSlider) {
+        if (this._inputStreamSlider && this._inputListener) {
             this._detachInputLabel()
             Volume.getMixerControl().disconnect(this._inputListener)
             this._inputListener = null
-
+        }
+        if (this._inputStreamSlider && this._inputVisibilityListener) {
             this._inputStreamSlider.disconnect(this._inputVisibilityListener)
             this._inputVisibilityListener = null
             this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible()
-            this._inputStreamSlider = null
         }
-        if (this._outputStreamSlider) {
+        if (this._outputStreamSlider && this._outputListener) {
             this._detachOutputLabel()
             Volume.getMixerControl().disconnect(this._outputListener)
             this._outputListener = null
@@ -112,7 +118,9 @@ var inputOutputFeature = class {
 
     _onInputStreamSliderSynced() {
         this._setInputStreamSliderVisibility()
-        this._setInputLabelVisibility()
+        if (this._inputListener) {
+            this._setInputLabelVisibility()
+        }
     }
 
     _setInputStreamSliderVisibility() {
