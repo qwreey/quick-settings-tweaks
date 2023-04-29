@@ -17,5 +17,5 @@ install: build
 
 dev: install
 ifeq ($(XDG_SESSION_TYPE),x11)
-	pkill gnome-shell &
+	busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…", global.context)'
 endif
