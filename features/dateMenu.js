@@ -63,6 +63,7 @@ var dateMenuFeature = class {
       DateMenuBox.style = "";
       this.dateMenuNotificationsRemoved = null;
     }
+
     // undo weather fix
     if (this.weatherFixBackupClass) {
       DateMenuBox.style_class = this.weatherFixBackupClass;

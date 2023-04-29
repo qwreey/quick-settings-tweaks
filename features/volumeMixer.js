@@ -6,6 +6,19 @@ const { VolumeMixer } = Me.imports.libs.volumeMixerHandler
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 
 var volumeMixerFeature = class {
+    reorder() {
+        // reorder on menu open
+        QuickSettingsGrid.set_child_below_sibling(
+            this.volumeMixer.actor,
+            this._getInputStreamSlider()
+        )
+    }
+
+    _getInputStreamSlider() {
+        return this.inputStreamSlider
+            || (this.inputStreamSlider = QuickSettingsGrid.get_children().find((child)=>child.constructor?.name == "InputStreamSlider"))
+    }
+
     load() {
         let settings = this.settings
 
@@ -38,10 +51,7 @@ var volumeMixerFeature = class {
         let position = settings.get_string("volume-mixer-position")
         switch (position) {
             case "top":
-                QuickSettingsGrid.insert_child_at_index(this.volumeMixer.actor,
-                    // Find Input slider index
-                    QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "InputStreamSlider")+1
-                )
+                QuickSettingsGrid.insert_child_below(this.volumeMixer.actor,this._getInputStreamSlider())
                 break
             case "bottom":
                 QuickSettingsGrid.add_child(this.volumeMixer.actor)
