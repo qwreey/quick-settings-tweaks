@@ -1,8 +1,7 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
-const { addChildWithIndex } = Me.imports.libs.utility
+const { featureReloader } = Me.imports.libs.utility
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 const { Label } = imports.gi.St
 const Volume = imports.ui.status.volume
@@ -69,7 +68,7 @@ var inputOutputFeature = class {
     _attachOutputLabel() {
         this.outputLabel = new Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        addChildWithIndex(QuickSettingsGrid, this.outputLabel, this._getOutputStreamSliderIndex() - 1);
+        QuickSettingsGrid.insert_child_at_index(this.outputLabel, this._getOutputStreamSliderIndex() - 1)
         this._spanTwoColumns(this.outputLabel)
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
         this.outputLabel.text = this._findActiveDevice(this._outputStreamSlider)
@@ -91,7 +90,7 @@ var inputOutputFeature = class {
     _attachInputLabel() {
         this.inputLabel = new Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        addChildWithIndex(QuickSettingsGrid, this.inputLabel, this._getInputStreamSliderIndex() - 1)
+        QuickSettingsGrid.insert_child_at_index(this.inputLabel, this._getInputStreamSliderIndex() - 1)
         this._spanTwoColumns(this.inputLabel)
         this._setInputLabelVisibility()
         this.inputLabel.text = this._findActiveDevice(this._inputStreamSlider)

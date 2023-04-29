@@ -1,10 +1,9 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
+const { featureReloader } = Me.imports.libs.utility
 const { VolumeMixer } = Me.imports.libs.volumeMixerHandler
 const { QuickSettingsGrid } = Me.imports.libs.gnome
-const { addChildWithIndex } = Me.imports.libs.utility
 
 var volumeMixerFeature = class {
     load() {
@@ -48,7 +47,7 @@ var volumeMixerFeature = class {
         let position = settings.get_string("volume-mixer-position")
         switch (position) {
             case "top":
-                addChildWithIndex(QuickSettingsGrid,this.volumeMixer.actor,inputSliderIndex)
+                QuickSettingsGrid.insert_child_at_index(this.volumeMixer.actor,inputSliderIndex)
                 break
             case "bottom":
                 QuickSettingsGrid.add_child(this.volumeMixer.actor)

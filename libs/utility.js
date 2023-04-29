@@ -1,24 +1,49 @@
-// this module exports many useful functions
-// for simplify main codes
 
-function addChildWithIndex(parent,child,addIndex) {
-    let children = parent.get_children()
-    let tmp = []
-    let tmp_visible = []
-    for (let index = addIndex+1; index<children.length; index++) {
-        let item = children[index]
-        tmp.push(item)
-        tmp_visible.push(item.visible)
-        parent.remove_child(item)
-    }
-    parent.add_child(child);
-    for (let index = 0; index<tmp.length; index++) {
-        let item = tmp[index]
-        parent.add_child(item)
-        item.visible = tmp_visible[index]
+// This is a bit of a hack, but it works for now. I took this from the
+// gjs guide on how to position items above the background apps menu.
+function addQuickSettingsItems(items) {
+    // Add the items with the built-in function
+    QuickSettings._addItems(items)
+
+    // Ensure the tile(s) are above the background apps menu
+    for (const item of items) {
+        QuickSettingsGrid.set_child_below_sibling(
+        item,
+        QuickSettings._backgroundApps.quickSettingsItems[0]
+        );
     }
 }
 
 function logger(str) {
     log("[EXTENSION QSTweaks] " + str)
+}
+
+var featureReloader = {
+    // Enable feature reloader with specific setting keys
+    enableWithSettingKeys(feature,settingKeys) {
+        // save connections here and destroy when disable called
+        let settingsListeners = feature.settingsListeners
+        if (!settingsListeners) {
+            settingsListeners = []
+            feature.settingsListeners = settingsListeners
+        }
+    
+        const reload = ()=>{
+            feature.unload()
+            feature.load()
+        }
+    
+        for (const key of settingKeys) {
+            settingsListeners.push(feature.settings.connect("changed::"+key,reload))
+        }
+    },
+    
+    // Disable feature reloader
+    disable(feature) {
+        if (!feature.settingsListeners) return
+        for (const connection of feature.settingsListeners) {
+            feature.settings.disconnect(connection)
+        }
+        feature.settingsListeners = null
+    }
 }

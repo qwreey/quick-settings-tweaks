@@ -1,9 +1,8 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
+const { featureReloader } = Me.imports.libs.utility
 const { Notifications } = Me.imports.libs.notificationHandler
-const { addChildWithIndex } = Me.imports.libs.utility
 const {
     QuickSettingsGrid,
     QuickSettingsBox,
@@ -107,9 +106,10 @@ var notificationsFeature = class {
                         for (let index = 0; index<gridChildren.length; index++) {
                             if (gridChildren[index]?.constructor?.name == "SystemItem") {
                                 systemItemIndex = index
+                                break
                             }
                         }
-                        addChildWithIndex(QuickSettingsGrid,this.notificationHandler,systemItemIndex)
+                        QuickSettingsGrid.insert_child_at_index(this.notificationHandler,systemItemIndex)
                         break
                     case "bottom":
                         QuickSettingsGrid.add_child(this.notificationHandler)

@@ -35,13 +35,13 @@ const DndQuickToggle = GObject.registerClass(
       this._settings.set_boolean(
         "show-banners",
         !this._settings.get_boolean("show-banners")
-      );
+      )
     }
 
     // Sync DND status
     _sync() {
-      const checked = !this._settings.get_boolean("show-banners");
-      if (this.checked !== checked) this.set({ checked });
+      const checked = !this._settings.get_boolean("show-banners")
+      if (this.checked !== checked) this.set({ checked })
     }
   }
 );
@@ -49,30 +49,28 @@ const DndQuickToggle = GObject.registerClass(
 var Indicator = GObject.registerClass(
   class Indicator extends SystemIndicator {
     _init() {
-      super._init();
+      super._init()
 
-      this._indicator = this._addIndicator();
+      this._indicator = this._addIndicator()
 
-      this._indicator.icon_name = "notifications-disabled-symbolic";
-      this.quickSettingsItems.push(new DndQuickToggle());
+      this._indicator.icon_name = "notifications-disabled-symbolic"
+      this.quickSettingsItems.push(new DndQuickToggle())
 
       this._settings = new Gio.Settings({
         schema_id: "org.gnome.desktop.notifications",
-      });
+      })
 
-      this._changedId = this._settings.connect("changed::show-banners", () =>
-        this._sync()
-      );
-
+      // sync
+      this._changedId = this._settings.connect("changed::show-banners", this._sync.bind(this))
       this._sync();
     }
 
     _sync() {
-      const checked = !this._settings.get_boolean("show-banners");
+      const checked = !this._settings.get_boolean("show-banners")
       if (checked) {
-        this._indicator.visible = true;
+        this._indicator.visible = true
       } else {
-        this._indicator.visible = false;
+        this._indicator.visible = false
       }
     }
   }
