@@ -42,7 +42,7 @@ var notificationsFeature = class {
             hideWhenNoNotifications: this.settings.get_boolean("notifications-hide-when-no-notifications")
         })
 
-        let notificationStyle = this.notificationHandler.style_class =
+        this.notificationHandler.style_class =
             // If separated, style as popup menu
             (isIntegrated ? "" : "popup-menu-content quick-settings ")
             // Integrated or separated
@@ -57,10 +57,10 @@ var notificationsFeature = class {
 
         // Max height
         this.notificationHandler.style
-            = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
+            = `max-height: ${this.settings.get_int("notifications-max-height")}px`
         this.maxHeigthListen = this.settings.connect("changed::notifications-max-height",()=>{
             this.notificationHandler.style
-            = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
+            = `max-height: ${this.settings.get_int("notifications-max-height")}px`
         })
 
         // Insert media control
@@ -100,16 +100,10 @@ var notificationsFeature = class {
                 // Insert notification modal
                 switch (this.settings.get_string("notifications-position")) {
                     case "top":
-                        // get system item index
-                        let gridChildren = QuickSettingsGrid.get_children()
-                        let systemItemIndex = null
-                        for (let index = 0; index<gridChildren.length; index++) {
-                            if (gridChildren[index]?.constructor?.name == "SystemItem") {
-                                systemItemIndex = index
-                                break
-                            }
-                        }
-                        QuickSettingsGrid.insert_child_at_index(this.notificationHandler,systemItemIndex)
+                        QuickSettingsGrid.insert_child_at_index(this.notificationHandler,
+                            // get system item index
+                            QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "SystemItem")+1
+                        )
                         break
                     case "bottom":
                         QuickSettingsGrid.add_child(this.notificationHandler)

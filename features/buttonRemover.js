@@ -50,12 +50,10 @@ var buttonRemoverFeature = class {
             this.settings.set_string("list-buttons",JSON.stringify(listButtons))
         }
 
-        let items; {
-            items = this.settings.get_strv("user-removed-buttons")
-            if (!items) {
-                items = []
-                this.settings.set_strv("user-removed-buttons",items)
-            }
+        let items = this.settings.get_strv("user-removed-buttons")
+        if (!items) {
+            items = []
+            this.settings.set_strv("user-removed-buttons",items)
         }
 
         this._apply(items)

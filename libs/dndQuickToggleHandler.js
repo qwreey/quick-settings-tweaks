@@ -1,6 +1,6 @@
-const { Gio, GObject } = imports.gi;
-const { QuickToggle, SystemIndicator } = imports.ui.quickSettings;
-const { St } = imports.gi;
+const { Gio, GObject } = imports.gi
+const { QuickToggle, SystemIndicator } = imports.ui.quickSettings
+const { St } = imports.gi
 
 const DndQuickToggle = GObject.registerClass(
   class DndQuickToggle extends QuickToggle {
@@ -8,13 +8,13 @@ const DndQuickToggle = GObject.registerClass(
       super._init({
         label: _('Do Not Disturb'),
         iconName: "notifications-disabled-symbolic",
-      });
+      })
 
       this._settings = new Gio.Settings({
         schema_id: "org.gnome.desktop.notifications",
-      });
+      })
 
-      this._changedId = this._settings.connect("changed::show-banners", this._sync.bind(this));
+      this._changedId = this._settings.connect("changed::show-banners", this._sync.bind(this))
 
       this.connectObject(
         // Destroy event
@@ -24,10 +24,10 @@ const DndQuickToggle = GObject.registerClass(
         "clicked", this._toggleMode.bind(this),
 
         this
-      );
+      )
 
       // Fetch DND status once
-      this._sync();
+      this._sync()
     }
 
     // Toggle DND
@@ -44,7 +44,7 @@ const DndQuickToggle = GObject.registerClass(
       if (this.checked !== checked) this.set({ checked })
     }
   }
-);
+)
 
 var Indicator = GObject.registerClass(
   class Indicator extends SystemIndicator {
@@ -62,7 +62,7 @@ var Indicator = GObject.registerClass(
 
       // sync
       this._changedId = this._settings.connect("changed::show-banners", this._sync.bind(this))
-      this._sync();
+      this._sync()
     }
 
     _sync() {
@@ -74,4 +74,4 @@ var Indicator = GObject.registerClass(
       }
     }
   }
-);
+)

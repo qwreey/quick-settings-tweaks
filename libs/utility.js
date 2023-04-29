@@ -1,3 +1,7 @@
+const ExtensionUtils = imports.misc.extensionUtils
+const Me = ExtensionUtils.getCurrentExtension()
+
+const { QuickSettings, QuickSettingsGrid } = Me.imports.libs.gnome
 
 // This is a bit of a hack, but it works for now. I took this from the
 // gjs guide on how to position items above the background apps menu.
@@ -14,6 +18,14 @@ function addQuickSettingsItems(items) {
             )
         }
     }
+}
+
+// Fix https://github.com/qwreey75/quick-settings-tweaks/issues/19
+// scrollbar appears over fading-effect
+function fixStScrollViewScrollbarOverflow(stScrollView) {
+    let update = ()=>stScrollView.overlay_scrollbars = !stScrollView.vscrollbar_visible
+    stScrollView.connect("notify::vscrollbar-visible",update)
+    update()
 }
 
 function logger(str) {

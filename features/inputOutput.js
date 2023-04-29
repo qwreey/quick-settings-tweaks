@@ -5,7 +5,7 @@ const { featureReloader } = Me.imports.libs.utility
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 const { Label } = imports.gi.St
 const Volume = imports.ui.status.volume
-const PopupMenu = imports.ui.popupMenu;
+const PopupMenu = imports.ui.popupMenu
 
 var inputOutputFeature = class {
     load() {
@@ -184,7 +184,7 @@ var inputOutputFeature = class {
         if (!device)
             return
 
-        const {description, origin} = device;
+        const {description, origin} = device
         const name = origin
             ? `${description} – ${origin}`
             : description
@@ -195,4 +195,4 @@ var inputOutputFeature = class {
     _spanTwoColumns(object) {
         QuickSettingsGrid.layout_manager.child_set_property(QuickSettingsGrid, object, 'column-span', 2)
     }
-};
+}

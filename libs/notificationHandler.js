@@ -2,7 +2,9 @@ const { GObject, St, Clutter } = imports.gi
 const Main = imports.ui.main
 const Calendar = imports.ui.calendar
 const ExtensionUtils = imports.misc.extensionUtils
+
 const Me = ExtensionUtils.getCurrentExtension()
+const { fixStScrollViewScrollbarOverflow } = Me.imports.libs.utility
 
 const NoNotifPlaceholder = GObject.registerClass(
 class NoNotifPlaceholder extends St.BoxLayout {
@@ -77,6 +79,7 @@ class Notifications extends St.BoxLayout{
         this.list = messageList._scrollView
         this.list.get_parent().remove_child(this.list)
         this.add_child(this.list) // mount
+        fixStScrollViewScrollbarOverflow(this.list) // fix fade effect
     }
 
     // Create 'Notifications' text and ClearButton

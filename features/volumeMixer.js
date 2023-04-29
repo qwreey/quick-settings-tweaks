@@ -34,20 +34,14 @@ var volumeMixerFeature = class {
             'volume-mixer-use-regex': settings.get_boolean("volume-mixer-use-regex")
         })
 
-        // Find Input slider index
-        let inputSliderIndex
-        let gridChildren = QuickSettingsGrid.get_children()
-        for (let index = 0; index<gridChildren.length; index++) {
-            if (gridChildren[index]?.constructor?.name == "InputStreamSlider") {
-                inputSliderIndex = index
-            }
-        }
-
         // Insert volume mixer into Quick Settings
         let position = settings.get_string("volume-mixer-position")
         switch (position) {
             case "top":
-                QuickSettingsGrid.insert_child_at_index(this.volumeMixer.actor,inputSliderIndex)
+                QuickSettingsGrid.insert_child_at_index(this.volumeMixer.actor,
+                    // Find Input slider index
+                    QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "InputStreamSlider")+1
+                )
                 break
             case "bottom":
                 QuickSettingsGrid.add_child(this.volumeMixer.actor)
