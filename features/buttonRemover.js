@@ -5,7 +5,7 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
+const { featureReloader } = Me.imports.libs.utility
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 
 var buttonRemoverFeature = class {

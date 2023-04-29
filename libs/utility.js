@@ -6,11 +6,13 @@ function addQuickSettingsItems(items) {
     QuickSettings._addItems(items)
 
     // Ensure the tile(s) are above the background apps menu
-    for (const item of items) {
-        QuickSettingsGrid.set_child_below_sibling(
-        item,
-        QuickSettings._backgroundApps.quickSettingsItems[0]
-        );
+    if (QuickSettings._backgroundApps) {
+        for (const item of items) {
+            QuickSettingsGrid.set_child_below_sibling(
+                item,
+                QuickSettings._backgroundApps.quickSettingsItems[0]
+            )
+        }
     }
 }
 
