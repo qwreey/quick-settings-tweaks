@@ -19,3 +19,6 @@ dev: install
 ifeq ($(XDG_SESSION_TYPE),x11)
 	busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…", global.context)'
 endif
+
+log:
+	journalctl /usr/bin/gnome-shell -f -q --output cat | grep '\[EXTENSION QSTweaks\] '

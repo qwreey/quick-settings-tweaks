@@ -8,6 +8,7 @@ class Extension {
     constructor() {}
     disable() {
         logger("Unloading ...")
+        let start = +Date.now()
     
         // unload features
         for (const feature of this.features) {
@@ -17,10 +18,11 @@ class Extension {
         }
         this.features = null
 
-        logger("Diabled")
+        logger("Diabled. " + (+new Date() - start) + "ms taken")
     }
     enable() {
         logger("Loading ...")
+        let start = +Date.now()
 
         // load modules
         this.features = [
@@ -43,7 +45,7 @@ class Extension {
             feature.load()
         }
 
-        logger("Loaded")
+        logger("Loaded. " + (+Date.now() - start) + "ms taken")
     }
 }
 
