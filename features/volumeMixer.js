@@ -6,7 +6,7 @@ const { VolumeMixer } = Me.imports.libs.volumeMixerHandler
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 
 var volumeMixerFeature = class {
-    reorder() {
+    onMenuOpen() {
         // reorder on menu open
         QuickSettingsGrid.set_child_below_sibling(
             this.volumeMixer.actor,

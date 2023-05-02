@@ -2,6 +2,7 @@ const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 const Features = Me.imports.features
 const { logger } = Me.imports.libs.utility
+const { QuickSettingsGrid } = Me.imports.libs.gnome
 const { GLib } = imports.gi
 
 class Extension {
@@ -9,7 +10,11 @@ class Extension {
     disable() {
         logger("Unloading ...")
         let start = +Date.now()
-    
+
+        // unload menu open tracker
+        QuickSettingsGrid.disconnect(this.menuOpenTracker)
+        this.menuOpenTracker = null
+
         // unload features
         for (const feature of this.features) {
             logger(`Unload feature '${feature.constructor.name}'`)
@@ -44,6 +49,15 @@ class Extension {
             feature.settings = settings
             feature.load()
         }
+
+        // load menu open tracker
+        this.menuOpenTracker = QuickSettingsGrid.connect("notify::mapped",()=>{
+            if (!QuickSettingsGrid.mapped) return
+            logger(`Update layout`)
+            for (const feature of this.features) {
+                if (feature.onMenuOpen) feature.onMenuOpen()
+            }
+        })
 
         logger("Loaded. " + (+Date.now() - start) + "ms taken")
     }
