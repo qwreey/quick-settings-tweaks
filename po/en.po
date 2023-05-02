@@ -1,9 +1,9 @@
 # Quick settings notifications title text
 
-#: Notifications title
+# Notifications title
 msgid "Notifications"
 msgstr "Notifications"
 
-#: Unsafe mode
+# Unsafe mode
 msgid "Unsafe Mode"
 msgstr "Unsafe Mode"
