@@ -1,12 +1,11 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
-const { addChildWithIndex } = Me.imports.libs.utility
+const { featureReloader } = Me.imports.libs.utility
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 const { Label } = imports.gi.St
 const Volume = imports.ui.status.volume
-const PopupMenu = imports.ui.popupMenu;
+const PopupMenu = imports.ui.popupMenu
 
 var inputOutputFeature = class {
     load() {
@@ -17,26 +16,42 @@ var inputOutputFeature = class {
             "input-always-show"
         ])
 
-        this._setupOutputChangedListener()
-        this._setupInputChangedListener()
-        this._setupInputVisibilityObserver()
+        this._outputListener = null
+        this._inputListener = null
+        this._inputVisibilityListener = null
+
+        this._inputStreamSlider = this._getInputStreamSlider()
+        if (this._inputStreamSlider && this.settings.get_boolean("input-show-selected")) {
+            this._setupInputChangedListener()
+        }
+        if (this._inputStreamSlider && this.settings.get_boolean("input-always-show")) {
+            this._setupInputVisibilityObserver()
+        }
+        this._outputStreamSlider = this._getOutputStreamSlider()
+        if (this._outputStreamSlider && this.settings.get_boolean("output-show-selected")) {
+            this._setupOutputChangedListener()
+        }
     }
 
     unload() {
         // disable feature reloader
         featureReloader.disable(this)
 
-        this._detachOutputLabel()
-        Volume.getMixerControl().disconnect(this._outputListener)
-        this._outputListener = null
-
-        this._detachInputLabel()
-        Volume.getMixerControl().disconnect(this._inputListener)
-        this._inputListener = null
-
-        this._getInputStreamSlider().disconnect(this._inputVisibilityListener)
-        this._inputVisibilityListener = null
-        this._getInputStreamSlider().visible = this._getInputStreamSlider()._shouldBeVisible()
+        if (this._inputStreamSlider && this._inputListener) {
+            this._detachInputLabel()
+            Volume.getMixerControl().disconnect(this._inputListener)
+            this._inputListener = null
+        }
+        if (this._inputStreamSlider && this._inputVisibilityListener) {
+            this._inputStreamSlider.disconnect(this._inputVisibilityListener)
+            this._inputVisibilityListener = null
+            this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible()
+        }
+        if (this._outputStreamSlider && this._outputListener) {
+            this._detachOutputLabel()
+            Volume.getMixerControl().disconnect(this._outputListener)
+            this._outputListener = null
+        }
     }
 
     // =========================================== Ouput ===========================================
@@ -53,10 +68,10 @@ var inputOutputFeature = class {
     _attachOutputLabel() {
         this.outputLabel = new Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        addChildWithIndex(QuickSettingsGrid, this.outputLabel, this._getOutputStreamSliderIndex() - 1);
+        QuickSettingsGrid.insert_child_at_index(this.outputLabel, this._getOutputStreamSliderIndex() - 1)
         this._spanTwoColumns(this.outputLabel)
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
-        this.outputLabel.text = this._findActiveDevice(this._getOutputStreamSlider())
+        this.outputLabel.text = this._findActiveDevice(this._outputStreamSlider)
     }
 
     _detachOutputLabel() {
@@ -69,16 +84,16 @@ var inputOutputFeature = class {
     // =========================================== Input ===========================================
     _setupInputChangedListener() {
         this._attachInputLabel()
-        this._outputListener = Volume.getMixerControl().connect('active-input-update', (c, id) => this._onInputDeviceChanged(id))
+        this._inputListener = Volume.getMixerControl().connect('active-input-update', (c, id) => this._onInputDeviceChanged(id))
     }
 
     _attachInputLabel() {
         this.inputLabel = new Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        addChildWithIndex(QuickSettingsGrid, this.inputLabel, this._getInputStreamSliderIndex() - 1)
+        QuickSettingsGrid.insert_child_at_index(this.inputLabel, this._getInputStreamSliderIndex() - 1)
         this._spanTwoColumns(this.inputLabel)
         this._setInputLabelVisibility()
-        this.inputLabel.text = this._findActiveDevice(this._getInputStreamSlider())
+        this.inputLabel.text = this._findActiveDevice(this._inputStreamSlider)
     }
 
     _onInputDeviceChanged(deviceId) {
@@ -96,21 +111,23 @@ var inputOutputFeature = class {
 
     // =========================================== Input Visbility ===========================================
     _setupInputVisibilityObserver() {
-        this._inputVisibilityListener = this._getInputStreamSlider().connect("notify::visible", () => this._onInputStreamSliderSynced())
+        this._inputVisibilityListener = this._inputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
         this._onInputStreamSliderSynced()
     }
 
     _onInputStreamSliderSynced() {
         this._setInputStreamSliderVisibility()
-        this._setInputLabelVisibility()
+        if (this._inputListener) {
+            this._setInputLabelVisibility()
+        }
     }
 
     _setInputStreamSliderVisibility() {
-        this._getInputStreamSlider().visible = this._getInputStreamSlider()._shouldBeVisible() || this.settings.get_boolean("input-always-show")
+        this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
     }
 
     _setInputLabelVisibility() {
-        this.inputLabel.visible = this._getInputStreamSlider().visible && this.settings.get_boolean("input-show-selected")
+        this.inputLabel.visible = this._inputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
     }
 
 
@@ -167,7 +184,7 @@ var inputOutputFeature = class {
         if (!device)
             return
 
-        const {description, origin} = device;
+        const {description, origin} = device
         const name = origin
             ? `${description} – ${origin}`
             : description
@@ -178,4 +195,4 @@ var inputOutputFeature = class {
     _spanTwoColumns(object) {
         QuickSettingsGrid.layout_manager.child_set_property(QuickSettingsGrid, object, 'column-span', 2)
     }
-};
+}

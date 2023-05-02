@@ -1,9 +1,8 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
+const { featureReloader } = Me.imports.libs.utility
 const { Notifications } = Me.imports.libs.notificationHandler
-const { addChildWithIndex } = Me.imports.libs.utility
 const {
     QuickSettingsGrid,
     QuickSettingsBox,
@@ -12,6 +11,22 @@ const {
 } = Me.imports.libs.gnome
 
 var notificationsFeature = class {
+    onMenuOpen() {
+        // reorder on menu open
+        if (this.mediaControlEnabled) {
+            QuickSettingsGrid.set_child_at_index(
+                this.notificationHandler.mediaSection,
+                -1
+            )
+        }
+        if (this.notificationsEnabled && this.notificationsIntegrated) {
+            QuickSettingsGrid.set_child_at_index(
+                this.notificationHandler,
+                this.notificationsPosition == "top" ? QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "SystemItem")+1 : -1
+            )
+        }
+    }
+
     load() {
         let settings = this.settings
 
@@ -29,8 +44,8 @@ var notificationsFeature = class {
         ])
 
         // check is feature enabled
-        let notificationsEnabled = this.settings.get_boolean("notifications-enabled")
-        let mediaControlEnabled = this.settings.get_boolean("media-control-enabled")
+        let notificationsEnabled = this.notificationsEnabled = this.settings.get_boolean("notifications-enabled")
+        let mediaControlEnabled = this.mediaControlEnabled = this.settings.get_boolean("media-control-enabled")
         let disableAdjustBorder = this.settings.get_boolean("disable-adjust-content-border-radius")
         let disableRemoveShadow = this.settings.get_boolean("disable-remove-shadow")
         let nativeControls = this.settings.get_boolean("notifications-use-native-controls")
@@ -43,7 +58,7 @@ var notificationsFeature = class {
             hideWhenNoNotifications: this.settings.get_boolean("notifications-hide-when-no-notifications")
         })
 
-        let notificationStyle = this.notificationHandler.style_class =
+        this.notificationHandler.style_class =
             // If separated, style as popup menu
             (isIntegrated ? "" : "popup-menu-content quick-settings ")
             // Integrated or separated
@@ -58,10 +73,10 @@ var notificationsFeature = class {
 
         // Max height
         this.notificationHandler.style
-            = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
+            = `max-height: ${this.settings.get_int("notifications-max-height")}px`
         this.maxHeigthListen = this.settings.connect("changed::notifications-max-height",()=>{
             this.notificationHandler.style
-            = `max-height: ${this.settings.get_int("notifications-max-height")}px;`
+            = `max-height: ${this.settings.get_int("notifications-max-height")}px`
         })
 
         // Insert media control
@@ -96,20 +111,17 @@ var notificationsFeature = class {
         }
 
         // Insert notifications
+        let notificationsPosition = this.notificationsPosition = this.settings.get_string("notifications-position")
+        let notificationsIntegrated = this.notificationsIntegrated = this.settings.get_string("notifications-position")
         if (notificationsEnabled) {
-            if (this.settings.get_boolean("notifications-integrated")) {
+            if (notificationsIntegrated) {
                 // Insert notification modal
-                switch (this.settings.get_string("notifications-position")) {
+                switch (notificationsPosition) {
                     case "top":
-                        // get system item index
-                        let gridChildren = QuickSettingsGrid.get_children()
-                        let systemItemIndex = null
-                        for (let index = 0; index<gridChildren.length; index++) {
-                            if (gridChildren[index]?.constructor?.name == "SystemItem") {
-                                systemItemIndex = index
-                            }
-                        }
-                        addChildWithIndex(QuickSettingsGrid,this.notificationHandler,systemItemIndex)
+                        QuickSettingsGrid.insert_child_at_index(this.notificationHandler,
+                            // get system item index
+                            QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "SystemItem")+1
+                        )
                         break
                     case "bottom":
                         QuickSettingsGrid.add_child(this.notificationHandler)
@@ -143,7 +155,7 @@ var notificationsFeature = class {
                 }
 
                 // Insert notification modal
-                switch (this.settings.get_string("notifications-position")) {
+                switch (notificationsPosition) {
                     case "top":
                         let quickSettingsModal = QuickSettingsBox.first_child
                         QuickSettingsBox.remove_child(quickSettingsModal)

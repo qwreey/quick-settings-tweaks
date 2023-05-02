@@ -1,17 +1,19 @@
 // forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
 
-// ! NEED TO REWRITE
-
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
+const { featureReloader } = Me.imports.libs.utility
 const { QuickSettingsGrid } = Me.imports.libs.gnome
 
 var buttonRemoverFeature = class {
     constructor() {
         this.removedItems = []
         this.visibleListeners = []
+    }
+    onMenuItemAdded() {
+        this._unapply()
+        this._apply(this.userRemovedItems)
     }
     _apply(removedItems) {
         for (const item of QuickSettingsGrid.get_children()) {
@@ -50,12 +52,10 @@ var buttonRemoverFeature = class {
             this.settings.set_string("list-buttons",JSON.stringify(listButtons))
         }
 
-        let items; {
-            items = this.settings.get_strv("user-removed-buttons")
-            if (!items) {
-                items = []
-                this.settings.set_strv("user-removed-buttons",items)
-            }
+        let items = this.userRemovedItems = this.settings.get_strv("user-removed-buttons")
+        if (!items) {
+            items = this.userRemovedItems = []
+            this.settings.set_strv("user-removed-buttons",items)
         }
 
         this._apply(items)
@@ -63,7 +63,7 @@ var buttonRemoverFeature = class {
         this._removedItemsConnection =
         this.settings.connect('changed::user-removed-buttons', (settings, key) => {
             this._unapply()
-            this._apply(this.settings.get_strv("user-removed-buttons"))
+            this._apply(this.userRemovedItems = this.settings.get_strv("user-removed-buttons"))
         })
     }
     unload() {

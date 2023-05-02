@@ -2,8 +2,4 @@
 
 # Notifications title
 msgid "Notifications"
-msgstr "Notifications"
-
-# Unsafe mode
-msgid "Unsafe Mode"
-msgstr "Unsafe Mode"
+msgstr "Уведомления"

@@ -2,110 +2,9 @@ const { GObject, St, Clutter } = imports.gi
 const Main = imports.ui.main
 const Calendar = imports.ui.calendar
 const ExtensionUtils = imports.misc.extensionUtils
+
 const Me = ExtensionUtils.getCurrentExtension()
-
-var Notifications = GObject.registerClass(
-    class Notifications extends St.BoxLayout{
-        _init(options){
-            let useNativeControls = options.useNativeControls
-            let hideWhenNoNotifications = options.hideWhenNoNotifications
-
-            super._init({
-                vertical: true,
-            })
-
-            let datemenu = new imports.ui.dateMenu.DateMenuButton()
-            let messageList = datemenu._messageList
-            this.notificationList = messageList._notificationSection
-            this.nativeDndSwitch = messageList._dndButton
-            this.nativeClearButton = messageList._clearButton
-
-            // media controls
-            this.mediaSection = messageList._mediaSection
-            this.mediaSection.get_parent().remove_child(this.mediaSection)
-
-            // notification list scroll
-            this.list = messageList._scrollView
-            this.list.get_parent().remove_child(this.list)
-
-            // header / title
-            let headerBox = new St.BoxLayout({ style_class: "QSTWEAKS-notifications-header" })
-            this.add_child(headerBox)
-            this.add_child(this.list)
-            let titleLabel = new St.Label({
-                text: ExtensionUtils.gettext('Notifications'),
-                style_class: "QSTWEAKS-notifications-title",
-                y_align: Clutter.ActorAlign.CENTER,
-                x_align: Clutter.ActorAlign.START,
-                x_expand: true
-            })
-            headerBox.add_child(titleLabel)
-
-            // no notifications text
-            let noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
-            noNotiBox.style_class = "QSTWEAKS-notifications-no-notifications-box"
-            const noNotiPlaceholder = new NoNotifPlaceholder()
-            noNotiBox.add_child(noNotiPlaceholder)
-            noNotiBox.hide()
-            this.add_child(noNotiBox)
-
-            // clear button / dnd switch
-            if (useNativeControls) {
-                // if use native controls
-                {
-                    let parent = this.nativeClearButton.get_parent()
-                    parent.remove_child(this.nativeClearButton)
-                    parent.remove_child(this.nativeDndSwitch)
-                    this.nativeDndText = parent.first_child
-                    parent.remove_child(this.nativeDndText)
-                }
-
-                let nativeControlBox = new St.BoxLayout()
-                nativeControlBox.add_child(this.nativeDndText)
-                nativeControlBox.add_child(this.nativeDndSwitch)
-                nativeControlBox.add_child(this.nativeClearButton)
-                this.nativeControlBox = nativeControlBox
-                this.add_child(nativeControlBox)
-            } else {
-                this.clearButton = new ClearNotificationsButton()
-                this.clearButton.connect("clicked",()=>{
-                    messageList._sectionList.get_children().forEach(s => s.clear())
-                })
-                headerBox.add_child(this.clearButton)
-            }
-
-            // sync notifications
-            let stockNotifications = Main.panel.statusArea.dateMenu._messageList._notificationSection
-            let notifications = stockNotifications._messages
-            notifications.forEach(n => {
-                let notification = new Calendar.NotificationMessage(n.notification)
-                this.notificationList.addMessage(notification)
-            })
-
-            // sync no-notification placeholder and clear button
-            const updateNoNotifications = ()=>{
-                if (this.nativeClearButton.reactive) {
-                    this.list.show()
-                    noNotiBox.hide()
-                    if (this.clearButton) this.clearButton.show()
-                    if (hideWhenNoNotifications) this.show()
-                } else {
-                    this.list.hide()
-                    noNotiBox.show()
-                    if (this.clearButton) this.clearButton.hide()
-                    if (hideWhenNoNotifications) this.hide()
-                }
-            }
-            this.nativeClearButton.connect('notify::reactive', updateNoNotifications)
-            updateNoNotifications()
-
-            this.connect('destroy', () => {
-                datemenu.destroy()
-                datemenu = null
-            })
-        }
-    }
-)
+const { fixStScrollViewScrollbarOverflow } = Me.imports.libs.utility
 
 const NoNotifPlaceholder = GObject.registerClass(
 class NoNotifPlaceholder extends St.BoxLayout {
@@ -155,5 +54,136 @@ class ClearNotificationsButton extends St.Button {
             text: _('Clear')
         })
         container.add_child(this._label)
+    }
+})
+
+var Notifications = GObject.registerClass(
+class Notifications extends St.BoxLayout{
+
+    // prepare date menu items
+    _prepareDateMenu() {
+        // create gnome datemenu
+        this.datemenu = new imports.ui.dateMenu.DateMenuButton()
+
+        // notifications
+        let messageList = this.messageList = this.datemenu._messageList
+        this.notificationList = messageList._notificationSection
+        this.nativeDndSwitch = messageList._dndButton
+        this.nativeClearButton = messageList._clearButton
+
+        // media controls
+        this.mediaSection = messageList._mediaSection
+        this.mediaSection.get_parent().remove_child(this.mediaSection)
+
+        // notification list scroll
+        this.list = messageList._scrollView
+        this.list.get_parent().remove_child(this.list)
+        this.add_child(this.list) // mount
+        fixStScrollViewScrollbarOverflow(this.list) // fix fade effect
+    }
+
+    // Create 'Notifications' text and ClearButton
+    _createHeaderArea() {
+        // header / title
+        let headerBox = new St.BoxLayout({ style_class: "QSTWEAKS-notifications-header" })
+        let titleLabel = new St.Label({
+            text: ExtensionUtils.gettext('Notifications'),
+            style_class: "QSTWEAKS-notifications-title",
+            y_align: Clutter.ActorAlign.CENTER,
+            x_align: Clutter.ActorAlign.START,
+            x_expand: true
+        })
+        headerBox.add_child(titleLabel)
+
+        // clear button
+        if (!this.options.useNativeControls) {
+            let clearButton = this.clearButton = new ClearNotificationsButton()
+            clearButton.connect("clicked",()=>{
+                this.messageList._sectionList.get_children().forEach(s => s.clear())
+            })
+            headerBox.add_child(clearButton)
+        }
+
+        // mount
+        this.insert_child_at_index(headerBox,0)
+    }
+
+    // Create 'NoNotification' placeholder
+    _createNoNotificationArea() {
+        // container
+        let noNotiBox = this.noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
+        noNotiBox.style_class = "QSTWEAKS-notifications-no-notifications-box"
+        noNotiBox.hide()
+
+        // no notifications text
+        noNotiBox.add_child(new NoNotifPlaceholder())
+
+        // mount
+        this.add_child(noNotiBox)
+    }
+
+    // sync no-notification placeholder and clear button
+    _updateNoNotifications() {
+        if (this.nativeClearButton.reactive) {
+            this.list.show()
+            this.noNotiBox.hide()
+            if (this.clearButton) this.clearButton.show()
+            if (this.options.hideWhenNoNotifications) this.show()
+        } else {
+            this.list.hide()
+            this.noNotiBox.show()
+            if (this.clearButton) this.clearButton.hide()
+            if (this.options.hideWhenNoNotifications) this.hide()
+        }
+    }
+
+    // Sync
+    _syncNotifications() {
+        // sync notifications from gnome stock notifications
+        Main.panel.statusArea.dateMenu._messageList._notificationSection._messages.forEach((notification)=>{
+        // for (notification of Main.panel.statusArea.dateMenu._messageList._notificationSection._messages) {
+            // clone message
+            this.notificationList.addMessage(new Calendar.NotificationMessage(notification.notification))
+        })
+
+        // sync no-notification placeholder and clear button
+        this.nativeClearButton.connect('notify::reactive', this._updateNoNotifications.bind(this))
+        this._updateNoNotifications()
+    }
+
+    _createNativeControls() {
+        // unmount dnd/clear/text from parent
+        {
+            let parent = this.nativeClearButton.get_parent()
+            parent.remove_child(this.nativeClearButton)
+            parent.remove_child(this.nativeDndSwitch)
+            parent.remove_child(this.nativeDndText = parent.first_child)
+        }
+
+        // create container
+        let nativeControlBox = this.nativeControlBox = new St.BoxLayout()
+        nativeControlBox.add_child(this.nativeDndText)
+        nativeControlBox.add_child(this.nativeDndSwitch)
+        nativeControlBox.add_child(this.nativeClearButton)
+        this.add_child(nativeControlBox)
+    }
+
+    // options {
+    //     hideWhenNoNotifications
+    //     useNativeControls
+    // }
+    _init(options){
+        super._init({
+            vertical: true,
+        })
+        this.options = options
+
+        this._prepareDateMenu()
+        this._createHeaderArea()
+        this._createNoNotificationArea()
+        this._syncNotifications()
+        if (options.useNativeControls) this._createNativeControls() // native clear/dnd
+
+        this.connect('destroy', this.datemenu.destroy.bind(this.datemenu))
     }
 })

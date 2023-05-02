@@ -1,12 +1,26 @@
 const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
-const featureReloader = Me.imports.libs.featureReloader
+const { featureReloader } = Me.imports.libs.utility
 const { VolumeMixer } = Me.imports.libs.volumeMixerHandler
 const { QuickSettingsGrid } = Me.imports.libs.gnome
-const { addChildWithIndex } = Me.imports.libs.utility
 
 var volumeMixerFeature = class {
+    onMenuOpen() {
+        // reorder on menu open
+        if (this.volumeMixer) {
+            QuickSettingsGrid.set_child_below_sibling(
+                this.volumeMixer.actor,
+                this._getInputStreamSlider()
+            )
+        }
+    }
+
+    _getInputStreamSlider() {
+        return this.inputStreamSlider
+            || (this.inputStreamSlider = QuickSettingsGrid.get_children().find((child)=>child.constructor?.name == "InputStreamSlider"))
+    }
+
     load() {
         let settings = this.settings
 
@@ -35,20 +49,11 @@ var volumeMixerFeature = class {
             'volume-mixer-use-regex': settings.get_boolean("volume-mixer-use-regex")
         })
 
-        // Find Input slider index
-        let inputSliderIndex
-        let gridChildren = QuickSettingsGrid.get_children()
-        for (let index = 0; index<gridChildren.length; index++) {
-            if (gridChildren[index]?.constructor?.name == "InputStreamSlider") {
-                inputSliderIndex = index
-            }
-        }
-
         // Insert volume mixer into Quick Settings
         let position = settings.get_string("volume-mixer-position")
         switch (position) {
             case "top":
-                addChildWithIndex(QuickSettingsGrid,this.volumeMixer.actor,inputSliderIndex)
+                QuickSettingsGrid.insert_child_below(this.volumeMixer.actor,this._getInputStreamSlider())
                 break
             case "bottom":
                 QuickSettingsGrid.add_child(this.volumeMixer.actor)
