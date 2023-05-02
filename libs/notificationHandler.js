@@ -66,7 +66,7 @@ class Notifications extends St.BoxLayout{
         this.datemenu = new imports.ui.dateMenu.DateMenuButton()
 
         // notifications
-        let messageList = this.datemenu._messageList
+        let messageList = this.messageList = this.datemenu._messageList
         this.notificationList = messageList._notificationSection
         this.nativeDndSwitch = messageList._dndButton
         this.nativeClearButton = messageList._clearButton
