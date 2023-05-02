@@ -11,6 +11,22 @@ const {
 } = Me.imports.libs.gnome
 
 var notificationsFeature = class {
+    onMenuOpen() {
+        // reorder on menu open
+        if (this.mediaControlEnabled) {
+            QuickSettingsGrid.set_child_at_index(
+                this.notificationHandler.mediaSection,
+                -1
+            )
+        }
+        if (this.notificationsEnabled && this.notificationsIntegrated) {
+            QuickSettingsGrid.set_child_at_index(
+                this.notificationHandler,
+                this.notificationsPosition == "top" ? QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "SystemItem")+1 : -1
+            )
+        }
+    }
+
     load() {
         let settings = this.settings
 
@@ -28,8 +44,8 @@ var notificationsFeature = class {
         ])
 
         // check is feature enabled
-        let notificationsEnabled = this.settings.get_boolean("notifications-enabled")
-        let mediaControlEnabled = this.settings.get_boolean("media-control-enabled")
+        let notificationsEnabled = this.notificationsEnabled = this.settings.get_boolean("notifications-enabled")
+        let mediaControlEnabled = this.mediaControlEnabled = this.settings.get_boolean("media-control-enabled")
         let disableAdjustBorder = this.settings.get_boolean("disable-adjust-content-border-radius")
         let disableRemoveShadow = this.settings.get_boolean("disable-remove-shadow")
         let nativeControls = this.settings.get_boolean("notifications-use-native-controls")
@@ -95,10 +111,12 @@ var notificationsFeature = class {
         }
 
         // Insert notifications
+        let notificationsPosition = this.notificationsPosition = this.settings.get_string("notifications-position")
+        let notificationsIntegrated = this.notificationsIntegrated = this.settings.get_string("notifications-position")
         if (notificationsEnabled) {
-            if (this.settings.get_boolean("notifications-integrated")) {
+            if (notificationsIntegrated) {
                 // Insert notification modal
-                switch (this.settings.get_string("notifications-position")) {
+                switch (notificationsPosition) {
                     case "top":
                         QuickSettingsGrid.insert_child_at_index(this.notificationHandler,
                             // get system item index
@@ -137,7 +155,7 @@ var notificationsFeature = class {
                 }
 
                 // Insert notification modal
-                switch (this.settings.get_string("notifications-position")) {
+                switch (notificationsPosition) {
                     case "top":
                         let quickSettingsModal = QuickSettingsBox.first_child
                         QuickSettingsBox.remove_child(quickSettingsModal)
