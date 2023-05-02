@@ -16,6 +16,9 @@ var UnsafeQuickToggle = GObject.registerClass(
       })
       this._onUpdate = onUpdate
 
+      // bind click
+      this.connect("clicked", this._toggleMode.bind(this))
+
       // Fetch global context
       this._sync()
     }
