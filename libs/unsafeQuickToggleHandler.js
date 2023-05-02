@@ -3,10 +3,10 @@ const { QuickToggle, SystemIndicator } = imports.ui.quickSettings
 const { St } = imports.gi
 const ExtensionUtils = imports.misc.extensionUtils
 
-const UnsafeQuickToggle = GObject.registerClass(
+var UnsafeQuickToggle = GObject.registerClass(
   class UnsafeQuickToggle extends QuickToggle {
     _updateIcon() {
-      self.iconName = this.checked ? "channel-insecure-symbolic" : "channel-secure-symbolic"
+      this.iconName = this.checked ? "channel-insecure-symbolic" : "channel-secure-symbolic"
     }
 
     _init(onUpdate) {

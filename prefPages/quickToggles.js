@@ -30,6 +30,13 @@ var quickTogglesPage = GObject.registerClass({
             value: settings.get_boolean("add-dnd-quick-toggle-enabled"),
             bind: [settings, "add-dnd-quick-toggle-enabled"]
         })
+        makeSwitch({
+            parent: newTogglesGroup,
+            title: "Unsafe Mode Quick Toggle",
+            subtitle: "Turn on to make the unsafe quick toggle visible on the Quick Settings panel",
+            value: settings.get_boolean("add-unsafe-quick-toggle-enabled"),
+            bind: [settings, "add-unsafe-quick-toggle-enabled"]
+        })
         this.add(newTogglesGroup)
 
         // description / enable

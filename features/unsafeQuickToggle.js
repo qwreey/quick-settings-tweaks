@@ -26,7 +26,9 @@ var unsafeQuickToggleFeature = class {
     // disable feature reloader
     featureReloader.disable(this)
 
-    this.unsafeToggle.destroy()
-    global.context.unsafe_mode = false
+    if (this.unsafeToggle) {
+      this.unsafeToggle.destroy()
+      global.context.unsafe_mode = false
+    }
   }
 }
