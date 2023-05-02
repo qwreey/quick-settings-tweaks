@@ -12,6 +12,9 @@
     <key name="add-dnd-quick-toggle-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="add-unsafe-quick-toggle-enabled" type="b">
+      <default>false</default>
+    </key>
     <key name="volume-mixer-enabled" type="b">
       <default>true</default>
     </key>
@@ -96,6 +99,11 @@
       <default>false</default>
     </key>
     <key name="input-always-show" type="b">
+      <default>false</default>
+    </key>
+
+    <!-- unsafe mode -->
+    <key name="last-unsafe-state" type="b">
       <default>false</default>
     </key>
   </schema>

@@ -32,11 +32,12 @@ class Extension {
         // load modules
         this.features = [
             new Features.dndQuickToggle.dndQuickToggleFeature(),
+            new Features.unsafeQuickToggle.unsafeQuickToggleFeature(),
             new Features.notifications.notificationsFeature(),
             new Features.volumeMixer.volumeMixerFeature(),
             new Features.dateMenu.dateMenuFeature(),
             new Features.buttonRemover.buttonRemoverFeature(),
-            new Features.inputOutput.inputOutputFeature()
+            new Features.inputOutput.inputOutputFeature(),
         ]
 
         // load settings
