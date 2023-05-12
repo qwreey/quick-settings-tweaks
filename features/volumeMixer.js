@@ -49,7 +49,7 @@ export class VolumeMixerFeature {
         // Insert volume mixer into Quick Settings
         QuickSettings.menu.addItem(this.volumeMixer.actor, 2);
         if (this.settings.get_string("volume-mixer-position") === "top") {
-            QuickSettings.menu._grid.set_child_below_sibling(
+            QuickSettings.menu._grid.set_child_above_sibling(
                 this.volumeMixer.actor,
                 InputStreamSlider
             )

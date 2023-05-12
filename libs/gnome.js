@@ -24,7 +24,7 @@ export var QuickSettingsShutdownMenuBox =
 
 // Quick Settings Items
 var InputStreamSlider = QuickSettings._volume._input;
-var OutputVolumeSlider = QuickSettings._volume._output;
+var OutputStreamSlider = QuickSettings._volume._output;
 
 // Date Menu
 export var DateMenu = Main.panel.statusArea.dateMenu
