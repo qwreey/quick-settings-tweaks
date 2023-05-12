@@ -1,6 +1,6 @@
 import { featureReloader } from "../libs/utility.js"
 import { VolumeMixer } from "../libs/volumeMixerHandler.js"
-import { QuickSettingsGrid } from "../libs/gnome.js"
+import { QuickSettingsGrid, QuickSettings, InputStreamSlider } from "../libs/gnome.js"
 
 export class VolumeMixerFeature {
     onMenuOpen() {
@@ -22,7 +22,7 @@ export class VolumeMixerFeature {
         let settings = this.settings
 
         // setup reloader
-        featureReloader.enableWithSettingKeys(this,[
+        featureReloader.enableWithSettingKeys(this, [
             "volume-mixer-enabled",
             "volume-mixer-position",
             "volume-mixer-filtered-apps",
@@ -47,25 +47,20 @@ export class VolumeMixerFeature {
         })
 
         // Insert volume mixer into Quick Settings
-        let position = settings.get_string("volume-mixer-position")
-        switch (position) {
-            case "top":
-                QuickSettingsGrid.insert_child_below(this.volumeMixer.actor,this._getInputStreamSlider())
-                break
-            case "bottom":
-                QuickSettingsGrid.add_child(this.volumeMixer.actor)
-                break
-        }
+        QuickSettings.menu.addItem(this.volumeMixer.actor, 2);
+        if (this.settings.get_string("volume-mixer-position") === "top") {
+            QuickSettings.menu._grid.set_child_below_sibling(
+                this.volumeMixer.actor,
+                InputStreamSlider
+            )
 
-        // Allow volume mixer taking 2 space
-        QuickSettingsGrid.layout_manager.child_set_property(
-            QuickSettingsGrid, this.volumeMixer.actor, 'column-span', 2
-        )
+        }
     }
 
     unload() {
         // disable feature reloader
         featureReloader.disable(this)
-        if (this.volumeMixer) this.volumeMixer.destroy()
+        if (this.volumeMixer) this.volumeMixer.destroy();
+        this.volumeMixer = null;
     }
 }
