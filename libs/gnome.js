@@ -26,6 +26,11 @@ export const QuickSettingsShutdownMenuBox =
 export const InputStreamSlider = QuickSettings._volume._input;
 export const OutputVolumeSlider = QuickSettings._volume._output;
 
+var QuickSettingsShutdownMenuBox =
+    SystemItem
+        .first_child?.get_children()?.find(i => i.constructor?.name == "ShutdownItem")
+        ?.menu?.box
+
 // Date Menu
 export const DateMenu = Main.panel.statusArea.dateMenu
 export const DateMenuBox = DateMenu.menu.box

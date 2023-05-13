@@ -8,8 +8,7 @@ import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.j
 import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
 import { DateMenu } from "./gnome.js"
 
-const NoNotifPlaceholder = GObject.registerClass(
-class NoNotifPlaceholder extends St.BoxLayout {
+const NoNotifPlaceholder = GObject.registerClass(class NoNotifPlaceholder extends St.BoxLayout {
     _init() {
         super._init({
             style_class: 'QSTWEAKS-notifications-no-notifications-placeholder',
@@ -28,8 +27,7 @@ class NoNotifPlaceholder extends St.BoxLayout {
     }
 })
 
-const ClearNotificationsButton = GObject.registerClass(
-class ClearNotificationsButton extends St.Button {
+const ClearNotificationsButton = GObject.registerClass(class ClearNotificationsButton extends St.Button {
     _init() {
         let container = new St.BoxLayout({
             x_expand: true,
@@ -75,7 +73,8 @@ class Notifications extends St.BoxLayout{
 
         // media controls
         this.mediaSection = messageList._mediaSection
-        this.mediaSection.get_parent().remove_child(this.mediaSection)
+        messageList._sectionList.remove_child(this.mediaSection);
+        this.mediaSection.disconnectObject(messageList);
 
         // notification list scroll
         this.list = messageList._scrollView
@@ -100,20 +99,20 @@ class Notifications extends St.BoxLayout{
         // clear button
         if (!this.options.useNativeControls) {
             let clearButton = this.clearButton = new ClearNotificationsButton()
-            clearButton.connect("clicked",()=>{
+            clearButton.connect("clicked", () => {
                 this.messageList._sectionList.get_children().forEach(s => s.clear())
             })
             headerBox.add_child(clearButton)
         }
 
         // mount
-        this.insert_child_at_index(headerBox,0)
+        this.insert_child_at_index(headerBox, 0)
     }
 
     // Create 'NoNotification' placeholder
     _createNoNotificationArea() {
         // container
-        let noNotiBox = this.noNotiBox = new St.BoxLayout({x_align: Clutter.ActorAlign.CENTER})
+        let noNotiBox = this.noNotiBox = new St.BoxLayout({ x_align: Clutter.ActorAlign.CENTER })
         noNotiBox.style_class = "QSTWEAKS-notifications-no-notifications-box"
         noNotiBox.hide()
 
@@ -173,7 +172,7 @@ class Notifications extends St.BoxLayout{
     //     hideWhenNoNotifications
     //     useNativeControls
     // }
-    _init(options){
+    _init(options) {
         super._init({
             vertical: true,
         })
@@ -185,6 +184,9 @@ class Notifications extends St.BoxLayout{
         this._syncNotifications()
         if (options.useNativeControls) this._createNativeControls() // native clear/dnd
 
-        this.connect('destroy', this.datemenu.destroy.bind(this.datemenu))
+        this.connect('destroy', () => {
+            this.datemenu._eventSource.destroy();
+            this.datemenu.destroy();
+        });
     }
 })
