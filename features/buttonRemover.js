@@ -4,26 +4,37 @@ const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
 const { featureReloader } = Me.imports.libs.utility
-const { QuickSettingsGrid } = Me.imports.libs.gnome
+const { QuickSettings } = Me.imports.libs.gnome
 
 var buttonRemoverFeature = class {
     constructor() {
         this.removedItems = []
         this.visibleListeners = []
+        this.systemHiddenItems = [];
     }
     onMenuItemAdded() {
         this._unapply()
         this._apply(this.userRemovedItems)
     }
     _apply(removedItems) {
-        for (const item of QuickSettingsGrid.get_children()) {
+        this.systemHiddenItems = [];
+
+        for (const item of QuickSettings.menu._grid.get_children()) {
             let name = item.constructor.name.toString()
-            if (name && removedItems.includes(name) && name!="Clutter_Actor") {
+            if (!item.visible) {
+                this.systemHiddenItems.push(item);
+            }
+            if (name && removedItems.includes(name)) {
                 item.hide()
                 this.removedItems.push(item)
                 this.visibleListeners.push([item,
-                    item.connect("show",()=>{
-                        this._unapply(); this._apply(removedItems)
+                    item.connect("show", () => {
+                        const index = this.systemHiddenItems.indexOf(item);
+                        if (index > -1) {
+                            this.systemHiddenItems.splice(index, 1);
+                        }
+                        this._unapply();
+                        this._apply(removedItems);
                     })
                 ])
             }
@@ -35,36 +46,36 @@ var buttonRemoverFeature = class {
         }
         this.visibleListeners = []
         for (const item of this.removedItems) {
-            item.show()
+            if (!this.systemHiddenItems.includes(item)) item.show();
         }
         this.removedItems = []
+        this.systemHiddenItems = [];
     }
     load() {
-        {
-            let listButtons = []
-            for (const item of QuickSettingsGrid.get_children()){
-                listButtons.push({
-                    name: item.constructor?.name,
-                    label: item.label || null,
-                    visible: item.visible
-                })
-            }
-            this.settings.set_string("list-buttons",JSON.stringify(listButtons))
+        const listButtons = []
+        for (const item of QuickSettings.menu._grid.get_children()) {
+            if (item === QuickSettings.menu._grid.layout_manager._overlay) continue;
+            listButtons.push({
+                name: item.constructor?.name,
+                label: item.title || null,
+                visible: item.visible
+            })
         }
+        this.settings.set_string("list-buttons", JSON.stringify(listButtons))
 
         let items = this.userRemovedItems = this.settings.get_strv("user-removed-buttons")
         if (!items) {
             items = this.userRemovedItems = []
-            this.settings.set_strv("user-removed-buttons",items)
+            this.settings.set_strv("user-removed-buttons", items)
         }
 
         this._apply(items)
 
         this._removedItemsConnection =
-        this.settings.connect('changed::user-removed-buttons', (settings, key) => {
-            this._unapply()
-            this._apply(this.userRemovedItems = this.settings.get_strv("user-removed-buttons"))
-        })
+            this.settings.connect('changed::user-removed-buttons', (settings, key) => {
+                this._unapply()
+                this._apply(this.userRemovedItems = this.settings.get_strv("user-removed-buttons"))
+            })
     }
     unload() {
         this._unapply()
