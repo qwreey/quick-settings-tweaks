@@ -11,7 +11,7 @@ var UnsafeQuickToggle = GObject.registerClass(
 
     _init(onUpdate) {
       super._init({
-        label: ExtensionUtils.gettext("Unsafe Mode"),
+        title: ExtensionUtils.gettext("Unsafe Mode"),
         iconName: "channel-insecure-symbolic",
       })
       this._onUpdate = onUpdate

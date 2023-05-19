@@ -41,7 +41,7 @@ var StreamSlider = GObject.registerClass({
         this._sliderChangedId = this.slider.connect('notify::value',
             () => this._sliderChanged())
         this._connections.push([ // ADDED BY QWREEY
-            this.slider,this._sliderChangedId
+            this.slider, this._sliderChangedId
         ])
         this._connections.push([ // MODED BY QWREEY
             this.slider,
@@ -61,7 +61,7 @@ var StreamSlider = GObject.registerClass({
         this.menu.addMenuItem(this._deviceSection)
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem())
-        this.menu.addSettingsAction(_('Sound Settings'),'gnome-sound-panel.desktop')
+        this.menu.addSettingsAction(_('Sound Settings'), 'gnome-sound-panel.desktop')
 
         this._stream = null
         this._volumeCancellable = null
@@ -117,7 +117,7 @@ var StreamSlider = GObject.registerClass({
         if (!device)
             return
 
-        const {description, origin} = device
+        const { description, origin } = device
         const name = origin
             ? `${description} – ${origin}`
             : description
@@ -257,7 +257,7 @@ var StreamSlider = GObject.registerClass({
     // ADDED BY QWREEY
     _destroy() {
         GLib.Source.remove(this._notifyVolumeChangeId)
-        for (item of this._connections) {
+        for (const item of this._connections) {
             item[0].disconnect(item[1])
         }
         this._connections = null

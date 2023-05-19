@@ -2,7 +2,7 @@ const ExtensionUtils = imports.misc.extensionUtils
 const Me = ExtensionUtils.getCurrentExtension()
 
 const { featureReloader } = Me.imports.libs.utility
-const { QuickSettingsGrid } = Me.imports.libs.gnome
+const { QuickSettings, InputStreamSlider, OutputStreamSlider } = Me.imports.libs.gnome
 const { Label } = imports.gi.St
 const Volume = imports.ui.status.volume
 const PopupMenu = imports.ui.popupMenu
@@ -10,7 +10,7 @@ const PopupMenu = imports.ui.popupMenu
 var inputOutputFeature = class {
     load() {
         // setup reloader
-        featureReloader.enableWithSettingKeys(this,[
+        featureReloader.enableWithSettingKeys(this, [
             "output-show-selected",
             "input-show-selected",
             "input-always-show"
@@ -20,15 +20,13 @@ var inputOutputFeature = class {
         this._inputListener = null
         this._inputVisibilityListener = null
 
-        this._inputStreamSlider = this._getInputStreamSlider()
-        if (this._inputStreamSlider && this.settings.get_boolean("input-show-selected")) {
+        if (this.settings.get_boolean("input-show-selected")) {
             this._setupInputChangedListener()
         }
-        if (this._inputStreamSlider && this.settings.get_boolean("input-always-show")) {
+        if (this.settings.get_boolean("input-always-show")) {
             this._setupInputVisibilityObserver()
         }
-        this._outputStreamSlider = this._getOutputStreamSlider()
-        if (this._outputStreamSlider && this.settings.get_boolean("output-show-selected")) {
+        if (this.settings.get_boolean("output-show-selected")) {
             this._setupOutputChangedListener()
         }
     }
@@ -37,17 +35,17 @@ var inputOutputFeature = class {
         // disable feature reloader
         featureReloader.disable(this)
 
-        if (this._inputStreamSlider && this._inputListener) {
+        if (this._inputListener) {
             this._detachInputLabel()
             Volume.getMixerControl().disconnect(this._inputListener)
             this._inputListener = null
         }
-        if (this._inputStreamSlider && this._inputVisibilityListener) {
-            this._inputStreamSlider.disconnect(this._inputVisibilityListener)
+        if (this._inputVisibilityListener) {
+            InputStreamSlider.disconnect(this._inputVisibilityListener)
             this._inputVisibilityListener = null
-            this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible()
+            InputStreamSlider.visible = InputStreamSlider._shouldBeVisible()
         }
-        if (this._outputStreamSlider && this._outputListener) {
+        if (this._outputListener) {
             this._detachOutputLabel()
             Volume.getMixerControl().disconnect(this._outputListener)
             this._outputListener = null
@@ -68,10 +66,10 @@ var inputOutputFeature = class {
     _attachOutputLabel() {
         this.outputLabel = new Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettingsGrid.insert_child_at_index(this.outputLabel, this._getOutputStreamSliderIndex() - 1)
-        this._spanTwoColumns(this.outputLabel)
+        QuickSettings.menu.addItem(this.outputLabel, 2);
+        QuickSettings.menu._grid.set_child_below_sibling(this.outputLabel, OutputStreamSlider);
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
-        this.outputLabel.text = this._findActiveDevice(this._outputStreamSlider)
+        this.outputLabel.text = this._findActiveDevice(OutputStreamSlider)
     }
 
     _detachOutputLabel() {
@@ -90,10 +88,10 @@ var inputOutputFeature = class {
     _attachInputLabel() {
         this.inputLabel = new Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettingsGrid.insert_child_at_index(this.inputLabel, this._getInputStreamSliderIndex() - 1)
-        this._spanTwoColumns(this.inputLabel)
+        QuickSettings.menu.addItem(this.inputLabel, 2);
+        QuickSettings.menu._grid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
         this._setInputLabelVisibility()
-        this.inputLabel.text = this._findActiveDevice(this._inputStreamSlider)
+        this.inputLabel.text = this._findActiveDevice(InputStreamSlider)
     }
 
     _onInputDeviceChanged(deviceId) {
@@ -103,7 +101,6 @@ var inputOutputFeature = class {
 
     _detachInputLabel() {
         if (this.inputLabel && this.inputLabel.get_parent()) {
-            this.inputLabel.visible = true
             this.inputLabel.get_parent().remove_child(this.inputLabel)
             this.inputLabel = null
         }
@@ -111,7 +108,7 @@ var inputOutputFeature = class {
 
     // =========================================== Input Visbility ===========================================
     _setupInputVisibilityObserver() {
-        this._inputVisibilityListener = this._inputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
+        this._inputVisibilityListener = InputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
         this._onInputStreamSliderSynced()
     }
 
@@ -123,55 +120,19 @@ var inputOutputFeature = class {
     }
 
     _setInputStreamSliderVisibility() {
-        this._inputStreamSlider.visible = this._inputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
+        InputStreamSlider.visible = InputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
     }
 
     _setInputLabelVisibility() {
-        this.inputLabel.visible = this._inputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
+        this.inputLabel.visible = InputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
     }
 
 
     // =========================================== Utils ===========================================
-    _getInputStreamSlider() {
-        return this._getUiObject("InputStreamSlider")
-    }
-
-    _getInputStreamSliderIndex() {
-        return this._getUiObjectIndex("InputStreamSlider")
-    }
-
-    _getOutputStreamSlider() {
-        return this._getUiObject("OutputStreamSlider")
-    }
-
-    _getOutputStreamSliderIndex() {
-        return this._getUiObjectIndex("OutputStreamSlider")
-    }
-
-    _getUiObject(constructorName) {
-        let gridChildren = QuickSettingsGrid.get_children()
-        let index = this._getUiObjectIndex(constructorName)
-        if (index) {
-            return gridChildren[index]
-        }
-        return null
-    }
-
-    _getUiObjectIndex(constructorName) {
-        let gridChildren = QuickSettingsGrid.get_children()
-        let outputSliderIndex
-        for (let index = 0; index<gridChildren.length; index++) {
-            if (gridChildren[index]?.constructor?.name == constructorName) {
-                return index
-            }
-        }
-        return null
-    }
-
     _findActiveDevice(sliderObject) {
         // find the current selected input and grab the input text from that
         let menuChildren = sliderObject.menu.box.get_children()[1].get_children()
-        for (let index = 0; index<menuChildren.length; index++) {
+        for (let index = 0; index < menuChildren.length; index++) {
             let item = menuChildren[index]
             if (item._ornament == PopupMenu.Ornament.CHECK) {
                 return item.label.text
@@ -184,15 +145,11 @@ var inputOutputFeature = class {
         if (!device)
             return
 
-        const {description, origin} = device
+        const { description, origin } = device
         const name = origin
             ? `${description} – ${origin}`
             : description
 
         return name
-    }
-
-    _spanTwoColumns(object) {
-        QuickSettingsGrid.layout_manager.child_set_property(QuickSettingsGrid, object, 'column-span', 2)
     }
 }
