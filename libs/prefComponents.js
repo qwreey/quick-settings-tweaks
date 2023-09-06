@@ -1,8 +1,12 @@
 
-const { Adw, Gio, Gtk, GObject } = imports.gi
-var baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
+import Adw from "gi://Adw"
+import Gio from "gi://Gio"
+import Gtk from "gi://Gtk"
+import GObject from "gi://GObject"
 
-function makeRow(options={parent: null,title: null, subtitle: null,uri: null}) {
+export var baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
+
+export function makeRow(options={parent: null,title: null, subtitle: null,uri: null}) {
     const row = new Adw.ActionRow({
         title: options.title,
         subtitle: options.subtitle || null
@@ -30,7 +34,7 @@ function makeRow(options={parent: null,title: null, subtitle: null,uri: null}) {
     return row
 }
 
-function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null}) {
+export function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null}) {
     const row = new Adw.ActionRow({
         title: options.title,
         subtitle: options.subtitle || null
@@ -66,7 +70,7 @@ function makeSwitch(options={bind: null,parent: null,value: false,title: "defaul
     return row
 }
 
-function makeAdjustment(options={
+export function makeAdjustment(options={
     max: 100,
     stepIncrement: 1,
     pageIncrement: 10,
@@ -114,7 +118,7 @@ function makeAdjustment(options={
     return row
 }
 
-var DropdownItems = GObject.registerClass({
+export var DropdownItems = GObject.registerClass({
     Properties: {
         'name': GObject.ParamSpec.string(
             'name', 'name', 'name',
@@ -130,7 +134,7 @@ var DropdownItems = GObject.registerClass({
         super._init({ name, value })
     }
 })
-function makeDropdown(options={
+export function makeDropdown(options={
     items:[{name:"",value:""}],
     bind: null,
     parent: null,
@@ -141,7 +145,7 @@ function makeDropdown(options={
     type: null
 }) {
     let filterModeModel = new Gio.ListStore({ item_type: DropdownItems })
-    for (item of options.items) {
+    for (const item of options.items) {
         filterModeModel.append(new DropdownItems(item.name, item.value))
     }
 

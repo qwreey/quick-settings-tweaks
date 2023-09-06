@@ -1,13 +1,10 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
+import { featureReloader } from "../libs/utility.js"
+import { QuickSettingsGrid } from "../libs/gnome.js"
+import St from "gi://St"
+import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
+import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 
-const { featureReloader } = Me.imports.libs.utility
-const { QuickSettingsGrid } = Me.imports.libs.gnome
-const { Label } = imports.gi.St
-const Volume = imports.ui.status.volume
-const PopupMenu = imports.ui.popupMenu
-
-var inputOutputFeature = class {
+export var inputOutputFeature = class {
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[
@@ -66,7 +63,7 @@ var inputOutputFeature = class {
     }
 
     _attachOutputLabel() {
-        this.outputLabel = new Label()
+        this.outputLabel = new St.Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
         QuickSettingsGrid.insert_child_at_index(this.outputLabel, this._getOutputStreamSliderIndex() - 1)
         this._spanTwoColumns(this.outputLabel)
@@ -88,7 +85,7 @@ var inputOutputFeature = class {
     }
 
     _attachInputLabel() {
-        this.inputLabel = new Label()
+        this.inputLabel = new St.Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
         QuickSettingsGrid.insert_child_at_index(this.inputLabel, this._getInputStreamSliderIndex() - 1)
         this._spanTwoColumns(this.inputLabel)

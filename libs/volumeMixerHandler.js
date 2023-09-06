@@ -1,15 +1,12 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-const { StreamSlider } = Me.imports.libs.streamSlider
+import { StreamSlider } from "./streamSlider.js"
 
-const { BoxLayout, Label } = imports.gi.St
-const { Settings, SettingsSchemaSource } = imports.gi.Gio
-const { MixerSinkInput } = imports.gi.Gvc
+import St from "gi://St"
+import Gvc from "gi://Gvc"
 
-const PopupMenu = imports.ui.popupMenu // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/popupMenu.js
-const Volume = imports.ui.status.volume // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
+import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
+import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 
-var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
+export var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
     constructor(settings) {
         super()
         this._applicationStreams = {}
@@ -43,7 +40,7 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
 
         const stream = control.lookup_stream_id(id)
 
-        if (stream.is_event_stream || !(stream instanceof MixerSinkInput)) {
+        if (stream.is_event_stream || !(stream instanceof Gvc.MixerSinkInput)) {
             return
         }
 
@@ -72,7 +69,7 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
         }
 
         if (name || description) {
-            slider._vbox = new BoxLayout();
+            slider._vbox = new St.BoxLayout();
             slider._vbox.vertical = true;
 
             let sliderBox = slider.first_child
@@ -82,7 +79,7 @@ var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
             sliderBox.remove_child(lastObj)
             sliderBox.add(slider._vbox)
             
-            slider._label = new Label({ x_expand: true })
+            slider._label = new St.Label({ x_expand: true })
             slider._label.style_class = "QSTWEAKS-volume-mixer-label"
             slider._label.text = name && this._showStreamDesc ? `${name} - ${description}` : (name || description)
             slider._vbox.add(slider._label)

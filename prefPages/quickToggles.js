@@ -1,14 +1,14 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-const { Adw, Gtk, GObject } = imports.gi
+import Adw from "gi://Adw"
+import Gtk from "gi://Gtk"
+import GObject from "gi://GObject"
 
-const {
+import {
     baseGTypeName,
     makeRow,
     makeSwitch
-} = Me.imports.libs.prefComponents
+} from "../libs/prefComponents.js"
 
-var quickTogglesPage = GObject.registerClass({
+export var quickTogglesPage = GObject.registerClass({
     GTypeName: baseGTypeName+'quickTogglesPage',
 }, class quickTogglesPage extends Adw.PreferencesPage {
     constructor(settings) {

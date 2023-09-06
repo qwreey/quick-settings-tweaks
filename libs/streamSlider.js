@@ -1,18 +1,14 @@
-const { BoxLayout, Label } = imports.gi.St
-const { GObject, Gio, GLib, Gvc } = imports.gi
+import GObject from "gi://GObject"
+import Gio from "gi://Gio"
+import GLib from "gi://GLib"
+import Gvc from "gi://Gvc"
 
-// https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/status/volume.js
-// Sometime, import.ui.status.volume.StreamSlider is undefined and it cause load fail
-// For prevent this, we can add `while (!import.ui.status.volume.StreamSlider) {}`
-// But, for performance, i just copied StreamSlider into this code
-// I know that this behavior isn't the best, but i will find out another way to fix this
-
-const Volume = imports.ui.status.volume
+import { QuickSlider } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 
 const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
-const { QuickSlider } = imports.ui.quickSettings
-const PopupMenu = imports.ui.popupMenu
-var StreamSlider = GObject.registerClass({
+
+export var StreamSlider = GObject.registerClass({
     Signals: {
         'stream-updated': {},
     },

@@ -1,17 +1,11 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-const { GLib } = imports.gi
-
-const { featureReloader } = Me.imports.libs.utility
-const {
+import { featureReloader } from "../libs/utility.js"
+import {
   DateMenuNotifications,
   DateMenuMediaControl,
-  DateMenuHolder,
   DateMenuBox,
-} = Me.imports.libs.gnome
-const { Indicator } = Me.imports.libs.dndQuickToggleHandler
+} from "../libs/gnome.js"
 
-var dateMenuFeature = class {
+export var dateMenuFeature = class {
   load() {
     // setup reloader
     featureReloader.enableWithSettingKeys(this, [

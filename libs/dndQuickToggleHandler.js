@@ -1,6 +1,6 @@
-const { Gio, GObject } = imports.gi
-const { QuickToggle, SystemIndicator } = imports.ui.quickSettings
-const { St } = imports.gi
+import Gio from "gi://Gio"
+import GObject from "gi://GObject"
+import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
 const DndQuickToggle = GObject.registerClass(
   class DndQuickToggle extends QuickToggle {
@@ -46,7 +46,7 @@ const DndQuickToggle = GObject.registerClass(
   }
 )
 
-var Indicator = GObject.registerClass(
+export var Indicator = GObject.registerClass(
   class Indicator extends SystemIndicator {
     _init() {
       super._init()

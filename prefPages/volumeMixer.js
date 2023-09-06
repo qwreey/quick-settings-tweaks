@@ -1,15 +1,15 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-const { Adw, Gio, Gtk, GObject } = imports.gi
+import Adw from "gi://Adw"
+import Gtk from "gi://Gtk"
+import GObject from "gi://GObject"
 
-const {
+import {
     baseGTypeName,
     makeRow,
     makeSwitch,
     makeDropdown
-} = Me.imports.libs.prefComponents
+} from "../libs/prefComponents.js"
 
-var VolumeMixerAddFilterDialog = GObject.registerClass({
+export var VolumeMixerAddFilterDialog = GObject.registerClass({
     GTypeName: baseGTypeName+'VolumeMixerAddFilterDialog',
 }, class VolumeMixerAddFilterDialog extends Gtk.Dialog {
     appNameEntry
@@ -69,7 +69,7 @@ var VolumeMixerAddFilterDialog = GObject.registerClass({
     }
 })
 
-var FilterMode = GObject.registerClass({
+export var FilterMode = GObject.registerClass({
     Properties: {
         'name': GObject.ParamSpec.string(
             'name', 'name', 'name',
@@ -86,7 +86,7 @@ var FilterMode = GObject.registerClass({
     }
 })
 
-var volumeMixerPage = GObject.registerClass({
+export var volumeMixerPage = GObject.registerClass({
     GTypeName: baseGTypeName+'volumeMixerPage',
 }, class volumeMixerPage extends Adw.PreferencesPage {
     constructor(settings) {

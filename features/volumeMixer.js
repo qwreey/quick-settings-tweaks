@@ -1,11 +1,8 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
+import { featureReloader } from "../libs/utility.js"
+import { VolumeMixer } from "../libs/volumeMixerHandler.js"
+import { QuickSettingsGrid } from "../libs/gnome.js"
 
-const { featureReloader } = Me.imports.libs.utility
-const { VolumeMixer } = Me.imports.libs.volumeMixerHandler
-const { QuickSettingsGrid } = Me.imports.libs.gnome
-
-var volumeMixerFeature = class {
+export var volumeMixerFeature = class {
     onMenuOpen() {
         // reorder on menu open
         if (this.volumeMixer) {

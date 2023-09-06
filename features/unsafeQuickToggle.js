@@ -1,12 +1,8 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
+import { featureReloader } from "../libs/utility.js"
+import { UnsafeQuickToggle } from "../libs/unsafeQuickToggleHandler.js"
+import { QuickSettings } from "../libs/gnome.js"
 
-const { featureReloader, addQuickSettingsItems } = Me.imports.libs.utility
-const { QuickSettings, DateMenu, QuickSettingsGrid } = Me.imports.libs.gnome
-const { UnsafeQuickToggle } = Me.imports.libs.unsafeQuickToggleHandler
-const { Gio, GObject } = imports.gi
-
-var unsafeQuickToggleFeature = class {
+export var unsafeQuickToggleFeature = class {
   load() {
     // setup reloader
     featureReloader.enableWithSettingKeys(this, [
@@ -19,7 +15,7 @@ var unsafeQuickToggleFeature = class {
 
     // Add Unsafe Quick Toggle
     this.unsafeToggle = new UnsafeQuickToggle((state)=>this.settings.set_boolean("last-unsafe-state",state))
-    addQuickSettingsItems([this.unsafeToggle])
+    QuickSettings.addExternalIndicator(this.unsafeToggle)
   }
 
   unload() {

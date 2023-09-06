@@ -1,16 +1,13 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-
-const { featureReloader } = Me.imports.libs.utility
-const { Notifications } = Me.imports.libs.notificationHandler
-const {
+import { featureReloader } from "../libs/utility.js"
+import { Notifications } from "../libs/notificationHandler.js"
+import {
     QuickSettingsGrid,
     QuickSettingsBox,
     QuickSettingsActor,
     QuickSettingsShutdownMenuBox
-} = Me.imports.libs.gnome
+} from "../libs/gnome.js"
 
-var notificationsFeature = class {
+export var notificationsFeature = class {
     onMenuOpen() {
         // reorder on menu open
         if (this.mediaControlEnabled) {

@@ -1,12 +1,8 @@
 // forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
 
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
+import { QuickSettingsGrid } from "../libs/gnome.js"
 
-const { featureReloader } = Me.imports.libs.utility
-const { QuickSettingsGrid } = Me.imports.libs.gnome
-
-var buttonRemoverFeature = class {
+export var buttonRemoverFeature = class {
     constructor() {
         this.removedItems = []
         this.visibleListeners = []
