@@ -2,7 +2,7 @@ import { featureReloader } from "../libs/utility.js"
 import { UnsafeQuickToggle } from "../libs/unsafeQuickToggleHandler.js"
 import { QuickSettings } from "../libs/gnome.js"
 
-export var unsafeQuickToggleFeature = class {
+export class UnsafeQuickToggleFeature {
   load() {
     // setup reloader
     featureReloader.enableWithSettingKeys(this, [

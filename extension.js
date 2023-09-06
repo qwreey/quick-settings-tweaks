@@ -1,11 +1,11 @@
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
-import { dndQuickToggleFeature } from "./features/dndQuickToggle.js"
-import { unsafeQuickToggleFeature } from "./features/unsafeQuickToggle.js"
-import { notificationsFeature } from "./features/notifications.js"
-import { volumeMixerFeature } from "./features/volumeMixer.js"
-import { dateMenuFeature } from "./features/dateMenu.js"
-import { buttonRemoverFeature } from "./features/buttonRemover.js"
-import { inputOutputFeature } from "./features/inputOutput.js"
+import { DndQuickToggleFeature } from "./features/dndQuickToggle.js"
+import { UnsafeQuickToggleFeature } from "./features/unsafeQuickToggle.js"
+import { NotificationsFeature } from "./features/notifications.js"
+import { VolumeMixerFeature } from "./features/volumeMixer.js"
+import { DateMenuFeature } from "./features/dateMenu.js"
+import { ButtonRemoverFeature } from "./features/buttonRemover.js"
+import { InputOutputFeature } from "./features/inputOutput.js"
 import { logger } from "./libs/utility.js"
 import { QuickSettingsGrid } from "./libs/gnome.js"
 
@@ -36,13 +36,13 @@ export default class QstExtension extends Extension {
 
         // load modules
         this.features = [
-            new dndQuickToggleFeature(),
-            new unsafeQuickToggleFeature(),
-            new notificationsFeature(),
-            new volumeMixerFeature(),
-            new dateMenuFeature(),
-            new buttonRemoverFeature(),
-            new inputOutputFeature(),
+            new DndQuickToggleFeature(),
+            new UnsafeQuickToggleFeature(),
+            new NotificationsFeature(),
+            new VolumeMixerFeature(),
+            new DateMenuFeature(),
+            new ButtonRemoverFeature(),
+            new InputOutputFeature(),
         ]
 
         // load settings

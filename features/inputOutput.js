@@ -4,7 +4,7 @@ import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 
-export var inputOutputFeature = class {
+export class InputOutputFeature {
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this,[

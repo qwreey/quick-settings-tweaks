@@ -5,7 +5,7 @@ import {
   DateMenuBox,
 } from "../libs/gnome.js"
 
-export var dateMenuFeature = class {
+export class DateMenuFeature {
   load() {
     // setup reloader
     featureReloader.enableWithSettingKeys(this, [

@@ -3,7 +3,7 @@ import { QuickSettings, DateMenu } from "../libs/gnome.js"
 import { Indicator } from "../libs/dndQuickToggleHandler.js"
 import Gio from "gi://Gio"
 
-export var dndQuickToggleFeature = class {
+export class DndQuickToggleFeature {
   load() {
     // setup reloader
     featureReloader.enableWithSettingKeys(this, [

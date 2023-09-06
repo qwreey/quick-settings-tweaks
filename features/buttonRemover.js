@@ -2,7 +2,7 @@
 
 import { QuickSettingsGrid } from "../libs/gnome.js"
 
-export var buttonRemoverFeature = class {
+export class ButtonRemoverFeature {
     constructor() {
         this.removedItems = []
         this.visibleListeners = []

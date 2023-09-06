@@ -2,7 +2,7 @@ import { featureReloader } from "../libs/utility.js"
 import { VolumeMixer } from "../libs/volumeMixerHandler.js"
 import { QuickSettingsGrid } from "../libs/gnome.js"
 
-export var volumeMixerFeature = class {
+export class VolumeMixerFeature {
     onMenuOpen() {
         // reorder on menu open
         if (this.volumeMixer) {

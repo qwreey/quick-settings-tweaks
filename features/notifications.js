@@ -7,7 +7,7 @@ import {
     QuickSettingsShutdownMenuBox
 } from "../libs/gnome.js"
 
-export var notificationsFeature = class {
+export class NotificationsFeature {
     onMenuOpen() {
         // reorder on menu open
         if (this.mediaControlEnabled) {
