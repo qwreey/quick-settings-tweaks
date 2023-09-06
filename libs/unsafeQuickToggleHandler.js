@@ -10,7 +10,7 @@ export var UnsafeQuickToggle = GObject.registerClass(
 
     _init(onUpdate) {
       super._init({
-        label: _("Unsafe Mode"),
+        title: _("Unsafe Mode"),
         iconName: "channel-insecure-symbolic",
       })
       this._onUpdate = onUpdate

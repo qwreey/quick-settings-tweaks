@@ -6,7 +6,7 @@ const DndQuickToggle = GObject.registerClass(
   class DndQuickToggle extends QuickToggle {
     _init() {
       super._init({
-        label: _('Do Not Disturb'),
+        title: _('Do Not Disturb'),
         iconName: "notifications-disabled-symbolic",
       })
 

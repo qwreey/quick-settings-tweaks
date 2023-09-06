@@ -41,7 +41,7 @@ export var buttonRemoverFeature = class {
             for (const item of QuickSettingsGrid.get_children()){
                 listButtons.push({
                     name: item.constructor?.name,
-                    label: item.label || null,
+                    title: item.title || null,
                     visible: item.visible
                 })
             }

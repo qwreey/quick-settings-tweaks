@@ -69,7 +69,7 @@ export var quickTogglesPage = GObject.registerClass({
         for (let button of listButtons) {
             const row = new Adw.ActionRow({
                 title: (button.name || "Unknown") + (button.visible ? "" : " (invisible by system)"),
-                subtitle: button.label
+                subtitle: button.title
             })
             removeGroup.add(row);
     
