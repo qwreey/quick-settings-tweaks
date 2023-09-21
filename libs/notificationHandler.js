@@ -1,10 +1,12 @@
-const { GObject, St, Clutter } = imports.gi
-const Main = imports.ui.main
-const Calendar = imports.ui.calendar
-const ExtensionUtils = imports.misc.extensionUtils
+import GObject from "gi://GObject"
+import St from "gi://St"
+import Clutter from "gi://Clutter"
+import * as Calendar from "resource:///org/gnome/shell/ui/calendar.js"
+import { DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js"
+import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
 
-const Me = ExtensionUtils.getCurrentExtension()
-const { fixStScrollViewScrollbarOverflow } = Me.imports.libs.utility
+import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
+import { DateMenu } from "./gnome.js"
 
 const NoNotifPlaceholder = GObject.registerClass(class NoNotifPlaceholder extends St.BoxLayout {
     _init() {
@@ -55,12 +57,13 @@ const ClearNotificationsButton = GObject.registerClass(class ClearNotificationsB
     }
 })
 
-var Notifications = GObject.registerClass(class Notifications extends St.BoxLayout {
+export var Notifications = GObject.registerClass(
+class Notifications extends St.BoxLayout{
 
     // prepare date menu items
     _prepareDateMenu() {
         // create gnome datemenu
-        this.datemenu = new imports.ui.dateMenu.DateMenuButton()
+        this.datemenu = new DateMenuButton()
 
         // notifications
         let messageList = this.messageList = this.datemenu._messageList
@@ -85,7 +88,7 @@ var Notifications = GObject.registerClass(class Notifications extends St.BoxLayo
         // header / title
         let headerBox = new St.BoxLayout({ style_class: "QSTWEAKS-notifications-header" })
         let titleLabel = new St.Label({
-            text: ExtensionUtils.gettext('Notifications'),
+            text: _('Notifications'),
             style_class: "QSTWEAKS-notifications-title",
             y_align: Clutter.ActorAlign.CENTER,
             x_align: Clutter.ActorAlign.START,
@@ -138,8 +141,7 @@ var Notifications = GObject.registerClass(class Notifications extends St.BoxLayo
     // Sync
     _syncNotifications() {
         // sync notifications from gnome stock notifications
-        // for (notification of Main.panel.statusArea.dateMenu._messageList._notificationSection._messages) {
-        Main.panel.statusArea.dateMenu._messageList._notificationSection._messages.forEach((notification) => {
+        DateMenu._messageList._notificationSection._messages.forEach((notification)=>{
             // clone message
             this.notificationList.addMessage(new Calendar.NotificationMessage(notification.notification))
         })

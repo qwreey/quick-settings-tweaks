@@ -1,14 +1,9 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-const { Adw, GObject } = imports.gi
+import Adw from "gi://Adw"
+import GObject from "gi://GObject"
 
-const {
-    baseGTypeName,
-    makeRow,
-    makeSwitch
-} = Me.imports.libs.prefComponents
+import { baseGTypeName, makeSwitch } from "../libs/prefComponents.js"
 
-var otherPage = GObject.registerClass({
+export var otherPage = GObject.registerClass({
     GTypeName: baseGTypeName+'otherPage',
 }, class otherPagePage extends Adw.PreferencesPage {
     constructor(settings) {

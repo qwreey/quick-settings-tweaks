@@ -1,12 +1,8 @@
 // forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
 
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
+import { QuickSettingsGrid } from "../libs/gnome.js"
 
-const { featureReloader } = Me.imports.libs.utility
-const { QuickSettings } = Me.imports.libs.gnome
-
-var buttonRemoverFeature = class {
+export class ButtonRemoverFeature {
     constructor() {
         this.removedItems = []
         this.visibleListeners = []
@@ -19,7 +15,7 @@ var buttonRemoverFeature = class {
     _apply(removedItems) {
         this.systemHiddenItems = [];
 
-        for (const item of QuickSettings.menu._grid.get_children()) {
+        for (const item of QuickSettingsGrid.get_children()) {
             let name = item.constructor.name.toString()
             if (!item.visible) {
                 this.systemHiddenItems.push(item);
@@ -52,14 +48,17 @@ var buttonRemoverFeature = class {
         this.systemHiddenItems = [];
     }
     load() {
-        const listButtons = []
-        for (const item of QuickSettings.menu._grid.get_children()) {
-            if (item === QuickSettings.menu._grid.layout_manager._overlay) continue;
-            listButtons.push({
-                name: item.constructor?.name,
-                label: item.title || null,
-                visible: item.visible
-            })
+        {
+            const listButtons = []
+            for (const item of QuickSettingsGrid.get_children()){
+                if (item === QuickSettingsGrid.layout_manager._overlay) continue;
+                listButtons.push({
+                    name: item.constructor?.name,
+                    label: item.title || null,
+                    visible: item.visible
+                })
+            }
+            this.settings.set_string("list-buttons", JSON.stringify(listButtons))
         }
         this.settings.set_string("list-buttons", JSON.stringify(listButtons))
 

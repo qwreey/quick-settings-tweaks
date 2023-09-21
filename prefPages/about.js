@@ -1,16 +1,13 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-const { Adw, GObject, Gtk } = imports.gi
+import Adw from "gi://Adw"
+import GObject from "gi://GObject"
+import Gtk from "gi://Gtk"
 
-const {
-    baseGTypeName,
-    makeRow
-} = Me.imports.libs.prefComponents
+import { baseGTypeName, makeRow } from "../libs/prefComponents.js"
 
-var aboutPage = GObject.registerClass({
+export var aboutPage = GObject.registerClass({
     GTypeName: baseGTypeName+'aboutPage',
 }, class aboutPage extends Adw.PreferencesPage {
-    constructor(settings) {
+    constructor(settings, metadata) {
         // group config
         super({
             name: 'about',
@@ -30,7 +27,7 @@ var aboutPage = GObject.registerClass({
             parent: group,
             title: "Version",
             suffix: new Gtk.Label({
-                label: Me.metadata.version?.toString() || "Unknown (Built from source)"
+                label: metadata.version?.toString() || "Unknown (Built from source)"
             })
         })
 

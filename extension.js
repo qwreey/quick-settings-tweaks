@@ -1,12 +1,15 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
-const Features = Me.imports.features
-const { logger } = Me.imports.libs.utility
-const { QuickSettingsGrid } = Me.imports.libs.gnome
-const { GLib } = imports.gi
+import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
+import { DndQuickToggleFeature } from "./features/dndQuickToggle.js"
+import { UnsafeQuickToggleFeature } from "./features/unsafeQuickToggle.js"
+import { NotificationsFeature } from "./features/notifications.js"
+import { VolumeMixerFeature } from "./features/volumeMixer.js"
+import { DateMenuFeature } from "./features/dateMenu.js"
+import { ButtonRemoverFeature } from "./features/buttonRemover.js"
+import { InputOutputFeature } from "./features/inputOutput.js"
+import { logger } from "./libs/utility.js"
+import { QuickSettingsGrid } from "./libs/gnome.js"
 
-class Extension {
-    constructor() {}
+export default class QstExtension extends Extension {
     disable() {
         logger("Unloading ...")
         let start = +Date.now()
@@ -33,18 +36,17 @@ class Extension {
 
         // load modules
         this.features = [
-            new Features.dndQuickToggle.dndQuickToggleFeature(),
-            new Features.unsafeQuickToggle.unsafeQuickToggleFeature(),
-            new Features.notifications.notificationsFeature(),
-            new Features.volumeMixer.volumeMixerFeature(),
-            new Features.dateMenu.dateMenuFeature(),
-            new Features.buttonRemover.buttonRemoverFeature(),
-            new Features.inputOutput.inputOutputFeature(),
+            new DndQuickToggleFeature(),
+            new UnsafeQuickToggleFeature(),
+            new NotificationsFeature(),
+            new VolumeMixerFeature(),
+            new DateMenuFeature(),
+            new ButtonRemoverFeature(),
+            new InputOutputFeature(),
         ]
 
         // load settings
-        let settings = ExtensionUtils.getSettings(Me.metadata['settings-schema'])
-        ExtensionUtils.initTranslations(Me.metadata['gettext-domain'])
+        let settings = this.getSettings()
 
         // load features
         for (const feature of this.features) {
@@ -76,8 +78,4 @@ class Extension {
 
         logger("Loaded. " + (+Date.now() - start) + "ms taken")
     }
-}
-
-function init(meta) {
-    return new Extension()
 }

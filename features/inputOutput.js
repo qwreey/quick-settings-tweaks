@@ -1,13 +1,15 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
+import { featureReloader } from "../libs/utility.js"
+import {
+    QuickSettingsMenu,
+    QuickSettingsGrid,
+    InputStreamSlider,
+    OutputStreamSlider
+} from "../libs/gnome.js"
+import St from "gi://St"
+import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
+import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 
-const { featureReloader } = Me.imports.libs.utility
-const { QuickSettings, InputStreamSlider, OutputStreamSlider } = Me.imports.libs.gnome
-const { Label } = imports.gi.St
-const Volume = imports.ui.status.volume
-const PopupMenu = imports.ui.popupMenu
-
-var inputOutputFeature = class {
+export class InputOutputFeature {
     load() {
         // setup reloader
         featureReloader.enableWithSettingKeys(this, [
@@ -64,10 +66,10 @@ var inputOutputFeature = class {
     }
 
     _attachOutputLabel() {
-        this.outputLabel = new Label()
+        this.outputLabel = new St.Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettings.menu.addItem(this.outputLabel, 2);
-        QuickSettings.menu._grid.set_child_below_sibling(this.outputLabel, OutputStreamSlider);
+        QuickSettingsMenu.addItem(this.outputLabel, 2);
+        QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider);
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
         this.outputLabel.text = this._findActiveDevice(OutputStreamSlider)
     }
@@ -86,10 +88,10 @@ var inputOutputFeature = class {
     }
 
     _attachInputLabel() {
-        this.inputLabel = new Label()
+        this.inputLabel = new St.Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettings.menu.addItem(this.inputLabel, 2);
-        QuickSettings.menu._grid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
+        QuickSettingsMenu.addItem(this.inputLabel, 2);
+        QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
         this._setInputLabelVisibility()
         this.inputLabel.text = this._findActiveDevice(InputStreamSlider)
     }

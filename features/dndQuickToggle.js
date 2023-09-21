@@ -1,12 +1,9 @@
-const ExtensionUtils = imports.misc.extensionUtils
-const Me = ExtensionUtils.getCurrentExtension()
+import { featureReloader } from "../libs/utility.js"
+import { QuickSettings, DateMenu } from "../libs/gnome.js"
+import { Indicator } from "../libs/dndQuickToggleHandler.js"
+import Gio from "gi://Gio"
 
-const { featureReloader, addQuickSettingsItems } = Me.imports.libs.utility
-const { QuickSettings, DateMenu, QuickSettingsGrid } = Me.imports.libs.gnome
-const { Indicator } = Me.imports.libs.dndQuickToggleHandler
-const { Gio, GObject } = imports.gi
-
-var dndQuickToggleFeature = class {
+export class DndQuickToggleFeature {
   load() {
     // setup reloader
     featureReloader.enableWithSettingKeys(this, [
@@ -19,9 +16,7 @@ var dndQuickToggleFeature = class {
 
     // Add DND Quick Toggle
     this.dndToggle = new Indicator()
-    QuickSettings._indicators.add_child(this.dndToggle)
-    // QuickSettings._addItems(this.dndToggle.quickSettingsItems)
-    addQuickSettingsItems(this.dndToggle.quickSettingsItems)
+    QuickSettings.addExternalIndicator(this.dndToggle)
 
     //remove DND button from datemenu
     this.datemenu_dnd = DateMenu.last_child.last_child
