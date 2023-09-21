@@ -1,7 +1,7 @@
 import { featureReloader } from "../libs/utility.js"
 import { Notifications } from "../libs/notificationHandler.js"
 import {
-    QuickSettings,
+    QuickSettingsMenu,
     QuickSettingsGrid,
     QuickSettingsBox,
     QuickSettingsActor,
@@ -12,13 +12,13 @@ export class NotificationsFeature {
     onMenuOpen() {
         // reorder on menu open
         if (this.mediaControlEnabled) {
-            QuickSettings.menu._grid.set_child_at_index(
+            QuickSettingsMenu._grid.set_child_at_index(
                 this.notificationHandler.mediaSection,
                 -1
             )
         }
         if (this.notificationsEnabled && this.notificationsIntegrated) {
-            QuickSettings.menu._grid.set_child_above_sibling(
+            QuickSettingsMenu._grid.set_child_above_sibling(
                 this.notificationHandler,
                 this.notificationsPosition === "top" ? SystemItem : null
             )
@@ -81,7 +81,7 @@ export class NotificationsFeature {
         if (mediaControlEnabled) {
             let mediaSection = this.notificationHandler.mediaSection
             mediaSection.style_class = "QSTWEAKS-media"
-            QuickSettings.menu.addItem(mediaSection, 2);
+            QuickSettingsMenu.addItem(mediaSection, 2);
             if (this.settings.get_boolean("media-control-compact-mode")) {
                 mediaSection.style_class += " QSTWEAKS-media-compact-mode"
             }

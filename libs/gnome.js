@@ -13,6 +13,7 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js"
 
 // Quick Settings
 export const QuickSettings = Main.panel.statusArea.quickSettings
+export const QuickSettingsMenu = QuickSettings.menu
 export const QuickSettingsGrid = QuickSettings.menu._grid
 export const QuickSettingsBox =  QuickSettings.menu.box
 export const QuickSettingsActor = QuickSettings.menu.actor
@@ -23,8 +24,8 @@ export const QuickSettingsShutdownMenuBox =
     ?.menu?.box
 
 // Quick Settings Items
-export const InputStreamSlider = QuickSettings._volume._input;
-export const OutputVolumeSlider = QuickSettings._volume._output;
+export const InputStreamSlider = QuickSettings._volume._input
+export const OutputVolumeSlider = QuickSettings._volume._output
 
 var QuickSettingsShutdownMenuBox =
     SystemItem

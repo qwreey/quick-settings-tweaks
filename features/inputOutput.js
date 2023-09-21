@@ -1,5 +1,10 @@
 import { featureReloader } from "../libs/utility.js"
-import { QuickSettings, InputStreamSlider, OutputStreamSlider } from "../libs/gnome.js"
+import {
+    QuickSettingsMenu,
+    QuickSettingsGrid,
+    InputStreamSlider,
+    OutputStreamSlider
+} from "../libs/gnome.js"
 import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
@@ -63,8 +68,8 @@ export class InputOutputFeature {
     _attachOutputLabel() {
         this.outputLabel = new St.Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettings.menu.addItem(this.outputLabel, 2);
-        QuickSettings.menu._grid.set_child_below_sibling(this.outputLabel, OutputStreamSlider);
+        QuickSettingsMenu.addItem(this.outputLabel, 2);
+        QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider);
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
         this.outputLabel.text = this._findActiveDevice(OutputStreamSlider)
     }
@@ -85,8 +90,8 @@ export class InputOutputFeature {
     _attachInputLabel() {
         this.inputLabel = new St.Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettings.menu.addItem(this.inputLabel, 2);
-        QuickSettings.menu._grid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
+        QuickSettingsMenu.addItem(this.inputLabel, 2);
+        QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
         this._setInputLabelVisibility()
         this.inputLabel.text = this._findActiveDevice(InputStreamSlider)
     }
