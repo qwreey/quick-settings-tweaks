@@ -4,6 +4,7 @@ const Me = ExtensionUtils.getCurrentExtension()
 const { featureReloader } = Me.imports.libs.utility
 const { Notifications } = Me.imports.libs.notificationHandler
 const {
+    QuickSettings,
     QuickSettingsGrid,
     QuickSettingsBox,
     QuickSettingsActor,
@@ -14,15 +15,15 @@ var notificationsFeature = class {
     onMenuOpen() {
         // reorder on menu open
         if (this.mediaControlEnabled) {
-            QuickSettingsGrid.set_child_at_index(
+            QuickSettings.menu._grid.set_child_at_index(
                 this.notificationHandler.mediaSection,
                 -1
             )
         }
         if (this.notificationsEnabled && this.notificationsIntegrated) {
-            QuickSettingsGrid.set_child_at_index(
+            QuickSettings.menu._grid.set_child_above_sibling(
                 this.notificationHandler,
-                this.notificationsPosition == "top" ? QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "SystemItem")+1 : -1
+                this.notificationsPosition === "top" ? SystemItem : null
             )
         }
     }
@@ -31,7 +32,7 @@ var notificationsFeature = class {
         let settings = this.settings
 
         // setup reloader
-        featureReloader.enableWithSettingKeys(this,[
+        featureReloader.enableWithSettingKeys(this, [
             "notifications-enabled",
             "notifications-position",
             "notifications-integrated",
@@ -49,7 +50,7 @@ var notificationsFeature = class {
         let disableAdjustBorder = this.settings.get_boolean("disable-adjust-content-border-radius")
         let disableRemoveShadow = this.settings.get_boolean("disable-remove-shadow")
         let nativeControls = this.settings.get_boolean("notifications-use-native-controls")
-        if ( !notificationsEnabled && !mediaControlEnabled ) return
+        if (!notificationsEnabled && !mediaControlEnabled) return
 
         // Make notification handler
         let isIntegrated = settings.get_boolean("notifications-integrated")
@@ -74,16 +75,16 @@ var notificationsFeature = class {
         // Max height
         this.notificationHandler.style
             = `max-height: ${this.settings.get_int("notifications-max-height")}px`
-        this.maxHeigthListen = this.settings.connect("changed::notifications-max-height",()=>{
+        this.maxHeigthListen = this.settings.connect("changed::notifications-max-height", () => {
             this.notificationHandler.style
-            = `max-height: ${this.settings.get_int("notifications-max-height")}px`
+                = `max-height: ${this.settings.get_int("notifications-max-height")}px`
         })
 
         // Insert media control
         if (mediaControlEnabled) {
             let mediaSection = this.notificationHandler.mediaSection
             mediaSection.style_class = "QSTWEAKS-media"
-            QuickSettingsGrid.add_child(mediaSection)
+            QuickSettings.menu.addItem(mediaSection, 2);
             if (this.settings.get_boolean("media-control-compact-mode")) {
                 mediaSection.style_class += " QSTWEAKS-media-compact-mode"
             }
@@ -93,21 +94,18 @@ var notificationsFeature = class {
             if (!disableRemoveShadow) {
                 mediaSection.style_class += " QSTWEAKS-remove-shadow"
             }
-            QuickSettingsGrid.layout_manager.child_set_property(
-                QuickSettingsGrid, mediaSection, 'column-span', 2
-            )
         }
 
         // Insert Native DND Switch
         if (nativeControls && notificationsEnabled) {
             this.notificationHandler.nativeClearButton.style_class
-            += " QSTWEAKS-notifications-native-clear-button"
+                += " QSTWEAKS-notifications-native-clear-button"
             this.notificationHandler.nativeDndSwitch.style_class
-            += " QSTWEAKS-notifications-native-dnd-switch"
+                += " QSTWEAKS-notifications-native-dnd-switch"
             this.notificationHandler.nativeDndText.style_class
-            += " QSTWEAKS-notifications-native-dnd-text"
+                += " QSTWEAKS-notifications-native-dnd-text"
             this.notificationHandler.nativeControlBox.style_class
-            = " QSTWEAKS-notifications-native-control-box"
+                = " QSTWEAKS-notifications-native-control-box"
         }
 
         // Insert notifications
@@ -120,7 +118,7 @@ var notificationsFeature = class {
                     case "top":
                         QuickSettingsGrid.insert_child_at_index(this.notificationHandler,
                             // get system item index
-                            QuickSettingsGrid.get_children().findIndex((child)=>child.constructor?.name == "SystemItem")+1
+                            QuickSettingsGrid.get_children().findIndex((child) => child.constructor?.name == "SystemItem") + 1
                         )
                         break
                     case "bottom":

@@ -2,6 +2,7 @@ const { Gio, GObject } = imports.gi
 const { QuickToggle, SystemIndicator } = imports.ui.quickSettings
 const { St } = imports.gi
 const ExtensionUtils = imports.misc.extensionUtils
+const _ = ExtensionUtils.gettext
 
 var UnsafeQuickToggle = GObject.registerClass(
   class UnsafeQuickToggle extends QuickToggle {
@@ -11,9 +12,10 @@ var UnsafeQuickToggle = GObject.registerClass(
 
     _init(onUpdate) {
       super._init({
-        label: ExtensionUtils.gettext("Unsafe Mode"),
         iconName: "channel-insecure-symbolic",
       })
+      try{ this.title = _('Unsafe Mode') }catch{}
+      try{ this.label = _('Unsafe Mode') }catch{}
       this._onUpdate = onUpdate
 
       // bind click
