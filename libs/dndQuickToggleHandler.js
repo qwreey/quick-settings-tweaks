@@ -8,8 +8,7 @@ const DndQuickToggle = GObject.registerClass(
       super._init({
         iconName: "notifications-disabled-symbolic",
       })
-      try{ this.title = _('Do Not Disturb') }catch{}
-      try{ this.label = _('Do Not Disturb') }catch{}
+      this.title = _('Do Not Disturb')
 
       this._settings = new Gio.Settings({
         schema_id: "org.gnome.desktop.notifications",
