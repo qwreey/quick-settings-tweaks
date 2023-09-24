@@ -2,26 +2,10 @@ import { featureReloader } from "../libs/utility.js"
 import { VolumeMixer } from "../libs/volumeMixerHandler.js"
 import {
     QuickSettingsMenu,
-    QuickSettingsGrid,
     InputStreamSlider
 } from "../libs/gnome.js"
 
 export class VolumeMixerFeature {
-    onMenuOpen() {
-        // reorder on menu open
-        if (this.volumeMixer) {
-            QuickSettingsGrid.set_child_below_sibling(
-                this.volumeMixer.actor,
-                this._getInputStreamSlider()
-            )
-        }
-    }
-
-    _getInputStreamSlider() {
-        return this.inputStreamSlider
-            || (this.inputStreamSlider = QuickSettingsGrid.get_children().find((child)=>child.constructor?.name == "InputStreamSlider"))
-    }
-
     load() {
         let settings = this.settings
 

@@ -1,5 +1,4 @@
 import Adw from "gi://Adw"
-import Gtk from "gi://Gtk"
 import GObject from "gi://GObject"
 
 import {
@@ -67,33 +66,25 @@ export var quickTogglesPage = GObject.registerClass({
         let listButtons = JSON.parse(settings.get_string("list-buttons"))
         let removedButtons = settings.get_strv("user-removed-buttons")
         for (let button of listButtons) {
-            const row = new Adw.ActionRow({
+            makeSwitch({
                 title: (button.name || "Unknown") + (button.visible ? "" : " (invisible by system)"),
-                subtitle: button.title
-            })
-            removeGroup.add(row);
-    
-            const toggle = new Gtk.Switch({
-                active: removedButtons.includes(button.name),
-                valign: Gtk.Align.CENTER,
-            });
-    
-            toggle.connect("notify::active",()=>{
-                if (toggle.get_active()) {
-                    removedButtons.push(button.name)
-                } else {
-                    while (true) {
-                        let index = removedButtons.indexOf(button.name)
-                        if (index != -1) {
-                            removedButtons.splice(index,1)
-                        } else break
+                subtitle: button.title,
+                parent: removeGroup,
+                value: removedButtons.includes(button.name),
+                action: (active)=>{
+                    if (active) {
+                        removedButtons.push(button.name)
+                    } else {
+                        while (true) {
+                            let index = removedButtons.indexOf(button.name)
+                            if (index != -1) {
+                                removedButtons.splice(index,1)
+                            } else break
+                        }
                     }
+                    settings.set_strv("user-removed-buttons",removedButtons)
                 }
-                settings.set_strv("user-removed-buttons",removedButtons)
             })
-    
-            row.add_suffix(toggle);
-            row.activatable_widget = toggle;
         }
     }
 })
