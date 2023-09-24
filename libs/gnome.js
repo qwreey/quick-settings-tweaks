@@ -18,19 +18,11 @@ export const QuickSettingsGrid = QuickSettings.menu._grid
 export const QuickSettingsBox =  QuickSettings.menu.box
 export const QuickSettingsActor = QuickSettings.menu.actor
 export const QuickSettingsShutdownMenuBox =
-    QuickSettingsBox.first_child
-    ?.get_children()?.find(i=>i.constructor?.name=="SystemItem")
-    ?.first_child?.get_children()?.find(i=>i.constructor?.name=="ShutdownItem")
-    ?.menu?.box
+    QuickSettings._system._systemItem.menu.box
 
 // Quick Settings Items
-export const InputStreamSlider = QuickSettings._volume._input
-export const OutputVolumeSlider = QuickSettings._volume._output
-
-var QuickSettingsShutdownMenuBox =
-    SystemItem
-        .first_child?.get_children()?.find(i => i.constructor?.name == "ShutdownItem")
-        ?.menu?.box
+export const InputStreamSlider = QuickSettings._volumeInput._input
+export const OutputStreamSlider = QuickSettings._volumeOutput._output
 
 // Date Menu
 export const DateMenu = Main.panel.statusArea.dateMenu

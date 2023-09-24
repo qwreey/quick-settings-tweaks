@@ -48,19 +48,16 @@ export class ButtonRemoverFeature {
         this.systemHiddenItems = [];
     }
     load() {
-        {
             const listButtons = []
             for (const item of QuickSettingsGrid.get_children()){
                 if (item === QuickSettingsGrid.layout_manager._overlay) continue;
                 listButtons.push({
                     name: item.constructor?.name,
-                    label: item.title || null,
+                    title: item.title || null,
                     visible: item.visible
                 })
             }
             this.settings.set_string("list-buttons", JSON.stringify(listButtons))
-        }
-        this.settings.set_string("list-buttons", JSON.stringify(listButtons))
 
         let items = this.userRemovedItems = this.settings.get_strv("user-removed-buttons")
         if (!items) {
