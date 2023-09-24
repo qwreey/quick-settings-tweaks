@@ -13,8 +13,6 @@ export var UnsafeQuickToggle = GObject.registerClass(
         title: _("Unsafe Mode"),
         iconName: "channel-insecure-symbolic",
       })
-      try{ this.title = _('Unsafe Mode') }catch{}
-      try{ this.label = _('Unsafe Mode') }catch{}
       this._onUpdate = onUpdate
 
       // bind click
