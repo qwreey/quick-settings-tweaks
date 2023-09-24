@@ -35,25 +35,16 @@ export function makeRow(options={parent: null,title: null, subtitle: null,uri: n
 }
 
 export function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null}) {
-    const row = new Adw.ActionRow({
+    const row = new Adw.SwitchRow({
         title: options.title,
         subtitle: options.subtitle || null
     })
 
-    const toggle = new Gtk.Switch({
-        active: options.value,
-        valign: Gtk.Align.CENTER,
-    });
-
     if (options.action) {
-        toggle.connect("notify::active",()=>{
-            options.action(toggle.get_active())
+        row.connect("notify::active",()=>{
+            options.action(row.get_active())
         })
     }
-
-    row.add_suffix(toggle)
-    row.activatable_widget = toggle
-    row.toggle = toggle
 
     if (options.parent) {
         options.parent.add(row)
@@ -62,7 +53,7 @@ export function makeSwitch(options={bind: null,parent: null,value: false,title: 
     if (options.bind) {
         options.bind[0].bind(
             options.bind[1],
-            toggle,'active',
+            row,'active',
             Gio.SettingsBindFlags.DEFAULT
         )
     }
