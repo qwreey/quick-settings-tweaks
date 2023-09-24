@@ -37,7 +37,8 @@ export function makeRow(options={parent: null,title: null, subtitle: null,uri: n
 export function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null}) {
     const row = new Adw.SwitchRow({
         title: options.title,
-        subtitle: options.subtitle || null
+        subtitle: options.subtitle || null,
+        active: options.value
     })
 
     if (options.action) {
@@ -72,27 +73,21 @@ export function makeAdjustment(options={
     subtitle: null,
     action: null
 }) {
-    const row = new Adw.ActionRow({
+    const row = new Adw.SpinRow({
         title: options.title,
-        subtitle: options.subtitle || null
-    })
-
-    const spinButton = new Gtk.SpinButton({
+        subtitle: options.subtitle || null,
         adjustment: new Gtk.Adjustment({
             upper: options.max,
             stepIncrement: options.stepIncrement || 1,
             pageIncrement: options.pageIncrement || 10
         }),
-        valign: Gtk.Align.CENTER
-    });
+    })
 
     if (options.action) {
-        spinButton.connect("notify::value",()=>{
-            options.action(toggle.get_value())
+        row.connect("notify::value",()=>{
+            options.action(row.get_value())
         })
     }
-    row.add_suffix(spinButton)
-    row.spinButton = spinButton
 
     if (options.parent) {
         options.parent.add(row)
@@ -101,7 +96,7 @@ export function makeAdjustment(options={
     if (options.bind) {
         options.bind[0].bind(
             options.bind[1],
-            spinButton,'value',
+            row,'value',
             Gio.SettingsBindFlags.DEFAULT
         )
     }
