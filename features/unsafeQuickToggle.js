@@ -1,5 +1,5 @@
 import { featureReloader } from "../libs/utility.js"
-import { UnsafeQuickToggle } from "../libs/unsafeQuickToggleHandler.js"
+import { Indicator } from "../libs/unsafeQuickToggleHandler.js"
 import { QuickSettings } from "../libs/gnome.js"
 
 export class UnsafeQuickToggleFeature {
@@ -14,7 +14,7 @@ export class UnsafeQuickToggleFeature {
     global.context.unsafe_mode = this.settings.get_boolean("last-unsafe-state")
 
     // Add Unsafe Quick Toggle
-    this.unsafeToggle = new UnsafeQuickToggle((state)=>this.settings.set_boolean("last-unsafe-state",state))
+    this.unsafeToggle = new Indicator((state)=>this.settings.set_boolean("last-unsafe-state",state))
     QuickSettings.addExternalIndicator(this.unsafeToggle)
   }
 
@@ -24,6 +24,7 @@ export class UnsafeQuickToggleFeature {
 
     if (this.unsafeToggle) {
       this.unsafeToggle.destroy()
+      this.unsafeToggle = null
       global.context.unsafe_mode = false
     }
   }

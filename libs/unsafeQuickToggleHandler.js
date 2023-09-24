@@ -1,8 +1,8 @@
 import GObject from "gi://GObject"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
-import { QuickToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
-export var UnsafeQuickToggle = GObject.registerClass(
+const UnsafeQuickToggle = GObject.registerClass(
   class UnsafeQuickToggle extends QuickToggle {
     _updateIcon() {
       this.iconName = this.checked ? "channel-insecure-symbolic" : "channel-secure-symbolic"
@@ -37,3 +37,18 @@ export var UnsafeQuickToggle = GObject.registerClass(
     }
   }
 )
+
+export var Indicator = GObject.registerClass(
+  class Indicator extends SystemIndicator {
+    _init(onUpdate) {
+        super._init()
+
+        this.quickSettingsItems.push(new UnsafeQuickToggle(onUpdate))
+    }
+
+    destroy() {
+      this.quickSettingsItems.forEach(item => item.destroy())
+      this._indicator.destroy()
+      super.destroy()
+    }
+});
