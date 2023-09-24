@@ -73,5 +73,11 @@ export var Indicator = GObject.registerClass(
         this._indicator.visible = false
       }
     }
+
+    destroy() {
+      this.quickSettingsItems.forEach(item => item.destroy())
+      this._indicator.destroy()
+      super.destroy()
+    }
   }
 )

@@ -43,9 +43,6 @@ export class DndQuickToggleFeature {
     }
     // Remove DND Quick Toggle
     if (this.dndToggle) {
-      const dndQSItems = this.dndToggle.quickSettingsItems[0]
-      dndQSItems.get_parent().remove_child(dndQSItems)
-      this.dndToggle.get_parent().remove_child(this.dndToggle)
       this.dndToggle.destroy()
       this.dndToggle = null
     }
