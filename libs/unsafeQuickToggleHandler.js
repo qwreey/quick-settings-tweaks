@@ -38,7 +38,7 @@ const UnsafeQuickToggle = GObject.registerClass(
   }
 )
 
-export var Indicator = GObject.registerClass(
+export const Indicator = GObject.registerClass(
   class Indicator extends SystemIndicator {
     _init(onUpdate) {
         super._init()

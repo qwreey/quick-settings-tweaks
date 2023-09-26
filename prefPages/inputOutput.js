@@ -3,7 +3,7 @@ import GObject from "gi://GObject"
 
 import { baseGTypeName, makeSwitch } from "../libs/prefComponents.js"
 
-export var inputOutputPage = GObject.registerClass({
+export const inputOutputPage = GObject.registerClass({
     GTypeName: baseGTypeName+'inputOutputPage',
 }, class inputOutputPage extends Adw.PreferencesPage {
     constructor(settings) {

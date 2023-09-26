@@ -7,7 +7,7 @@ import {
     makeSwitch
 } from "../libs/prefComponents.js"
 
-export var mediaControlPage = GObject.registerClass({
+export const mediaControlPage = GObject.registerClass({
     GTypeName: baseGTypeName+'mediaControlPage',
 }, class mediaControlPage extends Adw.PreferencesPage {
     constructor(settings) {

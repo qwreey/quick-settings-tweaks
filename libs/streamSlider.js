@@ -8,7 +8,7 @@ import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 
 const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
 
-export var StreamSlider = GObject.registerClass({
+export const StreamSlider = GObject.registerClass({
     Signals: {
         'stream-updated': {},
     },
