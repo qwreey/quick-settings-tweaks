@@ -7,10 +7,10 @@ export function fixStScrollViewScrollbarOverflow(stScrollView) {
 }
 
 export function logger(str) {
-    log("[EXTENSION QSTweaks] " + str)
+    console.log("[EXTENSION QSTweaks] " + str)
 }
 
-export var featureReloader = {
+export const featureReloader = {
     // Enable feature reloader with specific setting keys
     enableWithSettingKeys(feature,settingKeys) {
         // save connections here and destroy when disable called

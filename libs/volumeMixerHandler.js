@@ -6,7 +6,7 @@ import Gvc from "gi://Gvc"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 
-export var VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
+export const VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection {
     constructor(settings) {
         super()
         this._applicationStreams = {}

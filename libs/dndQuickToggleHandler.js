@@ -46,7 +46,7 @@ const DndQuickToggle = GObject.registerClass(
   }
 )
 
-export var Indicator = GObject.registerClass(
+export const Indicator = GObject.registerClass(
   class Indicator extends SystemIndicator {
     _init() {
       super._init()

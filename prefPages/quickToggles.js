@@ -7,7 +7,7 @@ import {
     makeSwitch
 } from "../libs/prefComponents.js"
 
-export var quickTogglesPage = GObject.registerClass({
+export const quickTogglesPage = GObject.registerClass({
     GTypeName: baseGTypeName+'quickTogglesPage',
 }, class quickTogglesPage extends Adw.PreferencesPage {
     constructor(settings) {

@@ -57,7 +57,7 @@ const ClearNotificationsButton = GObject.registerClass(class ClearNotificationsB
     }
 })
 
-export var Notifications = GObject.registerClass(
+export const Notifications = GObject.registerClass(
 class Notifications extends St.BoxLayout{
 
     // prepare date menu items

@@ -9,7 +9,7 @@ import {
     makeDropdown
 } from "../libs/prefComponents.js"
 
-export var VolumeMixerAddFilterDialog = GObject.registerClass({
+export const VolumeMixerAddFilterDialog = GObject.registerClass({
     GTypeName: baseGTypeName+'VolumeMixerAddFilterDialog',
 }, class VolumeMixerAddFilterDialog extends Gtk.Dialog {
     appNameEntry
@@ -69,7 +69,7 @@ export var VolumeMixerAddFilterDialog = GObject.registerClass({
     }
 })
 
-export var FilterMode = GObject.registerClass({
+export const FilterMode = GObject.registerClass({
     Properties: {
         'name': GObject.ParamSpec.string(
             'name', 'name', 'name',
@@ -86,7 +86,7 @@ export var FilterMode = GObject.registerClass({
     }
 })
 
-export var volumeMixerPage = GObject.registerClass({
+export const volumeMixerPage = GObject.registerClass({
     GTypeName: baseGTypeName+'volumeMixerPage',
 }, class volumeMixerPage extends Adw.PreferencesPage {
     constructor(settings) {

@@ -4,7 +4,7 @@ import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
 import GObject from "gi://GObject"
 
-export var baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
+export const baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
 
 export function makeRow(options={parent: null,title: null, subtitle: null,uri: null}) {
     const row = new Adw.ActionRow({
@@ -104,7 +104,7 @@ export function makeAdjustment(options={
     return row
 }
 
-export var DropdownItems = GObject.registerClass({
+export const DropdownItems = GObject.registerClass({
     Properties: {
         'name': GObject.ParamSpec.string(
             'name', 'name', 'name',

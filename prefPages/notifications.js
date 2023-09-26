@@ -9,7 +9,7 @@ import {
     makeDropdown
 } from "../libs/prefComponents.js"
 
-export var notificationsPage = GObject.registerClass({
+export const notificationsPage = GObject.registerClass({
     GTypeName: baseGTypeName+'notificationsPage',
 }, class notificationsPage extends Adw.PreferencesPage {
     constructor(settings) {

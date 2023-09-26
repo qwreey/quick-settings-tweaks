@@ -4,7 +4,7 @@ import Gtk from "gi://Gtk"
 
 import { baseGTypeName, makeRow } from "../libs/prefComponents.js"
 
-export var aboutPage = GObject.registerClass({
+export const aboutPage = GObject.registerClass({
     GTypeName: baseGTypeName+'aboutPage',
 }, class aboutPage extends Adw.PreferencesPage {
     constructor(settings, metadata) {
