@@ -1,6 +1,38 @@
 #!/usr/bin/env bash
 
-function pack() {
+function update-po() {
+	echo '' > messages.po
+	[ "$?" != "0" ] && echo "update-po: Unable to create ./messages.po file" && return 1
+
+	which xgettext 2>/dev/null >/dev/null
+	[ "$?" != "0" ] && echo "update-po: xgettext is not installed on this system. please install and try again" && return 1
+
+    find ./src -type f \( -name "*.ui" -or -name "*.js" \) | xgettext --from-code utf-8 -j messages.po -f -
+	[ "$?" != "0" ] && echo "update-po: Unable to update messages.po file by xgettext" && return 1
+
+    sed -i 's|"Content\-Type: text/plain; charset=CHARSET\\n"|"Content-Type: text/plain; charset=UTF-8\\n"|g' messages.po
+	[ "$?" != "0" ] && echo "update-po: Unable to set charset in messages.po file" && return 1
+
+    find ./po -type f -name "*.po" | xargs -i msgmerge {} messages.po -N --no-wrap -U
+	[ "$?" != "0" ] && echo "update-po: Failed to update *.po files (msgmerge error)" && return 1
+
+    mv messages.po $(find ./po -type f -name "*.pot")
+	[ "$?" != "0" ] && echo "update-po: Unable to move messages.po file (pot file not found)" && return 1
+
+	return 0
+}
+
+function compile-preferences() {
+	glib-compile-schemas --targetdir=src/schemas src/schemas
+	[ "$?" != "0" ] && echo "compile-preferences: glib-compile-schemas command failed" && return 1
+
+	return 0
+}
+
+function build() {
+	compile-preferences
+	[ "$?" != "0" ] && echo "Failed to compile preferences" && return 1
+
 	mkdir dist -p
 	gnome-extensions pack src\
 		--extra-source=../LICENSE\
@@ -11,25 +43,9 @@ function pack() {
 		--podir=../po\
 		--out-dir=dist\
 		--force
-}
-
-function compile-preferences() {
-	glib-compile-schemas --targetdir=src/schemas src/schemas
-}
-
-function update-po() {
-	echo '' > messages.po
-    find ./src -type f \( -name "*.ui" -or -name "*.js" \) | xgettext --from-code utf-8 -j messages.po -f -
-    sed -i 's|"Content\-Type: text/plain; charset=CHARSET\\n"|"Content-Type: text/plain; charset=UTF-8\\n"|g' messages.po
-    find ./po -type f -name "*.po" | xargs -i msgmerge {} messages.po -N --no-wrap -U
-    mv messages.po $(find ./po -type f -name "*.pot")
-}
-
-function build() {
-	compile-preferences
-	[ "$?" != "0" ] && echo "Failed to compile preferences" && return 1
-	pack
 	[ "$?" != "0" ] && echo "Failed to pack extension" && return 1
+
+	return 0
 }
 
 function install() {
@@ -41,6 +57,8 @@ function install() {
 		--force
 	[ "$?" != "0" ] && echo "Failed to install extension" && return 1
 	echo "Extension was installed. logout and login shell, and check extension list."
+
+	return 0
 }
 
 function dev() {
