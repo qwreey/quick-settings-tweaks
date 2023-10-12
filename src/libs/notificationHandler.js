@@ -4,7 +4,6 @@ import Clutter from "gi://Clutter"
 import * as Calendar from "resource:///org/gnome/shell/ui/calendar.js"
 import { DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
-
 import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
 import { DateMenu } from "./gnome.js"
 

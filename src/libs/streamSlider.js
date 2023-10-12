@@ -2,7 +2,6 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import GLib from "gi://GLib"
 import Gvc from "gi://Gvc"
-
 import { QuickSlider } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 

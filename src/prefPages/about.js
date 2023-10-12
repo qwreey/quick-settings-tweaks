@@ -1,7 +1,6 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gtk from "gi://Gtk"
-
 import { baseGTypeName, makeRow } from "../libs/prefComponents.js"
 
 export const aboutPage = GObject.registerClass({

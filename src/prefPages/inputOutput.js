@@ -1,6 +1,5 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
-
 import { baseGTypeName, makeSwitch } from "../libs/prefComponents.js"
 
 export const inputOutputPage = GObject.registerClass({

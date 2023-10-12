@@ -1,8 +1,6 @@
 import { StreamSlider } from "./streamSlider.js"
-
 import St from "gi://St"
 import Gvc from "gi://Gvc"
-
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 

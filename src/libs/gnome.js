@@ -1,3 +1,5 @@
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
+
 // This module exports gnome's UI objects
 // For make codes simple, All the gnome objects should be getting in here
 // You can import gnome object like this
@@ -8,8 +10,6 @@
 //    QuickSettingsBox
 // } = Me.imports.gnome
 //
-
-import * as Main from "resource:///org/gnome/shell/ui/main.js"
 
 // Quick Settings
 export const QuickSettings = Main.panel.statusArea.quickSettings

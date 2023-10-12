@@ -1,7 +1,6 @@
 import Adw from "gi://Adw"
 import Gtk from "gi://Gtk"
 import GObject from "gi://GObject"
-
 import {
     baseGTypeName,
     makeRow,

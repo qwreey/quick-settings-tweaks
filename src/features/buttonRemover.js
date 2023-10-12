@@ -1,6 +1,6 @@
-// forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
-
 import { QuickSettingsGrid } from "../libs/gnome.js"
+
+// forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
 
 export class ButtonRemoverFeature {
     constructor() {
