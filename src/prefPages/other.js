@@ -1,6 +1,8 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 
+import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
+
 import { baseGTypeName, makeSwitch } from "../libs/prefComponents.js"
 
 export const otherPage = GObject.registerClass({
@@ -10,7 +12,7 @@ export const otherPage = GObject.registerClass({
         // group config
         super({
             name: 'other',
-            title: 'Other',
+            title: _('Other'),
             iconName: 'non-starred-symbolic'
         })
         
@@ -18,36 +20,36 @@ export const otherPage = GObject.registerClass({
         const group = new Adw.PreferencesGroup()
         makeSwitch({
             parent: group,
-            title: "Fix Weather Widget Overflow",
+            title: _("Fix Weather Widget Overflow"),
+            subtitle: _("Fix overflow visual bug of weather widget in datemenu"),
             value: settings.get_boolean("datemenu-fix-weather-widget"),
-            subtitle: "Fix overflow visual bug of weather widget in datemenu",
             bind: [settings, "datemenu-fix-weather-widget"]
         })
         makeSwitch({
             parent: group,
-            title: "Remove Notifications On Date Menu",
+            title: _("Remove Notifications On Date Menu"),
+            subtitle: _("Hide notifications on date menu.\n*this option removes media control on date menu too*"),
             value: settings.get_boolean("datemenu-remove-notifications"),
-            subtitle: "Hide notifications on date menu.\n*this option removes media control on date menu too*",
             bind: [settings, "datemenu-remove-notifications"]
         })
         makeSwitch({
             parent: group,
-            title: "Remove Media Control On Date Menu",
+            title: _("Remove Media Control On Date Menu"),
+            subtitle: _("Hide media control on date menu."),
             value: settings.get_boolean("datemenu-remove-media-control"),
-            subtitle: "Hide media control on date menu.",
             bind: [settings, "datemenu-remove-media-control"]
         })
         makeSwitch({
             parent: group,
-            title: "Do not adjust the border radius of contents.",
-            subtitle: "Don't adjust the border of messages and media controls.",
+            title: _("Do not adjust the border radius of contents."),
+            subtitle: _("Don't adjust the border of messages and media controls."),
             value: settings.get_boolean("disable-adjust-content-border-radius"),
             bind: [settings, "disable-adjust-content-border-radius"]
         })
         makeSwitch({
             parent: group,
-            title: "Do not remove the shadow of contents.",
-            subtitle: "Don't remove the shadow of messages and media controls.",
+            title: _("Do not remove the shadow of contents."),
+            subtitle: _("Don't remove the shadow of messages and media controls."),
             value: settings.get_boolean("disable-remove-shadow"),
             bind: [settings, "disable-remove-shadow"]
         })

@@ -1,6 +1,8 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 
+import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
+
 import { baseGTypeName, makeSwitch } from "../libs/prefComponents.js"
 
 export const inputOutputPage = GObject.registerClass({
@@ -10,30 +12,30 @@ export const inputOutputPage = GObject.registerClass({
         // group config
         super({
             name: 'inputOutput',
-            title: 'Input/Output',
+            title: _('Input/Output'),
             iconName: 'audio-input-microphone-symbolic'
         })
 
         const group = new Adw.PreferencesGroup()
         makeSwitch({
             parent: group,
-            title: "Show current audio output selection",
+            title: _("Show current audio output selection"),
             value: settings.get_boolean("output-show-selected"),
-            subtitle: "Always show the current audio output selection above the volume slider",
+            subtitle: _("Always show the current audio output selection above the volume slider"),
             bind: [settings, "output-show-selected"]
         })
         makeSwitch({
             parent: group,
-            title: "Show current audio input selection",
+            title: _("Show current audio input selection"),
             value: settings.get_boolean("input-show-selected"),
-            subtitle: "Always show the current audio input selection above the volume slider",
+            subtitle: _("Always show the current audio input selection above the volume slider"),
             bind: [settings, "input-show-selected"]
         })
         makeSwitch({
             parent: group,
-            title: "Always show input",
+            title: _("Always show input"),
             value: settings.get_boolean("input-always-show"),
-            subtitle: "Always show the audio input volume slider, even when there is no audio input stream.",
+            subtitle: _("Always show the audio input volume slider, even when there is no audio input stream."),
             bind: [settings, "input-always-show"]
         })
 

@@ -2,6 +2,8 @@ import Adw from "gi://Adw"
 import Gtk from "gi://Gtk"
 import GObject from "gi://GObject"
 
+import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
+
 import {
     baseGTypeName,
     makeRow,
@@ -22,7 +24,7 @@ export const VolumeMixerAddFilterDialog = GObject.registerClass({
             destroy_with_parent: true,
             modal: true,
             resizable: false,
-            title: "Add Application to filtering"
+            title: _("Add Application to filtering")
         })
 
         this.filterListData = filterListData
@@ -30,7 +32,7 @@ export const VolumeMixerAddFilterDialog = GObject.registerClass({
         const addButton = this.add_button("Add", Gtk.ResponseType.OK)
         addButton.get_style_context().add_class('suggested-action')
         addButton.sensitive = false
-        this.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        this.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
 
         const dialogContent = this.get_content_area()
         dialogContent.margin_top = 20
@@ -39,7 +41,7 @@ export const VolumeMixerAddFilterDialog = GObject.registerClass({
         dialogContent.margin_start = 20
 
         const appNameLabel = new Gtk.Label({
-            label: "Application name",
+            label: _("Application name"),
             halign: Gtk.Align.START,
             margin_bottom: 10
         })
@@ -93,8 +95,8 @@ export const volumeMixerPage = GObject.registerClass({
         // group config
         super({
             name: 'volumeMixer',
-            title: 'Volume Mixer',
-            iconName: 'audio-volume-high-symbolic'
+            title: _('Volume Mixer'),
+            iconName: 'audio-volume-high-symbolic',
         })
 
         this.settings = settings
@@ -104,86 +106,86 @@ export const volumeMixerPage = GObject.registerClass({
         const descriptionGroup = new Adw.PreferencesGroup()
         makeRow({
             parent: descriptionGroup,
-            title: "Add volume mixer (PulseAudio, Pipewire)",
-            subtitle: "Forked from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature works well with both PulseAudio and Pipewire protocols"
+            title: _("Add volume mixer (PulseAudio, Pipewire)"),
+            subtitle: _("Forked from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature works well with both PulseAudio and Pipewire protocols"),
         })
         makeSwitch({
             parent: descriptionGroup,
-            title: "Visible",
-            subtitle: "Turn on to make the volume mixer visible",
+            title: _("Visible"),
+            subtitle: _("Turn on to make the volume mixer visible"),
             value: settings.get_boolean("volume-mixer-enabled"),
-            bind: [settings, "volume-mixer-enabled"]
+            bind: [settings, "volume-mixer-enabled"],
         })
         this.add(descriptionGroup)
 
         // Group for general settings
-        const generalGroup = new Adw.PreferencesGroup({ title: "General" })
+        const generalGroup = new Adw.PreferencesGroup({ title: _("General") })
         this.add(generalGroup)
 
         // move to bottom
         makeDropdown({
             parent: generalGroup,
-            title: "Position",
-            subtitle: "Set volume mixer position",
+            title: _("Position"),
+            subtitle: _("Set volume mixer position"),
             value: this.settings.get_string('volume-mixer-position'),
             type: "string",
             bind: [this.settings, 'volume-mixer-position'],
             items: [
-                {name: "Top (Below Output/Input slider)", value: "top"},
-                {name: "Bottom", value: "bottom"}
-            ]
+                {name: _("Top (Below Output/Input slider)"), value: "top"},
+                {name: _("Bottom"), value: "bottom"},
+            ],
         })
         
         // show-description
         makeSwitch({
-            title: 'Show stream Description',
-            subtitle: 'Show audio stream description above the slider',
+            title: _('Show stream Description'),
+            subtitle: _('Show audio stream description above the slider'),
             value: this.settings.get_boolean('volume-mixer-show-description'),
             parent: generalGroup,
-            bind: [this.settings, 'volume-mixer-show-description']
+            bind: [this.settings, 'volume-mixer-show-description'],
         })
 
         // show-icon
         makeSwitch({
-            title: 'Show stream Icon',
-            subtitle: 'Show application icon in front of the slider',
+            title: _('Show stream Icon'),
+            subtitle: _('Show application icon in front of the slider'),
             value: this.settings.get_boolean('volume-mixer-show-icon'),
             parent: generalGroup,
-            bind: [this.settings, 'volume-mixer-show-icon']
+            bind: [this.settings, 'volume-mixer-show-icon'],
         })
         
         // Application filter settings group
         const filterGroup = new Adw.PreferencesGroup({
-            title: 'Application Filtering',
-            description: 'Filter applications shown in the volume mixer.'
+            title: _('Application Filtering'),
+            description: _('Filter applications shown in the volume mixer.'),
         })
         this.add(filterGroup)
 
         // filter-mode
         makeDropdown({
             parent: filterGroup,
-            title: "Filter Mode",
+            title: _("Filter Mode"),
             value: this.settings.get_string('volume-mixer-filter-mode'),
             type: "string",
             bind: [this.settings, 'volume-mixer-filter-mode'],
             items: [
-                {name: "Blacklist", value: "block"},
-                {name: "Whitelist", value: "allow"}
-            ]
+                {name: _("Blacklist"), value: "block"},
+                {name: _("Whitelist"), value: "allow"},
+            ],
         })
         makeSwitch({
             parent: filterGroup,
-            title: 'Using Javascript Regex',
-            subtitle: 'Use Javascript RegExp for filtering app name or description',
+            title: _('Using Javascript Regex'),
+            subtitle: _('Use Javascript RegExp for filtering app name or description'),
             value: this.settings.get_boolean('volume-mixer-use-regex'),
-            bind: [this.settings, 'volume-mixer-use-regex']
+            bind: [this.settings, 'volume-mixer-use-regex'],
         })
         makeSwitch({
             parent: filterGroup,
-            title: "Check Stream Description",
-            subtitle: "Check Description also",
+            title: _("Check Stream Description"),
+            subtitle: _("Check Description also"),
             value: this.settings.get_boolean('volume-mixer-check-description'),
-            bind: [this.settings, 'volume-mixer-check-description']
+            bind: [this.settings, 'volume-mixer-check-description'],
         })
 
         // group to act as spacer for filter list

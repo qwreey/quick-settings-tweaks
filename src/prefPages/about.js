@@ -2,6 +2,8 @@ import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gtk from "gi://Gtk"
 
+import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
+
 import { baseGTypeName, makeRow } from "../libs/prefComponents.js"
 
 export const aboutPage = GObject.registerClass({
@@ -11,47 +13,54 @@ export const aboutPage = GObject.registerClass({
         // group config
         super({
             name: 'about',
-            title: 'About',
+            title: _('About'),
             iconName: 'dialog-information-symbolic'
         })
 
         // description / enable
-        const group = new Adw.PreferencesGroup()
-        this.add(group)
+        const info = new Adw.PreferencesGroup({
+            title: _('Information')
+        })
+        this.add(info)
         makeRow({
-            parent: group,
-            title: "This extension is distributed with license GPL 3+",
-            subtitle: "excludes Third-party. Third party codes follow their license",
+            parent: info,
+            title: _("This extension is distributed with license GPL 3+"),
+            subtitle: _("excludes Third-party. Third party codes follow their license"),
         })
         makeRow({
-            parent: group,
+            parent: info,
             title: "Version",
             suffix: new Gtk.Label({
-                label: metadata.version?.toString() || "Unknown (Built from source)"
+                label: metadata.version?.toString() || _("Unknown (Built from source)")
             })
         })
 
         const links = new Adw.PreferencesGroup({
-            title: 'Links'
+            title: _('Links')
         })
         this.add(links)
         makeRow({
-            uri: "https://extensions.gnome.org/extension/5446/quick-settings-tweaker/",
+            uri: _("https://extensions.gnome.org/extension/5446/quick-settings-tweaker/"),
             parent: links,
             title: "Gnome Extension",
-            subtitle: "Rate and comment the extension!"
+            subtitle: _("Rate and comment the extension!")
         })
         makeRow({
             uri: "https://github.com/qwreey75/quick-settings-tweaks",
             parent: links,
-            title: "Github Repository",
-            subtitle: "Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!"
+            title: _("Github Repository"),
+            subtitle: _("Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!\nOr, you can create PR with wonderful features!")
+        })
+        makeRow({
+            parent: links,
+            title: "Webslate",
+            subtitle: "Working in progress . . ."
         })
 
 
         const thirdLICENSE = new Adw.PreferencesGroup({
-            title: 'Third party LICENSE',
-            description: 'LICENSE OF CODES WHICH USED ON THIS EXTENSION'
+            title: _('Third party LICENSE'),
+            description: _('LICENSE OF CODES WHICH USED ON THIS EXTENSION')
         })
         this.add(thirdLICENSE)
         makeRow({
