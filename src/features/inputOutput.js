@@ -2,8 +2,7 @@ import { featureReloader } from "../libs/utility.js"
 import {
     QuickSettingsMenu,
     QuickSettingsGrid,
-    InputStreamSlider,
-    OutputStreamSlider
+    GetStreamSlider,
 } from "../libs/gnome.js"
 import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
@@ -43,9 +42,12 @@ export class InputOutputFeature {
             this._inputListener = null
         }
         if (this._inputVisibilityListener) {
-            InputStreamSlider.disconnect(this._inputVisibilityListener)
+            let inputVisibilityListener = this._inputVisibilityListener
             this._inputVisibilityListener = null
-            InputStreamSlider.visible = InputStreamSlider._shouldBeVisible()
+            GetStreamSlider(({InputStreamSlider})=>{
+                InputStreamSlider.disconnect(inputVisibilityListener)
+                InputStreamSlider.visible = InputStreamSlider._shouldBeVisible()
+            })
         }
         if (this._outputListener) {
             this._detachOutputLabel()
@@ -69,9 +71,11 @@ export class InputOutputFeature {
         this.outputLabel = new St.Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
         QuickSettingsMenu.addItem(this.outputLabel, 2);
-        QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider);
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
-        this.outputLabel.text = this._findActiveDevice(OutputStreamSlider)
+        GetStreamSlider(({OutputStreamSlider})=>{
+            QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider)
+            this.outputLabel.text = this._findActiveDevice(OutputStreamSlider)
+        })
     }
 
     _detachOutputLabel() {
@@ -91,9 +95,11 @@ export class InputOutputFeature {
         this.inputLabel = new St.Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
         QuickSettingsMenu.addItem(this.inputLabel, 2);
-        QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
+        GetStreamSlider(({InputStreamSlider})=>{
+            QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
+            this.inputLabel.text = this._findActiveDevice(InputStreamSlider)
+        })
         this._setInputLabelVisibility()
-        this.inputLabel.text = this._findActiveDevice(InputStreamSlider)
     }
 
     _onInputDeviceChanged(deviceId) {
@@ -110,8 +116,10 @@ export class InputOutputFeature {
 
     // =========================================== Input Visbility ===========================================
     _setupInputVisibilityObserver() {
-        this._inputVisibilityListener = InputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
-        this._onInputStreamSliderSynced()
+        GetStreamSlider(({InputStreamSlider})=>{
+            this._inputVisibilityListener = InputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
+            this._onInputStreamSliderSynced()
+        })
     }
 
     _onInputStreamSliderSynced() {
@@ -122,11 +130,16 @@ export class InputOutputFeature {
     }
 
     _setInputStreamSliderVisibility() {
-        InputStreamSlider.visible = InputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
+        GetStreamSlider(({InputStreamSlider})=>{
+            InputStreamSlider.visible = InputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
+        })
     }
 
+
     _setInputLabelVisibility() {
-        this.inputLabel.visible = InputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
+        GetStreamSlider(({InputStreamSlider})=>{
+            this.inputLabel.visible = InputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
+        })
     }
 
 

@@ -17,21 +17,41 @@ export const QuickSettingsMenu = QuickSettings.menu
 export const QuickSettingsGrid = QuickSettings.menu._grid
 export const QuickSettingsBox =  QuickSettings.menu.box
 export const QuickSettingsActor = QuickSettings.menu.actor
-export const GetQuickSettingsShutdownMenuBox = ()=>{
-    return new Promise(resolve=>{
-        GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
-            if (!QuickSettings._system)
-                return GLib.SOURCE_CONTINUE
-            resolve(QuickSettings._system._systemItem.menu.box)
-            return GLib.SOURCE_REMOVE
-        });
+export const GetQuickSettingsShutdownMenuBox = (callback)=>{
+    GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+        if (!QuickSettings._system)
+            return GLib.SOURCE_CONTINUE
+        callback(QuickSettings._system._systemItem.menu.box)
+        return GLib.SOURCE_REMOVE
     })
 }
 
-
 // Quick Settings Items
-export const InputStreamSlider = QuickSettings._volumeInput._input
-export const OutputStreamSlider = QuickSettings._volumeOutput._output
+function StreamSliderGetter() {
+    if (!QuickSettings._volumeInput)
+        return null
+    return {
+        VolumeInput: QuickSettings._volumeInput,
+        InputStreamSlider: QuickSettings._volumeInput._input,
+        OutputStreamSlider: QuickSettings._volumeOutput._output,
+    }
+}
+export const GetStreamSlider = (callback)=>{
+    let streamSlider = StreamSliderGetter()
+    if (streamSlider) {
+        callback(streamSlider)
+        return
+    }
+
+    GLib.idle_add(GLib.PRIORITY_DEFAULT, ()=>{
+        streamSlider = StreamSliderGetter()
+
+        if (!streamSlider) return GLib.SOURCE_CONTINUE
+
+        callback(streamSlider)
+        return GLib.SOURCE_REMOVE
+    })
+}
 
 // Date Menu
 export const DateMenu = Main.panel.statusArea.dateMenu
