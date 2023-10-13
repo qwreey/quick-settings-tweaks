@@ -29,7 +29,7 @@ export const aboutPage = GObject.registerClass({
         })
         makeRow({
             parent: info,
-            title: "Version",
+            title: _("Version"),
             suffix: new Gtk.Label({
                 label: metadata.version?.toString() || _("Unknown (Built from source)")
             })
@@ -57,6 +57,9 @@ export const aboutPage = GObject.registerClass({
             subtitle: "Working in progress . . ."
         })
 
+        const contributor = new Adw.PreferencesGroup({
+            title: _('Contributor')
+        })
 
         const thirdLICENSE = new Adw.PreferencesGroup({
             title: _('Third party LICENSE'),

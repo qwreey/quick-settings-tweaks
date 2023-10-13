@@ -37,7 +37,7 @@ export const mediaControlPage = GObject.registerClass({
         this.add(descriptionGroup)
 
         // general
-        const generalGroup = new Adw.PreferencesGroup({ title: "General" })
+        const generalGroup = new Adw.PreferencesGroup({ title: _("General") })
         this.add(generalGroup)
         makeSwitch({
             parent: generalGroup,

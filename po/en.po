@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 05:44+0900\n"
+"POT-Creation-Date: 2023-10-14 06:48+0900\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,10 @@ msgstr "This extension is distributed with license GPL 3+"
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr "excludes Third-party. Third party codes follow their license"
 
+#: src/prefPages/about.js:32
+msgid "Version"
+msgstr "Version"
+
 #: src/prefPages/about.js:34
 msgid "Unknown (Built from source)"
 msgstr "Unknown (Built from source)"
@@ -103,11 +107,15 @@ msgstr ""
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
 "Or, you can create PR with wonderful features!"
 
-#: src/prefPages/about.js:62
+#: src/prefPages/about.js:61
+msgid "Contributor"
+msgstr "Contributor"
+
+#: src/prefPages/about.js:65
 msgid "Third party LICENSE"
 msgstr "Third party LICENSE"
 
-#: src/prefPages/about.js:63
+#: src/prefPages/about.js:66
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 
@@ -189,6 +197,10 @@ msgstr " (invisible by system)"
 msgid "Add Application to filtering"
 msgstr "Add Application to filtering"
 
+#: src/prefPages/volumeMixer.js:32
+msgid "Add"
+msgstr "Add"
+
 #: src/prefPages/volumeMixer.js:35
 msgid "Cancel"
 msgstr "Cancel"
@@ -222,7 +234,8 @@ msgstr "Visible"
 msgid "Turn on to make the volume mixer visible"
 msgstr "Turn on to make the volume mixer visible"
 
-#: src/prefPages/volumeMixer.js:122
+#: src/prefPages/volumeMixer.js:122 src/prefPages/notifications.js:42
+#: src/prefPages/mediaControl.js:40
 msgid "General"
 msgstr "General"
 
@@ -238,7 +251,7 @@ msgstr "Set volume mixer position"
 msgid "Top (Below Output/Input slider)"
 msgstr "Top (Below Output/Input slider)"
 
-#: src/prefPages/volumeMixer.js:135
+#: src/prefPages/volumeMixer.js:135 src/prefPages/notifications.js:61
 msgid "Bottom"
 msgstr "Bottom"
 
@@ -327,6 +340,10 @@ msgstr "Set maximum height of the Notifications widget. default is 292"
 #: src/prefPages/notifications.js:55
 msgid "Set Notifications widget position"
 msgstr "Set Notifications widget position"
+
+#: src/prefPages/notifications.js:60
+msgid "Top"
+msgstr "Top"
 
 #: src/prefPages/notifications.js:66
 msgid "Attach to QS panel"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 05:35+0900\n"
+"POT-Creation-Date: 2023-10-14 06:48+0900\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +76,10 @@ msgstr "이 확장 프로그램은 GPL 3+ 라이선스 아래 배포됩니다"
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr "서드파티는 제외합니다. 서드파티 코드는 각각 원본 코드의 라이선스를 따릅니다"
 
+#: src/prefPages/about.js:32
+msgid "Version"
+msgstr "버전"
+
 #: src/prefPages/about.js:34
 msgid "Unknown (Built from source)"
 msgstr "알 수 없음 (소스에서 직접 빌드됨)"
@@ -102,11 +106,15 @@ msgstr ""
 "만약 버그를 찾은 경우, issue 를 남겨 우리가 알 수 있게 해주세요!\n"
 "또는, 환상적인 기능을 만들어 PR 을 남기는 것도 환영입니다!"
 
-#: src/prefPages/about.js:62
+#: src/prefPages/about.js:61
+msgid "Contributor"
+msgstr "기여자"
+
+#: src/prefPages/about.js:65
 msgid "Third party LICENSE"
 msgstr "서드파티 라이선스"
 
-#: src/prefPages/about.js:63
+#: src/prefPages/about.js:66
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "*이 확장 프로그램에 포함되어있는 일부 코드의 라이선스입니다*"
 
@@ -188,6 +196,10 @@ msgstr " (시스템에 의해 보이지 않는 항목임)"
 msgid "Add Application to filtering"
 msgstr "필터링할 애플리케이션을 추가하기"
 
+#: src/prefPages/volumeMixer.js:32
+msgid "Add"
+msgstr "추가"
+
 #: src/prefPages/volumeMixer.js:35
 msgid "Cancel"
 msgstr "취소"
@@ -212,7 +224,6 @@ msgstr ""
 "https://github.com/mymindstorm/gnome-volume-mixer 에서 포크된 기능입니다\n"
 "이 기능은 PulseAudio 와 Pipewire 프로토콜에서 모두 잘 작동합니다"
 
-
 #: src/prefPages/volumeMixer.js:114 src/prefPages/notifications.js:34
 #: src/prefPages/mediaControl.js:32
 msgid "Visible"
@@ -222,7 +233,8 @@ msgstr "보이기"
 msgid "Turn on to make the volume mixer visible"
 msgstr "볼륨 믹서를 보이게 합니다"
 
-#: src/prefPages/volumeMixer.js:122
+#: src/prefPages/volumeMixer.js:122 src/prefPages/notifications.js:42
+#: src/prefPages/mediaControl.js:40
 msgid "General"
 msgstr "일반"
 
@@ -238,7 +250,7 @@ msgstr "볼륨 믹서의 위치를 선택합니다"
 msgid "Top (Below Output/Input slider)"
 msgstr "위 (출력/입력 슬라이더 아래에 표시됩니다)"
 
-#: src/prefPages/volumeMixer.js:135
+#: src/prefPages/volumeMixer.js:135 src/prefPages/notifications.js:61
 msgid "Bottom"
 msgstr "아래"
 
@@ -327,6 +339,10 @@ msgstr "알림 위젯의 최대 높이(px)를 설정합니다. 기본값은 292 
 msgid "Set Notifications widget position"
 msgstr "알림 위젯의 위치"
 
+#: src/prefPages/notifications.js:60
+msgid "Top"
+msgstr "상단"
+
 #: src/prefPages/notifications.js:66
 msgid "Attach to QS panel"
 msgstr "퀵패널 아래에 부착하기"
@@ -335,8 +351,7 @@ msgstr "퀵패널 아래에 부착하기"
 msgid ""
 "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
 "(such as margin or padding not matching with the theme)"
-msgstr ""
-"퀵패널에서 분리하지 않기 (이 옵션을 사용하는것을 추천합니다. 분리된 알림 위젯은 표시 버그를 일으킬 수 있습니다)"
+msgstr "퀵패널에서 분리하지 않기 (이 옵션을 사용하는것을 추천합니다. 분리된 알림 위젯은 표시 버그를 일으킬 수 있습니다)"
 
 #: src/prefPages/notifications.js:73
 msgid "Auto Hide"

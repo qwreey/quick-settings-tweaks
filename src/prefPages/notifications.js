@@ -39,7 +39,7 @@ export const notificationsPage = GObject.registerClass({
         this.add(descriptionGroup)
 
         // general
-        const generalGroup = new Adw.PreferencesGroup({ title: "General" })
+        const generalGroup = new Adw.PreferencesGroup({ title: _("General") })
         this.add(generalGroup)
         makeAdjustment({
             parent: generalGroup,
@@ -57,8 +57,8 @@ export const notificationsPage = GObject.registerClass({
             type: "string",
             bind: [settings, 'notifications-position'],
             items: [
-                {name: "Top", value: "top"},
-                {name: "Bottom", value: "bottom"},
+                {name: _("Top"), value: "top"},
+                {name: _("Bottom"), value: "bottom"},
             ],
         })
         makeSwitch({
