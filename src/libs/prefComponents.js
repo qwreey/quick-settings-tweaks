@@ -6,7 +6,7 @@ import GObject from "gi://GObject"
 
 export const baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
 
-export function makeRow(options={parent: null,title: null, subtitle: null,uri: null}) {
+export function makeRow(options={parent: null,title: null, subtitle: null,uri: null, sensitiveBind: null}) {
     const row = new Adw.ActionRow({
         title: options.title,
         subtitle: options.subtitle || null
@@ -31,10 +31,18 @@ export function makeRow(options={parent: null,title: null, subtitle: null,uri: n
     if (options.prefix) {
         row.add_prefix(options.prefix)
     }
+    if (options.sensitiveBind) {
+        options.sensitiveBind[0].bind(
+            options.sensitiveBind[1],
+            row,'sensitive',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        row.sensitive = options.sensitiveBind[0].get_boolean(options.sensitiveBind[1])
+    }
     return row
 }
 
-export function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null}) {
+export function makeSwitch(options={bind: null,parent: null,value: false,title: "default",subtitle: null,action: null,sensitiveBind:null}) {
     const row = new Adw.SwitchRow({
         title: options.title,
         subtitle: options.subtitle || null,
@@ -59,6 +67,15 @@ export function makeSwitch(options={bind: null,parent: null,value: false,title: 
         )
     }
 
+    if (options.sensitiveBind) {
+        options.sensitiveBind[0].bind(
+            options.sensitiveBind[1],
+            row,'sensitive',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        row.sensitive = options.sensitiveBind[0].get_boolean(options.sensitiveBind[1])
+    }
+
     return row
 }
 
@@ -71,7 +88,8 @@ export function makeAdjustment(options={
     value: 1,
     title: "default",
     subtitle: null,
-    action: null
+    action: null,
+    sensitiveBind: null,
 }) {
     const row = new Adw.SpinRow({
         title: options.title,
@@ -101,6 +119,15 @@ export function makeAdjustment(options={
         )
     }
 
+    if (options.sensitiveBind) {
+        options.sensitiveBind[0].bind(
+            options.sensitiveBind[1],
+            row,'sensitive',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        row.sensitive = options.sensitiveBind[0].get_boolean(options.sensitiveBind[1])
+    }
+
     return row
 }
 
@@ -128,7 +155,8 @@ export function makeDropdown(options={
     title: "default",
     subtitle: null,
     action: null,
-    type: null
+    type: null,
+    sensitiveBind: null,
 }) {
     let filterModeModel = new Gio.ListStore({ item_type: DropdownItems })
     for (const item of options.items) {
@@ -165,6 +193,15 @@ export function makeDropdown(options={
         filterModeRow.connect('notify::selected', () => {
             action(filterModeRow.selectedItem.value)
         })
+    }
+
+    if (options.sensitiveBind) {
+        options.sensitiveBind[0].bind(
+            options.sensitiveBind[1],
+            filterModeRow,'sensitive',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        filterModeRow.sensitive = options.sensitiveBind[0].get_boolean(options.sensitiveBind[1])
     }
 
     return filterModeRow

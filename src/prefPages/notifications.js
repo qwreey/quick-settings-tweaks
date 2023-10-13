@@ -5,7 +5,6 @@ import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensio
 
 import {
     baseGTypeName,
-    makeRow,
     makeSwitch,
     makeAdjustment,
     makeDropdown
@@ -18,39 +17,50 @@ export const notificationsPage = GObject.registerClass({
         // group config
         super({
             name: 'notifications',
-            title: _('Notifications'),
+            title: _('Noti&Media'),
             iconName: 'user-available-symbolic',
         })
 
-        // description / enable
-        const descriptionGroup = new Adw.PreferencesGroup()
-        makeRow({
-            parent: descriptionGroup,
-            title: _("Add notifications widget"),
-            subtitle: _("Reference from https://github.com/Aylur/gnome-extensions\nSource code of that is not used on this extension"),
+        // media
+        const mediaGroup = new Adw.PreferencesGroup({
+            title: "Media Controls widget",
+            headerSuffix: makeSwitch({
+                parent: descriptionGroup,
+                value: settings.get_boolean("media-control-enabled"),
+                bind: [settings, "media-control-enabled"]
+            }),
+            description: _("Turn on to make the Media Control widget visible on the Quick Settings panel\nReference from https://github.com/Aylur/gnome-extensions\nSource code of that is not used on this extension"),
         })
         makeSwitch({
-            parent: descriptionGroup,
-            title: _("Visible"),
-            subtitle: _("Turn on to make the notification widget visible on the Quick Settings panel"),
-            value: settings.get_boolean("notifications-enabled"),
-            bind: [settings, "notifications-enabled"],
+            parent: mediaGroup,
+            title: _("Compact Mode"),
+            subtitle: _("Make Media Controls widget smaller\nMake it more similar in size to the notification message"),
+            value: settings.get_boolean("media-control-compact-mode"),
+            bind: [settings, "media-control-compact-mode"],
+            sensitiveBind: [settings, "media-control-enabled"],
         })
-        this.add(descriptionGroup)
+        this.add(mediaGroup)
 
-        // general
-        const generalGroup = new Adw.PreferencesGroup({ title: _("General") })
-        this.add(generalGroup)
+        // notification
+        const notificationGroup = new Adw.PreferencesGroup({
+            title: _("Notification Widget"),
+            headerSuffix: makeSwitch({
+                value: settings.get_boolean("notifications-enabled"),
+                bind: [settings, "notifications-enabled"],
+            }),
+            description: _("Turn on to make the notification widget visible on the Quick Settings panel\nReference from https://github.com/Aylur/gnome-extensions\nSource code of that is not used on this extension"),
+        })
         makeAdjustment({
-            parent: generalGroup,
+            parent: notificationGroup,
             max: 1280,
             title: _("Max height"),
             subtitle: _("Set maximum height of the Notifications widget. default is 292"),
             value: settings.get_int("notifications-max-height"),
             bind: [settings, "notifications-max-height"],
+            sensitiveBind: [settings, "notifications-enabled"],
         })
         makeDropdown({
-            parent: generalGroup,
+            parent: notificationGroup,
             title: _("Position"),
             subtitle: _("Set Notifications widget position"),
             value: settings.get_string('notifications-position'),
@@ -60,27 +70,32 @@ export const notificationsPage = GObject.registerClass({
                 {name: _("Top"), value: "top"},
                 {name: _("Bottom"), value: "bottom"},
             ],
+            sensitiveBind: [settings, "notifications-enabled"],
         })
         makeSwitch({
-            parent: generalGroup,
+            parent: notificationGroup,
             title: _("Attach to QS panel"),
             subtitle: _("Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n(such as margin or padding not matching with the theme)"),
             value: settings.get_boolean("notifications-integrated"),
             bind: [settings, "notifications-integrated"],
+            sensitiveBind: [settings, "notifications-enabled"],
         })
         makeSwitch({
-            parent: generalGroup,
+            parent: notificationGroup,
             title: _("Auto Hide"),
             subtitle: _("Hide the Notifications widget when have no notifications"),
             value: settings.get_boolean("notifications-hide-when-no-notifications"),
             bind: [settings, "notifications-hide-when-no-notifications"],
+            sensitiveBind: [settings, "notifications-enabled"],
         })
         makeSwitch({
-            parent: generalGroup,
+            parent: notificationGroup,
             title: _("Use native controls"),
             subtitle: _("Use native dnd switch and clear button"),
             value: settings.get_boolean("notifications-use-native-controls"),
             bind: [settings, "notifications-use-native-controls"],
+            sensitiveBind: [settings, "notifications-enabled"],
         })
+        this.add(descriptionGroup)
     }
 })
