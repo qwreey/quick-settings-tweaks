@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 07:34+0900\n"
+"POT-Creation-Date: 2023-10-14 07:54+0900\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,93 +202,109 @@ msgstr ""
 msgid "Volume Mixer"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:109
-msgid "Add volume mixer (PulseAudio, Pipewire)"
-msgstr ""
-
-#: src/prefPages/volumeMixer.js:110
-msgid ""
-"Forked from https://github.com/mymindstorm/gnome-volume-mixer\n"
-"This feature works well with both PulseAudio and Pipewire protocols"
-msgstr ""
-
-#: src/prefPages/volumeMixer.js:114
-msgid "Visible"
-msgstr ""
-
-#: src/prefPages/volumeMixer.js:115
-msgid "Turn on to make the volume mixer visible"
-msgstr ""
-
-#: src/prefPages/volumeMixer.js:122
+#: src/prefPages/volumeMixer.js:106
 msgid "General"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:128 src/prefPages/notifications.js:65
-msgid "Position"
+#: src/prefPages/volumeMixer.js:107
+msgid "Enchant input/output slider"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:129
-msgid "Set volume mixer position"
+#: src/prefPages/volumeMixer.js:111
+msgid "Show current audio output selection"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:113
+msgid "Always show the current audio output selection above the volume slider"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:118
+msgid "Show current audio input selection"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:120
+msgid "Always show the current audio input selection above the volume slider"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:125
+msgid "Always show input"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:127
+msgid "Always show the audio input volume slider, even when there is no audio input stream."
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:133
+msgid "Add volume mixer (PulseAudio, Pipewire)"
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:134
+msgid ""
+"Turn on to make the volume mixer visible\n"
+"Forked from https://github.com/mymindstorm/gnome-volume-mixer"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:143 src/prefPages/notifications.js:65
+msgid "Position"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:144
+msgid "Set volume mixer position"
+msgstr ""
+
+#: src/prefPages/volumeMixer.js:149
 msgid "Top (Below Output/Input slider)"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:135 src/prefPages/notifications.js:72
+#: src/prefPages/volumeMixer.js:150 src/prefPages/notifications.js:72
 msgid "Bottom"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:141
+#: src/prefPages/volumeMixer.js:155
 msgid "Show stream Description"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:142
+#: src/prefPages/volumeMixer.js:156
 msgid "Show audio stream description above the slider"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:150
+#: src/prefPages/volumeMixer.js:163
 msgid "Show stream Icon"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:151
+#: src/prefPages/volumeMixer.js:164
 msgid "Show application icon in front of the slider"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:159
-msgid "Application Filtering"
-msgstr ""
-
-#: src/prefPages/volumeMixer.js:160
+#: src/prefPages/volumeMixer.js:175
 msgid "Filter applications shown in the volume mixer."
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:167
+#: src/prefPages/volumeMixer.js:182
 msgid "Filter Mode"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:172
+#: src/prefPages/volumeMixer.js:187
 msgid "Blacklist"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:173
+#: src/prefPages/volumeMixer.js:188
 msgid "Whitelist"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:178
+#: src/prefPages/volumeMixer.js:194
 msgid "Using Javascript Regex"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:179
+#: src/prefPages/volumeMixer.js:195
 msgid "Use Javascript RegExp for filtering app name or description"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:185
+#: src/prefPages/volumeMixer.js:202
 msgid "Check Stream Description"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:186
+#: src/prefPages/volumeMixer.js:203
 msgid "Check Description also"
 msgstr ""
 
@@ -362,34 +378,6 @@ msgstr ""
 
 #: src/prefPages/notifications.js:95
 msgid "Use native dnd switch and clear button"
-msgstr ""
-
-#: src/prefPages/inputOutput.js:15
-msgid "Input/Output"
-msgstr ""
-
-#: src/prefPages/inputOutput.js:22
-msgid "Show current audio output selection"
-msgstr ""
-
-#: src/prefPages/inputOutput.js:24
-msgid "Always show the current audio output selection above the volume slider"
-msgstr ""
-
-#: src/prefPages/inputOutput.js:29
-msgid "Show current audio input selection"
-msgstr ""
-
-#: src/prefPages/inputOutput.js:31
-msgid "Always show the current audio input selection above the volume slider"
-msgstr ""
-
-#: src/prefPages/inputOutput.js:36
-msgid "Always show input"
-msgstr ""
-
-#: src/prefPages/inputOutput.js:38
-msgid "Always show the audio input volume slider, even when there is no audio input stream."
 msgstr ""
 
 #: src/libs/dndQuickToggleHandler.js:9

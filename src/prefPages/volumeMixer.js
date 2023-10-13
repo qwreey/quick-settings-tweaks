@@ -102,8 +102,34 @@ export const volumeMixerPage = GObject.registerClass({
         this.settings = settings
         this.filterListData = this.settings.get_strv("volume-mixer-filtered-apps")
 
-        // description / enable
         const generalGroup = new Adw.PreferencesGroup({
+            title: _("General"),
+            description: _("Enchant input/output slider")
+        })
+        makeSwitch({
+            parent: generalGroup,
+            title: _("Show current audio output selection"),
+            value: settings.get_boolean("output-show-selected"),
+            subtitle: _("Always show the current audio output selection above the volume slider"),
+            bind: [settings, "output-show-selected"]
+        })
+        makeSwitch({
+            parent: generalGroup,
+            title: _("Show current audio input selection"),
+            value: settings.get_boolean("input-show-selected"),
+            subtitle: _("Always show the current audio input selection above the volume slider"),
+            bind: [settings, "input-show-selected"]
+        })
+        makeSwitch({
+            parent: generalGroup,
+            title: _("Always show input"),
+            value: settings.get_boolean("input-always-show"),
+            subtitle: _("Always show the audio input volume slider, even when there is no audio input stream."),
+            bind: [settings, "input-always-show"]
+        })
+
+        // volumeMixerGroup
+        const volumeMixerGroup = new Adw.PreferencesGroup({
             title: _("Add volume mixer (PulseAudio, Pipewire)"),
             description: _("Turn on to make the volume mixer visible\nForked from https://github.com/mymindstorm/gnome-volume-mixer"),
             headerSuffix: makeSwitch({
@@ -112,11 +138,8 @@ export const volumeMixerPage = GObject.registerClass({
                 bind: [settings, "volume-mixer-enabled"],
             })
         })
-        this.add(generalGroup)
-
-        // move to bottom
-        makeDropdown({
-            parent: generalGroup,
+        makeDropdown({ // move to bottom
+            parent: volumeMixerGroup,
             title: _("Position"),
             subtitle: _("Set volume mixer position"),
             value: this.settings.get_string('volume-mixer-position'),
@@ -128,27 +151,24 @@ export const volumeMixerPage = GObject.registerClass({
             ],
             sensitiveBind: [settings, "volume-mixer-enabled"],
         })
-        
-        // show-description
-        makeSwitch({
+        makeSwitch({ // show-description
             title: _('Show stream Description'),
             subtitle: _('Show audio stream description above the slider'),
             value: this.settings.get_boolean('volume-mixer-show-description'),
-            parent: generalGroup,
+            parent: volumeMixerGroup,
             bind: [this.settings, 'volume-mixer-show-description'],
             sensitiveBind: [settings, "volume-mixer-enabled"],
         })
-
-        // show-icon
-        makeSwitch({
+        makeSwitch({ // show-icon
             title: _('Show stream Icon'),
             subtitle: _('Show application icon in front of the slider'),
             value: this.settings.get_boolean('volume-mixer-show-icon'),
-            parent: generalGroup,
+            parent: volumeMixerGroup,
             bind: [this.settings, 'volume-mixer-show-icon'],
             sensitiveBind: [settings, "volume-mixer-enabled"],
         })
-        
+        this.add(volumeMixerGroup)
+
         // Application filter settings group
         const filterGroup = new Adw.PreferencesGroup({
             title: "",
