@@ -5,7 +5,7 @@ import {
     QuickSettingsGrid,
     QuickSettingsBox,
     QuickSettingsActor,
-    QuickSettingsShutdownMenuBox
+    GetQuickSettingsShutdownMenuBox
 } from "../libs/gnome.js"
 
 export class NotificationsFeature {
@@ -141,13 +141,15 @@ export class NotificationsFeature {
                     + " popup-menu-content quick-settings QSTWEAKS-quick-settings-separated"
 
                 // Move shutdown menu box to proper position
-                let shutdownMenuHolder = QuickSettingsShutdownMenuBox.get_parent()
-                if (shutdownMenuHolder) {
+                GetQuickSettingsShutdownMenuBox().then((shutdownMenuHolder)=>{
+                    shutdownMenuHolder = shutdownMenuHolder?.get_parent()
+                    if (!shutdownMenuHolder) return
+
                     this.shutdownBackupClass = shutdownMenuHolder.style_class
                     shutdownMenuHolder.style_class =
                         "QSTWEAKS-quick-settings-separated-shutdown-item "
                         + shutdownMenuHolder.style_class
-                }
+                })
 
                 // Insert notification modal
                 switch (notificationsPosition) {
@@ -191,7 +193,9 @@ export class NotificationsFeature {
             this.gridBackupClass = null
         }
         if (this.shutdownBackupClass) {
-            QuickSettingsShutdownMenuBox.get_parent().style_class = this.shutdownBackupClass
+            GetQuickSettingsShutdownMenuBox().then((shutdownMenuHolder)=>{
+                shutdownMenuHolder.get_parent().style_class = this.shutdownBackupClass
+            })
             this.shutdownBackupClass = null
         }
     }

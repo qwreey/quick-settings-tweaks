@@ -7,7 +7,6 @@ import { quickTogglesPage } from "./prefPages/quickToggles.js"
 import { otherPage } from "./prefPages/other.js"
 import { aboutPage } from "./prefPages/about.js"
 
-
 var pageList = [
     volumeMixerPage,
     inputOutputPage,

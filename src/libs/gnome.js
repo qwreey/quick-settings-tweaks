@@ -17,8 +17,17 @@ export const QuickSettingsMenu = QuickSettings.menu
 export const QuickSettingsGrid = QuickSettings.menu._grid
 export const QuickSettingsBox =  QuickSettings.menu.box
 export const QuickSettingsActor = QuickSettings.menu.actor
-export const QuickSettingsShutdownMenuBox =
-    QuickSettings._system._systemItem.menu.box
+export const GetQuickSettingsShutdownMenuBox = ()=>{
+    return new Promise(resolve=>{
+        GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            if (!QuickSettings._system)
+                return GLib.SOURCE_CONTINUE
+            resolve(QuickSettings._system._systemItem.menu.box)
+            return GLib.SOURCE_REMOVE
+        });
+    })
+}
+
 
 // Quick Settings Items
 export const InputStreamSlider = QuickSettings._volumeInput._input
