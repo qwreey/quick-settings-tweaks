@@ -253,7 +253,7 @@ msgid ""
 "Turn on to make the volume mixer visible\n"
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr ""
-"볼륨 믹서를 활성화합니다\n"
+"볼륨 믹서를 활성화합니다. "
 "https://github.com/mymindstorm/gnome-volume-mixer 에서 포크된 기능입니다"
 
 #: src/prefPages/volumeMixer.js:143 src/prefPages/notifications.js:65

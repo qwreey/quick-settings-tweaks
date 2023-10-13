@@ -254,7 +254,7 @@ msgid ""
 "Turn on to make the volume mixer visible\n"
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr ""
-"Turn on to make the volume mixer visible\n"
+"Turn on to make the volume mixer visible. "
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 
 #: src/prefPages/volumeMixer.js:143 src/prefPages/notifications.js:65
