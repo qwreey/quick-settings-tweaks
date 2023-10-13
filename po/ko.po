@@ -41,5 +41,5 @@ msgid "Notifications"
 msgstr "알림"
 
 # Unsafe mode
-#~ msgid "불안전 모드"
-#~ msgstr "불안전 모드"
+#~ msgid "위험모드"
+#~ msgstr "위험모드"
