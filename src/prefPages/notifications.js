@@ -25,7 +25,6 @@ export const notificationsPage = GObject.registerClass({
         const mediaGroup = new Adw.PreferencesGroup({
             title: "Media Controls widget",
             headerSuffix: makeSwitch({
-                parent: descriptionGroup,
                 value: settings.get_boolean("media-control-enabled"),
                 bind: [settings, "media-control-enabled"]
             }),
