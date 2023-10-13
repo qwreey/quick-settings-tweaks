@@ -48,7 +48,8 @@ export const Indicator = GObject.registerClass(
 
     destroy() {
       this.quickSettingsItems.forEach(item => item.destroy())
-      this._indicator.destroy()
+      // After 45, this is not required
+      // this._indicator.destroy()
       super.destroy()
     }
 });
