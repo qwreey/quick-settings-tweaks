@@ -103,23 +103,15 @@ export const volumeMixerPage = GObject.registerClass({
         this.filterListData = this.settings.get_strv("volume-mixer-filtered-apps")
 
         // description / enable
-        const descriptionGroup = new Adw.PreferencesGroup()
-        makeRow({
-            parent: descriptionGroup,
+        const generalGroup = new Adw.PreferencesGroup({
             title: _("Add volume mixer (PulseAudio, Pipewire)"),
-            subtitle: _("Forked from https://github.com/mymindstorm/gnome-volume-mixer\nThis feature works well with both PulseAudio and Pipewire protocols"),
+            description: _("Turn on to make the volume mixer visible\nForked from https://github.com/mymindstorm/gnome-volume-mixer"),
+            headerSuffix: makeSwitch({
+                title: "",
+                value: settings.get_boolean("volume-mixer-enabled"),
+                bind: [settings, "volume-mixer-enabled"],
+            })
         })
-        makeSwitch({
-            parent: descriptionGroup,
-            title: _("Visible"),
-            subtitle: _("Turn on to make the volume mixer visible"),
-            value: settings.get_boolean("volume-mixer-enabled"),
-            bind: [settings, "volume-mixer-enabled"],
-        })
-        this.add(descriptionGroup)
-
-        // Group for general settings
-        const generalGroup = new Adw.PreferencesGroup({ title: _("General") })
         this.add(generalGroup)
 
         // move to bottom
@@ -134,6 +126,7 @@ export const volumeMixerPage = GObject.registerClass({
                 {name: _("Top (Below Output/Input slider)"), value: "top"},
                 {name: _("Bottom"), value: "bottom"},
             ],
+            sensitiveBind: [settings, "volume-mixer-enabled"],
         })
         
         // show-description
@@ -143,6 +136,7 @@ export const volumeMixerPage = GObject.registerClass({
             value: this.settings.get_boolean('volume-mixer-show-description'),
             parent: generalGroup,
             bind: [this.settings, 'volume-mixer-show-description'],
+            sensitiveBind: [settings, "volume-mixer-enabled"],
         })
 
         // show-icon
@@ -152,11 +146,12 @@ export const volumeMixerPage = GObject.registerClass({
             value: this.settings.get_boolean('volume-mixer-show-icon'),
             parent: generalGroup,
             bind: [this.settings, 'volume-mixer-show-icon'],
+            sensitiveBind: [settings, "volume-mixer-enabled"],
         })
         
         // Application filter settings group
         const filterGroup = new Adw.PreferencesGroup({
-            title: _('Application Filtering'),
+            title: "",
             description: _('Filter applications shown in the volume mixer.'),
         })
         this.add(filterGroup)
@@ -172,6 +167,7 @@ export const volumeMixerPage = GObject.registerClass({
                 {name: _("Blacklist"), value: "block"},
                 {name: _("Whitelist"), value: "allow"},
             ],
+            sensitiveBind: [settings, "volume-mixer-enabled"],
         })
         makeSwitch({
             parent: filterGroup,
@@ -179,6 +175,7 @@ export const volumeMixerPage = GObject.registerClass({
             subtitle: _('Use Javascript RegExp for filtering app name or description'),
             value: this.settings.get_boolean('volume-mixer-use-regex'),
             bind: [this.settings, 'volume-mixer-use-regex'],
+            sensitiveBind: [settings, "volume-mixer-enabled"],
         })
         makeSwitch({
             parent: filterGroup,
@@ -186,6 +183,7 @@ export const volumeMixerPage = GObject.registerClass({
             subtitle: _("Check Description also"),
             value: this.settings.get_boolean('volume-mixer-check-description'),
             bind: [this.settings, 'volume-mixer-check-description'],
+            sensitiveBind: [settings, "volume-mixer-enabled"],
         })
 
         // group to act as spacer for filter list
