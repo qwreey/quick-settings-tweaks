@@ -13,27 +13,27 @@ msgstr ""
 
 #: src/libs/dndQuickToggleHandler.js:9
 msgid "Do Not Disturb"
-msgstr ""
+msgstr "Não Perturbe"
 
 #: src/libs/unsafeQuickToggleHandler.js:13
 msgid "Unsafe Mode"
-msgstr ""
+msgstr "Modo Inseguro"
 
 #: src/libs/streamSlider.js:60
 msgid "Sound Settings"
-msgstr ""
+msgstr "Configurações de Som"
 
 #: src/libs/streamSlider.js:197
 msgid "Volume changed"
-msgstr ""
+msgstr "Volume alterado"
 
 #: src/libs/notificationHandler.js:25
 msgid "No Notifications"
-msgstr ""
+msgstr "Sem Notificações"
 
 #: src/libs/notificationHandler.js:54
 msgid "Clear"
-msgstr ""
+msgstr "Limpar"
 
 # Quick settings notifications title text
 # Notifications title
