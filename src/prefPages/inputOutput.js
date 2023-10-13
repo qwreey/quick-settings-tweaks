@@ -1,7 +1,7 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 
-import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/extension.js"
+import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 
 import { baseGTypeName, makeSwitch } from "../libs/prefComponents.js"
 
