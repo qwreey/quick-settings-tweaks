@@ -13,33 +13,29 @@ msgstr ""
 
 #: src/libs/dndQuickToggleHandler.js:9
 msgid "Do Not Disturb"
-msgstr ""
+msgstr "방해 금지 모드"
 
 #: src/libs/unsafeQuickToggleHandler.js:13
 msgid "Unsafe Mode"
-msgstr ""
+msgstr "위험모드"
 
 #: src/libs/streamSlider.js:60
 msgid "Sound Settings"
-msgstr ""
+msgstr "소리 설정"
 
 #: src/libs/streamSlider.js:197
 msgid "Volume changed"
-msgstr ""
+msgstr "볼륨 변경됨"
 
 #: src/libs/notificationHandler.js:25
 msgid "No Notifications"
-msgstr ""
+msgstr "알림이 없습니다"
 
 #: src/libs/notificationHandler.js:54
 msgid "Clear"
-msgstr ""
+msgstr "모두 읽기"
 
 # Quick settings notifications title text
 #: src/libs/notificationHandler.js:91
 msgid "Notifications"
 msgstr "알림"
-
-# Unsafe mode
-#~ msgid "위험모드"
-#~ msgstr "위험모드"
