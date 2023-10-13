@@ -14,7 +14,7 @@ msgstr ""
 
 #: src/libs/dndQuickToggleHandler.js:9
 msgid "Do Not Disturb"
-msgstr ""
+msgstr "Do Not Disturb"
 
 # Unsafe mode
 #: src/libs/unsafeQuickToggleHandler.js:13
