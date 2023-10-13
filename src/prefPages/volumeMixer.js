@@ -127,6 +127,7 @@ export const volumeMixerPage = GObject.registerClass({
             subtitle: _("Always show the audio input volume slider, even when there is no audio input stream."),
             bind: [settings, "input-always-show"]
         })
+        this.add(generalGroup)
 
         // volumeMixerGroup
         const volumeMixerGroup = new Adw.PreferencesGroup({
@@ -208,6 +209,12 @@ export const volumeMixerPage = GObject.registerClass({
 
         // group to act as spacer for filter list
         this.filteredAppsGroup = new Adw.PreferencesGroup()
+        settings.bind(
+            "volume-mixer-enabled",
+            this.filteredAppsGroup,'sensitive',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        this.filteredAppsGroup.sensitive = settings.get_boolean("volume-mixer-enabled")
         this.add(this.filteredAppsGroup)
 
         // List of filtered apps
