@@ -40,7 +40,7 @@ export const aboutPage = GObject.registerClass({
         })
         this.add(links)
         makeRow({
-            uri: _("https://extensions.gnome.org/extension/5446/quick-settings-tweaker/"),
+            uri: "https://extensions.gnome.org/extension/5446/quick-settings-tweaker/",
             parent: links,
             title: "Gnome Extension",
             subtitle: _("Rate and comment the extension!")
