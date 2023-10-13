@@ -1,6 +1,7 @@
 import Adw from "gi://Adw"
 import Gtk from "gi://Gtk"
 import GObject from "gi://GObject"
+import Gio from "gi://Gio"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 
