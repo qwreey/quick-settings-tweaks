@@ -23,8 +23,9 @@ export const notificationsPage = GObject.registerClass({
 
         // media
         const mediaGroup = new Adw.PreferencesGroup({
-            title: "Media Controls widget",
+            title: _("Media Controls widget"),
             headerSuffix: makeSwitch({
+                title: "",
                 value: settings.get_boolean("media-control-enabled"),
                 bind: [settings, "media-control-enabled"]
             }),
@@ -44,6 +45,7 @@ export const notificationsPage = GObject.registerClass({
         const notificationGroup = new Adw.PreferencesGroup({
             title: _("Notification Widget"),
             headerSuffix: makeSwitch({
+                title: "",
                 value: settings.get_boolean("notifications-enabled"),
                 bind: [settings, "notifications-enabled"],
             }),
