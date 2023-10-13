@@ -9,6 +9,7 @@
 // } = Me.imports.gnome
 //
 
+import GLib from "gi://GLib"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 
 // Quick Settings
