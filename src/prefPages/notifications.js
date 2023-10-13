@@ -96,6 +96,6 @@ export const notificationsPage = GObject.registerClass({
             bind: [settings, "notifications-use-native-controls"],
             sensitiveBind: [settings, "notifications-enabled"],
         })
-        this.add(descriptionGroup)
+        this.add(notificationGroup)
     }
 })
