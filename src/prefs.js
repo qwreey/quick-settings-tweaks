@@ -8,8 +8,8 @@ import { aboutPage } from "./prefPages/about.js"
 
 var pageList = [
     volumeMixerPage,
-    inputOutputPage,
     notificationsPage,
+    inputOutputPage,
     quickTogglesPage,
     otherPage,
     aboutPage

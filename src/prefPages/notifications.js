@@ -29,7 +29,7 @@ export const notificationsPage = GObject.registerClass({
                 value: settings.get_boolean("media-control-enabled"),
                 bind: [settings, "media-control-enabled"]
             }),
-            description: _("Turn on to make the Media Control widget visible on the Quick Settings panel\nReference from https://github.com/Aylur/gnome-extensions\nSource code of that is not used on this extension"),
+            description: _("Turn on to make the Media Control widget visible on the Quick Settings panel"),
         })
         makeSwitch({
             parent: mediaGroup,
@@ -49,7 +49,7 @@ export const notificationsPage = GObject.registerClass({
                 value: settings.get_boolean("notifications-enabled"),
                 bind: [settings, "notifications-enabled"],
             }),
-            description: _("Turn on to make the notification widget visible on the Quick Settings panel\nReference from https://github.com/Aylur/gnome-extensions\nSource code of that is not used on this extension"),
+            description: _("Turn on to make the notification widget visible on the Quick Settings panel"),
         })
         makeAdjustment({
             parent: notificationGroup,

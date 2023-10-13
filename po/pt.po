@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 06:48+0900\n"
+"POT-Creation-Date: 2023-10-14 07:34+0900\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -212,8 +212,7 @@ msgid ""
 "This feature works well with both PulseAudio and Pipewire protocols"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:114 src/prefPages/notifications.js:34
-#: src/prefPages/mediaControl.js:32
+#: src/prefPages/volumeMixer.js:114
 msgid "Visible"
 msgstr ""
 
@@ -221,12 +220,11 @@ msgstr ""
 msgid "Turn on to make the volume mixer visible"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:122 src/prefPages/notifications.js:42
-#: src/prefPages/mediaControl.js:40
+#: src/prefPages/volumeMixer.js:122
 msgid "General"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:128 src/prefPages/notifications.js:54
+#: src/prefPages/volumeMixer.js:128 src/prefPages/notifications.js:65
 msgid "Position"
 msgstr ""
 
@@ -238,7 +236,7 @@ msgstr ""
 msgid "Top (Below Output/Input slider)"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:135 src/prefPages/notifications.js:61
+#: src/prefPages/volumeMixer.js:135 src/prefPages/notifications.js:72
 msgid "Bottom"
 msgstr ""
 
@@ -294,65 +292,75 @@ msgstr ""
 msgid "Check Description also"
 msgstr ""
 
-# Quick settings notifications title text
-# Notifications title
-#: src/prefPages/notifications.js:21 src/libs/notificationHandler.js:91
-msgid "Notifications"
-msgstr "Notificações"
-
-#: src/prefPages/notifications.js:29
-msgid "Add notifications widget"
+#: src/prefPages/notifications.js:20
+msgid "Noti&Media"
 msgstr ""
 
-#: src/prefPages/notifications.js:30 src/prefPages/mediaControl.js:28
+#: src/prefPages/notifications.js:26
+msgid "Media Controls widget"
+msgstr ""
+
+#: src/prefPages/notifications.js:32
+msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
+msgstr ""
+
+#: src/prefPages/notifications.js:36
+msgid "Compact Mode"
+msgstr ""
+
+#: src/prefPages/notifications.js:37
 msgid ""
-"Reference from https://github.com/Aylur/gnome-extensions\n"
-"Source code of that is not used on this extension"
+"Make Media Controls widget smaller\n"
+"Make it more similar in size to the notification message"
 msgstr ""
 
-#: src/prefPages/notifications.js:35
+#: src/prefPages/notifications.js:46
+msgid "Notification Widget"
+msgstr ""
+
+#: src/prefPages/notifications.js:52
 msgid "Turn on to make the notification widget visible on the Quick Settings panel"
 msgstr ""
 
-#: src/prefPages/notifications.js:47
+#: src/prefPages/notifications.js:57
 msgid "Max height"
 msgstr ""
 
-#: src/prefPages/notifications.js:48
+#: src/prefPages/notifications.js:58
 msgid "Set maximum height of the Notifications widget. default is 292"
 msgstr ""
 
-#: src/prefPages/notifications.js:55
+#: src/prefPages/notifications.js:66
 msgid "Set Notifications widget position"
 msgstr ""
 
-#: src/prefPages/notifications.js:60
+#: src/prefPages/notifications.js:71
 msgid "Top"
 msgstr ""
 
-#: src/prefPages/notifications.js:66
+#: src/prefPages/notifications.js:78
 msgid "Attach to QS panel"
 msgstr ""
 
-#: src/prefPages/notifications.js:67
+#: src/prefPages/notifications.js:79
 msgid ""
 "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
 "(such as margin or padding not matching with the theme)"
 msgstr ""
 
-#: src/prefPages/notifications.js:73
+#: src/prefPages/notifications.js:86
 msgid "Auto Hide"
 msgstr ""
 
-#: src/prefPages/notifications.js:74
+#: src/prefPages/notifications.js:87
 msgid "Hide the Notifications widget when have no notifications"
 msgstr ""
 
-#: src/prefPages/notifications.js:80
+#: src/prefPages/notifications.js:94
 msgid "Use native controls"
 msgstr ""
 
-#: src/prefPages/notifications.js:81
+#: src/prefPages/notifications.js:95
 msgid "Use native dnd switch and clear button"
 msgstr ""
 
@@ -384,28 +392,6 @@ msgstr ""
 msgid "Always show the audio input volume slider, even when there is no audio input stream."
 msgstr ""
 
-#: src/prefPages/mediaControl.js:19
-msgid "Media Controls"
-msgstr ""
-
-#: src/prefPages/mediaControl.js:27
-msgid "Add Media Controls widget"
-msgstr ""
-
-#: src/prefPages/mediaControl.js:33
-msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
-msgstr ""
-
-#: src/prefPages/mediaControl.js:44
-msgid "Compact Mode"
-msgstr ""
-
-#: src/prefPages/mediaControl.js:45
-msgid ""
-"Make Media Controls widget smaller\n"
-"Make it more similar in size to the notification message"
-msgstr ""
-
 #: src/libs/dndQuickToggleHandler.js:9
 msgid "Do Not Disturb"
 msgstr "Não Perturbe"
@@ -429,3 +415,9 @@ msgstr "Sem Notificações"
 #: src/libs/notificationHandler.js:54
 msgid "Clear"
 msgstr "Limpar"
+
+# Quick settings notifications title text
+# Notifications title
+#: src/libs/notificationHandler.js:91
+msgid "Notifications"
+msgstr "Notificações"

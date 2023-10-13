@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 06:48+0900\n"
+"POT-Creation-Date: 2023-10-14 07:34+0900\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -224,8 +224,7 @@ msgstr ""
 "https://github.com/mymindstorm/gnome-volume-mixer 에서 포크된 기능입니다\n"
 "이 기능은 PulseAudio 와 Pipewire 프로토콜에서 모두 잘 작동합니다"
 
-#: src/prefPages/volumeMixer.js:114 src/prefPages/notifications.js:34
-#: src/prefPages/mediaControl.js:32
+#: src/prefPages/volumeMixer.js:114
 msgid "Visible"
 msgstr "보이기"
 
@@ -233,12 +232,11 @@ msgstr "보이기"
 msgid "Turn on to make the volume mixer visible"
 msgstr "볼륨 믹서를 보이게 합니다"
 
-#: src/prefPages/volumeMixer.js:122 src/prefPages/notifications.js:42
-#: src/prefPages/mediaControl.js:40
+#: src/prefPages/volumeMixer.js:122
 msgid "General"
 msgstr "일반"
 
-#: src/prefPages/volumeMixer.js:128 src/prefPages/notifications.js:54
+#: src/prefPages/volumeMixer.js:128 src/prefPages/notifications.js:65
 msgid "Position"
 msgstr "위치"
 
@@ -250,7 +248,7 @@ msgstr "볼륨 믹서의 위치를 선택합니다"
 msgid "Top (Below Output/Input slider)"
 msgstr "위 (출력/입력 슬라이더 아래에 표시됩니다)"
 
-#: src/prefPages/volumeMixer.js:135 src/prefPages/notifications.js:61
+#: src/prefPages/volumeMixer.js:135 src/prefPages/notifications.js:72
 msgid "Bottom"
 msgstr "아래"
 
@@ -306,66 +304,77 @@ msgstr "스트림의 설명도 확인하기"
 msgid "Check Description also"
 msgstr "스트림의 설명도 필터링에 사용합니다"
 
-# Quick settings notifications title text
-#: src/prefPages/notifications.js:21 src/libs/notificationHandler.js:91
-msgid "Notifications"
-msgstr "알림"
+#: src/prefPages/notifications.js:20
+msgid "Noti&Media"
+msgstr "알림&미디어"
 
-#: src/prefPages/notifications.js:29
-msgid "Add notifications widget"
-msgstr "알림 위젯을 추가합니다"
+#: src/prefPages/notifications.js:26
+msgid "Media Controls widget"
+msgstr "미디어 컨트롤 위젯"
 
-#: src/prefPages/notifications.js:30 src/prefPages/mediaControl.js:28
+#: src/prefPages/notifications.js:32
+msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
+msgstr "미디어 위젯을 퀵패널에 추가합니다"
+
+#: src/prefPages/notifications.js:36
+msgid "Compact Mode"
+msgstr "깔끔한 모드"
+
+#: src/prefPages/notifications.js:37
 msgid ""
-"Reference from https://github.com/Aylur/gnome-extensions\n"
-"Source code of that is not used on this extension"
+"Make Media Controls widget smaller\n"
+"Make it more similar in size to the notification message"
 msgstr ""
-"https://github.com/Aylur/gnome-extensions 에서 영감받았습니다\n"
-"해당 저장소의 소스코드 자체는 이 확장프로그램에 사용되지 않았습니다"
+"미디어 컨트롤 위젯을 작게 만듭니다\n"
+"알림 메시지와 비슷한 크기로 조정됩니다"
 
-#: src/prefPages/notifications.js:35
+#: src/prefPages/notifications.js:46
+msgid "Notification Widget"
+msgstr "알림 위젯"
+
+#: src/prefPages/notifications.js:52
 msgid "Turn on to make the notification widget visible on the Quick Settings panel"
 msgstr "퀵패널에 알림 위젯을 보여줍니다"
 
-#: src/prefPages/notifications.js:47
+#: src/prefPages/notifications.js:57
 msgid "Max height"
 msgstr "최대 높이"
 
-#: src/prefPages/notifications.js:48
+#: src/prefPages/notifications.js:58
 msgid "Set maximum height of the Notifications widget. default is 292"
 msgstr "알림 위젯의 최대 높이(px)를 설정합니다. 기본값은 292 입니다"
 
-#: src/prefPages/notifications.js:55
+#: src/prefPages/notifications.js:66
 msgid "Set Notifications widget position"
 msgstr "알림 위젯의 위치"
 
-#: src/prefPages/notifications.js:60
+#: src/prefPages/notifications.js:71
 msgid "Top"
 msgstr "상단"
 
-#: src/prefPages/notifications.js:66
+#: src/prefPages/notifications.js:78
 msgid "Attach to QS panel"
 msgstr "퀵패널 아래에 부착하기"
 
-#: src/prefPages/notifications.js:67
+#: src/prefPages/notifications.js:79
 msgid ""
 "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
 "(such as margin or padding not matching with the theme)"
 msgstr "퀵패널에서 분리하지 않기 (이 옵션을 사용하는것을 추천합니다. 분리된 알림 위젯은 표시 버그를 일으킬 수 있습니다)"
 
-#: src/prefPages/notifications.js:73
+#: src/prefPages/notifications.js:86
 msgid "Auto Hide"
 msgstr "자동 숨기기"
 
-#: src/prefPages/notifications.js:74
+#: src/prefPages/notifications.js:87
 msgid "Hide the Notifications widget when have no notifications"
 msgstr "알림 위젯을 알림이 없을 때 자동으로 숨깁니다"
 
-#: src/prefPages/notifications.js:80
+#: src/prefPages/notifications.js:94
 msgid "Use native controls"
 msgstr "네이티브 컨트롤 사용"
 
-#: src/prefPages/notifications.js:81
+#: src/prefPages/notifications.js:95
 msgid "Use native dnd switch and clear button"
 msgstr "그놈의 기본 방해 금지 스위치와 알림 모두 읽기 버튼을 사용합니다"
 
@@ -397,30 +406,6 @@ msgstr "항상 입력 보이기"
 msgid "Always show the audio input volume slider, even when there is no audio input stream."
 msgstr "오디오 입력 스트림이 없더라도 항상 오디오 입력 슬라이더를 보여줍니다"
 
-#: src/prefPages/mediaControl.js:19
-msgid "Media Controls"
-msgstr "미디어 컨트롤"
-
-#: src/prefPages/mediaControl.js:27
-msgid "Add Media Controls widget"
-msgstr "미디어 컨트롤 위젯 추가"
-
-#: src/prefPages/mediaControl.js:33
-msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
-msgstr "미디어 위젯을 퀵패널에 추가합니다"
-
-#: src/prefPages/mediaControl.js:44
-msgid "Compact Mode"
-msgstr "깔끔한 모드"
-
-#: src/prefPages/mediaControl.js:45
-msgid ""
-"Make Media Controls widget smaller\n"
-"Make it more similar in size to the notification message"
-msgstr ""
-"미디어 컨트롤 위젯을 작게 만듭니다\n"
-"알림 메시지와 비슷한 크기로 조정됩니다"
-
 #: src/libs/dndQuickToggleHandler.js:9
 msgid "Do Not Disturb"
 msgstr "방해 금지 모드"
@@ -444,3 +429,24 @@ msgstr "알림이 없습니다"
 #: src/libs/notificationHandler.js:54
 msgid "Clear"
 msgstr "모두 읽기"
+
+# Quick settings notifications title text
+#: src/libs/notificationHandler.js:91
+msgid "Notifications"
+msgstr "알림"
+
+#~ msgid "Add notifications widget"
+#~ msgstr "알림 위젯을 추가합니다"
+
+#~ msgid ""
+#~ "Reference from https://github.com/Aylur/gnome-extensions\n"
+#~ "Source code of that is not used on this extension"
+#~ msgstr ""
+#~ "https://github.com/Aylur/gnome-extensions 에서 영감받았습니다\n"
+#~ "해당 저장소의 소스코드 자체는 이 확장프로그램에 사용되지 않았습니다"
+
+#~ msgid "Media Controls"
+#~ msgstr "미디어 컨트롤"
+
+#~ msgid "Add Media Controls widget"
+#~ msgstr "미디어 컨트롤 위젯 추가"
