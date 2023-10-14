@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 07:54+0900\n"
+"POT-Creation-Date: 2023-10-14 10:19+0900\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,43 +60,47 @@ msgstr "콘텐츠의 그림자 지우지 않기"
 msgid "Don't remove the shadow of messages and media controls."
 msgstr "메시지와 미디어 컨트롤의 그림자를 지우지 않습니다"
 
-#: src/prefPages/about.js:16
+#: src/prefPages/about.js:20
 msgid "About"
 msgstr "정보"
 
-#: src/prefPages/about.js:22
+#: src/prefPages/about.js:26
 msgid "Information"
 msgstr "정보"
 
-#: src/prefPages/about.js:27
+#: src/prefPages/about.js:31
 msgid "This extension is distributed with license GPL 3+"
 msgstr "이 확장 프로그램은 GPL 3+ 라이선스 아래 배포됩니다"
 
-#: src/prefPages/about.js:28
+#: src/prefPages/about.js:32
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr "서드파티는 제외합니다. 서드파티 코드는 각각 원본 코드의 라이선스를 따릅니다"
 
-#: src/prefPages/about.js:32
+#: src/prefPages/about.js:36
 msgid "Version"
 msgstr "버전"
 
-#: src/prefPages/about.js:34
+#: src/prefPages/about.js:38
 msgid "Unknown (Built from source)"
 msgstr "알 수 없음 (소스에서 직접 빌드됨)"
 
-#: src/prefPages/about.js:39
+#: src/prefPages/about.js:43
 msgid "Links"
 msgstr "링크"
 
-#: src/prefPages/about.js:46
+#: src/prefPages/about.js:50
+msgid "Support development!"
+msgstr "개발에 후원하세요!"
+
+#: src/prefPages/about.js:56
 msgid "Rate and comment the extension!"
 msgstr "확장 프로그램에 평가를 주세요!"
 
-#: src/prefPages/about.js:51
+#: src/prefPages/about.js:61
 msgid "Github Repository"
 msgstr "Github 저장소"
 
-#: src/prefPages/about.js:52
+#: src/prefPages/about.js:62
 msgid ""
 "Add Star on Repository is helping me a lot!\n"
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
@@ -106,15 +110,19 @@ msgstr ""
 "만약 버그를 찾은 경우, issue 를 남겨 우리가 알 수 있게 해주세요!\n"
 "또는, 환상적인 기능을 만들어 PR 을 남기는 것도 환영입니다!"
 
-#: src/prefPages/about.js:61
+#: src/prefPages/about.js:71
 msgid "Contributor"
 msgstr "기여자"
 
-#: src/prefPages/about.js:65
+#: src/prefPages/about.js:72
+msgid "The creators of this extension"
+msgstr "이 확장프로그램을 만든 이들"
+
+#: src/prefPages/about.js:78
 msgid "Third party LICENSE"
 msgstr "서드파티 라이선스"
 
-#: src/prefPages/about.js:66
+#: src/prefPages/about.js:79
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "*이 확장 프로그램에 포함되어있는 일부 코드의 라이선스입니다*"
 
@@ -244,79 +252,77 @@ msgstr "항상 입력 보이기"
 msgid "Always show the audio input volume slider, even when there is no audio input stream."
 msgstr "오디오 입력 스트림이 없더라도 항상 오디오 입력 슬라이더를 보여줍니다"
 
-#: src/prefPages/volumeMixer.js:133
+#: src/prefPages/volumeMixer.js:134
 msgid "Add volume mixer (PulseAudio, Pipewire)"
 msgstr "볼륨 믹서 추가 (PulseAudio, Pipewire 호환)"
 
-#: src/prefPages/volumeMixer.js:134
+#: src/prefPages/volumeMixer.js:135
 msgid ""
 "Turn on to make the volume mixer visible\n"
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
-msgstr ""
-"볼륨 믹서를 활성화합니다. "
-"https://github.com/mymindstorm/gnome-volume-mixer 에서 포크된 기능입니다"
+msgstr "볼륨 믹서를 활성화합니다. https://github.com/mymindstorm/gnome-volume-mixer 에서 포크된 기능입니다"
 
-#: src/prefPages/volumeMixer.js:143 src/prefPages/notifications.js:65
+#: src/prefPages/volumeMixer.js:144 src/prefPages/notifications.js:65
 msgid "Position"
 msgstr "위치"
 
-#: src/prefPages/volumeMixer.js:144
+#: src/prefPages/volumeMixer.js:145
 msgid "Set volume mixer position"
 msgstr "볼륨 믹서의 위치를 선택합니다"
 
-#: src/prefPages/volumeMixer.js:149
+#: src/prefPages/volumeMixer.js:150
 msgid "Top (Below Output/Input slider)"
 msgstr "위 (출력/입력 슬라이더 아래에 표시됩니다)"
 
-#: src/prefPages/volumeMixer.js:150 src/prefPages/notifications.js:72
+#: src/prefPages/volumeMixer.js:151 src/prefPages/notifications.js:72
 msgid "Bottom"
 msgstr "아래"
 
-#: src/prefPages/volumeMixer.js:155
+#: src/prefPages/volumeMixer.js:156
 msgid "Show stream Description"
 msgstr "스트림의 설명을 표시하기"
 
-#: src/prefPages/volumeMixer.js:156
+#: src/prefPages/volumeMixer.js:157
 msgid "Show audio stream description above the slider"
 msgstr "오디오 스트림의 설명을 슬라이더 아래에 표시합니다"
 
-#: src/prefPages/volumeMixer.js:163
+#: src/prefPages/volumeMixer.js:164
 msgid "Show stream Icon"
 msgstr "스트림의 아이콘 표시하기"
 
-#: src/prefPages/volumeMixer.js:164
+#: src/prefPages/volumeMixer.js:165
 msgid "Show application icon in front of the slider"
 msgstr "애플리케이션의 아이콘을 슬라이더 앞에 추가합니다"
 
-#: src/prefPages/volumeMixer.js:175
+#: src/prefPages/volumeMixer.js:176
 msgid "Filter applications shown in the volume mixer."
 msgstr "볼륨 믹서에 보일 애플리케이션을 필터링합니다"
 
-#: src/prefPages/volumeMixer.js:182
+#: src/prefPages/volumeMixer.js:183
 msgid "Filter Mode"
 msgstr "필터 모드"
 
-#: src/prefPages/volumeMixer.js:187
+#: src/prefPages/volumeMixer.js:188
 msgid "Blacklist"
 msgstr "블랙리스트"
 
-#: src/prefPages/volumeMixer.js:188
+#: src/prefPages/volumeMixer.js:189
 msgid "Whitelist"
 msgstr "화이트리스트"
 
-#: src/prefPages/volumeMixer.js:194
+#: src/prefPages/volumeMixer.js:195
 msgid "Using Javascript Regex"
 msgstr "자바스크립트 정규 표현식을 사용합니다"
 
-#: src/prefPages/volumeMixer.js:195
+#: src/prefPages/volumeMixer.js:196
 msgid "Use Javascript RegExp for filtering app name or description"
 msgstr "자바스크립트의 정규 표현식을 사용해 애플리케이션 이름 혹은 설명을 필터링합니다"
 
-#: src/prefPages/volumeMixer.js:202
+#: src/prefPages/volumeMixer.js:203
 msgid "Check Stream Description"
 msgstr "스트림의 설명도 확인하기"
 
-#: src/prefPages/volumeMixer.js:203
+#: src/prefPages/volumeMixer.js:204
 msgid "Check Description also"
 msgstr "스트림의 설명도 필터링에 사용합니다"
 

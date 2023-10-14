@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 07:54+0900\n"
+"POT-Creation-Date: 2023-10-14 10:19+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,43 +63,47 @@ msgstr ""
 msgid "Don't remove the shadow of messages and media controls."
 msgstr ""
 
-#: src/prefPages/about.js:16
+#: src/prefPages/about.js:20
 msgid "About"
 msgstr ""
 
-#: src/prefPages/about.js:22
+#: src/prefPages/about.js:26
 msgid "Information"
 msgstr ""
 
-#: src/prefPages/about.js:27
+#: src/prefPages/about.js:31
 msgid "This extension is distributed with license GPL 3+"
 msgstr ""
 
-#: src/prefPages/about.js:28
+#: src/prefPages/about.js:32
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr ""
 
-#: src/prefPages/about.js:32
+#: src/prefPages/about.js:36
 msgid "Version"
 msgstr ""
 
-#: src/prefPages/about.js:34
+#: src/prefPages/about.js:38
 msgid "Unknown (Built from source)"
 msgstr ""
 
-#: src/prefPages/about.js:39
+#: src/prefPages/about.js:43
 msgid "Links"
 msgstr ""
 
-#: src/prefPages/about.js:46
+#: src/prefPages/about.js:50
+msgid "Support development!"
+msgstr ""
+
+#: src/prefPages/about.js:56
 msgid "Rate and comment the extension!"
 msgstr ""
 
-#: src/prefPages/about.js:51
+#: src/prefPages/about.js:61
 msgid "Github Repository"
 msgstr ""
 
-#: src/prefPages/about.js:52
+#: src/prefPages/about.js:62
 msgid ""
 "Add Star on Repository is helping me a lot!\n"
 "Please, if you found bug from this extension, you can make issue to make me "
@@ -107,15 +111,19 @@ msgid ""
 "Or, you can create PR with wonderful features!"
 msgstr ""
 
-#: src/prefPages/about.js:61
+#: src/prefPages/about.js:71
 msgid "Contributor"
 msgstr ""
 
-#: src/prefPages/about.js:65
+#: src/prefPages/about.js:72
+msgid "The creators of this extension"
+msgstr ""
+
+#: src/prefPages/about.js:78
 msgid "Third party LICENSE"
 msgstr ""
 
-#: src/prefPages/about.js:66
+#: src/prefPages/about.js:79
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr ""
 
@@ -246,77 +254,77 @@ msgid ""
 "stream."
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:133
+#: src/prefPages/volumeMixer.js:134
 msgid "Add volume mixer (PulseAudio, Pipewire)"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:134
+#: src/prefPages/volumeMixer.js:135
 msgid ""
 "Turn on to make the volume mixer visible\n"
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:143 src/prefPages/notifications.js:65
+#: src/prefPages/volumeMixer.js:144 src/prefPages/notifications.js:65
 msgid "Position"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:144
+#: src/prefPages/volumeMixer.js:145
 msgid "Set volume mixer position"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:149
+#: src/prefPages/volumeMixer.js:150
 msgid "Top (Below Output/Input slider)"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:150 src/prefPages/notifications.js:72
+#: src/prefPages/volumeMixer.js:151 src/prefPages/notifications.js:72
 msgid "Bottom"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:155
+#: src/prefPages/volumeMixer.js:156
 msgid "Show stream Description"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:156
+#: src/prefPages/volumeMixer.js:157
 msgid "Show audio stream description above the slider"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:163
+#: src/prefPages/volumeMixer.js:164
 msgid "Show stream Icon"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:164
+#: src/prefPages/volumeMixer.js:165
 msgid "Show application icon in front of the slider"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:175
+#: src/prefPages/volumeMixer.js:176
 msgid "Filter applications shown in the volume mixer."
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:182
+#: src/prefPages/volumeMixer.js:183
 msgid "Filter Mode"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:187
+#: src/prefPages/volumeMixer.js:188
 msgid "Blacklist"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:188
+#: src/prefPages/volumeMixer.js:189
 msgid "Whitelist"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:194
+#: src/prefPages/volumeMixer.js:195
 msgid "Using Javascript Regex"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:195
+#: src/prefPages/volumeMixer.js:196
 msgid "Use Javascript RegExp for filtering app name or description"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:202
+#: src/prefPages/volumeMixer.js:203
 msgid "Check Stream Description"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:203
+#: src/prefPages/volumeMixer.js:204
 msgid "Check Description also"
 msgstr ""
 
