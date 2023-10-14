@@ -41,6 +41,7 @@ function build() {
 		--extra-source=libs\
 		--extra-source=prefPages\
 		--extra-source=media\
+		--extra-source=contributors\
 		--podir=../po\
 		--out-dir=dist\
 		--force

@@ -16,6 +16,11 @@ var pageList = [
     aboutPage,
 ]
 
+function appendIconPath(iconTheme,path) {
+    if (!iconTheme.get_search_path().includes(path))
+        iconTheme.add_search_path(path)
+}
+
 export default class QstExtensionPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         let settings = this.getSettings()
@@ -24,10 +29,9 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
         window.set_default_size(640, 640)
 
         // register media path
-        const iconPath = `${this.path}/media`;
-        const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default());
-        if (!iconTheme.get_search_path().includes(iconPath))
-            iconTheme.add_search_path(iconPath)
+        const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+        appendIconPath(iconTheme,this.path + "/media")
+        appendIconPath(iconTheme,this.path + "/contributors/image")
 
         for (const page of pageList) {
             window.add(new page(settings, this.metadata))

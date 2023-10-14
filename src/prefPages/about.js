@@ -9,6 +9,7 @@ import {
     makeRow,
     makeExpander,
 } from "../libs/prefComponents.js"
+import contributors from "../contributors/data.js"
 
 export const aboutPage = GObject.registerClass({
     GTypeName: baseGTypeName+'aboutPage',
@@ -51,7 +52,7 @@ export const aboutPage = GObject.registerClass({
 
         // information
         const info = new Adw.PreferencesGroup({
-            title: ""
+            title: "",
         })
         makeRow({
             parent: info,
@@ -63,7 +64,7 @@ export const aboutPage = GObject.registerClass({
             title: _("Extension Version"),
             suffix: new Gtk.Label({
                 label: metadata.version?.toString() || _("Unknown (Built from source)")
-            })
+            }),
         })
         this.add(info)
 
@@ -82,26 +83,69 @@ export const aboutPage = GObject.registerClass({
             uri: "https://extensions.gnome.org/extension/5446/quick-settings-tweaker/",
             parent: links,
             title: "Gnome Extension",
-            subtitle: _("Rate and comment the extension!")
+            subtitle: _("Rate and comment the extension!"),
         })
         makeRow({
             uri: "https://github.com/qwreey75/quick-settings-tweaks",
             parent: links,
             title: _("Github Repository"),
-            subtitle: _("Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!\nOr, you can create PR with wonderful features!")
+            subtitle: _("Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!\nOr, you can create PR with wonderful features!"),
         })
         makeRow({
             parent: links,
             title: "Webslate",
-            subtitle: "Working in progress . . ."
+            subtitle: "Working in progress . . .",
         })
 
         // contributor
-        const contributor = new Adw.PreferencesGroup({
+        const contributorGroup = new Adw.PreferencesGroup({
             title: _('Contributor'),
             description: _("The creators of this extension"),
         })
-        this.add(contributor)
+        for (const items of contributors) {
+            let box = new Gtk.Box({
+                baseline_position: Gtk.BaselinePosition.CENTER,
+                // hexpand: false,
+                // vexpand: false,
+                homogeneous: true,
+                orientation: Gtk.Orientation.HORIZONTAL,
+            })
+            makeRow({
+                parent: contributorGroup,
+                title: _("This extension is distributed with license GPL 3+"),
+                subtitle: _("excludes Third-party. Third party codes follow their license"),
+            }).set_child(box)
+            for (const item of items) {
+                let itemBox = new Gtk.Box({
+                    baseline_position: Gtk.BaselinePosition.CENTER,
+                    orientation: Gtk.Orientation.VERTICAL,
+                })
+                const itemImage = new Gtk.Image({
+                    margin_bottom: 2,
+                    margin_top: 10,
+                    icon_name: item.image,
+                    pixel_size: 38,
+                })
+                itemBox.append(itemImage)
+                const nameText = new Gtk.Label({
+                    label: '<span size="small">'+item.name+'</span>',
+                    useMarkup: true,
+                    hexpand: true,
+                })
+                itemBox.append(nameText)
+                const labelText = new Gtk.Label({
+                    label: '<span size="small">'+item.label+'</span>',
+                    useMarkup: true,
+                    hexpand: true,
+                    opacity: 0.7,
+                    margin_bottom: 8,
+                })
+                itemBox.append(labelText)
+                box.append(itemBox)
+            }
+            // contributorRow.add(box)
+        }
+        this.add(contributorGroup)
 
         // third party LICENSE
         const thirdLICENSE = new Adw.PreferencesGroup({
@@ -121,7 +165,7 @@ export const aboutPage = GObject.registerClass({
                     subtitle: `prefPages/volumeMixer.js
 libs/volumeMixerHandler.js
 features/volumeMixer.js
-schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml`
+schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml`,
                 }),
                 makeRow({
                     title: "License",
@@ -145,7 +189,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.`
+SOFTWARE.`,
                 })
             ],
         })
