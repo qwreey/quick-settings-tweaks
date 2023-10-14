@@ -34,7 +34,7 @@ export const aboutPage = GObject.registerClass({
         })
         const logoImage = new Gtk.Image({
             margin_bottom: 20,
-            margin_top: 14,
+            margin_top: 10,
             icon_name: "project-icon",
             pixel_size: 100,
         })
