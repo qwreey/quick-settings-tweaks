@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 10:19+0900\n"
+"POT-Creation-Date: 2023-10-14 21:48+0900\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,62 +62,62 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: src/prefPages/about.js:26
-msgid "Information"
-msgstr ""
-
-#: src/prefPages/about.js:31
+#: src/prefPages/about.js:58
 msgid "This extension is distributed with license GPL 3+"
 msgstr ""
 
-#: src/prefPages/about.js:32
+#: src/prefPages/about.js:59
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr ""
 
-#: src/prefPages/about.js:36
-msgid "Version"
+#: src/prefPages/about.js:63
+msgid "Extension Version"
 msgstr ""
 
-#: src/prefPages/about.js:38
+#: src/prefPages/about.js:65
 msgid "Unknown (Built from source)"
 msgstr ""
 
-#: src/prefPages/about.js:43
+#: src/prefPages/about.js:72
 msgid "Links"
 msgstr ""
 
-#: src/prefPages/about.js:50
+#: src/prefPages/about.js:78
+msgid "Donate via patreon"
+msgstr ""
+
+#: src/prefPages/about.js:79
 msgid "Support development!"
 msgstr ""
 
-#: src/prefPages/about.js:56
+#: src/prefPages/about.js:85
 msgid "Rate and comment the extension!"
 msgstr ""
 
-#: src/prefPages/about.js:61
+#: src/prefPages/about.js:90
 msgid "Github Repository"
 msgstr ""
 
-#: src/prefPages/about.js:62
+#: src/prefPages/about.js:91
 msgid ""
 "Add Star on Repository is helping me a lot!\n"
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
 "Or, you can create PR with wonderful features!"
 msgstr ""
 
-#: src/prefPages/about.js:71
+#: src/prefPages/about.js:101
 msgid "Contributor"
 msgstr ""
 
-#: src/prefPages/about.js:72
+#: src/prefPages/about.js:102
 msgid "The creators of this extension"
 msgstr ""
 
-#: src/prefPages/about.js:78
+#: src/prefPages/about.js:108
 msgid "Third party LICENSE"
 msgstr ""
 
-#: src/prefPages/about.js:79
+#: src/prefPages/about.js:109
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr ""
 

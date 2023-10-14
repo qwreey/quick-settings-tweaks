@@ -21,36 +21,38 @@ export const aboutPage = GObject.registerClass({
             iconName: 'dialog-information-symbolic'
         })
 
-        // description / enable
-        const info = new Adw.PreferencesGroup({
-            title: _('Information')
-        })
-        this.add(info)
-        let logoRow = makeRow({
-            parent: info,
+        // logo
+        const logo = new Adw.PreferencesGroup({
             title: "",
         })
         let logoBox = new Gtk.Box({
             baseline_position: Gtk.BaselinePosition.CENTER,
-            homogeneous: true,
+            // hexpand: false,
+            // vexpand: false,
+            // homogeneous: true,
             orientation: Gtk.Orientation.VERTICAL,
         })
         const logoImage = new Gtk.Image({
-            margin_bottom: 5,
-            margin_top: 5,
+            margin_bottom: 20,
+            margin_top: 14,
             icon_name: "project-icon",
             pixel_size: 100,
-        });
+        })
         logoBox.append(logoImage)
         const logoText = new Gtk.Label({
             label: "Quick Setting Tweaker",
-            // vexpand: true,
-            // valign: Gtk.Align.FILL,
-
-        });
-        logoText.style = "font-size: 1.2em;"
+            css_classes: ["title-2"],
+            vexpand: true,
+            valign: Gtk.Align.FILL,
+        })
         logoBox.append(logoText)
-        logoRow.set_child(logoBox)
+        logo.add(logoBox)
+        this.add(logo)
+
+        // information
+        const info = new Adw.PreferencesGroup({
+            title: ""
+        })
         makeRow({
             parent: info,
             title: _("This extension is distributed with license GPL 3+"),
@@ -58,12 +60,14 @@ export const aboutPage = GObject.registerClass({
         })
         makeRow({
             parent: info,
-            title: _("Version"),
+            title: _("Extension Version"),
             suffix: new Gtk.Label({
                 label: metadata.version?.toString() || _("Unknown (Built from source)")
             })
         })
+        this.add(info)
 
+        // links
         const links = new Adw.PreferencesGroup({
             title: _('Links')
         })
@@ -71,7 +75,7 @@ export const aboutPage = GObject.registerClass({
         makeRow({
             uri: "https://patreon.com/user?u=44216831",
             parent: links,
-            title: "Support (patreon)",
+            title: _("Donate via patreon"),
             subtitle: _("Support development!"),
         })
         makeRow({
@@ -92,13 +96,14 @@ export const aboutPage = GObject.registerClass({
             subtitle: "Working in progress . . ."
         })
 
+        // contributor
         const contributor = new Adw.PreferencesGroup({
             title: _('Contributor'),
             description: _("The creators of this extension"),
         })
-
         this.add(contributor)
 
+        // third party LICENSE
         const thirdLICENSE = new Adw.PreferencesGroup({
             title: _('Third party LICENSE'),
             description: _('LICENSE OF CODES WHICH USED ON THIS EXTENSION')
