@@ -82,14 +82,14 @@ export const aboutPage = GObject.registerClass({
             children: [
                 makeRow({
                     title: "Affected on files",
-                    description: `prefPages/volumeMixer.js
+                    subtitle: `prefPages/volumeMixer.js
 libs/volumeMixerHandler.js
 features/volumeMixer.js
 schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml`
                 }),
                 makeRow({
                     title: "License",
-                    description: `MIT License
+                    subtitle: `MIT License
 
 Copyright (c) 2020-2022 Brendan Early
 
