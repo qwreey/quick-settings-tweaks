@@ -88,7 +88,7 @@ features/volumeMixer.js
 schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml`
                 }),
                 makeRow({
-                    title: "",
+                    title: "License",
                     description: `MIT License
 
 Copyright (c) 2020-2022 Brendan Early
