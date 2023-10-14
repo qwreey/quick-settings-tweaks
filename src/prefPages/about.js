@@ -34,8 +34,6 @@ export const aboutPage = GObject.registerClass({
             baseline_position: Gtk.BaselinePosition.CENTER,
             homogeneous: true,
             orientation: Gtk.Orientation.VERTICAL,
-            hexpand: true,
-            vexpend: true,
         })
         const logoImage = new Gtk.Image({
             margin_bottom: 5,
