@@ -26,6 +26,31 @@ export const aboutPage = GObject.registerClass({
             title: _('Information')
         })
         this.add(info)
+        let logoRow = makeRow({
+            parent: info,
+            title: "",
+        })
+        let logoBox = new Gtk.Box({
+            baseline_position: Gtk.BaselinePosition.CENTER,
+            homogeneous: true,
+            orientation: Gtk.Orientation.VERTICAL,
+            hexpand: true,
+            vexpend: true,
+        })
+        const logoImage = new Gtk.Image({
+            margin_bottom: 5,
+            icon_name: "project-icon",
+            pixel_size: 100,
+        });
+        logoBox.append(logoImage)
+        const logoText = new Gtk.Label({
+            label: "Quick Setting Tweaker",
+            style: "font-size: 1.2em;",
+            vexpand: true,
+            valign: Gtk.Align.FILL,
+        });
+        logoBox.append(logoText)
+        logoRow.set_child(logoBox)
         makeRow({
             parent: info,
             title: _("This extension is distributed with license GPL 3+"),
