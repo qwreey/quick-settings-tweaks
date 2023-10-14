@@ -37,15 +37,18 @@ export const aboutPage = GObject.registerClass({
         })
         const logoImage = new Gtk.Image({
             margin_bottom: 5,
+            margin_top: 5,
             icon_name: "project-icon",
             pixel_size: 100,
         });
         logoBox.append(logoImage)
         const logoText = new Gtk.Label({
             label: "Quick Setting Tweaker",
-            vexpand: true,
-            valign: Gtk.Align.FILL,
+            // vexpand: true,
+            // valign: Gtk.Align.FILL,
+
         });
+        logoText.style = "font-size: 1.2em;"
         logoBox.append(logoText)
         logoRow.set_child(logoBox)
         makeRow({
