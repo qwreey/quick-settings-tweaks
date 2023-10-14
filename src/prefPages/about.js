@@ -43,7 +43,6 @@ export const aboutPage = GObject.registerClass({
         logoBox.append(logoImage)
         const logoText = new Gtk.Label({
             label: "Quick Setting Tweaker",
-            style: "font-size: 1.2em;",
             vexpand: true,
             valign: Gtk.Align.FILL,
         });
