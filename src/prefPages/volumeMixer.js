@@ -7,7 +7,6 @@ import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensio
 
 import {
     baseGTypeName,
-    makeRow,
     makeSwitch,
     makeDropdown
 } from "../libs/prefComponents.js"

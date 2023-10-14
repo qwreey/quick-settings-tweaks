@@ -4,7 +4,11 @@ import Gtk from "gi://Gtk"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 
-import { baseGTypeName, makeRow } from "../libs/prefComponents.js"
+import {
+    baseGTypeName,
+    makeRow,
+    makeExpander,
+} from "../libs/prefComponents.js"
 
 export const aboutPage = GObject.registerClass({
     GTypeName: baseGTypeName+'aboutPage',
@@ -58,31 +62,34 @@ export const aboutPage = GObject.registerClass({
         })
 
         const contributor = new Adw.PreferencesGroup({
-            title: _('Contributor')
+            title: _('Contributor'),
+            description: _("The creators of this extension"),
         })
+
+        this.add(contributor)
 
         const thirdLICENSE = new Adw.PreferencesGroup({
             title: _('Third party LICENSE'),
             description: _('LICENSE OF CODES WHICH USED ON THIS EXTENSION')
         })
         this.add(thirdLICENSE)
-        makeRow({
+        makeExpander({
             uri: "https://github.com/mymindstorm/gnome-volume-mixer/blob/master/LICENSE",
             parent: thirdLICENSE,
             title: "gnome-volume-mixer",
-            subtitle: `
-https://github.com/mymindstorm/gnome-volume-mixer/blob/master/LICENSE
-
-Affected on files
-prefPages/volumeMixer.js
+            subtitle: "https://github.com/mymindstorm/gnome-volume-mixer/blob/master/LICENSE",
+            expanded: false,
+            children: [
+                makeRow({
+                    title: "Affected on files",
+                    description: `prefPages/volumeMixer.js
 libs/volumeMixerHandler.js
 features/volumeMixer.js
-schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml
-
-original source code is in here
-https://github.com/mymindstorm/gnome-volume-mixer
-
-MIT License
+schemas/org.gnome.shell.extensions.quick-settings-tweaks.gschema.xml`
+                }),
+                makeRow({
+                    title: "",
+                    description: `MIT License
 
 Copyright (c) 2020-2022 Brendan Early
 
@@ -102,8 +109,9 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-            `
+SOFTWARE.`
+                })
+            ],
         })
     }
 })

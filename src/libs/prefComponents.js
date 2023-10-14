@@ -131,6 +131,25 @@ export function makeAdjustment(options={
     return row
 }
 
+export function makeExpander(options={parent: null,title: null, subtitle: null, children: null, expanded: null}) {
+    const row = new Adw.ExpanderRow({
+        title: options.title,
+        subtitle: options.subtitle || null
+    })
+    if (options.parent) {
+        options.parent.add(row)
+    }
+    if (options.children) {
+        for (const child of options.children) {
+            row.add_row(child)
+        }
+    }
+    if (options.expanded === false || options.expanded === true) {
+        row.expanded = options.expanded
+    }
+    return row
+}
+
 export const DropdownItems = GObject.registerClass({
     Properties: {
         'name': GObject.ParamSpec.string(
