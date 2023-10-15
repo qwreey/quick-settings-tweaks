@@ -16,19 +16,20 @@ const DndQuickToggle = GObject.registerClass(
 
       this._changedId = this._settings.connect("changed::show-banners", this._sync.bind(this))
 
-      this.connectObject(
-        // Destroy event
-        // From Just Perfection's review:
-        // Extensions cannot use `run_dispose()` (line 21 libs/dndQuickToggleHandler.js):
-        // > This function should only be called from object system implementations.
-        // https://gjs-docs.gnome.org/gobject20~2.0/gobject.object#method-run_dispose
-        //"destroy", this._settings.run_dispose.bind(this._settings),
+      this.connect("clicked", this._toggleMode.bind(this))
+      // this.connectObject(
+      //   // Destroy event
+      //   // From Just Perfection's review:
+      //   // Extensions cannot use `run_dispose()` (line 21 libs/dndQuickToggleHandler.js):
+      //   // > This function should only be called from object system implementations.
+      //   // https://gjs-docs.gnome.org/gobject20~2.0/gobject.object#method-run_dispose
+      //   //"destroy", this._settings.run_dispose.bind(this._settings),
 
-        // Clicked event
-        "clicked", this._toggleMode.bind(this),
+      //   // Clicked event
+      //   "clicked", this._toggleMode.bind(this),
 
-        this
-      )
+      //   this
+      // )
 
       // Fetch DND status once
       this._sync()
