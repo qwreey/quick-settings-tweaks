@@ -6,6 +6,11 @@
 
 [<img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" height="100" align="middle">](https://extensions.gnome.org/extension/5446/quick-settings-tweaker/)
 
+<a href="http://weblate.paring.moe/engage/gs-quick-settings-tweaks/">
+<img src="http://weblate.paring.moe/widgets/gs-quick-settings-tweaks/-/gs-extension/svg-badge.svg" alt="Translation status" />
+</a>
+<br>
+<br>
 Quick Settings Tweaker is a Gnome 43+ extension which allows you to customize the new Quick Settings Panel to your liking!
 
 </div>
