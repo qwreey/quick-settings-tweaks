@@ -19,7 +19,8 @@ export const QuickSettingsGrid = QuickSettings.menu._grid
 export const QuickSettingsBox =  QuickSettings.menu.box
 export const QuickSettingsActor = QuickSettings.menu.actor
 export const GetQuickSettingsShutdownMenuBox = (callback)=>{
-    GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+    // To prevent freeze, priority should be PRIORITY_DEFAULT_IDLE instead of PRIORITY_DEFAULT
+    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
         if (!QuickSettings._system)
             return GLib.SOURCE_CONTINUE
         callback(QuickSettings._system._systemItem.menu.box)
@@ -44,7 +45,7 @@ export const GetStreamSlider = (callback)=>{
         return
     }
 
-    GLib.idle_add(GLib.PRIORITY_DEFAULT, ()=>{
+    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, ()=>{
         streamSlider = StreamSliderGetter()
 
         if (!streamSlider) return GLib.SOURCE_CONTINUE
