@@ -5,11 +5,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 21:48+0900\n"
+"POT-Creation-Date: 2023-11-08 19:06+0900\n"
 "PO-Revision-Date: 2023-10-18 10:07+0000\n"
 "Last-Translator: CrackThrough <crackthrough@gmail.com>\n"
-"Language-Team: Korean <http://weblate.paring.moe/projects/"
-"gs-quick-settings-tweaks/gs-extension/ko/>\n"
+"Language-Team: Korean <http://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,47 +64,47 @@ msgstr "콘텐츠의 그림자 지우지 않기"
 msgid "Don't remove the shadow of messages and media controls."
 msgstr "메시지와 미디어 컨트롤의 그림자를 지우지 않습니다"
 
-#: src/prefPages/about.js:20
+#: src/prefPages/about.js:21
 msgid "About"
 msgstr "정보"
 
-#: src/prefPages/about.js:58
+#: src/prefPages/about.js:59 src/prefPages/about.js:115
 msgid "This extension is distributed with license GPL 3+"
 msgstr "이 확장 프로그램은 GPL 3+ 라이선스 아래 배포됩니다"
 
-#: src/prefPages/about.js:59
+#: src/prefPages/about.js:60 src/prefPages/about.js:116
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr "서드파티는 제외합니다. 서드파티 코드는 각각 원본 코드의 라이선스를 따릅니다"
 
-#: src/prefPages/about.js:63
+#: src/prefPages/about.js:64
 msgid "Extension Version"
 msgstr "확장프로그램 버전"
 
-#: src/prefPages/about.js:65
+#: src/prefPages/about.js:66
 msgid "Unknown (Built from source)"
 msgstr "알 수 없음 (소스에서 직접 빌드됨)"
 
-#: src/prefPages/about.js:72
+#: src/prefPages/about.js:73
 msgid "Links"
 msgstr "링크"
 
-#: src/prefPages/about.js:78
+#: src/prefPages/about.js:79
 msgid "Donate via patreon"
 msgstr "Patreon 으로 후원하기"
 
-#: src/prefPages/about.js:79
+#: src/prefPages/about.js:80
 msgid "Support development!"
 msgstr "개발에 후원하세요!"
 
-#: src/prefPages/about.js:85
+#: src/prefPages/about.js:86
 msgid "Rate and comment the extension!"
 msgstr "확장 프로그램에 평가를 주세요!"
 
-#: src/prefPages/about.js:90
+#: src/prefPages/about.js:91
 msgid "Github Repository"
 msgstr "Github 저장소"
 
-#: src/prefPages/about.js:91
+#: src/prefPages/about.js:92
 msgid ""
 "Add Star on Repository is helping me a lot!\n"
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
@@ -115,19 +114,19 @@ msgstr ""
 "만약 버그를 찾은 경우, issue 를 남겨 우리가 알 수 있게 해주세요!\n"
 "또는, 환상적인 기능을 만들어 PR 을 남기는 것도 환영입니다!"
 
-#: src/prefPages/about.js:101
+#: src/prefPages/about.js:102
 msgid "Contributor"
 msgstr "기여자"
 
-#: src/prefPages/about.js:102
+#: src/prefPages/about.js:103
 msgid "The creators of this extension"
 msgstr "이 확장프로그램을 만든 이들"
 
-#: src/prefPages/about.js:108
+#: src/prefPages/about.js:152
 msgid "Third party LICENSE"
 msgstr "서드파티 라이선스"
 
-#: src/prefPages/about.js:109
+#: src/prefPages/about.js:153
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "*이 확장 프로그램에 포함되어있는 일부 코드의 라이선스입니다*"
 
