@@ -92,9 +92,10 @@ export const aboutPage = GObject.registerClass({
             subtitle: _("Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!\nOr, you can create PR with wonderful features!"),
         })
         makeRow({
+            uri: "https://weblate.paring.moe/projects/gs-quick-settings-tweaks/",
             parent: links,
             title: "Webslate",
-            subtitle: "Working in progress . . .",
+            subtitle: _("Add translation to this extension!"),
         })
 
         // contributor

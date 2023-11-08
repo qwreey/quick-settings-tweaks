@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-08 19:06+0900\n"
+"POT-Creation-Date: 2023-11-09 01:18+0900\n"
 "PO-Revision-Date: 2023-10-18 10:07+0000\n"
 "Last-Translator: CrackThrough <crackthrough@gmail.com>\n"
 "Language-Team: Korean <http://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/ko/>\n"
@@ -68,11 +68,11 @@ msgstr "메시지와 미디어 컨트롤의 그림자를 지우지 않습니다"
 msgid "About"
 msgstr "정보"
 
-#: src/prefPages/about.js:59 src/prefPages/about.js:115
+#: src/prefPages/about.js:59 src/prefPages/about.js:116
 msgid "This extension is distributed with license GPL 3+"
 msgstr "이 확장 프로그램은 GPL 3+ 라이선스 아래 배포됩니다"
 
-#: src/prefPages/about.js:60 src/prefPages/about.js:116
+#: src/prefPages/about.js:60 src/prefPages/about.js:117
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr "서드파티는 제외합니다. 서드파티 코드는 각각 원본 코드의 라이선스를 따릅니다"
 
@@ -114,19 +114,23 @@ msgstr ""
 "만약 버그를 찾은 경우, issue 를 남겨 우리가 알 수 있게 해주세요!\n"
 "또는, 환상적인 기능을 만들어 PR 을 남기는 것도 환영입니다!"
 
-#: src/prefPages/about.js:102
+#: src/prefPages/about.js:98
+msgid "Add translation to this extension!"
+msgstr ""
+
+#: src/prefPages/about.js:103
 msgid "Contributor"
 msgstr "기여자"
 
-#: src/prefPages/about.js:103
+#: src/prefPages/about.js:104
 msgid "The creators of this extension"
 msgstr "이 확장프로그램을 만든 이들"
 
-#: src/prefPages/about.js:152
+#: src/prefPages/about.js:153
 msgid "Third party LICENSE"
 msgstr "서드파티 라이선스"
 
-#: src/prefPages/about.js:153
+#: src/prefPages/about.js:154
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "*이 확장 프로그램에 포함되어있는 일부 코드의 라이선스입니다*"
 

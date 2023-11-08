@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-08 19:06+0900\n"
+"POT-Creation-Date: 2023-11-09 01:18+0900\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,11 +65,11 @@ msgstr "Don't remove the shadow of messages and media controls."
 msgid "About"
 msgstr "About"
 
-#: src/prefPages/about.js:59 src/prefPages/about.js:115
+#: src/prefPages/about.js:59 src/prefPages/about.js:116
 msgid "This extension is distributed with license GPL 3+"
 msgstr "This extension is distributed with license GPL 3+"
 
-#: src/prefPages/about.js:60 src/prefPages/about.js:116
+#: src/prefPages/about.js:60 src/prefPages/about.js:117
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr "excludes Third-party. Third party codes follow their license"
 
@@ -111,19 +111,23 @@ msgstr ""
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
 "Or, you can create PR with wonderful features!"
 
-#: src/prefPages/about.js:102
+#: src/prefPages/about.js:98
+msgid "Add translation to this extension!"
+msgstr ""
+
+#: src/prefPages/about.js:103
 msgid "Contributor"
 msgstr "Contributor"
 
-#: src/prefPages/about.js:103
+#: src/prefPages/about.js:104
 msgid "The creators of this extension"
 msgstr "The creators of this extension"
 
-#: src/prefPages/about.js:152
+#: src/prefPages/about.js:153
 msgid "Third party LICENSE"
 msgstr "Third party LICENSE"
 
-#: src/prefPages/about.js:153
+#: src/prefPages/about.js:154
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 
