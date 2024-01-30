@@ -1,102 +1,111 @@
 # AUTHORS
 # David Lapshin https://github.com/daudix-UFO, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-09 01:18+0900\n"
+"PO-Revision-Date: 2024-01-31 13:38+0000\n"
+"Last-Translator: \"Droid.SUGI\" <droid.sugi@gmail.com>\n"
+"Language-Team: Russian <http://weblate.paring.moe/projects/"
+"gs-quick-settings-tweaks/gs-extension/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.2.1\n"
 
 #: src/prefPages/other.js:15
 msgid "Other"
-msgstr ""
+msgstr "Другое"
 
 #: src/prefPages/other.js:23
 msgid "Fix Weather Widget Overflow"
-msgstr ""
+msgstr "Исправление переполнения виджета погоды"
 
 #: src/prefPages/other.js:24
 msgid "Fix overflow visual bug of weather widget in datemenu"
-msgstr ""
+msgstr "Исправление визуальной ошибки переполнения виджета погоды в меню даты"
 
 #: src/prefPages/other.js:30
 msgid "Remove Notifications On Date Menu"
-msgstr ""
+msgstr "Удалить уведомления в меню даты"
 
 #: src/prefPages/other.js:31
 msgid ""
 "Hide notifications on date menu.\n"
 "*this option removes media control on date menu too*"
 msgstr ""
+"Скрыть уведомления в меню даты.\n"
+"*эта опция также удаляет управление мультимедиа в меню даты*"
 
 #: src/prefPages/other.js:37
 msgid "Remove Media Control On Date Menu"
-msgstr ""
+msgstr "Удалить управление мультимедиа в меню даты"
 
 #: src/prefPages/other.js:38
 msgid "Hide media control on date menu."
-msgstr ""
+msgstr "Скрыть управление мультимедиа в меню даты."
 
 #: src/prefPages/other.js:44
 msgid "Do not adjust the border radius of contents."
-msgstr ""
+msgstr "Не изменяйте радиус границы контента."
 
 #: src/prefPages/other.js:45
 msgid "Don't adjust the border of messages and media controls."
-msgstr ""
+msgstr "Не меняйте границы сообщений и элементов управления мультимедиа."
 
 #: src/prefPages/other.js:51
 msgid "Do not remove the shadow of contents."
-msgstr ""
+msgstr "Не удаляйте тень контента."
 
 #: src/prefPages/other.js:52
 msgid "Don't remove the shadow of messages and media controls."
-msgstr ""
+msgstr "Не удаляйте тень сообщений и элементов управления мультимедиа."
 
 #: src/prefPages/about.js:21
 msgid "About"
-msgstr ""
+msgstr "О расширении"
 
 #: src/prefPages/about.js:59 src/prefPages/about.js:116
 msgid "This extension is distributed with license GPL 3+"
-msgstr ""
+msgstr "Это расширение распространяется под лицензией GPL 3+"
 
 #: src/prefPages/about.js:60 src/prefPages/about.js:117
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr ""
+"исключая сторонние разработки. Сторонние разработки следуют своей лицензии"
 
 #: src/prefPages/about.js:64
 msgid "Extension Version"
-msgstr ""
+msgstr "Версия расширения"
 
 #: src/prefPages/about.js:66
 msgid "Unknown (Built from source)"
-msgstr ""
+msgstr "Неизвестно (создано из исходного кода)"
 
 #: src/prefPages/about.js:73
 msgid "Links"
-msgstr ""
+msgstr "Ссылки"
 
 #: src/prefPages/about.js:79
 msgid "Donate via patreon"
-msgstr ""
+msgstr "Пожертвование через patreon"
 
 #: src/prefPages/about.js:80
 msgid "Support development!"
-msgstr ""
+msgstr "Поддержите разработку!"
 
 #: src/prefPages/about.js:86
 msgid "Rate and comment the extension!"
-msgstr ""
+msgstr "Оцените и прокомментируйте расширение!"
 
 #: src/prefPages/about.js:91
 msgid "Github Repository"
-msgstr ""
+msgstr "Репозиторий Github"
 
 #: src/prefPages/about.js:92
 msgid ""
@@ -104,74 +113,82 @@ msgid ""
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
 "Or, you can create PR with wonderful features!"
 msgstr ""
+"Добавление звездочки в репозиторий нам очень помогает!\n"
+"Пожалуйста, если вы нашли ошибку в этом расширении, создайте проблему, чтобы "
+"мы знали об этом!\n"
+"Или вы можете создать PR с новыми функциями!"
 
 #: src/prefPages/about.js:98
 msgid "Add translation to this extension!"
-msgstr ""
+msgstr "Добавьте перевод в это расширение!"
 
 #: src/prefPages/about.js:103
 msgid "Contributor"
-msgstr ""
+msgstr "Участники"
 
 #: src/prefPages/about.js:104
 msgid "The creators of this extension"
-msgstr ""
+msgstr "Создатели этого расширения"
 
 #: src/prefPages/about.js:153
 msgid "Third party LICENSE"
-msgstr ""
+msgstr "ЛИЦЕНЗИЯ третьей стороны"
 
 #: src/prefPages/about.js:154
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
-msgstr ""
+msgstr "ЛИЦЕНЗИИ НА РАЗРАБОТКИ, КОТОРЫЕ ИСПОЛЬЗОВАЛИСЬ В ЭТОМ РАСШИРЕНИИ"
 
 #: src/prefPages/quickToggles.js:19
 msgid "Quick Toggles"
-msgstr ""
+msgstr "Быстрые настройки"
 
 #: src/prefPages/quickToggles.js:24
 msgid "Add more buttons"
-msgstr ""
+msgstr "Добавить больше кнопок"
 
 #: src/prefPages/quickToggles.js:25
 msgid "Turn on the buttons you want to add on Quick Settings"
-msgstr ""
+msgstr "Включите кнопки, которые вы хотите добавить в быстрые настройки"
 
 #: src/prefPages/quickToggles.js:29
 msgid "DND Quick Toggle"
-msgstr ""
+msgstr "Кнопка переключения DND"
 
 #: src/prefPages/quickToggles.js:30
 msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
-msgstr ""
+msgstr "Включите, чтобы сделать кнопку DND видимой на панели быстрых настроек"
 
 #: src/prefPages/quickToggles.js:36
 msgid "Unsafe Mode Quick Toggle"
-msgstr ""
+msgstr "Кнопка переключения небезопасного режима"
 
 #: src/prefPages/quickToggles.js:37
 msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
 msgstr ""
+"Включите, чтобы сделать кнопку небезопасного режима видимой на панели "
+"быстрых настроек"
 
 #: src/prefPages/quickToggles.js:45
 msgid "Buttons to remove"
-msgstr ""
+msgstr "Удаление кнопок"
 
 #: src/prefPages/quickToggles.js:46
 msgid "Turn on the buttons you want to remove from Quick Settings"
-msgstr ""
+msgstr "Включите кнопки, которые вы хотите удалить из быстрых настроек"
 
 #: src/prefPages/quickToggles.js:50
 msgid "Remove chosen buttons from quick panel"
-msgstr ""
+msgstr "Удалить выбранные кнопки с панели быстрого доступа"
 
 #: src/prefPages/quickToggles.js:51
 msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
 msgstr ""
+"Форкнуто с расширения https://github.com/qwreey75/gnome-quick-settings-"
+"button-remover"
 
 #: src/prefPages/quickToggles.js:55
 msgid "This feature is unstable sometime"
-msgstr ""
+msgstr "Иногда эта функция работает нестабильно"
 
 #: src/prefPages/quickToggles.js:56
 msgid ""
@@ -181,46 +198,52 @@ msgid ""
 "  button doesn't remove after lockscreen\n"
 "  modal get bigger after lockscreen"
 msgstr ""
+"При блокировке/разблокировке с помощью gnome-screensaver происходит "
+"неожиданное поведение\n"
+"Пожалуйста, не сообщайте об известной проблеме, часто дублируется\n"
+"Известная проблема:\n"
+"  кнопка не убирается после блокировки экрана\n"
+"  модальное окно становится больше после блокировки экрана"
 
 #: src/prefPages/quickToggles.js:60
 msgid "Please turn off if some bug occurred"
-msgstr ""
+msgstr "Пожалуйста, отключите, если произошла какая-то ошибка"
 
 #: src/prefPages/quickToggles.js:72
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 #: src/prefPages/quickToggles.js:72
 msgid " (invisible by system)"
-msgstr ""
+msgstr " (невидимые системой)"
 
 #: src/prefPages/volumeMixer.js:27
 msgid "Add Application to filtering"
-msgstr ""
+msgstr "Добавить приложение в фильтрацию"
 
 #: src/prefPages/volumeMixer.js:32
 msgid "Add"
-msgstr ""
+msgstr "Добавить"
 
 #: src/prefPages/volumeMixer.js:35
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 #: src/prefPages/volumeMixer.js:44
 msgid "Application name"
-msgstr ""
+msgstr "Название приложения"
 
 #: src/prefPages/volumeMixer.js:98
 msgid "Volume Mixer"
-msgstr ""
+msgstr "Микшер громкости"
 
 #: src/prefPages/volumeMixer.js:106
 msgid "General"
-msgstr ""
+msgstr "Общие"
 
 #: src/prefPages/volumeMixer.js:107
 msgid "Enchant input/output slider"
-msgstr ""
+msgstr "Расширенный ползунок ввода/вывода"
 
 #: src/prefPages/volumeMixer.js:111
 msgid "Show current audio output selection"
