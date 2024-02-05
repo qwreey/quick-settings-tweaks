@@ -3,105 +3,109 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-09 01:18+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2024-02-06 23:38+0000\n"
+"Last-Translator: mechtifs <mechtifs@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <http://weblate.paring.moe/projects/"
+"gs-quick-settings-tweaks/gs-extension/zh_Hans/>\n"
 "Language: zh_Hans\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.2.1\n"
 
 #: src/prefPages/other.js:15
 msgid "Other"
-msgstr ""
+msgstr "其他"
 
 #: src/prefPages/other.js:23
 msgid "Fix Weather Widget Overflow"
-msgstr ""
+msgstr "修复天气组件溢出"
 
 #: src/prefPages/other.js:24
 msgid "Fix overflow visual bug of weather widget in datemenu"
-msgstr ""
+msgstr "修复天气组件在日期菜单中的视觉溢出问题"
 
 #: src/prefPages/other.js:30
 msgid "Remove Notifications On Date Menu"
-msgstr ""
+msgstr "移除日期菜单中的通知组件"
 
 #: src/prefPages/other.js:31
 msgid ""
 "Hide notifications on date menu.\n"
 "*this option removes media control on date menu too*"
 msgstr ""
+"隐藏日期菜单中的通知组件。\n"
+"*此选项也会移除日期菜单中的音乐控制组件*"
 
 #: src/prefPages/other.js:37
 msgid "Remove Media Control On Date Menu"
-msgstr ""
+msgstr "移除日期菜单中的音乐控制组件"
 
 #: src/prefPages/other.js:38
 msgid "Hide media control on date menu."
-msgstr ""
+msgstr "隐藏日期菜单中的音乐组件。"
 
 #: src/prefPages/other.js:44
 msgid "Do not adjust the border radius of contents."
-msgstr ""
+msgstr "不要调整组件的边框圆角弧度。"
 
 #: src/prefPages/other.js:45
 msgid "Don't adjust the border of messages and media controls."
-msgstr ""
+msgstr "不要调整通知与音乐控制组件的边框。"
 
 #: src/prefPages/other.js:51
 msgid "Do not remove the shadow of contents."
-msgstr ""
+msgstr "不要移除组件的阴影。"
 
 #: src/prefPages/other.js:52
 msgid "Don't remove the shadow of messages and media controls."
-msgstr ""
+msgstr "不要移除通知与音乐控制组件的阴影。"
 
 #: src/prefPages/about.js:21
 msgid "About"
-msgstr ""
+msgstr "关于"
 
 #: src/prefPages/about.js:59 src/prefPages/about.js:116
 msgid "This extension is distributed with license GPL 3+"
-msgstr ""
+msgstr "此拓展以 GPL 3+ 协议进行分发"
 
 #: src/prefPages/about.js:60 src/prefPages/about.js:117
 msgid "excludes Third-party. Third party codes follow their license"
-msgstr ""
+msgstr "除第三方外。第三方代码遵循其协议"
 
 #: src/prefPages/about.js:64
 msgid "Extension Version"
-msgstr ""
+msgstr "拓展版本"
 
 #: src/prefPages/about.js:66
 msgid "Unknown (Built from source)"
-msgstr ""
+msgstr "未知（编译自源代码）"
 
 #: src/prefPages/about.js:73
 msgid "Links"
-msgstr ""
+msgstr "链接"
 
 #: src/prefPages/about.js:79
 msgid "Donate via patreon"
-msgstr ""
+msgstr "在 Patreon 上捐赠"
 
 #: src/prefPages/about.js:80
 msgid "Support development!"
-msgstr ""
+msgstr "支持开发工作！"
 
 #: src/prefPages/about.js:86
 msgid "Rate and comment the extension!"
-msgstr ""
+msgstr "对本拓展进行评分及评论！"
 
 #: src/prefPages/about.js:91
 msgid "Github Repository"
-msgstr ""
+msgstr "GitHub 代码仓库"
 
 #: src/prefPages/about.js:92
 msgid ""
@@ -110,78 +114,82 @@ msgid ""
 "know that!\n"
 "Or, you can create PR with wonderful features!"
 msgstr ""
+"欢迎为本代码仓库添加星标！\n"
+"如果你在使用本拓展的过程中发现任何问题，你可以提交 Issue 来让我了解详情！\n"
+"或者，你也可以提交 PR 来增加更多的功能！"
 
 #: src/prefPages/about.js:98
 msgid "Add translation to this extension!"
-msgstr ""
+msgstr "将本拓展翻译为其他语言！"
 
 #: src/prefPages/about.js:103
 msgid "Contributor"
-msgstr ""
+msgstr "贡献者"
 
 #: src/prefPages/about.js:104
 msgid "The creators of this extension"
-msgstr ""
+msgstr "本拓展的主要开发者"
 
 #: src/prefPages/about.js:153
 msgid "Third party LICENSE"
-msgstr ""
+msgstr "第三方协议"
 
 #: src/prefPages/about.js:154
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
-msgstr ""
+msgstr "本拓展使用的代码协议"
 
 #: src/prefPages/quickToggles.js:19
 msgid "Quick Toggles"
-msgstr ""
+msgstr "快捷开关"
 
 #: src/prefPages/quickToggles.js:24
 msgid "Add more buttons"
-msgstr ""
+msgstr "增加更多按钮"
 
 #: src/prefPages/quickToggles.js:25
 msgid "Turn on the buttons you want to add on Quick Settings"
-msgstr ""
+msgstr "启用需添加至快捷控制面板的按钮"
 
 #: src/prefPages/quickToggles.js:29
 msgid "DND Quick Toggle"
-msgstr ""
+msgstr "免打扰快捷开关"
 
 #: src/prefPages/quickToggles.js:30
 msgid ""
 "Turn on to make the DND quick toggle visible on the Quick Settings panel"
-msgstr ""
+msgstr "开启以令免打扰快捷开关在快捷控制面板中可见"
 
 #: src/prefPages/quickToggles.js:36
 msgid "Unsafe Mode Quick Toggle"
-msgstr ""
+msgstr "不安全模式快捷开关"
 
 #: src/prefPages/quickToggles.js:37
 msgid ""
 "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
-msgstr ""
+msgstr "开启以令不安全模式快捷开关在快捷控制面板中可见"
 
 #: src/prefPages/quickToggles.js:45
 msgid "Buttons to remove"
-msgstr ""
+msgstr "欲移除的按钮"
 
 #: src/prefPages/quickToggles.js:46
 msgid "Turn on the buttons you want to remove from Quick Settings"
-msgstr ""
+msgstr "启用欲从快捷控制面板中移除的按钮"
 
 #: src/prefPages/quickToggles.js:50
 msgid "Remove chosen buttons from quick panel"
-msgstr ""
+msgstr "从快捷控制面板中移除所选按钮"
 
 #: src/prefPages/quickToggles.js:51
 msgid ""
 "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-"
 "button-remover"
 msgstr ""
+"Fork 此拓展 https://github.com/qwreey75/gnome-quick-settings-button-remover"
 
 #: src/prefPages/quickToggles.js:55
 msgid "This feature is unstable sometime"
-msgstr ""
+msgstr "此功能可能不稳定"
 
 #: src/prefPages/quickToggles.js:56
 msgid ""
@@ -191,198 +199,207 @@ msgid ""
 "  button doesn't remove after lockscreen\n"
 "  modal get bigger after lockscreen"
 msgstr ""
+"当 gnome-screensaver 启用或解锁时，会产生不可预期的行为\n"
+"请不要报告已知或几乎重复的问题\n"
+"已知问题：\n"
+"  按钮在解锁后不移除\n"
+"  组件在解锁后变大"
 
 #: src/prefPages/quickToggles.js:60
 msgid "Please turn off if some bug occurred"
-msgstr ""
+msgstr "如果发生了一些问题，请关闭计算机"
 
 #: src/prefPages/quickToggles.js:72
 msgid "Unknown"
-msgstr ""
+msgstr "未知"
 
 #: src/prefPages/quickToggles.js:72
 msgid " (invisible by system)"
-msgstr ""
+msgstr " （由系统设为不可见）"
 
 #: src/prefPages/volumeMixer.js:27
 msgid "Add Application to filtering"
-msgstr ""
+msgstr "添加应用至过滤"
 
 #: src/prefPages/volumeMixer.js:32
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 #: src/prefPages/volumeMixer.js:35
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: src/prefPages/volumeMixer.js:44
 msgid "Application name"
-msgstr ""
+msgstr "应用名称"
 
 #: src/prefPages/volumeMixer.js:98
 msgid "Volume Mixer"
-msgstr ""
+msgstr "音量混合器"
 
 #: src/prefPages/volumeMixer.js:106
 msgid "General"
-msgstr ""
+msgstr "通用"
 
 #: src/prefPages/volumeMixer.js:107
 msgid "Enchant input/output slider"
-msgstr ""
+msgstr "显示输入/输出滑动控制条"
 
 #: src/prefPages/volumeMixer.js:111
 msgid "Show current audio output selection"
-msgstr ""
+msgstr "显示当前音频输出选择"
 
 #: src/prefPages/volumeMixer.js:113
 msgid "Always show the current audio output selection above the volume slider"
-msgstr ""
+msgstr "总是在音量滑动控制条上方显示当前音频输出选择"
 
 #: src/prefPages/volumeMixer.js:118
 msgid "Show current audio input selection"
-msgstr ""
+msgstr "显示当前音频输入选择"
 
 #: src/prefPages/volumeMixer.js:120
 msgid "Always show the current audio input selection above the volume slider"
-msgstr ""
+msgstr "总是在音量控制条上方显示当前音频输入选择"
 
 #: src/prefPages/volumeMixer.js:125
 msgid "Always show input"
-msgstr ""
+msgstr "总是显示输入"
 
 #: src/prefPages/volumeMixer.js:127
 msgid ""
 "Always show the audio input volume slider, even when there is no audio input "
 "stream."
-msgstr ""
+msgstr "即使在没有音频输入流的情况下，总是显示音频输入音量滑动控制条。"
 
 #: src/prefPages/volumeMixer.js:134
 msgid "Add volume mixer (PulseAudio, Pipewire)"
-msgstr ""
+msgstr "添加音量混合器（PulseAudio、Pipewire）"
 
 #: src/prefPages/volumeMixer.js:135
 msgid ""
 "Turn on to make the volume mixer visible\n"
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr ""
+"启用以令音量混合器可见\n"
+"Fork 自 https://github.com/mymindstorm/gnome-volume-mixer"
 
 #: src/prefPages/volumeMixer.js:144 src/prefPages/notifications.js:65
 msgid "Position"
-msgstr ""
+msgstr "位置"
 
 #: src/prefPages/volumeMixer.js:145
 msgid "Set volume mixer position"
-msgstr ""
+msgstr "设置音量混合器位置"
 
 #: src/prefPages/volumeMixer.js:150
 msgid "Top (Below Output/Input slider)"
-msgstr ""
+msgstr "顶端（位于输入/输出滑动控制条底部）"
 
 #: src/prefPages/volumeMixer.js:151 src/prefPages/notifications.js:72
 msgid "Bottom"
-msgstr ""
+msgstr "底部"
 
 #: src/prefPages/volumeMixer.js:156
 msgid "Show stream Description"
-msgstr ""
+msgstr "显示音频流描述"
 
 #: src/prefPages/volumeMixer.js:157
 msgid "Show audio stream description above the slider"
-msgstr ""
+msgstr "在滑动控制条上方显示音频流描述"
 
 #: src/prefPages/volumeMixer.js:164
 msgid "Show stream Icon"
-msgstr ""
+msgstr "显示音频流图标"
 
 #: src/prefPages/volumeMixer.js:165
 msgid "Show application icon in front of the slider"
-msgstr ""
+msgstr "在滑动控制条前显示应用图标"
 
 #: src/prefPages/volumeMixer.js:176
 msgid "Filter applications shown in the volume mixer."
-msgstr ""
+msgstr "过滤音量混合器中可见的应用。"
 
 #: src/prefPages/volumeMixer.js:183
 msgid "Filter Mode"
-msgstr ""
+msgstr "过滤模式"
 
 #: src/prefPages/volumeMixer.js:188
 msgid "Blacklist"
-msgstr ""
+msgstr "黑名单"
 
 #: src/prefPages/volumeMixer.js:189
 msgid "Whitelist"
-msgstr ""
+msgstr "白名单"
 
 #: src/prefPages/volumeMixer.js:195
 msgid "Using Javascript Regex"
-msgstr ""
+msgstr "使用 JavaScript 正则表达式"
 
 #: src/prefPages/volumeMixer.js:196
 msgid "Use Javascript RegExp for filtering app name or description"
-msgstr ""
+msgstr "使用 JavaScript 正则表达式以过滤应用名称或描述"
 
 #: src/prefPages/volumeMixer.js:203
 msgid "Check Stream Description"
-msgstr ""
+msgstr "检查音频流描述"
 
 #: src/prefPages/volumeMixer.js:204
 msgid "Check Description also"
-msgstr ""
+msgstr "同时检查描述"
 
 #: src/prefPages/notifications.js:20
 msgid "Noti&Media"
-msgstr ""
+msgstr "通知与音频"
 
 #: src/prefPages/notifications.js:26
 msgid "Media Controls widget"
-msgstr ""
+msgstr "音频控制组件"
 
 #: src/prefPages/notifications.js:32
 msgid ""
 "Turn on to make the Media Control widget visible on the Quick Settings panel"
-msgstr ""
+msgstr "启用以令音频控制组件在快捷控制面板中可见"
 
 #: src/prefPages/notifications.js:36
 msgid "Compact Mode"
-msgstr ""
+msgstr "紧凑模式"
 
 #: src/prefPages/notifications.js:37
 msgid ""
 "Make Media Controls widget smaller\n"
 "Make it more similar in size to the notification message"
 msgstr ""
+"使音频控制组件变小\n"
+"使其与通知组件大小相近"
 
 #: src/prefPages/notifications.js:46
 msgid "Notification Widget"
-msgstr ""
+msgstr "通知组件"
 
 #: src/prefPages/notifications.js:52
 msgid ""
 "Turn on to make the notification widget visible on the Quick Settings panel"
-msgstr ""
+msgstr "启用以令通知组件在快捷控制面板中可见"
 
 #: src/prefPages/notifications.js:57
 msgid "Max height"
-msgstr ""
+msgstr "最大高度"
 
 #: src/prefPages/notifications.js:58
 msgid "Set maximum height of the Notifications widget. default is 292"
-msgstr ""
+msgstr "设置通知组件的最大高度。默认为 292"
 
 #: src/prefPages/notifications.js:66
 msgid "Set Notifications widget position"
-msgstr ""
+msgstr "设置通知组件位置"
 
 #: src/prefPages/notifications.js:71
 msgid "Top"
-msgstr ""
+msgstr "顶端"
 
 #: src/prefPages/notifications.js:78
 msgid "Attach to QS panel"
-msgstr ""
+msgstr "快捷控制面板底部"
 
 #: src/prefPages/notifications.js:79
 msgid ""
@@ -390,47 +407,50 @@ msgid ""
 "enable this option because separated panels can make many visual bugs\n"
 "(such as margin or padding not matching with the theme)"
 msgstr ""
+"不要分离快捷控制面板与通知组件，\\b建议启用此选项，"
+"因为分离面板可能造成许多视觉问题\n"
+"（例如边框距离与主题样式不匹配）"
 
 #: src/prefPages/notifications.js:86
 msgid "Auto Hide"
-msgstr ""
+msgstr "自动隐藏"
 
 #: src/prefPages/notifications.js:87
 msgid "Hide the Notifications widget when have no notifications"
-msgstr ""
+msgstr "当没有通知时，隐藏通知组件"
 
 #: src/prefPages/notifications.js:94
 msgid "Use native controls"
-msgstr ""
+msgstr "使用原始风格控制"
 
 #: src/prefPages/notifications.js:95
 msgid "Use native dnd switch and clear button"
-msgstr ""
+msgstr "使用原始风格免打扰控制开关及清除按钮"
 
 #: src/libs/dndQuickToggleHandler.js:9
 msgid "Do Not Disturb"
-msgstr ""
+msgstr "免打扰"
 
 #: src/libs/streamSlider.js:60
 msgid "Sound Settings"
-msgstr ""
+msgstr "声音设置"
 
 #: src/libs/streamSlider.js:197
 msgid "Volume changed"
-msgstr ""
+msgstr "音量改变"
 
 #: src/libs/unsafeQuickToggleHandler.js:13
 msgid "Unsafe Mode"
-msgstr ""
+msgstr "不安全模式"
 
 #: src/libs/notificationHandler.js:25
 msgid "No Notifications"
-msgstr ""
+msgstr "无通知"
 
 #: src/libs/notificationHandler.js:54
 msgid "Clear"
-msgstr ""
+msgstr "清除"
 
 #: src/libs/notificationHandler.js:91
 msgid "Notifications"
-msgstr ""
+msgstr "通知"
