@@ -67,7 +67,7 @@ export default class QstExtension extends Extension {
         })
 
         // load menu item added tracker
-        this.menuItemAddedTracker = QuickSettingsGrid.connect("actor-added",()=>{
+        this.menuItemAddedTracker = QuickSettingsGrid.connect("child-added",()=>{
             if (this.updating) return
             this.updating = true
             for (const feature of this.features) {
