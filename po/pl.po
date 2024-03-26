@@ -191,7 +191,7 @@ msgid ""
 "  modal get bigger after lockscreen"
 msgstr ""
 "Gdy blokowanie/odblokowanie za pomocą gnome-screensaver występuje nieoczekiwane zachowanie\n"
-"Nie zgłaszaj znanego problemu, nie powielaj znanych problemów\n”
+"Nie zgłaszaj znanego problemu, nie powielaj znanych problemów\n"
 "Znane błędy:\n"
 " przełącznik nie jest usuwany po ponownym zalogowaniu\n"
 " modal staje się większy po ponownym zalogowaniu"
@@ -332,7 +332,7 @@ msgstr "Użyj JavaScript RegexP do filtrowania nazwy lub opisu aplikacji"
 
 #: src/prefPages/volumeMixer.js:203
 msgid "Check Stream Description"
-msgstr "Sprawdź opis strumienia
+msgstr "Sprawdź opis strumienia"
 
 #: src/prefPages/volumeMixer.js:204
 msgid "Check Description also"
