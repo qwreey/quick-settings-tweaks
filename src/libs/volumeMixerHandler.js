@@ -77,16 +77,16 @@ export const VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection 
             let sliderObj = sliderBox.get_children()[1]
             sliderBox.remove_child(sliderObj)
             sliderBox.remove_child(lastObj)
-            sliderBox.add(slider._vbox)
+            sliderBox.add_child(slider._vbox)
             
             slider._label = new St.Label({ x_expand: true })
             slider._label.style_class = "QSTWEAKS-volume-mixer-label"
             slider._label.text = name && this._showStreamDesc ? `${name} - ${description}` : (name || description)
-            slider._vbox.add(slider._label)
-            slider._vbox.add(sliderObj)
+            slider._vbox.add_child(slider._label)
+            slider._vbox.add_child(sliderObj)
         }
 
-        this.actor.add(slider)
+        this.actor.add_child(slider)
         slider.visible = true
     }
 
