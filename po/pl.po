@@ -50,7 +50,7 @@ msgstr "Ukryj sterowanie mediami z menu daty"
 
 #: src/prefPages/other.js:44
 msgid "Do not adjust the border radius of contents."
-msgstr "Nie reguluj promienia granicy treści."
+msgstr "Nie reguluj promienia granicy treści"
 
 #: src/prefPages/other.js:45
 msgid "Don't adjust the border of messages and media controls."
@@ -58,7 +58,7 @@ msgstr "Nie dostosowuj granicy wiadomości i sterowania mediami."
 
 #: src/prefPages/other.js:51
 msgid "Do not remove the shadow of contents."
-msgstr "Nie usuwaj cienia zawartości."
+msgstr "Nie usuwaj cienia zawartości"
 
 #: src/prefPages/other.js:52
 msgid "Don't remove the shadow of messages and media controls."
@@ -352,7 +352,7 @@ msgstr "Pokaż widżet mediów w Szybkich ustawieniach"
 
 #: src/prefPages/notifications.js:36
 msgid "Compact Mode"
-msgstr "tryb kompaktowy"
+msgstr "Tryb kompaktowy"
 
 #: src/prefPages/notifications.js:37
 msgid ""
@@ -396,7 +396,7 @@ msgid ""
 "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
 "(such as margin or padding not matching with the theme)"
 msgstr ""
-"Nie oddielaj szybkich ustawień i powiadomień, \byou powinno się włączyć tę opcję, ponieważ oddzielone panele mogą tworzyć wiele wizualnych błędów\n"
+"Nie oddielaj szybkich ustawień i powiadomień, powinno się włączyć tę opcję, ponieważ oddzielone panele mogą tworzyć wiele wizualnych błędów\n"
 "(takie jak margines lub wypełnienie nie pasujące do motywu)"
 
 #: src/prefPages/notifications.js:86
