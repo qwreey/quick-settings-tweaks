@@ -1,102 +1,111 @@
 # AUTHORS
 # DanGLES3 https://github.com/DanGLES3, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-09 01:18+0900\n"
+"PO-Revision-Date: 2024-08-21 05:46+0000\n"
+"Last-Translator: Filipe Motta <luiz_filipe_motta@hotmail.com>\n"
+"Language-Team: Portuguese <http://weblate.paring.moe/projects/"
+"gs-quick-settings-tweaks/gs-extension/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.2.1\n"
 
 #: src/prefPages/other.js:15
 msgid "Other"
-msgstr ""
+msgstr "Outros"
 
 #: src/prefPages/other.js:23
 msgid "Fix Weather Widget Overflow"
-msgstr ""
+msgstr "Corrigir transbordamento do widget de Meteorologia"
 
 #: src/prefPages/other.js:24
 msgid "Fix overflow visual bug of weather widget in datemenu"
 msgstr ""
+"Corrigir problema visual de transbordamento do widget de Meteorologia no "
+"menu de data"
 
 #: src/prefPages/other.js:30
 msgid "Remove Notifications On Date Menu"
-msgstr ""
+msgstr "Remover notificações no menu de data"
 
 #: src/prefPages/other.js:31
 msgid ""
 "Hide notifications on date menu.\n"
 "*this option removes media control on date menu too*"
 msgstr ""
+"Ocultar notificações no menu de data.\n"
+"*esta opção também remove os controles de mídia no menu de data*"
 
 #: src/prefPages/other.js:37
 msgid "Remove Media Control On Date Menu"
-msgstr ""
+msgstr "Remover controles de mídia no menu de data"
 
 #: src/prefPages/other.js:38
 msgid "Hide media control on date menu."
-msgstr ""
+msgstr "Ocultar controles de mídia no menu de data."
 
 #: src/prefPages/other.js:44
 msgid "Do not adjust the border radius of contents."
-msgstr ""
+msgstr "Não ajustar o raio de curvatura das bordas dos conteúdos."
 
 #: src/prefPages/other.js:45
 msgid "Don't adjust the border of messages and media controls."
-msgstr ""
+msgstr "Não ajustar as bordas das mensagens e dos controles de mídia."
 
 #: src/prefPages/other.js:51
 msgid "Do not remove the shadow of contents."
-msgstr ""
+msgstr "Não remover as sombras dos conteúdos."
 
 #: src/prefPages/other.js:52
 msgid "Don't remove the shadow of messages and media controls."
-msgstr ""
+msgstr "Não remover as sombras das mensagens e dos controles de mídia."
 
 #: src/prefPages/about.js:21
 msgid "About"
-msgstr ""
+msgstr "Sobre"
 
 #: src/prefPages/about.js:59 src/prefPages/about.js:116
 msgid "This extension is distributed with license GPL 3+"
-msgstr ""
+msgstr "Esta extensão é distribuída sob a licença GPL 3+"
 
 #: src/prefPages/about.js:60 src/prefPages/about.js:117
 msgid "excludes Third-party. Third party codes follow their license"
-msgstr ""
+msgstr "Exclui terceiros. Código de terceiros segue suas próprias licenças"
 
 #: src/prefPages/about.js:64
 msgid "Extension Version"
-msgstr ""
+msgstr "Versão da extensão"
 
 #: src/prefPages/about.js:66
 msgid "Unknown (Built from source)"
-msgstr ""
+msgstr "Desconhecida (compilada do código-fonte)"
 
 #: src/prefPages/about.js:73
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #: src/prefPages/about.js:79
 msgid "Donate via patreon"
-msgstr ""
+msgstr "Doar pelo Patreon"
 
 #: src/prefPages/about.js:80
 msgid "Support development!"
-msgstr ""
+msgstr "Apoie o desenvolvimento!"
 
 #: src/prefPages/about.js:86
 msgid "Rate and comment the extension!"
-msgstr ""
+msgstr "Classifique e comente sobre a extensão!"
 
 #: src/prefPages/about.js:91
 msgid "Github Repository"
-msgstr ""
+msgstr "Repositório do GitHub"
 
 #: src/prefPages/about.js:92
 msgid ""
@@ -104,74 +113,84 @@ msgid ""
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
 "Or, you can create PR with wonderful features!"
 msgstr ""
+"Dar uma estrela no repositório me ajuda muito!\n"
+"Por favor, se encontrar um problema com esta extensão, pode criar um relato "
+"de problema para me avisar disso!\n"
+"Ou pode criar um PR com funcionalidades incríveis!"
 
 #: src/prefPages/about.js:98
 msgid "Add translation to this extension!"
-msgstr ""
+msgstr "Adicione uma tradução para esta extensão!"
 
 #: src/prefPages/about.js:103
 msgid "Contributor"
-msgstr ""
+msgstr "Colaborador"
 
 #: src/prefPages/about.js:104
 msgid "The creators of this extension"
-msgstr ""
+msgstr "Os criadores desta extensão"
 
 #: src/prefPages/about.js:153
 msgid "Third party LICENSE"
-msgstr ""
+msgstr "Licenças de Terceiros"
 
 #: src/prefPages/about.js:154
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
-msgstr ""
+msgstr "Licenças de códigos que foram utilizados nesta extensão"
 
 #: src/prefPages/quickToggles.js:19
 msgid "Quick Toggles"
-msgstr ""
+msgstr "Quick Toggles"
 
 #: src/prefPages/quickToggles.js:24
 msgid "Add more buttons"
-msgstr ""
+msgstr "Adicionar botões"
 
 #: src/prefPages/quickToggles.js:25
 msgid "Turn on the buttons you want to add on Quick Settings"
-msgstr ""
+msgstr "Ative os botões que você deseja adicionar às Configurações Rápidas"
 
 #: src/prefPages/quickToggles.js:29
 msgid "DND Quick Toggle"
-msgstr ""
+msgstr "Quick Toggle do Não Perturbe"
 
 #: src/prefPages/quickToggles.js:30
 msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
 msgstr ""
+"Ative para deixar o Quick Toggle do Não Perturbe visível no painel de "
+"Configurações Rápidas"
 
 #: src/prefPages/quickToggles.js:36
 msgid "Unsafe Mode Quick Toggle"
-msgstr ""
+msgstr "Quick Toggle do Modo Inseguro"
 
 #: src/prefPages/quickToggles.js:37
 msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
 msgstr ""
+"Ative para deixar o Quick Toggle do Modo Inseguro visível no painel de "
+"Configurações Rápidas"
 
 #: src/prefPages/quickToggles.js:45
 msgid "Buttons to remove"
-msgstr ""
+msgstr "Remover botões"
 
 #: src/prefPages/quickToggles.js:46
 msgid "Turn on the buttons you want to remove from Quick Settings"
-msgstr ""
+msgstr "Ative os botões que você deseja remover das Configurações Rápidas"
 
 #: src/prefPages/quickToggles.js:50
 msgid "Remove chosen buttons from quick panel"
-msgstr ""
+msgstr "Remover botões escolhidos do painel de Configurações Rápidas"
 
 #: src/prefPages/quickToggles.js:51
 msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
 msgstr ""
+"Uma ramificação da minha extensão https://github.com/qwreey75/gnome-quick-"
+"settings-button-remover"
 
 #: src/prefPages/quickToggles.js:55
 msgid "This feature is unstable sometime"
-msgstr ""
+msgstr "Esta funcionalidade às vezes pode ser instável"
 
 #: src/prefPages/quickToggles.js:56
 msgid ""
@@ -181,216 +200,242 @@ msgid ""
 "  button doesn't remove after lockscreen\n"
 "  modal get bigger after lockscreen"
 msgstr ""
+"Ao bloquear/desbloquear com o gnome-screensaver, um comportamento inesperado "
+"ocorre\n"
+"Favor não criar um relato de problema sobre um problema já conhecido, quase "
+"duplicado\n"
+"Problemas conhecidos:\n"
+"  botão não é removido após a tela de bloqueio\n"
+"  modal fica maior após a tela de bloqueio"
 
 #: src/prefPages/quickToggles.js:60
 msgid "Please turn off if some bug occurred"
-msgstr ""
+msgstr "Favor desativar se algum problema ocorrer"
 
 #: src/prefPages/quickToggles.js:72
 msgid "Unknown"
-msgstr ""
+msgstr "Desconhecido"
 
 #: src/prefPages/quickToggles.js:72
 msgid " (invisible by system)"
-msgstr ""
+msgstr " (invisível por padrão do sistema)"
 
 #: src/prefPages/volumeMixer.js:27
 msgid "Add Application to filtering"
-msgstr ""
+msgstr "Adicionar aplicativo ao filtro"
 
 #: src/prefPages/volumeMixer.js:32
 msgid "Add"
-msgstr ""
+msgstr "Adicionar"
 
 #: src/prefPages/volumeMixer.js:35
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: src/prefPages/volumeMixer.js:44
 msgid "Application name"
-msgstr ""
+msgstr "Nome do aplicativo"
 
 #: src/prefPages/volumeMixer.js:98
 msgid "Volume Mixer"
-msgstr ""
+msgstr "Mixer de Volume"
 
 #: src/prefPages/volumeMixer.js:106
 msgid "General"
-msgstr ""
+msgstr "Geral"
 
 #: src/prefPages/volumeMixer.js:107
 msgid "Enchant input/output slider"
-msgstr ""
+msgstr "Personalize o slider de entrada/saída"
 
 #: src/prefPages/volumeMixer.js:111
 msgid "Show current audio output selection"
-msgstr ""
+msgstr "Mostrar saída de áudio atual"
 
 #: src/prefPages/volumeMixer.js:113
 msgid "Always show the current audio output selection above the volume slider"
 msgstr ""
+"Sempre mostrar a saída de áudio atualmente selecionada acima do slider de "
+"volume"
 
 #: src/prefPages/volumeMixer.js:118
 msgid "Show current audio input selection"
-msgstr ""
+msgstr "Mostrar entrada de áudio atual"
 
 #: src/prefPages/volumeMixer.js:120
 msgid "Always show the current audio input selection above the volume slider"
 msgstr ""
+"Sempre mostrar a entrada de áudio atualmente selecionada acima do slider de "
+"volume"
 
 #: src/prefPages/volumeMixer.js:125
 msgid "Always show input"
-msgstr ""
+msgstr "Sempre mostrar entrada"
 
 #: src/prefPages/volumeMixer.js:127
 msgid "Always show the audio input volume slider, even when there is no audio input stream."
 msgstr ""
+"Sempre mostrar o slider de volume da entrada de áudio, mesmo quando não "
+"houver fluxo de entrada de áudio."
 
 #: src/prefPages/volumeMixer.js:134
 msgid "Add volume mixer (PulseAudio, Pipewire)"
-msgstr ""
+msgstr "Adicionar mixer de volume (PulseAudio, PipeWire)"
 
 #: src/prefPages/volumeMixer.js:135
 msgid ""
 "Turn on to make the volume mixer visible\n"
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr ""
+"Ative para tornar visível o mixer de volume\n"
+"Uma ramificação de https://github.com/mymindstorm/gnome-volume-mixer"
 
 #: src/prefPages/volumeMixer.js:144 src/prefPages/notifications.js:65
 msgid "Position"
-msgstr ""
+msgstr "Posição"
 
 #: src/prefPages/volumeMixer.js:145
 msgid "Set volume mixer position"
-msgstr ""
+msgstr "Definir posição do mixer de volume"
 
 #: src/prefPages/volumeMixer.js:150
 msgid "Top (Below Output/Input slider)"
-msgstr ""
+msgstr "Superior (sob o slider de saída/entrada)"
 
 #: src/prefPages/volumeMixer.js:151 src/prefPages/notifications.js:72
 msgid "Bottom"
-msgstr ""
+msgstr "Inferior"
 
 #: src/prefPages/volumeMixer.js:156
 msgid "Show stream Description"
-msgstr ""
+msgstr "Mostrar descrição do fluxo"
 
 #: src/prefPages/volumeMixer.js:157
 msgid "Show audio stream description above the slider"
-msgstr ""
+msgstr "Mostrar descrição do fluxo de áudio acima do slider"
 
 #: src/prefPages/volumeMixer.js:164
 msgid "Show stream Icon"
-msgstr ""
+msgstr "Mostrar ícone do fluxo"
 
 #: src/prefPages/volumeMixer.js:165
 msgid "Show application icon in front of the slider"
-msgstr ""
+msgstr "Mostrar ícone do aplicativo na frente do slider"
 
 #: src/prefPages/volumeMixer.js:176
 msgid "Filter applications shown in the volume mixer."
-msgstr ""
+msgstr "Filtrar aplicativos mostrados no mixer de volume."
 
 #: src/prefPages/volumeMixer.js:183
 msgid "Filter Mode"
-msgstr ""
+msgstr "Modo de Filtragem"
 
 #: src/prefPages/volumeMixer.js:188
 msgid "Blacklist"
-msgstr ""
+msgstr "Lista negra"
 
 #: src/prefPages/volumeMixer.js:189
 msgid "Whitelist"
-msgstr ""
+msgstr "Lista branca"
 
 #: src/prefPages/volumeMixer.js:195
 msgid "Using Javascript Regex"
-msgstr ""
+msgstr "Usar Regex do Javascript"
 
 #: src/prefPages/volumeMixer.js:196
 msgid "Use Javascript RegExp for filtering app name or description"
 msgstr ""
+"Usar RegExp do Javascript para filtrar nomes ou descrições de aplicativos"
 
 #: src/prefPages/volumeMixer.js:203
 msgid "Check Stream Description"
-msgstr ""
+msgstr "Conferir descrição do fluxo"
 
 #: src/prefPages/volumeMixer.js:204
 msgid "Check Description also"
-msgstr ""
+msgstr "Conferir também a descrição"
 
 #: src/prefPages/notifications.js:20
 msgid "Noti&Media"
-msgstr ""
+msgstr "Not.&Mídia"
 
 #: src/prefPages/notifications.js:26
 msgid "Media Controls widget"
-msgstr ""
+msgstr "Widget de controles de mídia"
 
 #: src/prefPages/notifications.js:32
 msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
 msgstr ""
+"Ative para deixar o widget de Controles de Mídia visível no painel de "
+"Configurações Rápidas"
 
 #: src/prefPages/notifications.js:36
 msgid "Compact Mode"
-msgstr ""
+msgstr "Modo compacto"
 
 #: src/prefPages/notifications.js:37
 msgid ""
 "Make Media Controls widget smaller\n"
 "Make it more similar in size to the notification message"
 msgstr ""
+"Deixar o widget de Controles de Mídia menor\n"
+"Deixá-lo com tamanho similar a uma mensagem de notificação"
 
 #: src/prefPages/notifications.js:46
 msgid "Notification Widget"
-msgstr ""
+msgstr "Widget de notificação"
 
 #: src/prefPages/notifications.js:52
 msgid "Turn on to make the notification widget visible on the Quick Settings panel"
 msgstr ""
+"Ative para deixar o widget de notificação visível no painel de Configurações "
+"Rápidas"
 
 #: src/prefPages/notifications.js:57
 msgid "Max height"
-msgstr ""
+msgstr "Altura máxima"
 
 #: src/prefPages/notifications.js:58
 msgid "Set maximum height of the Notifications widget. default is 292"
-msgstr ""
+msgstr "Defina a altura máxima do widget de Notificações. O padrão é 292"
 
 #: src/prefPages/notifications.js:66
 msgid "Set Notifications widget position"
-msgstr ""
+msgstr "Definir posição do widget de Notificações"
 
 #: src/prefPages/notifications.js:71
 msgid "Top"
-msgstr ""
+msgstr "Superior"
 
 #: src/prefPages/notifications.js:78
 msgid "Attach to QS panel"
-msgstr ""
+msgstr "Anexar ao painel de Configurações Rápidas"
 
 #: src/prefPages/notifications.js:79
 msgid ""
 "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
 "(such as margin or padding not matching with the theme)"
 msgstr ""
+"Não separar os widgets de Configurações Rápidas e de Notificações \\bvocê "
+"deve ativar esta opção porque painéis separados podem gerar vários problemas "
+"visuais\n"
+"(como margens e espaçamentos não corresponderem ao tema)"
 
 #: src/prefPages/notifications.js:86
 msgid "Auto Hide"
-msgstr ""
+msgstr "Ocultar automaticamente"
 
 #: src/prefPages/notifications.js:87
 msgid "Hide the Notifications widget when have no notifications"
-msgstr ""
+msgstr "Ocultar o widget de Notificações quando não houver nenhuma notificação"
 
 #: src/prefPages/notifications.js:94
 msgid "Use native controls"
-msgstr ""
+msgstr "Usar controles nativos"
 
 #: src/prefPages/notifications.js:95
 msgid "Use native dnd switch and clear button"
-msgstr ""
+msgstr "Usar interruptor do Não Perturbe e botão Limpar nativos"
 
 #: src/libs/dndQuickToggleHandler.js:9
 msgid "Do Not Disturb"
@@ -398,7 +443,7 @@ msgstr "Não Perturbe"
 
 #: src/libs/streamSlider.js:60
 msgid "Sound Settings"
-msgstr "Configurações de Som"
+msgstr "Configurações de som"
 
 #: src/libs/streamSlider.js:197
 msgid "Volume changed"
@@ -410,7 +455,7 @@ msgstr "Modo Inseguro"
 
 #: src/libs/notificationHandler.js:25
 msgid "No Notifications"
-msgstr "Sem Notificações"
+msgstr "Nenhuma notificação"
 
 #: src/libs/notificationHandler.js:54
 msgid "Clear"
