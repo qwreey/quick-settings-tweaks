@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd "$(dirname "$(readlink -f "$0")")"
+
 function update-po() {
 	echo '' > messages.po
 	[ "$?" != "0" ] && echo "update-po: Unable to create ./messages.po file" && return 1
@@ -50,6 +52,10 @@ function build() {
 	return 0
 }
 
+function enable() {
+	gnome-extensions enable quick-settings-tweaks@qwreey
+}
+
 function install() {
 	build
 	[ "$?" != "0" ] && return 1
@@ -63,7 +69,7 @@ function install() {
 	return 0
 }
 
-function dev() {
+function dev-xorg() {
 	build
 	echo "Warn: Dev hot reload (restarting) only works on unsafe mode"
 	if [[ "$XDG_SESSION_TYPE" == "x11" ]]; then
@@ -81,6 +87,10 @@ function clear-old-po() {
 	rm ./po/*.po~
 }
 
+function dev() {
+	./gnome-docker/test.sh
+}
+
 function usage() {
     echo 'Usage: ./install.sh COMMAND'
     echo 'COMMAND:'
@@ -88,10 +98,12 @@ function usage() {
     echo '                under ~/.local'
     echo '  build         Creates a zip file of the extension'
     echo '  update-po     Update po files to match source files'
-	echo '  dev           Update installed extension and reload gnome shell.'
+	echo '  dev-xorg      Update installed extension and reload gnome shell.'
 	echo '                only works on x11 unsafe mode.'
+	ecoh '  dev           Run dev docker'
 	echo '  log           show extension logs (live)'
 	echo '  clear-old-po  clear *.po~'
+	echo '  enable        enable extension'
 }
 
 case "$1" in
@@ -107,8 +119,8 @@ case "$1" in
 		log
 	;;
 
-    "dev" )
-        dev
+    "dev-xorg" )
+        dev-xorg
     ;;
 
     "update-po" )
@@ -117,6 +129,14 @@ case "$1" in
 
 	"clear-old-po" )
 		clear-old-po
+	;;
+
+	"enable" )
+		enable
+	;;
+
+	"dev" )
+		dev
 	;;
     
     * )
