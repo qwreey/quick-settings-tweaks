@@ -1,0 +1,36 @@
+services:
+  gnome-docker:
+    container_name: gnome-docker
+    hostname: gnome-docker
+    build: ./gnome-docker
+
+    environment:
+      VNC_OPTION: -SecurityTypes=None -rfbunixpath /host/vncsocket -rfbport -1
+      BEFORE_GNOME: "cp -r /extension /home/gnome/extension ; /home/gnome/extension/install.sh install; /home/gnome/extension/install.sh enable"
+      ROOTMODE: false
+      DEBUG: true
+
+    # For systemd
+    cgroup: host
+    volumes:
+      # Systemd requirements
+      - type: tmpfs
+        target: /tmp
+      - type: tmpfs
+        target: /run
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup/system.slice:/sys/fs/cgroup/system.slice:rw
+
+      # For vnc unix socket
+      - ./host:/host:rw
+      - ./:/extension
+
+    # For gpu
+    # security_opt:
+      # - "seccomp=unconfined"
+    group_add:
+      # - video
+      - render
+    devices:
+      - /dev/dri/renderD128
+      # - /dev/kfd
