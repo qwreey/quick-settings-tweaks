@@ -84,10 +84,24 @@ function log() {
 }
 
 function clear-old-po() {
-	rm ./po/*.po~
+	rm ./po/*.po
 }
 
 function dev() {
+	mkdir -p host
+	CURTAG=""
+	if [ -e "./host/gnome-docker" ]; then
+		CURTAG="$(git -C host/gnome-docker describe --tags --always --abbrev=0 HEAD)"
+	else
+		git clone https://github.com/qwreey/gnome-docker host/gnome-docker --recursive
+	fi
+
+	TARTAG="$(cat gnome-docker-version)"
+	if [[ "$CURTAG" != "$TARTAG" ]]; then
+		git -C host/gnome-docker pull origin master --tags
+		git -C host/gnome-docker checkout "$TARTAG"
+	fi
+
 	./gnome-docker/test.sh
 }
 
