@@ -89,20 +89,25 @@ function clear-old-po() {
 
 function dev() {
 	mkdir -p host
+
+	[ ! -e ./host/docker-compose.yml ] && cp ./docker-compose.example.yml ./docker-compose.yml
+
 	CURTAG=""
 	if [ -e "./host/gnome-docker" ]; then
 		CURTAG="$(git -C host/gnome-docker describe --tags --always --abbrev=0 HEAD)"
 	else
-		git clone https://github.com/qwreey/gnome-docker host/gnome-docker --recursive
+		git clone https://github.com/qwreey/gnome-docker host/gnome-docker --recursive --tags
 	fi
 
 	TARTAG="$(cat gnome-docker-version)"
 	if [[ "$CURTAG" != "$TARTAG" ]]; then
 		git -C host/gnome-docker pull origin master --tags
+		git -C host/gnome-docker submodule update
 		git -C host/gnome-docker checkout "$TARTAG"
+		sudo docker compose -f ./docker-compose.yml build
 	fi
 
-	./host/gnome-docker/test.sh
+	COMPOSEFILE="./docker-compose.yml" ./host/gnome-docker/test.sh
 }
 
 function usage() {

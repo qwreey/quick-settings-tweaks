@@ -2,3 +2,4 @@ dist/
 i
 *.po~
 host/
+docker-compose.yml
