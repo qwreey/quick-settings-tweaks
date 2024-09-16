@@ -102,7 +102,7 @@ function dev() {
 		git -C host/gnome-docker checkout "$TARTAG"
 	fi
 
-	./gnome-docker/test.sh
+	./host/gnome-docker/test.sh
 }
 
 function usage() {
