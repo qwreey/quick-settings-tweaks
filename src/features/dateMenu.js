@@ -1,9 +1,5 @@
 import { featureReloader } from "../libs/utility.js"
-import {
-  DateMenuNotifications,
-  DateMenuMediaControl,
-  DateMenuBox,
-} from "../libs/gnome.js"
+import { GnomeContext } from "../libs/gnome.js"
 
 export class DateMenuFeature {
   load() {
@@ -17,24 +13,24 @@ export class DateMenuFeature {
     // remove media control from date menu
     if (this.settings.get_boolean("datemenu-remove-media-control")) {
       this.dateMenuMediaControlRemoved = true
-      DateMenuMediaControl.hide()
-      this.dateMenuMediaControlConnection = DateMenuMediaControl.connect(
-        "show",DateMenuMediaControl.hide.bind(DateMenuMediaControl)
+      GnomeContext.DateMenuMediaControl.hide()
+      this.dateMenuMediaControlConnection = GnomeContext.DateMenuMediaControl.connect(
+        "show",GnomeContext.DateMenuMediaControl.hide.bind(GnomeContext.DateMenuMediaControl)
       )
     }
 
     // remove notifications from date menu
     if (this.settings.get_boolean("datemenu-remove-notifications")) {
       this.dateMenuNotificationsRemoved = true
-      DateMenuNotifications.hide()
-      DateMenuBox.style = "padding: 4px 6px 4px 0px;"
-      this.dateMenuConnection = DateMenuNotifications.connect("show", DateMenuNotifications.hide.bind(DateMenuNotifications))
+      GnomeContext.DateMenuNotifications.hide()
+      GnomeContext.DateMenuBox.style = "padding: 4px 6px 4px 0px;"
+      this.dateMenuConnection = GnomeContext.DateMenuNotifications.connect("show", ()=> GnomeContext.DateMenuNotifications.hide)
     }
 
     // datemenu fix weather widget
     if (this.settings.get_boolean("datemenu-fix-weather-widget")) {
-      this.weatherFixBackupClass = DateMenuBox.style_class
-      DateMenuBox.style_class += " qwreey-fixed-weather"
+      this.weatherFixBackupClass = GnomeContext.DateMenuBox.style_class
+      GnomeContext.DateMenuBox.style_class += " qwreey-fixed-weather"
     }
   }
 
@@ -44,23 +40,23 @@ export class DateMenuFeature {
 
     // restore media control
     if (this.dateMenuMediaControlRemoved) {
-      DateMenuMediaControl.disconnect(this.dateMenuMediaControlConnection);
-      if (DateMenuMediaControl._shouldShow()) DateMenuMediaControl.show();
+      GnomeContext.DateMenuMediaControl.disconnect(this.dateMenuMediaControlConnection);
+      if (GnomeContext.DateMenuMediaControl._shouldShow()) GnomeContext.DateMenuMediaControl.show();
       this.dateMenuMediaControlRemoved = null;
       this.dateMenuMediaControlConnection = null;
     }
 
     // restore notifications to date menu
     if (this.dateMenuNotificationsRemoved) {
-      DateMenuNotifications.disconnect(this.dateMenuConnection);
-      DateMenuNotifications.show();
-      DateMenuBox.style = "";
+      GnomeContext.DateMenuNotifications.disconnect(this.dateMenuConnection);
+      GnomeContext.DateMenuNotifications.show();
+      GnomeContext.DateMenuBox.style = "";
       this.dateMenuNotificationsRemoved = null;
     }
 
     // undo weather fix
     if (this.weatherFixBackupClass) {
-      DateMenuBox.style_class = this.weatherFixBackupClass;
+      GnomeContext.DateMenuBox.style_class = this.weatherFixBackupClass;
       this.weatherFixBackupClass = null;
     }
   }

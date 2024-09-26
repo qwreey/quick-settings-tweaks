@@ -2,11 +2,11 @@ services:
   gnome-docker:
     container_name: gnome-docker
     hostname: gnome-docker
-    build: ./gnome-docker
+    build: ./host/gnome-docker
 
     environment:
       VNC_OPTION: -SecurityTypes=None -rfbunixpath /host/vncsocket -rfbport -1
-      BEFORE_GNOME: "cp -r /extension /home/gnome/extension ; /home/gnome/extension/install.sh install; /home/gnome/extension/install.sh enable"
+      BEFORE_GNOME: "[ -e /home/gnome/extension ] && rm -rf /home/gnome/extension ; cp -r /extension /home/gnome/extension ; /home/gnome/extension/install.sh install; /home/gnome/extension/install.sh enable"
       ROOTMODE: false
       DEBUG: true
 
@@ -28,9 +28,9 @@ services:
     # For gpu
     # security_opt:
       # - "seccomp=unconfined"
-    group_add:
-      # - video
-      - render
-    devices:
-      - /dev/dri/renderD128
-      # - /dev/kfd
+    # group_add:
+    #   # - video
+    #   - render
+    # devices:
+    #   - /dev/dri/renderD128
+    #   # - /dev/kfd

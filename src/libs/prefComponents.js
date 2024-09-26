@@ -4,7 +4,7 @@ import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
 import GObject from "gi://GObject"
 
-export const baseGTypeName = "qwreey.quick-settings-tweaks.prefs."
+export const baseGTypeName = "quick-settings-tweaks_prefs_"
 
 export function makeRow(options={parent: null,title: null, subtitle: null,uri: null, sensitiveBind: null}) {
     const row = new Adw.ActionRow({

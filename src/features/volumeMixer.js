@@ -1,9 +1,6 @@
 import { featureReloader } from "../libs/utility.js"
 import { VolumeMixer } from "../libs/volumeMixerHandler.js"
-import {
-    QuickSettingsMenu,
-    GetStreamSlider,
-} from "../libs/gnome.js"
+import { GnomeContext } from "../libs/gnome.js"
 
 export class VolumeMixerFeature {
     load() {
@@ -35,10 +32,10 @@ export class VolumeMixerFeature {
         })
 
         // Insert volume mixer into Quick Settings
-        QuickSettingsMenu.addItem(this.volumeMixer.actor, 2);
+        GnomeContext.QuickSettingsMenu.addItem(this.volumeMixer.actor, 2);
         if (this.settings.get_string("volume-mixer-position") === "top") {
-            GetStreamSlider(({InputStreamSlider})=>{
-                QuickSettingsMenu._grid.set_child_above_sibling(
+            GnomeContext.GetStreamSlider(({InputStreamSlider})=>{
+                GnomeContext.QuickSettingsMenu._grid.set_child_above_sibling(
                     this.volumeMixer.actor,
                     InputStreamSlider
                 )

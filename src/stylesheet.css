@@ -9,6 +9,10 @@
             text-overflow: ellipsis;
             width: 0px;
         }
+        .QSTWEAKS-notifications .message-expand-button,
+        .QSTWEAKS-notifications .message-close-button {
+            padding: 4px !important;
+        }
 
     /* titlebar */
         .QSTWEAKS-notifications .QSTWEAKS-notifications-title {

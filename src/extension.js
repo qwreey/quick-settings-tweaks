@@ -7,7 +7,7 @@ import { DateMenuFeature } from "./features/dateMenu.js"
 import { ButtonRemoverFeature } from "./features/buttonRemover.js"
 import { InputOutputFeature } from "./features/inputOutput.js"
 import { logger } from "./libs/utility.js"
-import { QuickSettingsGrid } from "./libs/gnome.js"
+import { GnomeContext } from "./libs/gnome.js"
 
 export default class QstExtension extends Extension {
     disable() {
@@ -15,8 +15,8 @@ export default class QstExtension extends Extension {
         let start = +Date.now()
 
         // unload menu open tracker
-        QuickSettingsGrid.disconnect(this.menuOpenTracker)
-        QuickSettingsGrid.disconnect(this.menuItemAddedTracker)
+        GnomeContext.QuickSettingsGrid.disconnect(this.menuOpenTracker)
+        GnomeContext.QuickSettingsGrid.disconnect(this.menuItemAddedTracker)
 
         // unload features
         for (const feature of this.features) {
@@ -27,12 +27,15 @@ export default class QstExtension extends Extension {
 
         // Null out
         this.menuItemAddedTracker = this.features = this.updating = this.menuOpenTracker = null
+        GnomeContext.uninit()
 
         logger("Diabled. " + (+new Date() - start) + "ms taken")
     }
     enable() {
         logger("Loading ...")
         let start = +Date.now()
+
+        GnomeContext.init()
 
         // load modules
         this.features = [
@@ -57,8 +60,8 @@ export default class QstExtension extends Extension {
 
         // load menu open tracker
         this.updating = false
-        this.menuOpenTracker = QuickSettingsGrid.connect("notify::mapped",()=>{
-            if (!QuickSettingsGrid.mapped) return
+        this.menuOpenTracker = GnomeContext.QuickSettingsGrid.connect("notify::mapped",()=>{
+            if (!GnomeContext.QuickSettingsGrid.mapped) return
             this.updating = true
             for (const feature of this.features) {
                 if (feature.onMenuOpen) feature.onMenuOpen()
@@ -67,7 +70,7 @@ export default class QstExtension extends Extension {
         })
 
         // load menu item added tracker
-        this.menuItemAddedTracker = QuickSettingsGrid.connect("child-added",()=>{
+        this.menuItemAddedTracker = GnomeContext.QuickSettingsGrid.connect("child-added",()=>{
             if (this.updating) return
             this.updating = true
             for (const feature of this.features) {

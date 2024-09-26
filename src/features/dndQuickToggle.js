@@ -1,5 +1,5 @@
 import { featureReloader } from "../libs/utility.js"
-import { QuickSettings, DateMenu } from "../libs/gnome.js"
+import { GnomeContext } from "../libs/gnome.js"
 import { Indicator } from "../libs/dndQuickToggleHandler.js"
 import Gio from "gi://Gio"
 
@@ -16,10 +16,10 @@ export class DndQuickToggleFeature {
 
     // Add DND Quick Toggle
     this.dndToggle = new Indicator()
-    QuickSettings.addExternalIndicator(this.dndToggle)
+    GnomeContext.QuickSettings.addExternalIndicator(this.dndToggle)
 
     //remove DND button from datemenu
-    this.datemenu_dnd = DateMenu.last_child.last_child
+    this.datemenu_dnd = GnomeContext.DateMenu.last_child.last_child
     this.datemenu_dnd.hide()
     this.datemenu_dnd_connection = this.datemenu_dnd.connect("show", () => {
       this.datemenu_dnd.hide()

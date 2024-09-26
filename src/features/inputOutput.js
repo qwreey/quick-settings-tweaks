@@ -1,9 +1,5 @@
 import { featureReloader } from "../libs/utility.js"
-import {
-    QuickSettingsMenu,
-    QuickSettingsGrid,
-    GetStreamSlider,
-} from "../libs/gnome.js"
+import { GnomeContext } from "../libs/gnome.js"
 import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
@@ -44,7 +40,7 @@ export class InputOutputFeature {
         if (this._inputVisibilityListener) {
             let inputVisibilityListener = this._inputVisibilityListener
             this._inputVisibilityListener = null
-            GetStreamSlider(({InputStreamSlider})=>{
+            GnomeContext.GetStreamSlider(({InputStreamSlider})=>{
                 InputStreamSlider.disconnect(inputVisibilityListener)
                 InputStreamSlider.visible = InputStreamSlider._shouldBeVisible()
             })
@@ -70,10 +66,10 @@ export class InputOutputFeature {
     _attachOutputLabel() {
         this.outputLabel = new St.Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettingsMenu.addItem(this.outputLabel, 2);
+        GnomeContext.QuickSettingsMenu.addItem(this.outputLabel, 2);
         this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
-        GetStreamSlider(({OutputStreamSlider})=>{
-            QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider)
+        GnomeContext.GetStreamSlider(({OutputStreamSlider})=>{
+            GnomeContext.QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider)
             this.outputLabel.text = this._findActiveDevice(OutputStreamSlider)
         })
     }
@@ -94,9 +90,9 @@ export class InputOutputFeature {
     _attachInputLabel() {
         this.inputLabel = new St.Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        QuickSettingsMenu.addItem(this.inputLabel, 2);
-        GetStreamSlider(({InputStreamSlider})=>{
-            QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
+        GnomeContext.QuickSettingsMenu.addItem(this.inputLabel, 2);
+        GnomeContext.GetStreamSlider(({InputStreamSlider})=>{
+            GnomeContext.QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider);
             this.inputLabel.text = this._findActiveDevice(InputStreamSlider)
         })
         this._setInputLabelVisibility()
@@ -116,7 +112,7 @@ export class InputOutputFeature {
 
     // =========================================== Input Visbility ===========================================
     _setupInputVisibilityObserver() {
-        GetStreamSlider(({InputStreamSlider})=>{
+        GnomeContext.GetStreamSlider(({InputStreamSlider})=>{
             this._inputVisibilityListener = InputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
             this._onInputStreamSliderSynced()
         })
@@ -130,14 +126,14 @@ export class InputOutputFeature {
     }
 
     _setInputStreamSliderVisibility() {
-        GetStreamSlider(({InputStreamSlider})=>{
+        GnomeContext.GetStreamSlider(({InputStreamSlider})=>{
             InputStreamSlider.visible = InputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
         })
     }
 
 
     _setInputLabelVisibility() {
-        GetStreamSlider(({InputStreamSlider})=>{
+        GnomeContext.GetStreamSlider(({InputStreamSlider})=>{
             this.inputLabel.visible = InputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
         })
     }

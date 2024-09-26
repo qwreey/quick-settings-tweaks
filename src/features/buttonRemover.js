@@ -1,6 +1,6 @@
 // forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
 
-import { QuickSettingsGrid } from "../libs/gnome.js"
+import { GnomeContext } from "../libs/gnome.js"
 
 export class ButtonRemoverFeature {
     constructor() {
@@ -15,7 +15,7 @@ export class ButtonRemoverFeature {
     _apply(removedItems) {
         this.systemHiddenItems = [];
 
-        for (const item of QuickSettingsGrid.get_children()) {
+        for (const item of GnomeContext.QuickSettingsGrid.get_children()) {
             let name = item.constructor.name.toString()
             if (!item.visible) {
                 this.systemHiddenItems.push(item);
@@ -49,8 +49,8 @@ export class ButtonRemoverFeature {
     }
     load() {
             const listButtons = []
-            for (const item of QuickSettingsGrid.get_children()){
-                if (item === QuickSettingsGrid.layout_manager._overlay) continue;
+            for (const item of GnomeContext.QuickSettingsGrid.get_children()){
+                if (item === GnomeContext.QuickSettingsGrid.layout_manager._overlay) continue;
                 listButtons.push({
                     name: item.constructor?.name,
                     title: item.title || null,
