@@ -5,17 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-09 01:18+0900\n"
+"POT-Creation-Date: 2024-09-26 18:26+0900\n"
 "PO-Revision-Date: 2024-01-31 13:38+0000\n"
 "Last-Translator: \"Droid.SUGI\" <droid.sugi@gmail.com>\n"
-"Language-Team: Russian <http://weblate.paring.moe/projects/"
-"gs-quick-settings-tweaks/gs-extension/ru/>\n"
+"Language-Team: Russian <http://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.2.1\n"
 
 #: src/prefPages/other.js:15
@@ -66,6 +64,76 @@ msgstr "Не удаляйте тень контента."
 msgid "Don't remove the shadow of messages and media controls."
 msgstr "Не удаляйте тень сообщений и элементов управления мультимедиа."
 
+#: src/prefPages/notifications.js:20
+msgid "Noti&Media"
+msgstr ""
+
+#: src/prefPages/notifications.js:26
+msgid "Media Controls widget"
+msgstr ""
+
+#: src/prefPages/notifications.js:32
+msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
+msgstr ""
+
+#: src/prefPages/notifications.js:36
+msgid "Compact Mode"
+msgstr ""
+
+#: src/prefPages/notifications.js:37
+msgid ""
+"Make Media Controls widget smaller\n"
+"Make it more similar in size to the notification message"
+msgstr ""
+
+#: src/prefPages/notifications.js:46
+msgid "Notification Widget"
+msgstr ""
+
+#: src/prefPages/notifications.js:52
+msgid "Turn on to make the notification widget visible on the Quick Settings panel"
+msgstr ""
+
+#: src/prefPages/notifications.js:57
+msgid "Max height"
+msgstr ""
+
+#: src/prefPages/notifications.js:58
+msgid "Set maximum height of the Notifications widget. default is 292"
+msgstr ""
+
+#: src/prefPages/notifications.js:65 src/prefPages/volumeMixer.js:144
+msgid "Position"
+msgstr ""
+
+#: src/prefPages/notifications.js:66
+msgid "Set Notifications widget position"
+msgstr ""
+
+#: src/prefPages/notifications.js:71
+msgid "Top"
+msgstr ""
+
+#: src/prefPages/notifications.js:72 src/prefPages/volumeMixer.js:151
+msgid "Bottom"
+msgstr ""
+
+#: src/prefPages/notifications.js:86
+msgid "Auto Hide"
+msgstr ""
+
+#: src/prefPages/notifications.js:87
+msgid "Hide the Notifications widget when have no notifications"
+msgstr ""
+
+#: src/prefPages/notifications.js:94
+msgid "Use native controls"
+msgstr ""
+
+#: src/prefPages/notifications.js:95
+msgid "Use native dnd switch and clear button"
+msgstr ""
+
 #: src/prefPages/about.js:21
 msgid "About"
 msgstr "О расширении"
@@ -76,8 +144,7 @@ msgstr "Это расширение распространяется под ли
 
 #: src/prefPages/about.js:60 src/prefPages/about.js:117
 msgid "excludes Third-party. Third party codes follow their license"
-msgstr ""
-"исключая сторонние разработки. Сторонние разработки следуют своей лицензии"
+msgstr "исключая сторонние разработки. Сторонние разработки следуют своей лицензии"
 
 #: src/prefPages/about.js:64
 msgid "Extension Version"
@@ -114,8 +181,7 @@ msgid ""
 "Or, you can create PR with wonderful features!"
 msgstr ""
 "Добавление звездочки в репозиторий нам очень помогает!\n"
-"Пожалуйста, если вы нашли ошибку в этом расширении, создайте проблему, чтобы "
-"мы знали об этом!\n"
+"Пожалуйста, если вы нашли ошибку в этом расширении, создайте проблему, чтобы мы знали об этом!\n"
 "Или вы можете создать PR с новыми функциями!"
 
 #: src/prefPages/about.js:98
@@ -137,85 +203,6 @@ msgstr "ЛИЦЕНЗИЯ третьей стороны"
 #: src/prefPages/about.js:154
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "ЛИЦЕНЗИИ НА РАЗРАБОТКИ, КОТОРЫЕ ИСПОЛЬЗОВАЛИСЬ В ЭТОМ РАСШИРЕНИИ"
-
-#: src/prefPages/quickToggles.js:19
-msgid "Quick Toggles"
-msgstr "Быстрые настройки"
-
-#: src/prefPages/quickToggles.js:24
-msgid "Add more buttons"
-msgstr "Добавить больше кнопок"
-
-#: src/prefPages/quickToggles.js:25
-msgid "Turn on the buttons you want to add on Quick Settings"
-msgstr "Включите кнопки, которые вы хотите добавить в быстрые настройки"
-
-#: src/prefPages/quickToggles.js:29
-msgid "DND Quick Toggle"
-msgstr "Кнопка переключения DND"
-
-#: src/prefPages/quickToggles.js:30
-msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
-msgstr "Включите, чтобы сделать кнопку DND видимой на панели быстрых настроек"
-
-#: src/prefPages/quickToggles.js:36
-msgid "Unsafe Mode Quick Toggle"
-msgstr "Кнопка переключения небезопасного режима"
-
-#: src/prefPages/quickToggles.js:37
-msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
-msgstr ""
-"Включите, чтобы сделать кнопку небезопасного режима видимой на панели "
-"быстрых настроек"
-
-#: src/prefPages/quickToggles.js:45
-msgid "Buttons to remove"
-msgstr "Удаление кнопок"
-
-#: src/prefPages/quickToggles.js:46
-msgid "Turn on the buttons you want to remove from Quick Settings"
-msgstr "Включите кнопки, которые вы хотите удалить из быстрых настроек"
-
-#: src/prefPages/quickToggles.js:50
-msgid "Remove chosen buttons from quick panel"
-msgstr "Удалить выбранные кнопки с панели быстрого доступа"
-
-#: src/prefPages/quickToggles.js:51
-msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
-msgstr ""
-"Форкнуто с расширения https://github.com/qwreey75/gnome-quick-settings-"
-"button-remover"
-
-#: src/prefPages/quickToggles.js:55
-msgid "This feature is unstable sometime"
-msgstr "Иногда эта функция работает нестабильно"
-
-#: src/prefPages/quickToggles.js:56
-msgid ""
-"When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
-"Please do not report issue about known issue, Almost duplicated\n"
-"Known issue:\n"
-"  button doesn't remove after lockscreen\n"
-"  modal get bigger after lockscreen"
-msgstr ""
-"При блокировке/разблокировке с помощью gnome-screensaver происходит "
-"неожиданное поведение\n"
-"Пожалуйста, не сообщайте об известной проблеме, часто дублируется\n"
-"Известная проблема:\n"
-"  кнопка не убирается после блокировки экрана\n"
-"  модальное окно становится больше после блокировки экрана"
-
-#: src/prefPages/quickToggles.js:60
-msgid "Please turn off if some bug occurred"
-msgstr "Пожалуйста, отключите, если произошла какая-то ошибка"
-
-#: src/prefPages/quickToggles.js:72
-msgid "Unknown"
-msgstr "Неизвестно"
-
-#: src/prefPages/quickToggles.js:72
-msgid " (invisible by system)"
-msgstr " (невидимые системой)"
 
 #: src/prefPages/volumeMixer.js:27
 msgid "Add Application to filtering"
@@ -279,20 +266,12 @@ msgid ""
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:144 src/prefPages/notifications.js:65
-msgid "Position"
-msgstr ""
-
 #: src/prefPages/volumeMixer.js:145
 msgid "Set volume mixer position"
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:150
 msgid "Top (Below Output/Input slider)"
-msgstr ""
-
-#: src/prefPages/volumeMixer.js:151 src/prefPages/notifications.js:72
-msgid "Bottom"
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:156
@@ -343,81 +322,79 @@ msgstr ""
 msgid "Check Description also"
 msgstr ""
 
-#: src/prefPages/notifications.js:20
-msgid "Noti&Media"
-msgstr ""
+#: src/prefPages/quickToggles.js:19
+msgid "Quick Toggles"
+msgstr "Быстрые настройки"
 
-#: src/prefPages/notifications.js:26
-msgid "Media Controls widget"
-msgstr ""
+#: src/prefPages/quickToggles.js:24
+msgid "Add more buttons"
+msgstr "Добавить больше кнопок"
 
-#: src/prefPages/notifications.js:32
-msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
-msgstr ""
+#: src/prefPages/quickToggles.js:25
+msgid "Turn on the buttons you want to add on Quick Settings"
+msgstr "Включите кнопки, которые вы хотите добавить в быстрые настройки"
 
-#: src/prefPages/notifications.js:36
-msgid "Compact Mode"
-msgstr ""
+#: src/prefPages/quickToggles.js:29
+msgid "DND Quick Toggle"
+msgstr "Кнопка переключения DND"
 
-#: src/prefPages/notifications.js:37
+#: src/prefPages/quickToggles.js:30
+msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
+msgstr "Включите, чтобы сделать кнопку DND видимой на панели быстрых настроек"
+
+#: src/prefPages/quickToggles.js:36
+msgid "Unsafe Mode Quick Toggle"
+msgstr "Кнопка переключения небезопасного режима"
+
+#: src/prefPages/quickToggles.js:37
+msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
+msgstr "Включите, чтобы сделать кнопку небезопасного режима видимой на панели быстрых настроек"
+
+#: src/prefPages/quickToggles.js:45
+msgid "Buttons to remove"
+msgstr "Удаление кнопок"
+
+#: src/prefPages/quickToggles.js:46
+msgid "Turn on the buttons you want to remove from Quick Settings"
+msgstr "Включите кнопки, которые вы хотите удалить из быстрых настроек"
+
+#: src/prefPages/quickToggles.js:50
+msgid "Remove chosen buttons from quick panel"
+msgstr "Удалить выбранные кнопки с панели быстрого доступа"
+
+#: src/prefPages/quickToggles.js:51
+msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
+msgstr "Форкнуто с расширения https://github.com/qwreey75/gnome-quick-settings-button-remover"
+
+#: src/prefPages/quickToggles.js:55
+msgid "This feature is unstable sometime"
+msgstr "Иногда эта функция работает нестабильно"
+
+#: src/prefPages/quickToggles.js:56
 msgid ""
-"Make Media Controls widget smaller\n"
-"Make it more similar in size to the notification message"
+"When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
+"Please do not report issue about known issue, Almost duplicated\n"
+"Known issue:\n"
+"  button doesn't remove after lockscreen\n"
+"  modal get bigger after lockscreen"
 msgstr ""
+"При блокировке/разблокировке с помощью gnome-screensaver происходит неожиданное поведение\n"
+"Пожалуйста, не сообщайте об известной проблеме, часто дублируется\n"
+"Известная проблема:\n"
+"  кнопка не убирается после блокировки экрана\n"
+"  модальное окно становится больше после блокировки экрана"
 
-#: src/prefPages/notifications.js:46
-msgid "Notification Widget"
-msgstr ""
+#: src/prefPages/quickToggles.js:60
+msgid "Please turn off if some bug occurred"
+msgstr "Пожалуйста, отключите, если произошла какая-то ошибка"
 
-#: src/prefPages/notifications.js:52
-msgid "Turn on to make the notification widget visible on the Quick Settings panel"
-msgstr ""
+#: src/prefPages/quickToggles.js:72
+msgid "Unknown"
+msgstr "Неизвестно"
 
-#: src/prefPages/notifications.js:57
-msgid "Max height"
-msgstr ""
-
-#: src/prefPages/notifications.js:58
-msgid "Set maximum height of the Notifications widget. default is 292"
-msgstr ""
-
-#: src/prefPages/notifications.js:66
-msgid "Set Notifications widget position"
-msgstr ""
-
-#: src/prefPages/notifications.js:71
-msgid "Top"
-msgstr ""
-
-#: src/prefPages/notifications.js:78
-msgid "Attach to QS panel"
-msgstr ""
-
-#: src/prefPages/notifications.js:79
-msgid ""
-"Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
-"(such as margin or padding not matching with the theme)"
-msgstr ""
-
-#: src/prefPages/notifications.js:86
-msgid "Auto Hide"
-msgstr ""
-
-#: src/prefPages/notifications.js:87
-msgid "Hide the Notifications widget when have no notifications"
-msgstr ""
-
-#: src/prefPages/notifications.js:94
-msgid "Use native controls"
-msgstr ""
-
-#: src/prefPages/notifications.js:95
-msgid "Use native dnd switch and clear button"
-msgstr ""
-
-#: src/libs/dndQuickToggleHandler.js:9
-msgid "Do Not Disturb"
-msgstr ""
+#: src/prefPages/quickToggles.js:72
+msgid " (invisible by system)"
+msgstr " (невидимые системой)"
 
 #: src/libs/streamSlider.js:60
 msgid "Sound Settings"
@@ -427,20 +404,24 @@ msgstr ""
 msgid "Volume changed"
 msgstr ""
 
+#: src/libs/dndQuickToggleHandler.js:9 src/libs/notificationBox.js:92
+msgid "Do Not Disturb"
+msgstr ""
+
 #: src/libs/unsafeQuickToggleHandler.js:13
 msgid "Unsafe Mode"
 msgstr ""
 
-#: src/libs/notificationHandler.js:25
+#: src/libs/notificationBox.js:26
 msgid "No Notifications"
 msgstr ""
 
-#: src/libs/notificationHandler.js:54
+#: src/libs/notificationBox.js:57 src/libs/notificationBox.js:113
 msgid "Clear"
 msgstr ""
 
 # Quick settings notifications title text
 # Notifications title
-#: src/libs/notificationHandler.js:91
+#: src/libs/notificationBox.js:69
 msgid "Notifications"
 msgstr "Уведомления"

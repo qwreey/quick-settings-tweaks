@@ -1,4 +1,4 @@
-import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
+import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
 import { DndQuickToggleFeature } from "./features/dndQuickToggle.js"
 import { UnsafeQuickToggleFeature } from "./features/unsafeQuickToggle.js"
 import { NotificationsFeature } from "./features/notifications.js"
@@ -60,7 +60,7 @@ export default class QstExtension extends Extension {
 
         // load menu open tracker
         this.updating = false
-        this.menuOpenTracker = GnomeContext.QuickSettingsGrid.connect("notify::mapped",()=>{
+        this.menuOpenTracker = GnomeContext.QuickSettingsGrid.connect("notify::mapped", () => {
             if (!GnomeContext.QuickSettingsGrid.mapped) return
             this.updating = true
             for (const feature of this.features) {
@@ -70,7 +70,7 @@ export default class QstExtension extends Extension {
         })
 
         // load menu item added tracker
-        this.menuItemAddedTracker = GnomeContext.QuickSettingsGrid.connect("child-added",()=>{
+        this.menuItemAddedTracker = GnomeContext.QuickSettingsGrid.connect("child-added", () => {
             if (this.updating) return
             this.updating = true
             for (const feature of this.features) {

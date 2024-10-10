@@ -9,6 +9,7 @@ services:
       BEFORE_GNOME: "[ -e /home/gnome/extension ] && rm -rf /home/gnome/extension ; cp -r /extension /home/gnome/extension ; /home/gnome/extension/install.sh install; /home/gnome/extension/install.sh enable"
       ROOTMODE: false
       DEBUG: true
+      XVFB_GPU: false
 
     # For systemd
     cgroup: host

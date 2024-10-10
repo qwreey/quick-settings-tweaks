@@ -32,9 +32,9 @@ export class VolumeMixerFeature {
         })
 
         // Insert volume mixer into Quick Settings
-        GnomeContext.QuickSettingsMenu.addItem(this.volumeMixer.actor, 2);
+        GnomeContext.QuickSettingsMenu.addItem(this.volumeMixer.actor, 2)
         if (this.settings.get_string("volume-mixer-position") === "top") {
-            GnomeContext.GetStreamSlider(({InputStreamSlider})=>{
+            GnomeContext.GetStreamSlider(({ InputStreamSlider }) => {
                 GnomeContext.QuickSettingsMenu._grid.set_child_above_sibling(
                     this.volumeMixer.actor,
                     InputStreamSlider
@@ -46,7 +46,7 @@ export class VolumeMixerFeature {
     unload() {
         // disable feature reloader
         featureReloader.disable(this)
-        if (this.volumeMixer) this.volumeMixer.destroy();
-        this.volumeMixer = null;
+        if (this.volumeMixer) this.volumeMixer.destroy()
+        this.volumeMixer = null
     }
 }

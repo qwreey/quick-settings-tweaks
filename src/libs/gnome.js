@@ -33,9 +33,9 @@ export const GnomeContext = new (class GnomeContext {
         const QuickSettings = this.QuickSettings = Main.panel.statusArea.quickSettings
         this.QuickSettingsMenu = QuickSettings.menu
         this.QuickSettingsGrid = QuickSettings.menu._grid
-        this.QuickSettingsBox =  QuickSettings.menu.box
+        this.QuickSettingsBox = QuickSettings.menu.box
         this.QuickSettingsActor = QuickSettings.menu.actor
-        this.GetQuickSettingsShutdownMenuBox = (callback)=>{
+        this.GetQuickSettingsShutdownMenuBox = (callback) => {
             // To prevent freeze, priority should be PRIORITY_DEFAULT_IDLE instead of PRIORITY_DEFAULT
             GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
                 if (!QuickSettings._system)
@@ -51,7 +51,7 @@ export const GnomeContext = new (class GnomeContext {
         this.DateMenuHolder = DateMenu.menu.box.first_child.first_child
         this.DateMenuNotifications =
             this.DateMenuHolder.get_children()
-            .find(item=>item.constructor.name=="CalendarMessageList")
+                .find(item => item.constructor.name == "CalendarMessageList")
         this.DateMenuMediaControl = this.DateMenuNotifications
             .last_child.first_child.last_child.first_child
 
@@ -67,18 +67,18 @@ export const GnomeContext = new (class GnomeContext {
                 OutputStreamSlider: QuickSettings._volumeOutput._output,
             }
         }
-        this.GetStreamSlider = (callback)=>{
+        this.GetStreamSlider = (callback) => {
             let streamSlider = StreamSliderGetter()
             if (streamSlider) {
                 callback(streamSlider)
                 return
             }
-        
-            GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, ()=>{
+
+            GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
                 streamSlider = StreamSliderGetter()
-        
+
                 if (!streamSlider) return GLib.SOURCE_CONTINUE
-        
+
                 callback(streamSlider)
                 return GLib.SOURCE_REMOVE
             })

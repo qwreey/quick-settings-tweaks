@@ -36,9 +36,9 @@
       <!-- "bottom" or "top" -->
       <default>"bottom"</default>
     </key>
-    <key name="notifications-integrated" type="b">
+    <!-- <key name="notifications-integrated" type="b">
       <default>true</default>
-    </key>
+    </key> -->
     <key name="notifications-use-native-controls" type="b">
       <default>false</default>
     </key>

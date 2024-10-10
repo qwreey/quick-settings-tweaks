@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-09 01:18+0900\n"
+"POT-Creation-Date: 2024-09-26 18:26+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,6 +63,76 @@ msgstr ""
 msgid "Don't remove the shadow of messages and media controls."
 msgstr ""
 
+#: src/prefPages/notifications.js:20
+msgid "Noti&Media"
+msgstr ""
+
+#: src/prefPages/notifications.js:26
+msgid "Media Controls widget"
+msgstr ""
+
+#: src/prefPages/notifications.js:32
+msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
+msgstr ""
+
+#: src/prefPages/notifications.js:36
+msgid "Compact Mode"
+msgstr ""
+
+#: src/prefPages/notifications.js:37
+msgid ""
+"Make Media Controls widget smaller\n"
+"Make it more similar in size to the notification message"
+msgstr ""
+
+#: src/prefPages/notifications.js:46
+msgid "Notification Widget"
+msgstr ""
+
+#: src/prefPages/notifications.js:52
+msgid "Turn on to make the notification widget visible on the Quick Settings panel"
+msgstr ""
+
+#: src/prefPages/notifications.js:57
+msgid "Max height"
+msgstr ""
+
+#: src/prefPages/notifications.js:58
+msgid "Set maximum height of the Notifications widget. default is 292"
+msgstr ""
+
+#: src/prefPages/notifications.js:65 src/prefPages/volumeMixer.js:144
+msgid "Position"
+msgstr ""
+
+#: src/prefPages/notifications.js:66
+msgid "Set Notifications widget position"
+msgstr ""
+
+#: src/prefPages/notifications.js:71
+msgid "Top"
+msgstr ""
+
+#: src/prefPages/notifications.js:72 src/prefPages/volumeMixer.js:151
+msgid "Bottom"
+msgstr ""
+
+#: src/prefPages/notifications.js:86
+msgid "Auto Hide"
+msgstr ""
+
+#: src/prefPages/notifications.js:87
+msgid "Hide the Notifications widget when have no notifications"
+msgstr ""
+
+#: src/prefPages/notifications.js:94
+msgid "Use native controls"
+msgstr ""
+
+#: src/prefPages/notifications.js:95
+msgid "Use native dnd switch and clear button"
+msgstr ""
+
 #: src/prefPages/about.js:21
 msgid "About"
 msgstr ""
@@ -106,8 +176,7 @@ msgstr ""
 #: src/prefPages/about.js:92
 msgid ""
 "Add Star on Repository is helping me a lot!\n"
-"Please, if you found bug from this extension, you can make issue to make me "
-"know that!\n"
+"Please, if you found bug from this extension, you can make issue to make me know that!\n"
 "Or, you can create PR with wonderful features!"
 msgstr ""
 
@@ -129,79 +198,6 @@ msgstr ""
 
 #: src/prefPages/about.js:154
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:19
-msgid "Quick Toggles"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:24
-msgid "Add more buttons"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:25
-msgid "Turn on the buttons you want to add on Quick Settings"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:29
-msgid "DND Quick Toggle"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:30
-msgid ""
-"Turn on to make the DND quick toggle visible on the Quick Settings panel"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:36
-msgid "Unsafe Mode Quick Toggle"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:37
-msgid ""
-"Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:45
-msgid "Buttons to remove"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:46
-msgid "Turn on the buttons you want to remove from Quick Settings"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:50
-msgid "Remove chosen buttons from quick panel"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:51
-msgid ""
-"Forked from my extension https://github.com/qwreey75/gnome-quick-settings-"
-"button-remover"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:55
-msgid "This feature is unstable sometime"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:56
-msgid ""
-"When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
-"Please do not report issue about known issue, Almost duplicated\n"
-"Known issue:\n"
-"  button doesn't remove after lockscreen\n"
-"  modal get bigger after lockscreen"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:60
-msgid "Please turn off if some bug occurred"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:72
-msgid "Unknown"
-msgstr ""
-
-#: src/prefPages/quickToggles.js:72
-msgid " (invisible by system)"
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:27
@@ -253,9 +249,7 @@ msgid "Always show input"
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:127
-msgid ""
-"Always show the audio input volume slider, even when there is no audio input "
-"stream."
+msgid "Always show the audio input volume slider, even when there is no audio input stream."
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:134
@@ -268,20 +262,12 @@ msgid ""
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr ""
 
-#: src/prefPages/volumeMixer.js:144 src/prefPages/notifications.js:65
-msgid "Position"
-msgstr ""
-
 #: src/prefPages/volumeMixer.js:145
 msgid "Set volume mixer position"
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:150
 msgid "Top (Below Output/Input slider)"
-msgstr ""
-
-#: src/prefPages/volumeMixer.js:151 src/prefPages/notifications.js:72
-msgid "Bottom"
 msgstr ""
 
 #: src/prefPages/volumeMixer.js:156
@@ -332,83 +318,73 @@ msgstr ""
 msgid "Check Description also"
 msgstr ""
 
-#: src/prefPages/notifications.js:20
-msgid "Noti&Media"
+#: src/prefPages/quickToggles.js:19
+msgid "Quick Toggles"
 msgstr ""
 
-#: src/prefPages/notifications.js:26
-msgid "Media Controls widget"
+#: src/prefPages/quickToggles.js:24
+msgid "Add more buttons"
 msgstr ""
 
-#: src/prefPages/notifications.js:32
+#: src/prefPages/quickToggles.js:25
+msgid "Turn on the buttons you want to add on Quick Settings"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:29
+msgid "DND Quick Toggle"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:30
+msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:36
+msgid "Unsafe Mode Quick Toggle"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:37
+msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:45
+msgid "Buttons to remove"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:46
+msgid "Turn on the buttons you want to remove from Quick Settings"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:50
+msgid "Remove chosen buttons from quick panel"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:51
+msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:55
+msgid "This feature is unstable sometime"
+msgstr ""
+
+#: src/prefPages/quickToggles.js:56
 msgid ""
-"Turn on to make the Media Control widget visible on the Quick Settings panel"
+"When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
+"Please do not report issue about known issue, Almost duplicated\n"
+"Known issue:\n"
+"  button doesn't remove after lockscreen\n"
+"  modal get bigger after lockscreen"
 msgstr ""
 
-#: src/prefPages/notifications.js:36
-msgid "Compact Mode"
+#: src/prefPages/quickToggles.js:60
+msgid "Please turn off if some bug occurred"
 msgstr ""
 
-#: src/prefPages/notifications.js:37
-msgid ""
-"Make Media Controls widget smaller\n"
-"Make it more similar in size to the notification message"
+#: src/prefPages/quickToggles.js:72
+msgid "Unknown"
 msgstr ""
 
-#: src/prefPages/notifications.js:46
-msgid "Notification Widget"
-msgstr ""
-
-#: src/prefPages/notifications.js:52
-msgid ""
-"Turn on to make the notification widget visible on the Quick Settings panel"
-msgstr ""
-
-#: src/prefPages/notifications.js:57
-msgid "Max height"
-msgstr ""
-
-#: src/prefPages/notifications.js:58
-msgid "Set maximum height of the Notifications widget. default is 292"
-msgstr ""
-
-#: src/prefPages/notifications.js:66
-msgid "Set Notifications widget position"
-msgstr ""
-
-#: src/prefPages/notifications.js:71
-msgid "Top"
-msgstr ""
-
-#: src/prefPages/notifications.js:78
-msgid "Attach to QS panel"
-msgstr ""
-
-#: src/prefPages/notifications.js:79
-msgid ""
-"Do not separate Quick Settings and Notifications widgets, \byou should "
-"enable this option because separated panels can make many visual bugs\n"
-"(such as margin or padding not matching with the theme)"
-msgstr ""
-
-#: src/prefPages/notifications.js:86
-msgid "Auto Hide"
-msgstr ""
-
-#: src/prefPages/notifications.js:87
-msgid "Hide the Notifications widget when have no notifications"
-msgstr ""
-
-#: src/prefPages/notifications.js:94
-msgid "Use native controls"
-msgstr ""
-
-#: src/prefPages/notifications.js:95
-msgid "Use native dnd switch and clear button"
-msgstr ""
-
-#: src/libs/dndQuickToggleHandler.js:9
-msgid "Do Not Disturb"
+#: src/prefPages/quickToggles.js:72
+msgid " (invisible by system)"
 msgstr ""
 
 #: src/libs/streamSlider.js:60
@@ -419,18 +395,22 @@ msgstr ""
 msgid "Volume changed"
 msgstr ""
 
+#: src/libs/dndQuickToggleHandler.js:9 src/libs/notificationBox.js:92
+msgid "Do Not Disturb"
+msgstr ""
+
 #: src/libs/unsafeQuickToggleHandler.js:13
 msgid "Unsafe Mode"
 msgstr ""
 
-#: src/libs/notificationHandler.js:25
+#: src/libs/notificationBox.js:26
 msgid "No Notifications"
 msgstr ""
 
-#: src/libs/notificationHandler.js:54
+#: src/libs/notificationBox.js:57 src/libs/notificationBox.js:113
 msgid "Clear"
 msgstr ""
 
-#: src/libs/notificationHandler.js:91
+#: src/libs/notificationBox.js:69
 msgid "Notifications"
 msgstr ""

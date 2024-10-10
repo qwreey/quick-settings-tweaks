@@ -73,14 +73,14 @@ export const notificationsPage = GObject.registerClass({
             ],
             sensitiveBind: [settings, "notifications-enabled"],
         })
-        makeSwitch({
-            parent: notificationGroup,
-            title: _("Attach to QS panel"),
-            subtitle: _("Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n(such as margin or padding not matching with the theme)"),
-            value: settings.get_boolean("notifications-integrated"),
-            bind: [settings, "notifications-integrated"],
-            sensitiveBind: [settings, "notifications-enabled"],
-        })
+        // makeSwitch({
+        //     parent: notificationGroup,
+        //     title: _("Attach to QS panel"),
+        //     subtitle: _("Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n(such as margin or padding not matching with the theme)"),
+        //     value: settings.get_boolean("notifications-integrated"),
+        //     bind: [settings, "notifications-integrated"],
+        //     sensitiveBind: [settings, "notifications-enabled"],
+        // })
         makeSwitch({
             parent: notificationGroup,
             title: _("Auto Hide"),

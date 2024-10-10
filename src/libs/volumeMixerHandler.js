@@ -11,7 +11,7 @@ export const VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection 
         super()
         this._applicationStreams = {}
         this._applicationMenus = {}
-        
+
         this._control = Volume.getMixerControl()
         this._streamAddedEventId = this._control.connect("stream-added", this._streamAdded.bind(this))
         this._streamRemovedEventId = this._control.connect("stream-removed", this._streamRemoved.bind(this))
@@ -26,14 +26,14 @@ export const VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection 
         this._updateStreams()
     }
 
-    _checkMatch(str,matchStr) {
+    _checkMatch(str, matchStr) {
         if (!str) return
         if (matchStr instanceof RegExp) return str.match(matchStr)
         return str === matchStr
     }
 
     _streamAdded(control, id) {
-        
+
         if (id in this._applicationStreams) {
             return
         }
@@ -52,9 +52,9 @@ export const VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection 
             let matchExp = this._useRegex ? new RegExp(matchStr) : matchStr
             if (
                 // Check name
-                this._checkMatch(name,matchExp) 
+                this._checkMatch(name, matchExp)
                 // Check description
-                || this._checkDescription && this._checkMatch(description,matchExp)
+                || this._checkDescription && this._checkMatch(description, matchExp)
             ) { hasFiltered = true; break }
         }
         if (this._filterMode === "block" && hasFiltered) return
@@ -69,8 +69,8 @@ export const VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection 
         }
 
         if (name || description) {
-            slider._vbox = new St.BoxLayout();
-            slider._vbox.vertical = true;
+            slider._vbox = new St.BoxLayout()
+            slider._vbox.vertical = true
 
             let sliderBox = slider.first_child
             let lastObj = sliderBox.last_child // expend button. not needed
@@ -78,7 +78,7 @@ export const VolumeMixer = class VolumeMixer extends PopupMenu.PopupMenuSection 
             sliderBox.remove_child(sliderObj)
             sliderBox.remove_child(lastObj)
             sliderBox.add_child(slider._vbox)
-            
+
             slider._label = new St.Label({ x_expand: true })
             slider._label.style_class = "QSTWEAKS-volume-mixer-label"
             slider._label.text = name && this._showStreamDesc ? `${name} - ${description}` : (name || description)

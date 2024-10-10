@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-09 01:18+0900\n"
+"POT-Creation-Date: 2024-09-26 18:26+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,8 @@ msgstr "Usuń powiadomienia z menu daty"
 msgid ""
 "Hide notifications on date menu.\n"
 "*this option removes media control on date menu too*"
-msgstr "Ukruj powiadomienia w menu daty\n"
+msgstr ""
+"Ukruj powiadomienia w menu daty\n"
 "Ta opcja również usuwa sterowanie mediami z menu daty"
 
 #: src/prefPages/other.js:37
@@ -63,6 +64,78 @@ msgstr "Nie usuwaj cienia zawartości"
 #: src/prefPages/other.js:52
 msgid "Don't remove the shadow of messages and media controls."
 msgstr "Nie usuwaj cienia wiadomości i sterowania multimediami."
+
+#: src/prefPages/notifications.js:20
+msgid "Noti&Media"
+msgstr "Powiadomienia i Media"
+
+#: src/prefPages/notifications.js:26
+msgid "Media Controls widget"
+msgstr "Widżet mediów"
+
+#: src/prefPages/notifications.js:32
+msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
+msgstr "Pokaż widżet mediów w Szybkich ustawieniach"
+
+#: src/prefPages/notifications.js:36
+msgid "Compact Mode"
+msgstr "Tryb kompaktowy"
+
+#: src/prefPages/notifications.js:37
+msgid ""
+"Make Media Controls widget smaller\n"
+"Make it more similar in size to the notification message"
+msgstr ""
+"Mały widźet mediów\n"
+"Uczyń go bardziej podobnym do komunikatu powiadomienia"
+
+#: src/prefPages/notifications.js:46
+msgid "Notification Widget"
+msgstr "Widźet powiadomień"
+
+#: src/prefPages/notifications.js:52
+msgid "Turn on to make the notification widget visible on the Quick Settings panel"
+msgstr "Pokaż widźet powiadomień na panelu Szybkich ustawień"
+
+#: src/prefPages/notifications.js:57
+msgid "Max height"
+msgstr "Maks. wysokość"
+
+#: src/prefPages/notifications.js:58
+msgid "Set maximum height of the Notifications widget. default is 292"
+msgstr "Ustaw maks. wysokość widźetu powiadomień, domyślnie 292"
+
+#: src/prefPages/notifications.js:65 src/prefPages/volumeMixer.js:144
+msgid "Position"
+msgstr "Pozycja"
+
+#: src/prefPages/notifications.js:66
+msgid "Set Notifications widget position"
+msgstr "Ustaw pozycję widźetu powiadomień"
+
+#: src/prefPages/notifications.js:71
+msgid "Top"
+msgstr "U góry"
+
+#: src/prefPages/notifications.js:72 src/prefPages/volumeMixer.js:151
+msgid "Bottom"
+msgstr "Na dole"
+
+#: src/prefPages/notifications.js:86
+msgid "Auto Hide"
+msgstr "Automatyczne ukrywanie"
+
+#: src/prefPages/notifications.js:87
+msgid "Hide the Notifications widget when have no notifications"
+msgstr "Ukryj widźet powiadomień, jeśli ich nie ma"
+
+#: src/prefPages/notifications.js:94
+msgid "Use native controls"
+msgstr "Użyj wbudowanej kontroli"
+
+#: src/prefPages/notifications.js:95
+msgid "Use native dnd switch and clear button"
+msgstr "Użyj wbudowanego przycisku Nie przeszkadzać i wyczyść przełącznik"
 
 #: src/prefPages/about.js:21
 msgid "About"
@@ -134,81 +207,6 @@ msgstr "Licencja strony trzeciej"
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "Licencja kodów, które są używane w tym rozszerzeniu"
 
-#: src/prefPages/quickToggles.js:19
-msgid "Quick Toggles"
-msgstr "Szybkie ustawienia"
-
-#: src/prefPages/quickToggles.js:24
-msgid "Add more buttons"
-msgstr "Dodaj więcej przełączników"
-
-#: src/prefPages/quickToggles.js:25
-msgid "Turn on the buttons you want to add on Quick Settings"
-msgstr "Włącz przyciski, które chcesz dodać do szybkich ustawień"
-
-#: src/prefPages/quickToggles.js:29
-msgid "DND Quick Toggle"
-msgstr "Włączanie Nie przeszkadzać"
-
-#: src/prefPages/quickToggles.js:30
-msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
-msgstr "Włącz, aby przycisk Nie przeszkadzać był widoczny na panelu szybkich ustawień"
-
-#: src/prefPages/quickToggles.js:36
-msgid "Unsafe Mode Quick Toggle"
-msgstr "Przełącznik Trybu niezabezpieczonego"
-
-#: src/prefPages/quickToggles.js:37
-msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
-msgstr "Włącz, aby przełącznik Trybu niezabezpieczonego był widoczny na panelu szybkich ustawień"
-
-#: src/prefPages/quickToggles.js:45
-msgid "Buttons to remove"
-msgstr "Wyłączanie przełączników"
-
-#: src/prefPages/quickToggles.js:46
-msgid "Turn on the buttons you want to remove from Quick Settings"
-msgstr "Wybierz przełączniki, które chcesz usunąć z szybkich ustawień"
-
-#: src/prefPages/quickToggles.js:50
-msgid "Remove chosen buttons from quick panel"
-msgstr "Wyłącz wybrane przyciski z szybkiego panelu"
-
-#: src/prefPages/quickToggles.js:51
-msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
-msgstr "Bazowano na moim rozszerzeniu https://github.com/qwrey75/gnome-quick-settings-button-remover"
-
-#: src/prefPages/quickToggles.js:55
-msgid "This feature is unstable sometime"
-msgstr "Ta funkcja jest czasami niestabilna"
-
-#: src/prefPages/quickToggles.js:56
-msgid ""
-"When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
-"Please do not report issue about known issue, Almost duplicated\n"
-"Known issue:\n"
-"  button doesn't remove after lockscreen\n"
-"  modal get bigger after lockscreen"
-msgstr ""
-"Gdy blokowanie/odblokowanie za pomocą gnome-screensaver występuje nieoczekiwane zachowanie\n"
-"Nie zgłaszaj znanego problemu, nie powielaj znanych problemów\n"
-"Znane błędy:\n"
-" przełącznik nie jest usuwany po ponownym zalogowaniu\n"
-" modal staje się większy po ponownym zalogowaniu"
-
-
-#: src/prefPages/quickToggles.js:60
-msgid "Please turn off if some bug occurred"
-msgstr "Wyłącz, jeśli wystąpił jakiś błąd"
-
-#: src/prefPages/quickToggles.js:72
-msgid "Unknown"
-msgstr "Nieznane"
-
-#: src/prefPages/quickToggles.js:72
-msgid " (invisible by system)"
-msgstr " (niewodoczne przez system"
-
 #: src/prefPages/volumeMixer.js:27
 msgid "Add Application to filtering"
 msgstr "Dodaj aplikację do filtrowania"
@@ -273,11 +271,6 @@ msgstr ""
 "Włącz pokazywanie poziomów głośności\n"
 "Bazowano na https://github.com/mymindstorm/gnome-volume-mixer"
 
-
-#: src/prefPages/volumeMixer.js:144 src/prefPages/notifications.js:65
-msgid "Position"
-msgstr "Pozycja"
-
 #: src/prefPages/volumeMixer.js:145
 msgid "Set volume mixer position"
 msgstr "Ustaw pozycję poziomów głośności"
@@ -285,10 +278,6 @@ msgstr "Ustaw pozycję poziomów głośności"
 #: src/prefPages/volumeMixer.js:150
 msgid "Top (Below Output/Input slider)"
 msgstr "U góry (poniżej suwaka wejścia/wyjścia)"
-
-#: src/prefPages/volumeMixer.js:151 src/prefPages/notifications.js:72
-msgid "Bottom"
-msgstr "Na dole"
 
 #: src/prefPages/volumeMixer.js:156
 msgid "Show stream Description"
@@ -338,86 +327,79 @@ msgstr "Sprawdź opis strumienia"
 msgid "Check Description also"
 msgstr "Sprawdź także opis"
 
-#: src/prefPages/notifications.js:20
-msgid "Noti&Media"
-msgstr "Powiadomienia i Media"
+#: src/prefPages/quickToggles.js:19
+msgid "Quick Toggles"
+msgstr "Szybkie ustawienia"
 
-#: src/prefPages/notifications.js:26
-msgid "Media Controls widget"
-msgstr "Widżet mediów"
+#: src/prefPages/quickToggles.js:24
+msgid "Add more buttons"
+msgstr "Dodaj więcej przełączników"
 
-#: src/prefPages/notifications.js:32
-msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
-msgstr "Pokaż widżet mediów w Szybkich ustawieniach"
+#: src/prefPages/quickToggles.js:25
+msgid "Turn on the buttons you want to add on Quick Settings"
+msgstr "Włącz przyciski, które chcesz dodać do szybkich ustawień"
 
-#: src/prefPages/notifications.js:36
-msgid "Compact Mode"
-msgstr "Tryb kompaktowy"
+#: src/prefPages/quickToggles.js:29
+msgid "DND Quick Toggle"
+msgstr "Włączanie Nie przeszkadzać"
 
-#: src/prefPages/notifications.js:37
+#: src/prefPages/quickToggles.js:30
+msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
+msgstr "Włącz, aby przycisk Nie przeszkadzać był widoczny na panelu szybkich ustawień"
+
+#: src/prefPages/quickToggles.js:36
+msgid "Unsafe Mode Quick Toggle"
+msgstr "Przełącznik Trybu niezabezpieczonego"
+
+#: src/prefPages/quickToggles.js:37
+msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
+msgstr "Włącz, aby przełącznik Trybu niezabezpieczonego był widoczny na panelu szybkich ustawień"
+
+#: src/prefPages/quickToggles.js:45
+msgid "Buttons to remove"
+msgstr "Wyłączanie przełączników"
+
+#: src/prefPages/quickToggles.js:46
+msgid "Turn on the buttons you want to remove from Quick Settings"
+msgstr "Wybierz przełączniki, które chcesz usunąć z szybkich ustawień"
+
+#: src/prefPages/quickToggles.js:50
+msgid "Remove chosen buttons from quick panel"
+msgstr "Wyłącz wybrane przyciski z szybkiego panelu"
+
+#: src/prefPages/quickToggles.js:51
+msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
+msgstr "Bazowano na moim rozszerzeniu https://github.com/qwrey75/gnome-quick-settings-button-remover"
+
+#: src/prefPages/quickToggles.js:55
+msgid "This feature is unstable sometime"
+msgstr "Ta funkcja jest czasami niestabilna"
+
+#: src/prefPages/quickToggles.js:56
 msgid ""
-"Make Media Controls widget smaller\n"
-"Make it more similar in size to the notification message"
+"When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
+"Please do not report issue about known issue, Almost duplicated\n"
+"Known issue:\n"
+"  button doesn't remove after lockscreen\n"
+"  modal get bigger after lockscreen"
 msgstr ""
-"Mały widźet mediów\n"
-"Uczyń go bardziej podobnym do komunikatu powiadomienia"
+"Gdy blokowanie/odblokowanie za pomocą gnome-screensaver występuje nieoczekiwane zachowanie\n"
+"Nie zgłaszaj znanego problemu, nie powielaj znanych problemów\n"
+"Znane błędy:\n"
+" przełącznik nie jest usuwany po ponownym zalogowaniu\n"
+" modal staje się większy po ponownym zalogowaniu"
 
+#: src/prefPages/quickToggles.js:60
+msgid "Please turn off if some bug occurred"
+msgstr "Wyłącz, jeśli wystąpił jakiś błąd"
 
-#: src/prefPages/notifications.js:46
-msgid "Notification Widget"
-msgstr "Widźet powiadomień"
+#: src/prefPages/quickToggles.js:72
+msgid "Unknown"
+msgstr "Nieznane"
 
-#: src/prefPages/notifications.js:52
-msgid "Turn on to make the notification widget visible on the Quick Settings panel"
-msgstr "Pokaż widźet powiadomień na panelu Szybkich ustawień"
-
-#: src/prefPages/notifications.js:57
-msgid "Max height"
-msgstr "Maks. wysokość"
-
-#: src/prefPages/notifications.js:58
-msgid "Set maximum height of the Notifications widget. default is 292"
-msgstr "Ustaw maks. wysokość widźetu powiadomień, domyślnie 292"
-
-#: src/prefPages/notifications.js:66
-msgid "Set Notifications widget position"
-msgstr "Ustaw pozycję widźetu powiadomień"
-
-#: src/prefPages/notifications.js:71
-msgid "Top"
-msgstr "U góry"
-
-#: src/prefPages/notifications.js:78
-msgid "Attach to QS panel"
-msgstr "Przyłącz do panelu Szybkich ustawień"
-
-#: src/prefPages/notifications.js:79
-msgid ""
-"Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
-"(such as margin or padding not matching with the theme)"
-msgstr ""
-"Nie oddzielaj szybkich ustawień i widdżetów powiadomień, \bpowinno się włączyć tę opcję, ponieważ oddzielone panele mogą tworzyć wiele wizualnych błędów\n"
-"(takie jak margines lub wypełnienie nie pasujące do motywu)"
-
-#: src/prefPages/notifications.js:86
-msgid "Auto Hide"
-msgstr "Automatyczne ukrywanie"
-
-#: src/prefPages/notifications.js:87
-msgid "Hide the Notifications widget when have no notifications"
-msgstr "Ukryj widźet powiadomień, jeśli ich nie ma"
-
-#: src/prefPages/notifications.js:94
-msgid "Use native controls"
-msgstr "Użyj wbudowanej kontroli"
-
-#: src/prefPages/notifications.js:95
-msgid "Use native dnd switch and clear button"
-msgstr "Użyj wbudowanego przycisku Nie przeszkadzać i wyczyść przełącznik"
-
-#: src/libs/dndQuickToggleHandler.js:9
-msgid "Do Not Disturb"
-msgstr "Nie przeszkadzać"
+#: src/prefPages/quickToggles.js:72
+msgid " (invisible by system)"
+msgstr " (niewodoczne przez system"
 
 #: src/libs/streamSlider.js:60
 msgid "Sound Settings"
@@ -427,18 +409,32 @@ msgstr "Ustawienia dźwięku"
 msgid "Volume changed"
 msgstr "Zmiany głośności"
 
+#: src/libs/dndQuickToggleHandler.js:9 src/libs/notificationBox.js:92
+msgid "Do Not Disturb"
+msgstr "Nie przeszkadzać"
+
 #: src/libs/unsafeQuickToggleHandler.js:13
 msgid "Unsafe Mode"
 msgstr "Tryb niezabezpieczony"
 
-#: src/libs/notificationHandler.js:25
+#: src/libs/notificationBox.js:26
 msgid "No Notifications"
 msgstr "Brak powiadomień"
 
-#: src/libs/notificationHandler.js:54
+#: src/libs/notificationBox.js:57 src/libs/notificationBox.js:113
 msgid "Clear"
 msgstr "Wyczyść"
 
-#: src/libs/notificationHandler.js:91
+#: src/libs/notificationBox.js:69
 msgid "Notifications"
 msgstr "Powiadomienia"
+
+#~ msgid "Attach to QS panel"
+#~ msgstr "Przyłącz do panelu Szybkich ustawień"
+
+#~ msgid ""
+#~ "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
+#~ "(such as margin or padding not matching with the theme)"
+#~ msgstr ""
+#~ "Nie oddzielaj szybkich ustawień i widdżetów powiadomień, \bpowinno się włączyć tę opcję, ponieważ oddzielone panele mogą tworzyć wiele wizualnych błędów\n"
+#~ "(takie jak margines lub wypełnienie nie pasujące do motywu)"

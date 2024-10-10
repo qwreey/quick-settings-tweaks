@@ -40,6 +40,7 @@ function build() {
 		--extra-source=../LICENSE\
 		--extra-source=../LICENSE-gnome-volume-mixer\
 		--extra-source=features\
+		--extra-source=components\
 		--extra-source=libs\
 		--extra-source=prefPages\
 		--extra-source=media\
@@ -90,7 +91,7 @@ function clear-old-po() {
 function dev() {
 	mkdir -p host
 
-	[ ! -e ./host/docker-compose.yml ] && cp ./docker-compose.example.yml ./docker-compose.yml
+	[ ! -e ./docker-compose.yml ] && cp ./docker-compose.example.yml ./docker-compose.yml
 
 	CURTAG=""
 	if [ -e "./host/gnome-docker" ]; then
