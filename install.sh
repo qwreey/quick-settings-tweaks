@@ -120,7 +120,7 @@ function usage() {
     echo '  update-po     Update po files to match source files'
 	echo '  dev-xorg      Update installed extension and reload gnome shell.'
 	echo '                only works on x11 unsafe mode.'
-	ecoh '  dev           Run dev docker'
+	echo '  dev           Run dev docker'
 	echo '  log           show extension logs (live)'
 	echo '  clear-old-po  clear *.po~'
 	echo '  enable        enable extension'
