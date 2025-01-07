@@ -8,16 +8,19 @@ import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
 import { GnomeContext } from "../libs/gnome.js"
 
 class Placeholder extends St.BoxLayout {
+    _icon: St.Icon
+    _label: St.Label
+
     _init() {
         super._init({
-            style_class: 'QSTWEAKS-notifications-no-notifications-placeholder',
+            style_class: 'QSTWEAKS-placeholder',
             x_align: Clutter.ActorAlign.CENTER,
             vertical: true,
             opacity: 60,
         })
 
         this._icon = new St.Icon({
-            style_class: 'QSTWEAKS-notifications-no-notifications-placeholder-icon',
+            style_class: 'QSTWEAKS-icon',
             icon_name: 'no-notifications-symbolic'
         })
         this.add_child(this._icon)
@@ -29,6 +32,9 @@ class Placeholder extends St.BoxLayout {
 GObject.registerClass(Placeholder)
 
 class ClearButton extends St.Button {
+    _icon: St.Icon
+    _label: St.Label
+
     _init() {
         let container = new St.BoxLayout({
             x_expand: true,
@@ -36,7 +42,7 @@ class ClearButton extends St.Button {
         })
 
         super._init({
-            style_class: 'QSTWEAKS-notifications-clear-button',
+            style_class: 'QSTWEAKS-clear-button',
             button_mask: St.ButtonMask.ONE,
             child: container,
             reactive: true,
@@ -45,7 +51,7 @@ class ClearButton extends St.Button {
         })
 
         this._icon = new St.Icon({
-            style_class: 'QSTWEAKS-notifications-clear-button-icon',
+            style_class: 'QSTWEAKS-icon',
             icon_name: 'user-trash-symbolic',
             icon_size: 12
         })
@@ -59,8 +65,17 @@ class ClearButton extends St.Button {
 }
 GObject.registerClass(ClearButton)
 
+export interface HeaderOptions extends St.BoxLayout.ConstructorProps {
+    createClearButton: boolean
+}
 class Header extends St.BoxLayout {
-    _init(createClearButton) {
+    _headerLabel: St.Label
+    _clearButton: ClearButton
+
+    constructor(options: Partial<HeaderOptions>) {
+        super(options)
+    }
+    _init(options: Partial<HeaderOptions>) {
         super._init({ style_class: "QSTWEAKS-notifications-header" })
         this._headerLabel = new St.Label({
             text: _('Notifications'),
@@ -72,7 +87,7 @@ class Header extends St.BoxLayout {
         this.add_child(this._headerLabel)
 
         // Clear button
-        if (createClearButton) {
+        if (options.createClearButton) {
             this._clearButton = new ClearButton()
             this.add_child(this._clearButton)
         }
@@ -81,16 +96,28 @@ class Header extends St.BoxLayout {
 GObject.registerClass(Header)
 
 class NativeControl extends St.BoxLayout {
+    _clearButton: St.Button
+    _dndButton: St.Button
+    _dndLabel: St.Label
+    _dndSwitch: any // FIXME
+
     _init() {
         // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L979
-        super._init()
+        super._init({
+            style_class: 'QSTWEAKS-native-control-box',
+        })
+
+        // DND Switch
+        this._dndSwitch = new GnomeContext.DateMenu._messageList._dndSwitch.constructor() // Calendar.DoNotDisturbSwitch();
+        this._dndSwitch.style_class += " QSTWEAKS-native-dnd-switch"
+        
+        // DND Label
         this._dndLabel = new St.Label({
+            style_class: 'QSTWEAKS-native-dnd-text',
             text: _('Do Not Disturb'),
             y_align: Clutter.ActorAlign.CENTER,
         })
         this.add_child(this._dndLabel)
-
-        this._dndSwitch = new GnomeContext.DateMenu._messageList._dndSwitch.constructor() // Calendar.DoNotDisturbSwitch();
         this._dndButton = new St.Button({
             style_class: 'dnd-button',
             can_focus: true,
@@ -104,8 +131,9 @@ class NativeControl extends St.BoxLayout {
             GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
         this.add_child(this._dndButton)
 
+        // Clear Button
         this._clearButton = new St.Button({
-            style_class: 'message-list-clear-button button',
+            style_class: 'message-list-clear-button button QSTWEAKS-native-clear-button',
             label: _('Clear'),
             can_focus: true,
             x_expand: true,
@@ -118,6 +146,8 @@ class NativeControl extends St.BoxLayout {
 GObject.registerClass(NativeControl)
 
 class NotificationList extends MessageList.MessageListSection {
+    _nUrgent: number
+
     _init() {
         super._init()
 
@@ -155,8 +185,22 @@ class NotificationList extends MessageList.MessageListSection {
 GObject.registerClass(NotificationList)
 
 // options: { useNativeControls, autoHide }
+export interface NotificationBoxOptions extends St.BoxLayout.ConstructorProps {
+    useNativeControls: boolean
+    autoHide: boolean
+}
 export class NotificationBox extends St.BoxLayout {
-    _init(options) {
+    _options: NotificationBoxOptions
+    _header: Header
+    _placeholder: Placeholder
+    _list: NotificationList
+    _scroll: St.ScrollView
+    _nativeControl: NativeControl
+
+    constructor(options: Partial<NotificationBoxOptions>) {
+        super(options)
+    }
+    _init(options: NotificationBoxOptions) {
         super._init({
             vertical: true,
         })
@@ -169,34 +213,34 @@ export class NotificationBox extends St.BoxLayout {
         this._createNativeControl()
 
         this.add_child(this._header)
-        this.add_child(this._notificationScroll)
+        this.add_child(this._scroll)
         if (this._placeholder) this.add_child(this._placeholder)
         if (this._nativeControl) this.add_child(this._nativeControl)
 
-        this._notificationSection.connect('notify::empty', this._syncEmpty.bind(this))
-        this._notificationSection.connect('notify::can-clear', this._syncClear.bind(this))
+        this._list.connect('notify::empty', this._syncEmpty.bind(this))
+        this._list.connect('notify::can-clear', this._syncClear.bind(this))
         this._syncEmpty()
         this._syncClear()
     }
 
     _createNotificationScroll() {
-        this._notificationScroll = new St.ScrollView({
+        this._scroll = new St.ScrollView({
             style_class: 'vfade',
             overlay_scrollbars: true,
             x_expand: true, y_expand: true,
         })
-        fixStScrollViewScrollbarOverflow(this._notificationScroll)
-        this._notificationSection = new NotificationList()
-        this._notificationScroll.child = this._notificationSection
+        fixStScrollViewScrollbarOverflow(this._scroll)
+        this._list = new NotificationList()
+        this._scroll.child = this._list
     }
 
     _createHeaderArea() {
-        const header = this._header = new Header(!this._options.useNativeControls)
+        const header = this._header = new Header({ createClearButton: !this._options.useNativeControls })
 
         if (header._clearButton) {
             header._clearButton.connect(
                 "clicked",
-                this._notificationSection.clear.bind(this._notificationSection)
+                this._list.clear.bind(this._list)
             )
         }
     }
@@ -211,14 +255,14 @@ export class NotificationBox extends St.BoxLayout {
         this._nativeControl = new NativeControl()
         this._nativeControl._clearButton.connect(
             "clicked",
-            this._notificationSection.clear.bind(this._notificationSection)
+            this._list.clear.bind(this._list)
         )
     }
 
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L1043
     _syncClear() {
         // Sync clear button reactive
-        const canClear = this._notificationSection.canClear
+        const canClear = this._list.canClear
         if (this._nativeControl) {
             this._nativeControl._clearButton.reactive = canClear
         }
@@ -229,11 +273,11 @@ export class NotificationBox extends St.BoxLayout {
     }
     _syncEmpty() {
         // placeholder / autohide
-        const empty = this._notificationSection.empty
+        const empty = this._list.empty
         if (this._options.autoHide) {
             this.visible = !empty
         } else {
-            this._notificationScroll.visible = !empty
+            this._scroll.visible = !empty
             this._placeholder.visible = empty
         }
     }

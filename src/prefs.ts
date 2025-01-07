@@ -7,6 +7,7 @@ import { notificationsPage } from "./prefPages/notifications.js"
 import { quickTogglesPage } from "./prefPages/quickToggles.js"
 import { otherPage } from "./prefPages/other.js"
 import { aboutPage } from "./prefPages/about.js"
+import Adw from "gi://Adw"
 
 var pageList = [
     volumeMixerPage,
@@ -22,7 +23,7 @@ function appendIconPath(iconTheme, path) {
 }
 
 export default class QstExtensionPreferences extends ExtensionPreferences {
-    fillPreferencesWindow(window) {
+    async fillPreferencesWindow(window: Adw.PreferencesWindow) {
         let settings = this.getSettings()
 
         window.set_search_enabled(true)
@@ -31,7 +32,7 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
         // register media path
         const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
         appendIconPath(iconTheme, this.path + "/media")
-        appendIconPath(iconTheme, this.path + "/contributors/image")
+        appendIconPath(iconTheme, this.path + "/media/contributors")
 
         for (const page of pageList) {
             window.add(new page(settings, this.metadata))

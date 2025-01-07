@@ -24,29 +24,24 @@ function update-po() {
 	return 0
 }
 
-function compile-preferences() {
-	glib-compile-schemas --targetdir=src/schemas src/schemas
-	[ "$?" != "0" ] && echo "compile-preferences: glib-compile-schemas command failed" && return 1
-
-	return 0
-}
-
 function build() {
-	compile-preferences
-	[ "$?" != "0" ] && echo "Failed to compile preferences" && return 1
+	rm -rf target/out
 
-	mkdir dist -p
-	gnome-extensions pack src\
-		--extra-source=../LICENSE\
-		--extra-source=../LICENSE-gnome-volume-mixer\
+	npm run build
+	cp metadata.json target/out
+	cp -r schemas target/out
+
+	gnome-extensions pack target/out\
+		--podir=../../po\
+		--extra-source=../../LICENSE\
+		--extra-source=../../media\
+		--extra-source=../../LICENSE-gnome-volume-mixer\
 		--extra-source=features\
 		--extra-source=components\
 		--extra-source=libs\
 		--extra-source=prefPages\
 		--extra-source=media\
-		--extra-source=contributors\
-		--podir=../po\
-		--out-dir=dist\
+		--out-dir=target\
 		--force
 	[ "$?" != "0" ] && echo "Failed to pack extension" && return 1
 
@@ -58,11 +53,8 @@ function enable() {
 }
 
 function install() {
-	build
-	[ "$?" != "0" ] && return 1
-
 	gnome-extensions install\
-		dist/quick-settings-tweaks@qwreey.shell-extension.zip\
+		target/quick-settings-tweaks@qwreey.shell-extension.zip\
 		--force
 	[ "$?" != "0" ] && echo "Failed to install extension" && return 1
 	echo "Extension was installed. logout and login shell, and check extension list."
@@ -89,6 +81,7 @@ function clear-old-po() {
 }
 
 function dev() {
+	build
 	mkdir -p host
 
 	[ ! -e ./docker-compose.yml ] && cp ./docker-compose.example.yml ./docker-compose.yml

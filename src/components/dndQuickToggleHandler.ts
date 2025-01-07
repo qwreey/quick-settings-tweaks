@@ -3,6 +3,8 @@ import GObject from "gi://GObject"
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
 class DndQuickToggle extends QuickToggle {
+    _settings: Gio.Settings
+
     _init() {
         super._init({
             title: _('Do Not Disturb'),

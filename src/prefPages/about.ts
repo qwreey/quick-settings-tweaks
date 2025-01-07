@@ -9,7 +9,7 @@ import {
     makeRow,
     makeExpander,
 } from "../libs/prefComponents.js"
-import contributors from "../contributors/data.js"
+import contributors from "../../media/contributors/index.js"
 
 export const aboutPage = GObject.registerClass({
     GTypeName: baseGTypeName+'aboutPage',

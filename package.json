@@ -1,0 +1,35 @@
+{
+  "name": "quik-settings-tweaks",
+  "description": "A TypeScript GNOME Extension",
+  "version": "0.0.0",
+  "author": {
+    "email": "me@qwreey.moe",
+    "name": "qwreey",
+    "url": "https://github.com/qwreey"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "license": "LGPL-3.0-or-later",
+  "homepage": "https://github.com/qwreey/quick-settings-tweaks#readme",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/qwreey/quick-settings-tweaks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qwreey/quick-settings-tweaks.git"
+  },
+  "devDependencies": {
+    "eslint": "^9.17.0",
+    "eslint-plugin-jsdoc": "^50.6.1",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@girs/gjs": "^4.0.0-beta.19",
+    "@girs/gnome-shell": "^47.0.0",
+    "sass": "^1.83.1"
+  },
+  "scripts": {
+    "build": "tsc && sass src/stylesheet.scss:target/built/stylesheet.css --no-source-map --style=compressed"
+  }
+}

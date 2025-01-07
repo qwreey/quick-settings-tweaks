@@ -6,31 +6,31 @@ export class ButtonRemoverFeature {
     constructor() {
         this.removedItems = []
         this.visibleListeners = []
-        this.systemHiddenItems = [];
+        this.systemHiddenItems = []
     }
     onMenuItemAdded() {
         this._unapply()
         this._apply(this.userRemovedItems)
     }
     _apply(removedItems) {
-        this.systemHiddenItems = [];
+        this.systemHiddenItems = []
 
         for (const item of GnomeContext.QuickSettingsGrid.get_children()) {
             let name = item.constructor.name.toString()
             if (!item.visible) {
-                this.systemHiddenItems.push(item);
+                this.systemHiddenItems.push(item)
             }
             if (name && removedItems.includes(name)) {
                 item.hide()
                 this.removedItems.push(item)
                 this.visibleListeners.push([item,
                     item.connect("show", () => {
-                        const index = this.systemHiddenItems.indexOf(item);
+                        const index = this.systemHiddenItems.indexOf(item)
                         if (index > -1) {
-                            this.systemHiddenItems.splice(index, 1);
+                            this.systemHiddenItems.splice(index, 1)
                         }
-                        this._unapply();
-                        this._apply(removedItems);
+                        this._unapply()
+                        this._apply(removedItems)
                     })
                 ])
             }
@@ -42,22 +42,22 @@ export class ButtonRemoverFeature {
         }
         this.visibleListeners = []
         for (const item of this.removedItems) {
-            if (!this.systemHiddenItems.includes(item)) item.show();
+            if (!this.systemHiddenItems.includes(item)) item.show()
         }
         this.removedItems = []
-        this.systemHiddenItems = [];
+        this.systemHiddenItems = []
     }
     load() {
-            const listButtons = []
-            for (const item of GnomeContext.QuickSettingsGrid.get_children()){
-                if (item === GnomeContext.QuickSettingsGrid.layout_manager._overlay) continue;
-                listButtons.push({
-                    name: item.constructor?.name,
-                    title: item.title || null,
-                    visible: item.visible
-                })
-            }
-            this.settings.set_string("list-buttons", JSON.stringify(listButtons))
+        const listButtons = []
+        for (const item of GnomeContext.QuickSettingsGrid.get_children()) {
+            if (item === GnomeContext.QuickSettingsGrid.layout_manager._overlay) continue
+            listButtons.push({
+                name: item.constructor?.name,
+                title: item.title || null,
+                visible: item.visible
+            })
+        }
+        this.settings.set_string("list-buttons", JSON.stringify(listButtons))
 
         let items = this.userRemovedItems = this.settings.get_strv("user-removed-buttons")
         if (!items) {

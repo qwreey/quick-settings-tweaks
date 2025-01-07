@@ -1,0 +1,94 @@
+@import "global.scss";
+@import "components/notificationBox.scss";
+
+/* media control on quick settings */
+.quick-settings .QSTWEAKS-media .message {
+    /* margin / round */
+    margin: 2px 0px 0px 0px;
+    padding: 0px;
+    width: 100px;
+}
+.quick-settings .QSTWEAKS-media .message-content {
+    /* text sizing */
+    font-size: 0.89em;
+    text-overflow: ellipsis;
+    width: 0px;
+}
+.quick-settings .QSTWEAKS-media .message-media-control {
+    /* control button sizing */
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* media control compact */
+.QSTWEAKS-media-compact-mode .message-icon-bin {
+    padding: 0px;
+}
+.QSTWEAKS-media-compact-mode .message {
+    margin: 0px;
+}
+.QSTWEAKS-media-compact-mode .media-message-cover-icon {
+    background-color: transparent;
+    padding: 0px;
+    margin: 16px 0px 0px 12px;
+}
+
+/* weather box overflow fix */
+.QSTWEAKS-fixed-weather .weather-button {
+    margin-bottom: 6px;
+}
+.QSTWEAKS-fixed-weather .weather-button .weather-box {
+    spacing: 7px;
+}
+.QSTWEAKS-fixed-weather .weather-button .weather-header-box {
+    spacing: 4px;
+}
+.QSTWEAKS-fixed-weather .weather-button .weather-header.location {
+    font-weight: normal;
+    font-size: 9pt;
+}
+.QSTWEAKS-fixed-weather .weather-button .weather-grid {
+    spacing-rows: 4px;
+    spacing-columns: 8px;
+}
+.QSTWEAKS-fixed-weather .weather-button .weather-forecast-icon {
+    icon-size: 32px;
+}
+.QSTWEAKS-fixed-weather .weather-button .weather-forecast-time {
+    font-size: 8pt;
+    font-weight: normal;
+    padding-top: 0.2em;
+    padding-bottom: 0.4em;
+}
+
+/* volume mixer label */
+.QSTWEAKS-volume-mixer-label {
+    padding-left: 6px;
+    font-size: 0.92em;
+    text-overflow: ellipsis;
+    width: 0px;
+}
+.QSTWEAKS-volume-mixer-slider {
+    margin: 4px 0px;
+}
+
+/* .QSTWEAKS-adjust-border-radius */
+.QSTWEAKS-notifications.QSTWEAKS-adjust-border-radius .message {
+    /* notification message margin / round */
+    margin: 6px 0px 2px 0px;
+    border-radius: 18px;
+}
+.quick-settings .QSTWEAKS-media.QSTWEAKS-adjust-border-radius .message {
+    border-radius: 22px;
+}
+
+/* .QSTWEAKS-remove-shadow */
+.QSTWEAKS-notifications.QSTWEAKS-remove-shadow .message,
+.quick-settings .QSTWEAKS-media.QSTWEAKS-remove-shadow .message {
+    box-shadow: none;
+}
+
+/* input output labels */
+.QSTWEAWKS-input-output-label {
+    width: auto;
+}
