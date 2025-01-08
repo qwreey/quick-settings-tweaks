@@ -18,7 +18,7 @@ export class DateMenuFeature extends FeatureBase {
             this.maid.connectJob(
                 GnomeContext.MediaSection,
                 "show",
-                GnomeContext.MediaSection.hide.bind(GnomeContext.MediaSection)
+                () => GnomeContext.MediaSection.hide()
             )
         }
 
@@ -28,7 +28,7 @@ export class DateMenuFeature extends FeatureBase {
             this.maid.connectJob(
                 GnomeContext.NotificationSection,
                 "show",
-                GnomeContext.NotificationSection.hide.bind(GnomeContext.NotificationSection)
+                () => GnomeContext.NotificationSection.hide()
             )
             // GnomeContext.DateMenuBox.style = "padding: 4px 6px 4px 0px;"
         }
@@ -39,4 +39,5 @@ export class DateMenuFeature extends FeatureBase {
         //     GnomeContext.DateMenuBox.style_class += " qwreey-fixed-weather"
         // }
     }
+    onUnload(): void {}
 }

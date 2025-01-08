@@ -7,11 +7,11 @@
 
         // Message Content Box (Outside)
         .message-box {
-            padding: 2px 0px 0px 0px; // Header & Content spacing
+            padding-top: 1px; // Header & Content spacing
 
             // Message Content (Texts)
             .message-content {
-                spacing: 2px; // Title & Content spacing
+                spacing: 3px; // Title & Content spacing
                 font-size: 0.89em;
             }
         }
@@ -24,6 +24,11 @@
             .message-expand-button,
             .message-close-button {
                 padding: 2px !important;
+            }
+
+            // Title
+            .message-header-content {
+                padding-left: 6px;
             }
         }
     }

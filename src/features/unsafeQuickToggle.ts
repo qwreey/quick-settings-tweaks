@@ -1,31 +1,33 @@
-import { featureReloader } from "../libs/utility.js"
 import { Indicator } from "../components/unsafeQuickToggleHandler.js"
 import { GnomeContext } from "../libs/gnome.js"
+import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
-export class UnsafeQuickToggleFeature {
-    load() {
-        // setup reloader
-        featureReloader.enableWithSettingKeys(this, [
-            "add-unsafe-quick-toggle-enabled",
-        ])
+export class UnsafeQuickToggleFeature extends FeatureBase {
+    // #region settings
+    enabled: boolean
+    override loadSettings(loader: SettingLoader): void {
+        this.enabled = loader.loadBoolean("add-unsafe-quick-toggle-enabled")
+    }
+    // #endregion settings
 
-        // check is feature enabled
-        if (!this.settings.get_boolean("add-unsafe-quick-toggle-enabled")) return
+    indicator: Indicator
+    override onLoad(): void {
+        if (!this.enabled) return
+
+        // Load last state
         global.context.unsafe_mode = this.settings.get_boolean("last-unsafe-state")
 
         // Add Unsafe Quick Toggle
-        this.unsafeToggle = new Indicator((state) => this.settings.set_boolean("last-unsafe-state", state))
-        GnomeContext.QuickSettings.addExternalIndicator(this.unsafeToggle)
+        this.maid.destroyJob(
+            this.indicator = new Indicator(
+                (state) => this.settings.set_boolean("last-unsafe-state", state)
+            )
+        )
+        // @ts-ignore
+        GnomeContext.QuickSettings.addExternalIndicator(this.indicator)
     }
-
-    unload() {
-        // disable feature reloader
-        featureReloader.disable(this)
-
-        if (this.unsafeToggle) {
-            this.unsafeToggle.destroy()
-            this.unsafeToggle = null
-            global.context.unsafe_mode = false
-        }
+    override onUnload(): void {
+        global.context.unsafe_mode = false
+        this.indicator = null
     }
 }

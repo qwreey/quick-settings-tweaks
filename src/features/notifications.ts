@@ -14,7 +14,7 @@ export class NotificationsFeature extends FeatureBase {
     override loadSettings(loader: SettingLoader): void {
         this.notificationsEnabled = loader.loadBoolean("notifications-enabled")
         this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
-        this.autoHide = loader.loadBoolean("notifications-hide-when-no-notifications")
+        this.autoHide = loader.loadBoolean("notifications-autohide")
         this.position = loader.loadString("notifications-position")
         this.maxHeight = loader.loadInt("notifications-max-height")
         this.compact = loader.loadBoolean("notifications-compact")
@@ -39,7 +39,7 @@ export class NotificationsFeature extends FeatureBase {
 
     notificationBox: NotificationBox
     updateMaxHeight() {
-        this.notificationBox.style = `max-height: ${this.maxHeight}`
+        this.notificationBox.style = `max-height:${this.maxHeight}px;`
     }
     updateStyleClass() {
         let style = "QSTWEAKS-notifications"

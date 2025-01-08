@@ -1,48 +1,63 @@
-import { featureReloader } from "../libs/utility.js"
+import Gio from "gi://Gio"
+import Clutter from "gi://Clutter"
+
 import { GnomeContext } from "../libs/gnome.js"
 import { Indicator } from "../components/dndQuickToggleHandler.js"
-import Gio from "gi://Gio"
+import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
-export class DndQuickToggleFeature {
-    load() {
-        // setup reloader
-        featureReloader.enableWithSettingKeys(this, [
-            "add-dnd-quick-toggle-enabled",
-        ])
-        if (!this.settings.get_boolean("add-dnd-quick-toggle-enabled")) return
+export class DndQuickToggleFeature extends FeatureBase {
+    // #region settings
+    enabled: boolean
+    override loadSettings(loader: SettingLoader): void {
+        this.enabled = loader.loadBoolean("add-dnd-quick-toggle-enabled")
+    }
+    // #endregion settings
 
-        // Add DND Quick Toggle
-        this.dndToggle = new Indicator()
-        GnomeContext.QuickSettings.addExternalIndicator(this.dndToggle)
+    indicator: Indicator
+    datemenuDnd: Clutter.Actor
+    override onLoad(): void {
+        if (!this.enabled) return
 
-        //remove DND button from datemenu
+        // Create Indicator
+        this.maid.destroyJob(
+            this.indicator = new Indicator()
+        )
+
         this.datemenuDnd = GnomeContext.DateMenu.last_child.last_child
         this.datemenuDnd.hide()
-        this.datemenu_dnd_connection = this.datemenuDnd.connect("show", () => {
-            this.datemenuDnd.hide()
+        this.maid.connectJob(this.datemenuDnd, "show", () => this.datemenuDnd.hide())
+        this.maid.functionJob(()=>{
+            if (!(new Gio.Settings({
+                schema_id: "org.gnome.desktop.notifications",
+            })).get_boolean("show-banners")) {
+                this.datemenuDnd.show()
+            }
+            this.datemenuDnd = null
         })
+        // Add to QS
+        // @ts-ignore
+        GnomeContext.QuickSettings.addExternalIndicator(this.indicator)
+
     }
-
-    unload() {
-        // disable feature reloader
-        featureReloader.disable(this)
-
-        if (this.datemenuDnd == null) return
-
-        // restore date menu dnd icon
-        this.datemenuDnd.disconnect(this.datemenu_dnd_connection)
-        this.datemenu_dnd_connection = null
-        const _settings = new Gio.Settings({
-            schema_id: "org.gnome.desktop.notifications",
-        })
-        if (!_settings.get_boolean("show-banners")) {
-            this.datemenuDnd.show()
-        }
-
-        // Remove DND Quick Toggle
-        if (this.dndToggle) {
-            this.dndToggle.destroy()
-            this.dndToggle = null
-        }
+    override onUnload(): void {
+        this.indicator = null
     }
 }
+
+
+// export class DndQuickToggleFeature {
+//     load() {
+
+//         //remove DND button from datemenu
+
+//     }
+
+
+
+//         // Remove DND Quick Toggle
+//         if (this.dndToggle) {
+//             this.dndToggle.destroy()
+//             this.dndToggle = null
+//         }
+//     }
+// }

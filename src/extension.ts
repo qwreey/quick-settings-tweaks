@@ -46,12 +46,12 @@ export default class QstExtension extends Extension {
         // load modules
         global.context.unsafe_mode = true
         this.features = [
-            // new DndQuickToggleFeature(),
-            // new UnsafeQuickToggleFeature(),
+            new DndQuickToggleFeature(settings),
+            new UnsafeQuickToggleFeature(settings),
             // new VolumeMixerFeature(),
             // new ButtonRemoverFeature(),
             // new InputOutputFeature(),
-            // new DateMenuFeature(settings),
+            new DateMenuFeature(settings),
             new NotificationsFeature(settings),
             new MediaFeature(settings),
         ]

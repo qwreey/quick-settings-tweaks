@@ -1,31 +1,37 @@
+import St from "gi://St"
 import Gio from "gi://Gio"
 import GObject from "gi://GObject"
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
-class DndQuickToggle extends QuickToggle {
+interface DndQuickToggle {
     _settings: Gio.Settings
-
+}
+class DndQuickToggle extends QuickToggle {
     _init() {
         super._init({
             title: _('Do Not Disturb'),
             iconName: "notifications-disabled-symbolic",
-        })
+        } as Partial<QuickToggle.ConstructorProps>)
 
         this._settings = new Gio.Settings({
             schema_id: "org.gnome.desktop.notifications",
         })
+        // @ts-ignore
         this._settings.connectObject("changed::show-banners", this._sync.bind(this), this)
 
         this.connect("clicked", this._toggleMode.bind(this))
-
         this._sync()
     }
 
+    // Update icon to match current state
     _updateIcon() {
-        this.iconName = this.checked ? "notifications-disabled-symbolic" : "notifications-symbolic"
+        this.iconName =
+            this.checked
+            ? "notifications-disabled-symbolic"
+            : "notifications-symbolic"
     }
 
-    // Toggle DND
+    // Toggle DND Mode
     _toggleMode() {
         this._settings.set_boolean(
             "show-banners",
@@ -33,13 +39,14 @@ class DndQuickToggle extends QuickToggle {
         )
     }
 
-    // Sync DND status
+    // Sync DND state
     _sync() {
         const checked = !this._settings.get_boolean("show-banners")
         if (this.checked !== checked) this.set({ checked })
         this._updateIcon()
     }
 
+    // Nullout
     destroy() {
         this._settings = null
         super.destroy()
@@ -47,7 +54,11 @@ class DndQuickToggle extends QuickToggle {
 }
 GObject.registerClass(DndQuickToggle)
 
-export class Indicator extends SystemIndicator {
+interface Indicator {
+    _indicator: St.Icon
+    _settings: Gio.Settings
+}
+class Indicator extends SystemIndicator {
     _init() {
         super._init()
 
@@ -59,6 +70,7 @@ export class Indicator extends SystemIndicator {
         this._settings = new Gio.Settings({
             schema_id: "org.gnome.desktop.notifications",
         })
+        // @ts-ignore
         this._settings.connectObject("changed::show-banners", this._sync.bind(this), this)
         this._sync()
     }
@@ -79,3 +91,4 @@ export class Indicator extends SystemIndicator {
     }
 }
 GObject.registerClass(Indicator)
+export { Indicator }

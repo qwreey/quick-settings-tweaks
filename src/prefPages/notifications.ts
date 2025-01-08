@@ -53,26 +53,26 @@ export const notificationsPage = GObject.registerClass({
         })
         makeAdjustment({
             parent: notificationGroup,
-            max: 1280,
+            max: 2048,
             title: _("Max height"),
             subtitle: _("Set maximum height of the Notifications widget. default is 292"),
             value: settings.get_int("notifications-max-height"),
             bind: [settings, "notifications-max-height"],
             sensitiveBind: [settings, "notifications-enabled"],
         })
-        makeDropdown({
-            parent: notificationGroup,
-            title: _("Position"),
-            subtitle: _("Set Notifications widget position"),
-            value: settings.get_string('notifications-position'),
-            type: "string",
-            bind: [settings, 'notifications-position'],
-            items: [
-                {name: _("Top"), value: "top"},
-                {name: _("Bottom"), value: "bottom"},
-            ],
-            sensitiveBind: [settings, "notifications-enabled"],
-        })
+        // makeDropdown({
+        //     parent: notificationGroup,
+        //     title: _("Position"),
+        //     subtitle: _("Set Notifications widget position"),
+        //     value: settings.get_string('notifications-position'),
+        //     type: "string",
+        //     bind: [settings, 'notifications-position'],
+        //     items: [
+        //         {name: _("Top"), value: "top"},
+        //         {name: _("Bottom"), value: "bottom"},
+        //     ],
+        //     sensitiveBind: [settings, "notifications-enabled"],
+        // })
         // makeSwitch({
         //     parent: notificationGroup,
         //     title: _("Attach to QS panel"),
@@ -85,8 +85,8 @@ export const notificationsPage = GObject.registerClass({
             parent: notificationGroup,
             title: _("Auto Hide"),
             subtitle: _("Hide the Notifications widget when have no notifications"),
-            value: settings.get_boolean("notifications-hide-when-no-notifications"),
-            bind: [settings, "notifications-hide-when-no-notifications"],
+            value: settings.get_boolean("notifications-autohide"),
+            bind: [settings, "notifications-autohide"],
             sensitiveBind: [settings, "notifications-enabled"],
         })
         makeSwitch({
@@ -95,6 +95,14 @@ export const notificationsPage = GObject.registerClass({
             subtitle: _("Use native dnd switch and clear button"),
             value: settings.get_boolean("notifications-use-native-controls"),
             bind: [settings, "notifications-use-native-controls"],
+            sensitiveBind: [settings, "notifications-enabled"],
+        })
+        makeSwitch({
+            parent: notificationGroup,
+            title: _("Compact Mode"),
+            subtitle: _("Make notifications smaller"),
+            value: settings.get_boolean("notifications-compact"),
+            bind: [settings, "notifications-compact"],
             sensitiveBind: [settings, "notifications-enabled"],
         })
         this.add(notificationGroup)

@@ -8,6 +8,7 @@ import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar
 import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
 import { GnomeContext } from "../libs/gnome.js"
 
+// #region Placeholder
 interface Placeholder {
     _icon: St.Icon
     _label: St.Label
@@ -19,55 +20,66 @@ class Placeholder extends St.BoxLayout {
             x_align: Clutter.ActorAlign.CENTER,
             vertical: true,
             opacity: 60,
-        })
+        } as Partial<St.BoxLayout>)
 
+        // Symbolic Icon
         this._icon = new St.Icon({
             style_class: 'QSTWEAKS-icon',
             icon_name: 'no-notifications-symbolic'
         })
         this.add_child(this._icon)
 
+        // 'No Notifications' Text
         this._label = new St.Label({ text: _('No Notifications') })
         this.add_child(this._label)
     }
 }
 GObject.registerClass(Placeholder)
+// #endregion Placeholder
 
+// #region ClearButton
 interface ClearButton {
     _icon: St.Icon
     _label: St.Label
+    _container: St.BoxLayout
 }
 class ClearButton extends St.Button {
     _init() {
-        let container = new St.BoxLayout({
+        // Child Container
+        this._container = new St.BoxLayout({
             x_expand: true,
             y_expand: true,
         })
 
+        // Button
         super._init({
             style_class: 'QSTWEAKS-clear-button',
             button_mask: St.ButtonMask.ONE,
-            child: container,
+            child: this._container,
             reactive: true,
             can_focus: true,
             y_align: Clutter.ActorAlign.CENTER,
-        })
+        } as Partial<St.Button.ConstructorProps>)
 
+        // Icon
         this._icon = new St.Icon({
             style_class: 'QSTWEAKS-icon',
             icon_name: 'user-trash-symbolic',
             icon_size: 12
         })
-        container.add_child(this._icon)
+        this._container.add_child(this._icon)
 
+        // Label
         this._label = new St.Label({
             text: _('Clear')
         })
-        container.add_child(this._label)
+        this._container.add_child(this._label)
     }
 }
 GObject.registerClass(ClearButton)
+// #endregion ClearButton
 
+// #region Header
 namespace Header {   
     export type Options = Partial<{
         createClearButton: boolean
@@ -82,10 +94,14 @@ class Header extends St.BoxLayout {
         super(options)
     }
     _init(options: Header.Options) {
-        super._init({ style_class: "QSTWEAKS-notifications-header" })
+        super._init({
+            style_class: "QSTWEAKS-header"
+        } as Partial<St.BoxLayout.ConstructorProps>)
+
+        // Label
         this._headerLabel = new St.Label({
             text: _('Notifications'),
-            style_class: "QSTWEAKS-notifications-title",
+            style_class: "QSTWEAKS-header-label",
             y_align: Clutter.ActorAlign.CENTER,
             x_align: Clutter.ActorAlign.START,
             x_expand: true
@@ -100,7 +116,9 @@ class Header extends St.BoxLayout {
     }
 }
 GObject.registerClass(Header)
+// #endregion Header
 
+// #region NativeControl
 interface NativeControl {
     _clearButton: St.Button
     _dndButton: St.Button
@@ -111,8 +129,8 @@ class NativeControl extends St.BoxLayout {
     _init() {
         // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L979
         super._init({
-            style_class: 'QSTWEAKS-native-control-box',
-        })
+            style_class: 'QSTWEAKS-native-controls',
+        } as Partial<St.BoxLayout.ConstructorProps>)
 
         // DND Switch
         this._dndSwitch = new (GnomeContext.MessageList._dndSwitch.constructor as any)() // Calendar.DoNotDisturbSwitch();
@@ -151,7 +169,9 @@ class NativeControl extends St.BoxLayout {
     }
 }
 GObject.registerClass(NativeControl)
+// #endregion NativeControl
 
+// #region NotificationList
 interface NotificationList {
     _nUrgent: number
 }
@@ -183,7 +203,6 @@ class NotificationList extends MessageList.MessageListSection {
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L871
     _onNotificationAdded(source, notification) {
         // @ts-ignore
-        // Calendar.NotificationSection
         GnomeContext.NotificationSection._onNotificationAdded.call(this, source, notification)
     }
 
@@ -194,7 +213,9 @@ class NotificationList extends MessageList.MessageListSection {
     }
 }
 GObject.registerClass(NotificationList)
+// #endregion NotificationList
 
+// #region NotificationBox
 namespace NotificationBox {
     export type Options = Partial<{
         useNativeControls: boolean
@@ -208,6 +229,7 @@ interface NotificationBox {
     _list: NotificationList
     _scroll: St.ScrollView
     _nativeControl: NativeControl
+    _sections: St.BoxLayout
 }
 class NotificationBox extends St.BoxLayout {
     constructor(options: NotificationBox.Options) {
@@ -216,7 +238,7 @@ class NotificationBox extends St.BoxLayout {
     _init(options: NotificationBox.Options) {
         super._init({
             vertical: true,
-        })
+        } as Partial<St.BoxLayout.ConstructorProps>)
 
         this._options = options
 
@@ -237,16 +259,27 @@ class NotificationBox extends St.BoxLayout {
     }
 
     _createNotificationScroll() {
+        this._sections = new St.BoxLayout({
+            vertical: true,
+            x_expand: true,
+            y_expand: true,
+        })
         this._scroll = new St.ScrollView({
             style_class: 'vfade',
             overlay_scrollbars: true,
-            x_expand: true, y_expand: true,
+            x_expand: true,
+            y_expand: true,
+            child: this._sections,
         })
+        this._scroll.connect(
+            "notify::vscrollbar-visible",
+            this._syncScrollbarPadding.bind(this)
+        )
+        this._syncScrollbarPadding()
         fixStScrollViewScrollbarOverflow(this._scroll)
         this._list = new NotificationList()
-        this._scroll.child = this._list
+        this._sections.add_child(this._list)
     }
-
     _createHeaderArea() {
         const header = this._header = new Header({ createClearButton: !this._options.useNativeControls })
 
@@ -257,12 +290,10 @@ class NotificationBox extends St.BoxLayout {
             )
         }
     }
-
     _createPlaceholder() {
         if (this._options.autoHide) return
         this._placeholder = new Placeholder()
     }
-
     _createNativeControl() {
         if (!this._options.useNativeControls) return
         this._nativeControl = new NativeControl()
@@ -294,7 +325,13 @@ class NotificationBox extends St.BoxLayout {
             this._placeholder.visible = empty
         }
     }
+    _syncScrollbarPadding() {
+        this._sections.style_class =
+            this._scroll.vscrollbar_visible
+            ? "message-list-sections QSTWEAKS-has-scrollbar"
+            : "message-list-sections"
+    }
 }
 GObject.registerClass(NotificationBox)
-
 export { NotificationBox }
+// #endregion NotificationBox
