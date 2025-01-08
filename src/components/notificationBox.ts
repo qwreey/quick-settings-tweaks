@@ -3,14 +3,16 @@ import St from "gi://St"
 import Clutter from "gi://Clutter"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
+import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
 
 import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
 import { GnomeContext } from "../libs/gnome.js"
 
-class Placeholder extends St.BoxLayout {
+interface Placeholder {
     _icon: St.Icon
     _label: St.Label
-
+}
+class Placeholder extends St.BoxLayout {
     _init() {
         super._init({
             style_class: 'QSTWEAKS-placeholder',
@@ -31,10 +33,11 @@ class Placeholder extends St.BoxLayout {
 }
 GObject.registerClass(Placeholder)
 
-class ClearButton extends St.Button {
+interface ClearButton {
     _icon: St.Icon
     _label: St.Label
-
+}
+class ClearButton extends St.Button {
     _init() {
         let container = new St.BoxLayout({
             x_expand: true,
@@ -65,17 +68,20 @@ class ClearButton extends St.Button {
 }
 GObject.registerClass(ClearButton)
 
-export interface HeaderOptions extends St.BoxLayout.ConstructorProps {
-    createClearButton: boolean
+namespace Header {   
+    export type Options = Partial<{
+        createClearButton: boolean
+    } & St.BoxLayout.ConstructorProps>
 }
-class Header extends St.BoxLayout {
+interface Header {
     _headerLabel: St.Label
     _clearButton: ClearButton
-
-    constructor(options: Partial<HeaderOptions>) {
+}
+class Header extends St.BoxLayout {
+    constructor(options: Header.Options) {
         super(options)
     }
-    _init(options: Partial<HeaderOptions>) {
+    _init(options: Header.Options) {
         super._init({ style_class: "QSTWEAKS-notifications-header" })
         this._headerLabel = new St.Label({
             text: _('Notifications'),
@@ -95,12 +101,13 @@ class Header extends St.BoxLayout {
 }
 GObject.registerClass(Header)
 
-class NativeControl extends St.BoxLayout {
+interface NativeControl {
     _clearButton: St.Button
     _dndButton: St.Button
     _dndLabel: St.Label
-    _dndSwitch: any // FIXME
-
+    _dndSwitch: DoNotDisturbSwitch
+}
+class NativeControl extends St.BoxLayout {
     _init() {
         // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L979
         super._init({
@@ -108,7 +115,7 @@ class NativeControl extends St.BoxLayout {
         })
 
         // DND Switch
-        this._dndSwitch = new GnomeContext.DateMenu._messageList._dndSwitch.constructor() // Calendar.DoNotDisturbSwitch();
+        this._dndSwitch = new (GnomeContext.MessageList._dndSwitch.constructor as any)() // Calendar.DoNotDisturbSwitch();
         this._dndSwitch.style_class += " QSTWEAKS-native-dnd-switch"
         
         // DND Label
@@ -145,62 +152,68 @@ class NativeControl extends St.BoxLayout {
 }
 GObject.registerClass(NativeControl)
 
-class NotificationList extends MessageList.MessageListSection {
+interface NotificationList {
     _nUrgent: number
-
+}
+class NotificationList extends MessageList.MessageListSection {
     _init() {
         super._init()
 
         this._nUrgent = 0
 
+        // @ts-ignore // FIXME:
         GnomeContext.MessageTray.connectObject('source-added', this._sourceAdded.bind(this), this)
         GnomeContext.MessageTray.getSources().forEach(source => {
             this._sourceAdded(GnomeContext.MessageTray, source)
         })
 
         // sync notifications from gnome stock notifications
-        GnomeContext.DateMenu._messageList._notificationSection._messages.forEach((notification) => {
+        // @ts-ignore
+        GnomeContext.NotificationSection._messages.forEach((notification) => {
             this._onNotificationAdded(null, notification.notification)
         })
     }
 
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L866
     _sourceAdded(tray, source) {
-        // Calendar.NotificationSection
-        GnomeContext.DateMenu._messageList._notificationSection._sourceAdded.call(this, tray, source)
+        // @ts-ignore
+        GnomeContext.NotificationSection._sourceAdded.call(this, tray, source)
     }
 
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L871
     _onNotificationAdded(source, notification) {
+        // @ts-ignore
         // Calendar.NotificationSection
-        GnomeContext.DateMenu._messageList._notificationSection._onNotificationAdded.call(this, source, notification)
+        GnomeContext.NotificationSection._onNotificationAdded.call(this, source, notification)
     }
 
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L900
     vfunc_map() {
-        // Calendar.NotificationSection
-        GnomeContext.DateMenu._messageList._notificationSection.vfunc_map.call(this)
+        // @ts-ignore
+        GnomeContext.NotificationSection.vfunc_map.call(this)
     }
 }
 GObject.registerClass(NotificationList)
 
-// options: { useNativeControls, autoHide }
-export interface NotificationBoxOptions extends St.BoxLayout.ConstructorProps {
-    useNativeControls: boolean
-    autoHide: boolean
+namespace NotificationBox {
+    export type Options = Partial<{
+        useNativeControls: boolean
+        autoHide: boolean
+    } & St.BoxLayout.ConstructorProps>
 }
-export class NotificationBox extends St.BoxLayout {
-    _options: NotificationBoxOptions
+interface NotificationBox {
+    _options: NotificationBox.Options
     _header: Header
     _placeholder: Placeholder
     _list: NotificationList
     _scroll: St.ScrollView
     _nativeControl: NativeControl
-
-    constructor(options: Partial<NotificationBoxOptions>) {
+}
+class NotificationBox extends St.BoxLayout {
+    constructor(options: NotificationBox.Options) {
         super(options)
     }
-    _init(options: NotificationBoxOptions) {
+    _init(options: NotificationBox.Options) {
         super._init({
             vertical: true,
         })
@@ -283,3 +296,5 @@ export class NotificationBox extends St.BoxLayout {
     }
 }
 GObject.registerClass(NotificationBox)
+
+export { NotificationBox }

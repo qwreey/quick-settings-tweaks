@@ -1,5 +1,5 @@
 import Gio from "gi://Gio";
-import { Maid } from "./maid.js";
+import Maid from "./maid.js";
 
 export class SettingLoader {
     settings: Gio.Settings
@@ -61,25 +61,22 @@ export abstract class FeatureBase {
             this.loadSettings(this.loader)
             this.reload(key)
         })
-        this.loadSettings(this.loader)
     }
 
-    load() {
+    load(noSettingsLoad?: boolean): void {
+        if (!noSettingsLoad) this.loadSettings(this.loader)
         this.onLoad()
     }
-    unload() {
-        this.loader.clear()
+    unload(noSettingsUnload?: boolean): void {
+        if (!noSettingsUnload) this.loader.clear()
         this.onUnload()
         this.maid.clear()
     }
-    onLoad() {}
-    onUnload() {}
-    hotReload() {
-        this.unload()
-        this.load()
+    abstract onLoad(): void
+    abstract onUnload(): void
+    reload(changedKey?: string): void {
+        this.unload(true)
+        this.load(true)
     }
-    reload(changedKey?: string) {
-        this.hotReload()
-    }
-    loadSettings(loader: SettingLoader) {}
+    abstract loadSettings(loader: SettingLoader): void
 }

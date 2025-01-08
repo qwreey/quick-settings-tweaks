@@ -7,7 +7,7 @@
         "removeComments": false,
         "skipLibCheck": true,
         "lib": ["ESNext"],
-        "allowArbitraryExtensions": true
+        "allowArbitraryExtensions": true,
     },
     "include": ["./src/**/*.ts", "./types.d.ts", "src/contributors.js"],
 }

@@ -1,17 +1,12 @@
-@import "../global.scss";
+@use "../global.scss" as *;
 
 #{$p}-notifications {
-    max-height: 292px;
     padding: 0px; // integrated
-    margin: 4px 0px 0px 0px;
-    .message-content {
-        font-size: 0.9em;
+    margin: 0px 0px 0px 0px;
+
+    .message-content { // Message Content (Texts)
+        width: 0px; // Min size, texts will be expended
         text-overflow: ellipsis;
-        width: 0px;
-    }
-    .message-expand-button,
-    .message-close-button {
-        padding: 4px !important;
     }
 
     // Clear button

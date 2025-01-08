@@ -30,6 +30,6 @@
     "sass": "^1.83.1"
   },
   "scripts": {
-    "build": "tsc && sass src/stylesheet.scss:target/built/stylesheet.css --no-source-map --style=compressed"
+    "build": "tsc ; sass src/stylesheet.scss:target/out/stylesheet.css --no-source-map"
   }
 }

@@ -9,7 +9,6 @@ import { InputOutputFeature } from "./features/inputOutput.js"
 import { logger } from "./libs/utility.js"
 import { GnomeContext } from "./libs/gnome.js"
 import { FeatureBase } from "./libs/feature.js"
-
 import { MediaFeature } from "./features/media.js"
 
 export default class QstExtension extends Extension {
@@ -45,13 +44,14 @@ export default class QstExtension extends Extension {
         let settings = this.getSettings()
 
         // load modules
+        global.context.unsafe_mode = true
         this.features = [
             // new DndQuickToggleFeature(),
             // new UnsafeQuickToggleFeature(),
             // new VolumeMixerFeature(),
             // new ButtonRemoverFeature(),
             // new InputOutputFeature(),
-            new DateMenuFeature(settings),
+            // new DateMenuFeature(settings),
             new NotificationsFeature(settings),
             new MediaFeature(settings),
         ]

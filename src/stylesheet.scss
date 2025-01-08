@@ -1,19 +1,15 @@
-@import "global.scss";
-@import "components/notificationBox.scss";
+@use "./global.scss" as *;
+
+@use "./styles/notification-box.scss";
+@use "./styles/message-compact.scss";
 
 /* media control on quick settings */
-.quick-settings .QSTWEAKS-media .message {
-    /* margin / round */
-    margin: 2px 0px 0px 0px;
+.quick-settings .QSTWEAKS-media .message { // Card Background
+    margin: 0px 0px 0px 0px;
     padding: 0px;
     width: 100px;
 }
-.quick-settings .QSTWEAKS-media .message-content {
-    /* text sizing */
-    font-size: 0.89em;
-    text-overflow: ellipsis;
-    width: 0px;
-}
+
 .quick-settings .QSTWEAKS-media .message-media-control {
     /* control button sizing */
     padding-left: 5px;

@@ -1,21 +1,6 @@
-
-enum TaskType {
-    Connect,
-    Function,
-    Dispose,
-    RunDispose,
-    Destroy,
-    Patch,
-}
-export const Priority = {
-    High: 2000,
-    Default: 0,
-    Low: -2000,
-}
-
 // Connection destroyer
-export class Maid {
-	private records: [TaskType, number, ...any][]
+class Maid {
+	private records: [Maid.TaskType, number, ...any][]
 
 	constructor() {
 		this.records = []
@@ -27,23 +12,23 @@ export class Maid {
         handleFunc: (...args: any)=>any,
         priority: number = 0
     ) {
-		this.getRecords().push([TaskType.Connect, priority, signalObject, signalObject.connect(signalName, handleFunc)])
+		this.getRecords().push([Maid.TaskType.Connect, priority, signalObject, signalObject.connect(signalName, handleFunc)])
 	}
 
 	functionJob(func: (...args: any)=>any, priority: number = 0) {
-		this.getRecords().push([TaskType.Function, priority, func])
+		this.getRecords().push([Maid.TaskType.Function, priority, func])
 	}
 
 	disposeJob(object: any, priority: number = 0) {
-		this.getRecords().push([TaskType.Dispose, priority, object])
+		this.getRecords().push([Maid.TaskType.Dispose, priority, object])
 	}
 
 	runDisposeJob(object: any, priority: number = 0) {
-		this.getRecords().push([TaskType.RunDispose, priority, object])
+		this.getRecords().push([Maid.TaskType.RunDispose, priority, object])
 	}
 
 	destroyJob(object: any, priority: number = 0) {
-		this.getRecords().push([TaskType.Destroy, priority, object])
+		this.getRecords().push([Maid.TaskType.Destroy, priority, object])
 	}
 
 	destroy() {
@@ -63,7 +48,7 @@ export class Maid {
         priority: number = 0
     ) {
         const original = patchObject[patchName]
-		this.getRecords().push([TaskType.Patch, priority, patchObject, patchName, original])
+		this.getRecords().push([Maid.TaskType.Patch, priority, patchObject, patchName, original])
 		patchObject[patchName] = handleFunc(original)
 	}
 
@@ -72,22 +57,22 @@ export class Maid {
 		records.sort((a, b) => b[1] - a[1])
 		for (const record of records) {
 			switch (record[0]) {
-				case TaskType.Connect:
+				case Maid.TaskType.Connect:
 					record[2].disconnect(record[3])
 					break
-				case TaskType.Function:
+				case Maid.TaskType.Function:
 					record[2]()
 					break
-				case TaskType.Dispose:
+				case Maid.TaskType.Dispose:
 					record[2].dispose()
 					break
-				case TaskType.RunDispose:
+				case Maid.TaskType.RunDispose:
 					record[2].run_dispose()
 					break
-				case TaskType.Destroy:
+				case Maid.TaskType.Destroy:
 					record[2].destroy()
 					break
-				case TaskType.Patch:
+				case Maid.TaskType.Patch:
 					record[2][record[1]] = record[2]
 					break
 				default:
@@ -97,3 +82,19 @@ export class Maid {
 		this.records = []
 	}
 }
+namespace Maid {
+	export enum TaskType {
+		Connect,
+		Function,
+		Dispose,
+		RunDispose,
+		Destroy,
+		Patch,
+	}
+	export const Priority = {
+		High: 2000,
+		Default: 0,
+		Low: -2000,
+	}
+}
+export default Maid

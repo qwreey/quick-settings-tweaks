@@ -7,7 +7,7 @@ export class MediaFeature extends FeatureBase {
     mediaControlEnabled: boolean
     disableAdjustBorder: boolean
     disableRemoveShadow: boolean
-    loadSettings(loader: SettingLoader): void {
+    override loadSettings(loader: SettingLoader): void {
         this.mediaControlEnabled = loader.loadBoolean("media-control-enabled")
         this.disableAdjustBorder = loader.loadBoolean("disable-adjust-content-border-radius")
         this.disableRemoveShadow = loader.loadBoolean("disable-remove-shadow")
@@ -15,7 +15,7 @@ export class MediaFeature extends FeatureBase {
     // #endregion settings
 
     mediaBox?: MediaBox
-    onLoad(): void {
+    override onLoad(): void {
         if (!this.mediaControlEnabled) return
         this.maid.destroyJob(
             this.mediaBox = new MediaBox({})
@@ -25,5 +25,8 @@ export class MediaFeature extends FeatureBase {
         GnomeContext.QuickSettingsGrid.layout_manager.child_set_property(
             GnomeContext.QuickSettingsGrid, this.mediaBox, 'column-span', 2
         )
+    }
+    override onUnload(): void {
+        this.mediaBox = null
     }
 }

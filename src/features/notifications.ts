@@ -1,27 +1,23 @@
-import { featureReloader } from "../libs/utility.js"
 import { NotificationBox } from "../components/notificationBox.js"
 import { GnomeContext } from "../libs/gnome.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
 // FIXME: size change? issue when long noti showing
 export class NotificationsFeature extends FeatureBase {
-
     // #region settings
     notificationsEnabled: boolean
-    disableAdjustBorder: boolean
-    disableRemoveShadow: boolean
     useNativeControls: boolean
     autoHide: boolean
     position: string
     maxHeight: number
-    loadSettings(loader: SettingLoader): void {
+    compact: boolean
+    override loadSettings(loader: SettingLoader): void {
         this.notificationsEnabled = loader.loadBoolean("notifications-enabled")
-        this.disableAdjustBorder = loader.loadBoolean("disable-adjust-content-border-radius")
-        this.disableRemoveShadow = loader.loadBoolean("disable-remove-shadow")
         this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
         this.autoHide = loader.loadBoolean("notifications-hide-when-no-notifications")
         this.position = loader.loadString("notifications-position")
         this.maxHeight = loader.loadInt("notifications-max-height")
+        this.compact = loader.loadBoolean("notifications-compact")
     }
     // #endregion settings
 
@@ -40,22 +36,35 @@ export class NotificationsFeature extends FeatureBase {
     //     )
     // }
     // }
-    notificationBox: NotificationBox
 
+    notificationBox: NotificationBox
     updateMaxHeight() {
         this.notificationBox.style = `max-height: ${this.maxHeight}`
     }
-
-    reload(key: string) {
-        if (key == "notifications-max-height") {
-            this.updateMaxHeight()
-            return
-        }
-        this.hotReload()
+    updateStyleClass() {
+        let style = "QSTWEAKS-notifications"
+        if (this.useNativeControls) style += " QSTWEAKS-use-native-controls"
+        if (this.compact) style += " QSTWEAKS-message-compact"
+        this.notificationBox.style_class = style
     }
-    onLoad() {
+
+    override reload(key: string): void {
+        switch (key) {
+            case "notifications-max-height":
+                this.updateMaxHeight()
+                break
+            case "notifications-compact":
+                this.updateStyleClass()
+                break
+            default:
+                super.reload()
+                break
+        }
+    }
+    override onLoad(): void {
         if (!this.notificationsEnabled) return
 
+        // Create Notification Box
         this.maid.destroyJob(
             this.notificationBox = new NotificationBox({
                 autoHide: this.autoHide,
@@ -63,14 +72,12 @@ export class NotificationsFeature extends FeatureBase {
             })
         )
 
-        let style = "QSTWEAKS-notifications"
-        if (this.useNativeControls) style += " QSTWEAKS-use-native-controls"
-        if (!this.disableAdjustBorder) style += " QSTWEAKS-adjust-border-radius"
-        if (!this.disableRemoveShadow) style += " QSTWEAKS-remove-shadow"
-        this.notificationBox.style_class = style
+        // Update styles
+        this.updateStyleClass()
         this.updateMaxHeight()
 
         // add
+        // FIXME: with layout manager
         switch (this.position) {
             case "top":
                 GnomeContext.QuickSettingsGrid.insert_child_at_index(this.notificationBox,
@@ -86,7 +93,7 @@ export class NotificationsFeature extends FeatureBase {
             GnomeContext.QuickSettingsGrid, this.notificationBox, 'column-span', 2
         )
     }
-    onUnload() {
+    override onUnload(): void {
         this.notificationBox = null
     }
 }

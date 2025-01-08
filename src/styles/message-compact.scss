@@ -1,0 +1,30 @@
+@use "../global.scss" as *;
+
+#{$p}-message-compact {
+    // Message Card
+    .message {
+        padding: 5px 6px;
+
+        // Message Content Box (Outside)
+        .message-box {
+            padding: 2px 0px 0px 0px; // Header & Content spacing
+
+            // Message Content (Texts)
+            .message-content {
+                spacing: 2px; // Title & Content spacing
+                font-size: 0.89em;
+            }
+        }
+
+        // Message Header (App, Button)
+        .message-header {
+            spacing: 3px; // close / expand button spacing
+
+            // Buttons
+            .message-expand-button,
+            .message-close-button {
+                padding: 2px !important;
+            }
+        }
+    }
+}

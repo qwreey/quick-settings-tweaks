@@ -36,18 +36,19 @@
       <!-- "bottom" or "top" -->
       <default>"bottom"</default>
     </key>
-    <!-- <key name="notifications-integrated" type="b">
-      <default>true</default>
-    </key> -->
     <key name="notifications-use-native-controls" type="b">
       <default>false</default>
     </key>
-    <key name="notifications-hide-when-no-notifications" type="b">
+    <key name="notifications-compact" type="b">
+      <default>true</default>
+    </key>
+    <key name="notifications-autohide" type="b">
       <default>true</default>
     </key>
     <key name="notifications-max-height" type="i">
       <default>292</default>
     </key>
+
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
     </key>
