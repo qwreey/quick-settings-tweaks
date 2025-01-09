@@ -8,163 +8,15 @@ import { logger } from "../libs/utility.js"
 import { Global } from "../global.js"
 import Gio from "gi://Gio"
 
-
-// export class ProgressBar extends Slider {
-//     _init(value, manager, busName, timestamps) {
-//         super._init(value)
-
-//         this._busName = busName
-//         this.manager = manager
-//         this.timestamps = timestamps
-//         this._updateSettings()
-//         this.updateSignal = St.Settings.get().connect('notify', () => this._updateSettings())
-//         this._length = 1
-
-//         this.signals = []
-
-//         this._initProxy()
-
-//         timeout = setInterval(() => {
-//             if (this._dragging)
-//                 return
-//             if (!this) {
-//                 this.destroy()
-//                 return
-//             }
-//             if (!this.length)
-//                 this._updateInfo()
-
-//             let position = this.getProperty("Position")
-
-//             this.value = position / this._length
-//             position = position / 1000000
-//             let text = new Date(0)
-//             text.setUTCSeconds(position)
-//             this.timestamps[0].set_text(text.toISOString().substring(11, 19).replace(/^0(?:0:0?)?/, ''))
-//         }, 1000)
-
-//         this.signals.push(this.connect("drag-end", () => {
-//             if (this._dragging)
-//                 return
-//             this.setPosition(this.value * this._length)
-//         }))
-//     }
-
-//     _updateInfo() {
-//         if (!this._playerProxy)
-//             this._initProxy()
-//         this._trackId = this.getProperty("Metadata")['mpris:trackid']
-//         if (!this._trackId)
-//             this.reactive = false
-//         if (this._trackId !== 0 && this.getProperty("CanSeek"))
-//             this.reactive = true
-//         this._length = this.getProperty("Metadata")['mpris:length']
-//         if (!this._length) {
-//             this.visible = false
-//             this.timestamps[0].visible = false
-//             this.timestamps[1].visible = false
-//             return
-//         } else {
-//             this.visible = true
-//             this.timestamps[0].visible = true
-//             this.timestamps[1].visible = true
-//         }
-
-//         let position = this._length / 1000000
-//         let text = new Date(0)
-//         text.setUTCSeconds(position)
-//         this.timestamps[1].set_text(text.toISOString().substring(11, 19).replace(/^0(?:0:0?)?/, ''))
-//     }
-
-//     getProperty(prop) {
-//         try {
-//             return this._playerProxy.get_connection().call_sync(
-//                 this._busName,
-//                 "/org/mpris/MediaPlayer2",
-//                 "org.freedesktop.DBus.Properties",
-//                 "Get",
-//                 new GLib.Variant("(ss)", ["org.mpris.MediaPlayer2.Player", prop]),
-//                 null,
-//                 Gio.DBusCallFlags.NONE,
-//                 50,
-//                 null
-//             ).recursiveUnpack()[0]
-//         } catch {
-//             return 0
-//         }
-//     }
-
-//     setPosition(value) {
-//         this._playerProxy.get_connection().call_sync(
-//             this._busName,
-//             "/org/mpris/MediaPlayer2",
-//             "org.mpris.MediaPlayer2.Player",
-//             "SetPosition",
-//             new GLib.Variant("(ox)", [this._trackId, value.toString()]),
-//             null,
-//             Gio.DBusCallFlags.NONE,
-//             50,
-//             null
-//         )
-//     }
-
-//     _onPlayerProxyReady() {
-//         this._playerProxy.connectObject('g-properties-changed', () => this._updateInfo(), this)
-//         this._updateInfo()
-//     }
-
-//     _updateSettings() {
-//         if (St.Settings.get().color_scheme === 0 && GLib.get_os_info("NAME").includes("Ubuntu")) {
-//             this.remove_style_class_name('progress-bar')
-//             this.add_style_class_name('progress-bar-light')
-//         } else if (St.Settings.get().color_scheme === 2) {
-//             this.remove_style_class_name('progress-bar')
-//             this.add_style_class_name('progress-bar-light')
-//         } else {
-//             this.remove_style_class_name('progress-bar-light')
-//             this.add_style_class_name('progress-bar')
-//         }
-
-//     }
-
-//     _initProxy() {
-//         try {
-//             const MprisPlayerIface = loadInterfaceXML('org.mpris.MediaPlayer2.Player')
-//             const MprisPlayerProxy = Gio.DBusProxy.makeProxyWrapper(MprisPlayerIface)
-
-//             this._playerProxy = MprisPlayerProxy(Gio.DBus.session, this._busName, '/org/mpris/MediaPlayer2', this._onPlayerProxyReady.bind(this))
-//         } catch { }
-//     }
-
-//     destroy() {
-//         this.signals.map((i) => {
-//             this.disconnect(i)
-//         })
-//         this._playerProxy.disconnectObject(this)
-//         St.Settings.get().disconnect(this.updateSignal)
-//         clearInterval(timeout)
-//         this._playerProxy = null
-//         this.timestamps[0].destroy()
-//         this.timestamps[1].destroy()
-//         if (this.manager.bars[this._busName])
-//             delete this.manager.bars[this._busName]
-//         super.destroy()
-//     }
-// }
-
-class ProgressSlider extends Slider {
-    _init(value) {
-        super._init(value)
-    }
-}
-GObject.registerClass(ProgressSlider)
-
+// #region ProgressControl
 interface ProgressControl {
-    _progressLabel: St.Label
+    _positionLabel: St.Label
     _lengthLabel: St.Label
-    _slider: ProgressSlider
+    _slider: Slider
     _player: Player
     _positionTracker: number|null
+    _dragging: boolean
+    _shown: boolean
 }
 class ProgressControl extends St.BoxLayout {
     constructor(player: Player) {
@@ -173,42 +25,118 @@ class ProgressControl extends St.BoxLayout {
     _init(player: Player): void {
         this._player = player
         this._positionTracker = null
+        this._dragging = false
+        this._shown = false
 
         super._init({
             vertical: false,
             x_expand: true,
+            style_class: "QSTWEAKS-progress-control",
         })
 
-        this._progressLabel = new St.Label({
-            text: "test",
-            y_expand: true,
-            y_align: Clutter.ActorAlign.CENTER,
-            style_class: "QSTWEAKS-progress-label",
-        })
-        this.add_child(this._progressLabel)
+        this._createLabels()
+        this._createSlider()
 
-        this._slider = new ProgressSlider(20)
+        this.add_child(this._positionLabel)
         this.add_child(this._slider)
-
-        this._lengthLabel = new St.Label({
-            text: "test",
-            y_expand: true,
-            y_align: Clutter.ActorAlign.CENTER,
-            style_class: "QSTWEAKS-length-label",
-        })
         this.add_child(this._lengthLabel)
 
         this.connect("notify::mapped", this._updateTracker.bind(this))
         this.connect("destroy", this._dropTracker.bind(this))
+        this._player.connectObject("changed", () => this._updateStatus(), this)
     }
 
-    _updatePosition() {
-        this._player._propertiesProxy.GetAsync(
-            "org.mpris.MediaPlayer2.Player",
-            "Position"
-        ).then(result => {
-            logger(result[0].get_int64())
+    _createLabels() {
+        this._positionLabel = new St.Label({
+            y_expand: true,
+            y_align: Clutter.ActorAlign.CENTER,
+            style_class: "QSTWEAKS-position-label",
         })
+        this._lengthLabel = new St.Label({
+            y_expand: true,
+            y_align: Clutter.ActorAlign.CENTER,
+            style_class: "QSTWEAKS-length-label",
+        })
+    }
+    _createSlider() {
+        this._slider = new Slider(0)
+
+        // Process Dragging
+        this._slider.connect("drag-begin", () => {
+            this._dragging = true
+            return Clutter.EVENT_PROPAGATE
+        });
+        this._slider.connect("drag-end", () => {
+            this._player.position = (Math.floor(this._slider.value) * 1000000)
+            this._dragging = false
+            return Clutter.EVENT_PROPAGATE
+        })
+        this._slider.connect("scroll-event", () => {
+            return Clutter.EVENT_STOP
+        })
+        this._slider.connect("notify::value", () => {
+            if (this._dragging) this._updatePosition(Math.floor(this._slider.value) * 1000000)
+        })
+    }
+
+    // Show / Hide by playing status
+    _updateStatus(noAnimate?: boolean) {
+        if (!this.mapped) return
+        this._shown = this._player.status === 'Playing'
+        if (this._shown) this._trackPosition()
+        const previousHeight = this.height
+        this.height = -1
+        const height = this._shown ? this.get_preferred_height(-1)[0] : 0
+        this.height = previousHeight
+        const opacity = this._shown ? 255 : 0
+        if (noAnimate) {
+            this.remove_all_transitions()
+            this.height = height
+            this.opacity = opacity
+            return
+        }
+        // @ts-expect-error
+        if (this._shown) {
+            this.ease({
+                height,
+                duration: 150,
+                onComplete: ()=>{
+                    this.ease({
+                        opacity,
+                        duration: 150,
+                    })
+                }
+            })
+        } else {
+            this.ease({
+                opacity,
+                duration: 200,
+                onComplete: ()=>{
+                    this.ease({
+                        height,
+                        duration: 150,
+                    })
+                }
+            })
+        }
+    }
+
+    // Update slider and label
+    _updatePosition(current: number) {
+        const currentSeconds = current / 1000000
+        const lengthSeconds = this._player.length / 1000000
+        this._positionLabel.text = this._formatSeconds(currentSeconds)
+        this._lengthLabel.text = this._formatSeconds(lengthSeconds)
+        this._slider.overdriveStart = this._slider.maximumValue = lengthSeconds
+        this._slider.value = currentSeconds
+    }
+
+    // Use polling to update position when only shown
+    _trackPosition() {
+        this._slider.reactive = this._player.canSeek
+        if (this._shown && !this._dragging) {
+            this._player.position.then(this._updatePosition.bind(this))
+        }
         return GLib.SOURCE_CONTINUE;
     }
     _dropTracker() {
@@ -217,26 +145,45 @@ class ProgressControl extends St.BoxLayout {
         this._positionTracker = null
     }
     _createTracker() {
-        this._updatePosition()
-        this._positionTracker = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, this._updatePosition.bind(this))
+        this._positionTracker = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, this._trackPosition.bind(this))
     }
     _updateTracker() {
         if (this.mapped) this._createTracker()
         else this._dropTracker()
+        this._updateStatus(true)
+    }
+
+    // Seconds => HH:MM:SS or MM:SS
+    _formatSeconds(seconds: number) {
+        const minutes = Math.floor(seconds / 60) % 60
+        const hours = Math.floor(seconds / 3600) % 60
+        seconds %= 60
+
+        const secondsPadded = seconds.toString().padStart(2, "0")
+        const minutesPadded = minutes.toString().padStart(2, "0")
+
+        if (hours > 0) return `${hours}:${minutesPadded}:${secondsPadded}`
+        return `${minutes}:${secondsPadded}`
     }
 }
 GObject.registerClass(ProgressControl)
+// #endregion ProgressControl
 
 // #region Player
 interface Player {
+    _length: number | null
     _propertiesProxy: Gio.DBusProxy
+    _seekProxy: Gio.DBusProxy
     _isPropertiesProxyReady: boolean
+    _canSeek: boolean
+    _trackid: string
 }
 class Player extends Mpris.MprisPlayer {
     constructor(busName: string) {
         super(busName)
 
-        const propertiesIface = Global.GetDbusInterface("media/dbus-properties.xml","org.freedesktop.DBus.Properties")
+        // Create properties proxy for Position & CanSeek
+        const propertiesIface = Global.GetDbusInterface("media/dbus.xml","org.freedesktop.DBus.Properties")
         Gio.DBusProxy.new(
             Gio.DBus.session,
             Gio.DBusProxyFlags.NONE,
@@ -247,10 +194,62 @@ class Player extends Mpris.MprisPlayer {
             null,
         // @ts-expect-error
         ).then((proxy: Gio.DbusProxy) => this._propertiesProxy = proxy)
+
+        // Create proxy for seeking
+        const seekIface = Global.GetDbusInterface("media/dbus.xml","org.mpris.MediaPlayer2.Player")
+        Gio.DBusProxy.new(
+            Gio.DBus.session,
+            Gio.DBusProxyFlags.NONE,
+            seekIface,
+            busName,
+            '/org/mpris/MediaPlayer2',
+            seekIface.name,
+            null,
+        // @ts-expect-error
+        ).then((proxy: Gio.DbusProxy) => this._seekProxy = proxy)
+    }
+
+    get position(): Promise<number|null> {
+        return this._propertiesProxy.GetAsync(
+            "org.mpris.MediaPlayer2.Player",
+            "Position"
+        ).then((result: any) => {
+            return result[0].get_int64()
+        }).catch( ()=> null)
+    }
+    set position(value: number) {
+        this._seekProxy.SetPositionAsync(
+            this.trackId,
+            Math.min(this.length, Math.max(1, value))
+        ).catch(logger)
+    }
+    get trackId(): string {
+        return this._trackid
+    }
+    get canSeek(): boolean {
+        return this._canSeek
+    }
+    get length(): number|null {
+        return this._length
+    }
+    _updateState() {
+        const metadata = (this as any)._playerProxy.Metadata
+        this._length = metadata?.["mpris:length"]?.get_int64() ?? null
+        this._trackid = metadata?.["mpris:trackid"]?.get_string()[0]
+
+        this._propertiesProxy.GetAsync(
+            "org.mpris.MediaPlayer2.Player",
+            "CanSeek"
+        ).then((result: any) => {
+            this._canSeek = result[0].get_boolean()
+        }).finally(()=>{
+            super._updateState()
+        })
     }
 
     _close() {
         this._propertiesProxy = null
+        this._seekProxy = null
         super._close()
     }
 }
