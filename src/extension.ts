@@ -39,7 +39,6 @@ export default class QstExtension extends Extension {
         let settings = this.getSettings()
 
         // load modules
-        global.context.unsafe_mode = true
         this.features = [
             new DndQuickToggleFeature(),
             new UnsafeQuickToggleFeature(),

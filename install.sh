@@ -25,11 +25,29 @@ function update-po() {
 }
 
 function build() {
-	rm -rf target/out
+	(
+		npx tsc --noCheck
+		cp -r target/tsc/* target/out
+	) &
+	TSC_PID=$!
 
-	npm run build
-	cp metadata.json target/out
-	cp -r schemas target/out
+	npx sass\
+		--no-source-map\
+		src/stylesheet.scss:target/out/stylesheet.css &
+	SASS_PID=$!
+
+	rm -rf target/out
+	mkdir -p target/out
+
+	(
+		cp metadata.json target/out
+		cp -r schemas target/out
+	) &
+	COPYING_PID=$!
+
+	wait $TSC_PID
+	wait $SASS_PID
+	wait $COPYING_PID
 
 	gnome-extensions pack target/out\
 		--podir=../../po\

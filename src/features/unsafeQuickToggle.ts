@@ -1,4 +1,4 @@
-import { Indicator } from "../components/unsafeQuickToggleHandler.js"
+import { UnsafeIndicator } from "../components/unsafeQuickToggleHandler.js"
 import { Global } from "../global.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
@@ -10,7 +10,7 @@ export class UnsafeQuickToggleFeature extends FeatureBase {
     }
     // #endregion settings
 
-    indicator: Indicator
+    indicator: UnsafeIndicator
     override onLoad(): void {
         if (!this.enabled) return
 
@@ -19,7 +19,7 @@ export class UnsafeQuickToggleFeature extends FeatureBase {
 
         // Add Unsafe Quick Toggle
         this.maid.destroyJob(
-            this.indicator = new Indicator(
+            this.indicator = new UnsafeIndicator(
                 (state) => Global.Settings.set_boolean("last-unsafe-state", state)
             )
         )

@@ -54,11 +54,11 @@ class DndQuickToggle extends QuickToggle {
 }
 GObject.registerClass(DndQuickToggle)
 
-interface Indicator {
+interface DndIndicator {
     _indicator: St.Icon
     _settings: Gio.Settings
 }
-class Indicator extends SystemIndicator {
+class DndIndicator extends SystemIndicator {
     _init() {
         super._init()
 
@@ -90,5 +90,5 @@ class Indicator extends SystemIndicator {
         super.destroy()
     }
 }
-GObject.registerClass(Indicator)
-export { Indicator }
+GObject.registerClass(DndIndicator)
+export { DndIndicator }

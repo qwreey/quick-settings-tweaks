@@ -47,6 +47,9 @@
     <key name="media-compact" type="b">
       <default>true</default>
     </key>
+    <key name="media-show-progress" type="b">
+      <default>true</default>
+    </key>
 
     <!-- datemenu -->
     <key name="datemenu-remove-notifications" type="b">

@@ -1,4 +1,3 @@
-import Gio from "gi://Gio";
 import Maid from "./maid.js";
 import { Global } from "../global.js";
 

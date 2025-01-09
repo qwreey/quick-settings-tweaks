@@ -28,8 +28,5 @@
     "@girs/gjs": "^4.0.0-beta.19",
     "@girs/gnome-shell": "^47.0.0",
     "sass": "^1.83.1"
-  },
-  "scripts": {
-    "build": "tsc ; sass src/stylesheet.scss:target/out/stylesheet.css --no-source-map"
   }
 }

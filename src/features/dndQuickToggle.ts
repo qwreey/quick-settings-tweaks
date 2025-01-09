@@ -2,7 +2,7 @@ import Gio from "gi://Gio"
 import Clutter from "gi://Clutter"
 
 import { Global } from "../global.js"
-import { Indicator } from "../components/dndQuickToggleHandler.js"
+import { DndIndicator } from "../components/dndQuickToggleHandler.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
 export class DndQuickToggleFeature extends FeatureBase {
@@ -13,14 +13,14 @@ export class DndQuickToggleFeature extends FeatureBase {
     }
     // #endregion settings
 
-    indicator: Indicator
+    indicator: DndIndicator
     datemenuDnd: Clutter.Actor
     override onLoad(): void {
         if (!this.enabled) return
 
         // Create Indicator
         this.maid.destroyJob(
-            this.indicator = new Indicator()
+            this.indicator = new DndIndicator()
         )
 
         // Hide DateMenu DND State Icon

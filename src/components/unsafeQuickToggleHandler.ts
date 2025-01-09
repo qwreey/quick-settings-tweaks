@@ -37,7 +37,7 @@ class UnsafeQuickToggle extends QuickToggle {
 }
 GObject.registerClass(UnsafeQuickToggle)
 
-export class Indicator extends SystemIndicator {
+class UnsafeIndicator extends SystemIndicator {
     _init(onUpdate) {
         super._init()
         this.quickSettingsItems.push(new UnsafeQuickToggle(onUpdate))
@@ -48,4 +48,5 @@ export class Indicator extends SystemIndicator {
         super.destroy()
     }
 }
-GObject.registerClass(Indicator)
+GObject.registerClass(UnsafeIndicator)
+export { UnsafeIndicator }

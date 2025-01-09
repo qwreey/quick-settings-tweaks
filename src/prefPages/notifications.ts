@@ -26,8 +26,8 @@ export const notificationsPage = GObject.registerClass({
             title: _("Media Controls widget"),
             headerSuffix: makeSwitch({
                 title: "",
-                value: settings.get_boolean("media-control-enabled"),
-                bind: [settings, "media-control-enabled"]
+                value: settings.get_boolean("media-enabled"),
+                bind: [settings, "media-enabled"]
             }),
             description: _("Turn on to make the Media Control widget visible on the Quick Settings panel"),
         })
@@ -35,10 +35,19 @@ export const notificationsPage = GObject.registerClass({
             parent: mediaGroup,
             title: _("Compact Mode"),
             subtitle: _("Make Media Controls widget smaller\nMake it more similar in size to the notification message"),
-            value: settings.get_boolean("media-control-compact-mode"),
-            bind: [settings, "media-control-compact-mode"],
-            sensitiveBind: [settings, "media-control-enabled"],
+            value: settings.get_boolean("media-compact"),
+            bind: [settings, "media-compact"],
+            sensitiveBind: [settings, "media-enabled"],
         })
+        makeSwitch({
+            parent: mediaGroup,
+            title: _("Show Progress Bar"),
+            subtitle: _("Add Progress Bar under description"),
+            value: settings.get_boolean("media-show-progress"),
+            bind: [settings, "media-show-progress"],
+            sensitiveBind: [settings, "media-enabled"],
+        })
+        
         this.add(mediaGroup)
 
         // notification

@@ -6,9 +6,11 @@ export class MediaFeature extends FeatureBase {
     // #region settings
     enabled: boolean
     compact: boolean
+    showProgress: boolean
     override loadSettings(loader: SettingLoader): void {
         this.enabled = loader.loadBoolean("media-enabled")
         this.compact = loader.loadBoolean("media-compact")
+        this.showProgress = loader.loadBoolean("media-show-progress")
     }
     // #endregion settings
 
@@ -32,7 +34,9 @@ export class MediaFeature extends FeatureBase {
     override onLoad(): void {
         if (!this.enabled) return
         this.maid.destroyJob(
-            this.mediaBox = new MediaBox({})
+            this.mediaBox = new MediaBox({
+                showProgress: this.showProgress
+            })
         )
 
         Global.QuickSettingsGrid.add_child(this.mediaBox)

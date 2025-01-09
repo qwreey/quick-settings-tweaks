@@ -123,8 +123,8 @@ class ProgressControl extends St.BoxLayout {
 
     // Update slider and label
     _updatePosition(current: number) {
-        const currentSeconds = current / 1000000
-        const lengthSeconds = this._player.length / 1000000
+        const currentSeconds = Math.floor(current / 1000000)
+        const lengthSeconds = Math.floor(this._player.length / 1000000)
         this._positionLabel.text = this._formatSeconds(currentSeconds)
         this._lengthLabel.text = this._formatSeconds(lengthSeconds)
         this._slider.overdriveStart = this._slider.maximumValue = lengthSeconds
@@ -233,14 +233,20 @@ class Player extends Mpris.MprisPlayer {
         return this._length
     }
     _updateState() {
-        const metadata = (this as any)._playerProxy.Metadata
-        this._length = metadata?.["mpris:length"]?.get_int64() ?? null
-        this._trackid = metadata?.["mpris:trackid"]?.get_string()[0]
+        this._trackid = null
+        this._length = null
+        try {
+            const metadata = (this as any)._playerProxy.Metadata
+            this._trackid = metadata?.["mpris:trackid"]?.get_string()[0]
+            this._length = metadata?.["mpris:length"]?.get_int64() ?? null
+        } catch {}
 
         this._propertiesProxy.GetAsync(
             "org.mpris.MediaPlayer2.Player",
             "CanSeek"
-        ).then((result: any) => {
+        ).catch(()=>{
+            this._canSeek = false
+        }).then((result: any) => {
             this._canSeek = result[0].get_boolean()
         }).finally(()=>{
             super._updateState()
@@ -256,24 +262,43 @@ class Player extends Mpris.MprisPlayer {
 // #endregion Player
 
 // #region MediaItem
+interface MediaItem {
+    _player: Player
+}
 class MediaItem extends Mpris.MediaMessage {
-    constructor(player: Player) {
+    constructor({ player, showProgress }: { player: Player, showProgress: boolean }) {
         super(player)
-        this.child.add_child(new ProgressControl(player))
+        if (showProgress) this.child.add_child(new ProgressControl(player))
     }
 }
 GObject.registerClass(MediaItem)
 // #endregion MediaItem
 
 // #region MediaList
+namespace MediaList {
+    export type Options = Partial<{
+        showProgress: boolean
+    } & St.BoxLayout.ConstructorProps>
+}
+interface MediaList {
+    _options: MediaList.Options
+    _messages: MediaItem[]
+    _current: MediaItem
+}
 class MediaList extends Mpris.MediaSection {
-    _init() {
+    constructor(options: MediaList.Options) {
+        // @ts-ignore
+        super(options)
+    }
+    _init(options?: MediaList.Options): void {
         super._init()
+        this._current = null
+        this._options = options ?? {}
     }
 
-    // Override and bind custom message
+    // Override for custom message and player
     // See: https://github.com/GNOME/gnome-shell/blob/c58b826788f99bc783c36fa44e0e669dee638f0e/js/ui/mpris.js#L264
-    _addPlayer(busName) {
+    _addPlayer(busName: string) {
         if (this._players.get(busName))
             return
 
@@ -284,7 +309,10 @@ class MediaList extends Mpris.MediaSection {
                 this._players.delete(busName)
             })
         player.connect('show', () => {
-            message = new MediaItem(player) // modified
+            message = new MediaItem({
+                player,
+                showProgress: this._options.showProgress,
+            }) // modified
             this.addMessage(message, true)
         })
         player.connect('hide', () => {
@@ -293,6 +321,89 @@ class MediaList extends Mpris.MediaSection {
         })
 
         this._players.set(busName, player)
+    }
+
+    // Show first playing message
+    _showFirstPlaying() {
+        this._setPage(
+            this._messages.find(message => message?._player.status === 'Playing')
+            ?? this._messages[0]
+        )
+    }
+
+    // Handle page action
+    _setPage(to: MediaItem) {
+        const current = this._current
+        this._current = to
+        if (!to || to == current) return
+        for (const message of this._messages) {
+            message.remove_all_transitions()
+            if (message == current) continue
+            message.hide()
+        }
+        if (!current) {
+            to.show()
+            return
+        }
+
+        const currentIndex = this._messages.findIndex(message => message == current)
+        const toIndex = this._messages.findIndex(message => message == to)
+
+        current.ease({
+            opacity: 0,
+            translationX: toIndex > currentIndex ? -120 : 120,
+            duration: 120,
+            onComplete: ()=>{
+                current.hide()
+                to.opacity = 0
+                to.translationX = toIndex > currentIndex ? 120 : -120
+                to.show()
+                to.ease({
+                    duration: 120,
+                    translationX: 0,
+                    opacity: 255,
+                    onStopped: ()=>{
+                        if (!this._messages.includes(to)) return
+                        to.opacity = 255
+                        to.translationX = 0
+                    }
+                })
+            },
+            onStopped: ()=>{
+                if (!this._messages.includes(current)) return
+                current.opacity = 255
+                current.translationX = 0
+            }
+        })
+    }
+    _seekPage(offset: number) {
+        if (this._current === null) return
+        let currentIndex = this._messages.findIndex(message => message == this._current)
+        if (currentIndex == -1) currentIndex = 0
+        const length = this._messages.length
+        this._setPage(this._messages[((currentIndex + offset + length) % length)])
+    }
+
+    // New message / Remove message
+    _sync() {
+        // @ts-expect-error
+        super._sync()
+
+        // Current message destroyed
+        if (this._current && (this.empty || !this._messages.includes(this._current))) {
+            this._current = null
+        }
+
+        // Hide new message
+        for (const message of this._messages) {
+            if (message == this._current) continue
+            message.hide()
+        }
+
+        // Show first playing message if nothing shown
+        if (!this._current) {
+            this._showFirstPlaying()
+        }
     }
 }
 GObject.registerClass(MediaList)
@@ -332,7 +443,7 @@ GObject.registerClass(Header)
 // #region MediaBox
 namespace MediaBox {
     export type Options = Partial<{
-
+        showProgress: boolean
     } & St.BoxLayout.ConstructorProps>
 }
 interface MediaBox {
@@ -346,38 +457,42 @@ class MediaBox extends St.BoxLayout {
     constructor(options: MediaBox.Options) {
         super(options)
     }
-    _init(options) {
+    _init(options: MediaBox.Options) {
         super._init({
             vertical: true,
             x_expand: true,
             y_expand: true,
-        })
+            reactive: true,
+        } as Partial<St.BoxLayout.ConstructorProps>)
         this._options = options
 
         this._header = new Header({})
         this.add_child(this._header)
 
-        this._createMediaScroll()
-        this.add_child(this._scroll)
-
+        this._list = new MediaList({ showProgress: options.showProgress })
+        this.add_child(this._list)
         this._list.connect('notify::empty', this._syncEmpty.bind(this))
-        this._syncEmpty()
-    }
+        this.connect("scroll-event", (_: Clutter.Actor, event: Clutter.Event) => {
+            const direction = event.get_scroll_direction();
+            if (direction === Clutter.ScrollDirection.UP) {
+                this._list._seekPage(-1)
+            }
+            if (direction === Clutter.ScrollDirection.DOWN) {
+                this._list._seekPage(1)
+            }
+        })
+        const swipeAction = new Clutter.SwipeAction()
+        swipeAction.connect("swipe", (_, __, direction) => {
+            if (direction === Clutter.SwipeDirection.RIGHT) {
+                this._list._seekPage(-1)
+            }
 
-    _createMediaScroll() {
-        this._sections = new St.BoxLayout({
-            vertical: false,
-            x_expand: true,
+            if (direction === Clutter.SwipeDirection.LEFT) {
+                this._list._seekPage(1)
+            }
         })
-        this._scroll = new St.ScrollView({
-            x_expand: true,
-            y_expand: true,
-            hscrollbar_policy: St.PolicyType.EXTERNAL,
-            vscrollbar_policy: St.PolicyType.NEVER,
-            child: this._sections,
-        })
-        this._list = new MediaList()
-        this._sections.add_child(this._list)
+        this.add_action(swipeAction)
+        this._syncEmpty()
     }
 
     _syncEmpty() {
