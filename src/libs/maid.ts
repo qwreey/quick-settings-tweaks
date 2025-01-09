@@ -7,11 +7,11 @@ class Maid {
 	}
 
 	connectJob(
-        signalObject: any,
-        signalName: string,
-        handleFunc: (...args: any)=>any,
-        priority: number = 0
-    ) {
+		signalObject: any,
+		signalName: string,
+		handleFunc: (...args: any)=>any,
+		priority: number = 0
+	) {
 		this.getRecords().push([Maid.TaskType.Connect, priority, signalObject, signalObject.connect(signalName, handleFunc)])
 	}
 
@@ -42,12 +42,12 @@ class Maid {
 	}
 
 	patchJob(
-        patchObject: any,
-        patchName: string,
-        handleFunc: (...args: any)=>any,
-        priority: number = 0
-    ) {
-        const original = patchObject[patchName]
+		patchObject: any,
+		patchName: string,
+		handleFunc: (...args: any)=>any,
+		priority: number = 0
+	) {
+		const original = patchObject[patchName]
 		this.getRecords().push([Maid.TaskType.Patch, priority, patchObject, patchName, original])
 		patchObject[patchName] = handleFunc(original)
 	}

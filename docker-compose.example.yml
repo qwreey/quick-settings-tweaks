@@ -5,15 +5,27 @@ services:
     build: ./host/gnome-docker
 
     environment:
-      VNC_OPTION: -SecurityTypes=None -rfbunixpath /host/vncsocket -rfbport -1
-      BEFORE_GNOME: "cat /host/extension-ready>/dev/null;/extension/install.sh install-enable"
+      VNC_OPTION: -SecurityTypes=None -rfbunixpath /host/vncsocket -rfbport 5900
+      BEFORE_GNOME: "/extension/install.sh dev-guest"
       ROOTMODE: false
-      DEBUG: true
       XVFB_GPU: false
       XVFB_SCREEN_WIDTH: 1080
+      RDP_OPTION: "-auth /monitors:0"
+
+    # Remote
+    ports:
+      # for rdp
+      - 3389:3389
+      # for vnc
+      - 5900:5900
 
     # For systemd
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
     cgroup: host
+
+    # Mounts
     volumes:
       # Systemd requirements
       - type: tmpfs
@@ -23,6 +35,7 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /sys/fs/cgroup/system.slice:/sys/fs/cgroup/system.slice:rw
 
-      # For vnc unix socket
+      # Host dir
       - ./host:/host:rw
       - ./:/extension
+      - ./host/home:/home/gnome

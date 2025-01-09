@@ -10,32 +10,32 @@ import { aboutPage } from "./prefPages/about.js"
 import Adw from "gi://Adw"
 
 var pageList = [
-    volumeMixerPage,
-    notificationsPage,
-    quickTogglesPage,
-    otherPage,
-    aboutPage,
+	volumeMixerPage,
+	notificationsPage,
+	quickTogglesPage,
+	otherPage,
+	aboutPage,
 ]
 
 function appendIconPath(iconTheme, path) {
-    if (!iconTheme.get_search_path().includes(path))
-        iconTheme.add_search_path(path)
+	if (!iconTheme.get_search_path().includes(path))
+		iconTheme.add_search_path(path)
 }
 
 export default class QstExtensionPreferences extends ExtensionPreferences {
-    async fillPreferencesWindow(window: Adw.PreferencesWindow) {
-        let settings = this.getSettings()
+	async fillPreferencesWindow(window: Adw.PreferencesWindow) {
+		let settings = this.getSettings()
 
-        window.set_search_enabled(true)
-        window.set_default_size(640, 640)
+		window.set_search_enabled(true)
+		window.set_default_size(640, 640)
 
-        // register media path
-        const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-        appendIconPath(iconTheme, this.path + "/media")
-        appendIconPath(iconTheme, this.path + "/media/contributors")
+		// register media path
+		const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+		appendIconPath(iconTheme, this.path + "/media")
+		appendIconPath(iconTheme, this.path + "/media/contributors")
 
-        for (const page of pageList) {
-            window.add(new page(settings, this.metadata))
-        }
-    }
+		for (const page of pageList) {
+			window.add(new page(settings, this.metadata))
+		}
+	}
 }

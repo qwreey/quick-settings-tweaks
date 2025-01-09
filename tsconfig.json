@@ -10,7 +10,7 @@
         "allowArbitraryExtensions": true,
         "incremental": true,
         "tsBuildInfoFile": "target/.tsbuildinfo",
-        "useDefineForClassFields": false
+        "useDefineForClassFields": false,
     },
     "include": ["./src/**/*.ts", "src/types.d.ts", "src/contributors.js"],
 }

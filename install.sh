@@ -24,19 +24,22 @@ function update-po() {
 }
 
 function build() {
+	rm -rf target/out
+	mkdir -p target/out
+
 	(
 		npx tsc --noCheck
 		cp -r target/tsc/* target/out
 	) &
 	TSC_PID=$!
 
-	npx sass\
-		--no-source-map\
-		src/stylesheet.scss:target/out/stylesheet.css &
+	(
+		npx sass\
+			--no-source-map\
+			src/stylesheet.scss:target/out/stylesheet.css
+		sed $'s/^  /\t/g' -i target/out/stylesheet.css
+	) &
 	SASS_PID=$!
-
-	rm -rf target/out
-	mkdir -p target/out
 
 	(
 		cp metadata.json target/out
@@ -99,15 +102,31 @@ function clear-old-po() {
 }
 
 function dev() {
+	if ! sudo echo > /dev/null; then
+		return
+	fi
 	mkdir -p host
-
-	# Run
 	[ -e host/extension-ready ] && rm host/extension-ready
 	mkfifo host/extension-ready
+	[ -e host/extension-build ] && rm host/extension-build
+	mkfifo host/extension-build
+
+	# Build
 	(
 		build
 		echo > host/extension-ready
+	) > /dev/null &
+
+	# Watch Build Request
+	(
+		cat host/extension-build > /dev/null
+		while true; do
+			cat host/extension-build > /dev/null
+			build
+			echo > host/extension-ready
+		done
 	) &
+	BUILDWATCH_PID=$!
 
 	[ ! -e ./docker-compose.yml ] && cp ./docker-compose.example.yml ./docker-compose.yml
 
@@ -127,6 +146,13 @@ function dev() {
 	fi
 
 	COMPOSEFILE="./docker-compose.yml" ./host/gnome-docker/test.sh
+	kill $BUILDWATCH_PID
+}
+function dev-guest() {
+	echo > /host/extension-build
+	cat /host/extension-ready > /dev/null
+	install
+	enable
 }
 
 function usage() {
@@ -181,6 +207,9 @@ case "$1" in
 
 	"dev" )
 		dev
+	;;
+	"dev-guest" )
+		dev-guest
 	;;
 	
 	* )
