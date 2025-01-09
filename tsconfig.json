@@ -11,5 +11,5 @@
         "incremental": true,
         "tsBuildInfoFile": "target/.tsbuildinfo"
     },
-    "include": ["./src/**/*.ts", "./types.d.ts", "src/contributors.js"],
+    "include": ["./src/**/*.ts", "src/types.d.ts", "src/contributors.js"],
 }

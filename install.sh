@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 cd "$(dirname "$(readlink -f "$0")")"
 
 function update-po() {
@@ -9,16 +8,16 @@ function update-po() {
 	which xgettext 2>/dev/null >/dev/null
 	[ "$?" != "0" ] && echo "update-po: xgettext is not installed on this system. please install and try again" && return 1
 
-    find ./src -type f \( -name "*.ui" -or -name "*.js" \) | xgettext --from-code utf-8 -j messages.po -f -
+	find ./src -type f \( -name "*.ui" -or -name "*.js" \) | xgettext --from-code utf-8 -j messages.po -f -
 	[ "$?" != "0" ] && echo "update-po: Unable to update messages.po file by xgettext" && return 1
 
-    sed -i 's|"Content\-Type: text/plain; charset=CHARSET\\n"|"Content-Type: text/plain; charset=UTF-8\\n"|g' messages.po
+	sed -i 's|"Content\-Type: text/plain; charset=CHARSET\\n"|"Content-Type: text/plain; charset=UTF-8\\n"|g' messages.po
 	[ "$?" != "0" ] && echo "update-po: Unable to set charset in messages.po file" && return 1
 
-    find ./po -type f -name "*.po" | xargs -i msgmerge {} messages.po -N --no-wrap -U
+	find ./po -type f -name "*.po" | xargs -i msgmerge {} messages.po -N --no-wrap -U
 	[ "$?" != "0" ] && echo "update-po: Failed to update *.po files (msgmerge error)" && return 1
 
-    mv messages.po $(find ./po -type f -name "*.pot")
+	mv messages.po $(find ./po -type f -name "*.pot")
 	[ "$?" != "0" ] && echo "update-po: Unable to move messages.po file (pot file not found)" && return 1
 
 	return 0
@@ -100,8 +99,15 @@ function clear-old-po() {
 }
 
 function dev() {
-	build
 	mkdir -p host
+
+	# Run
+	[ -e host/extension-ready ] && rm host/extension-ready
+	mkfifo host/extension-ready
+	(
+		build
+		echo > host/extension-ready
+	) &
 
 	[ ! -e ./docker-compose.yml ] && cp ./docker-compose.example.yml ./docker-compose.yml
 
@@ -124,24 +130,30 @@ function dev() {
 }
 
 function usage() {
-    echo 'Usage: ./install.sh COMMAND'
-    echo 'COMMAND:'
-    echo "  install       install the extension in the user's home directory"
-    echo '                under ~/.local'
-    echo '  build         Creates a zip file of the extension'
-    echo '  update-po     Update po files to match source files'
-	echo '  dev-xorg      Update installed extension and reload gnome shell.'
-	echo '                only works on x11 unsafe mode.'
-	ecoh '  dev           Run dev docker'
-	echo '  log           show extension logs (live)'
-	echo '  clear-old-po  clear *.po~'
-	echo '  enable        enable extension'
+	echo 'Usage: ./install.sh COMMAND'
+	echo 'COMMAND:'
+	echo "  install        install the extension in the user's home directory"
+	echo '                 under ~/.local'
+	echo '  build          Creates a zip file of the extension'
+	echo '  update-po      Update po files to match source files'
+	echo '  dev-xorg       Update installed extension and reload gnome shell.'
+	echo '                 only works on x11 unsafe mode.'
+	ecoh '  dev            Run dev docker'
+	echo '  log            show extension logs (live)'
+	echo '  clear-old-po   clear *.po~'
+	echo '  enable         enable extension'
+	echo '  install-enable install and enable'
 }
 
 case "$1" in
-    "install" )
-        install
-    ;;
+	"install" )
+		install
+	;;
+
+	"install-enable" )
+		install
+		enable
+	;;
 
 	"build" )
 		build
@@ -151,13 +163,13 @@ case "$1" in
 		log
 	;;
 
-    "dev-xorg" )
-        dev-xorg
-    ;;
+	"dev-xorg" )
+		dev-xorg
+	;;
 
-    "update-po" )
-        update-po
-    ;;
+	"update-po" )
+		update-po
+	;;
 
 	"clear-old-po" )
 		clear-old-po
@@ -170,9 +182,9 @@ case "$1" in
 	"dev" )
 		dev
 	;;
-    
-    * )
-        usage
-    ;;
+	
+	* )
+		usage
+	;;
 esac
 exit

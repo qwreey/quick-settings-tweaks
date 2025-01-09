@@ -6,10 +6,11 @@ services:
 
     environment:
       VNC_OPTION: -SecurityTypes=None -rfbunixpath /host/vncsocket -rfbport -1
-      BEFORE_GNOME: "[ -e /home/gnome/extension ] && rm -rf /home/gnome/extension ; cp -r /extension /home/gnome/extension ; /home/gnome/extension/install.sh install; /home/gnome/extension/install.sh enable"
+      BEFORE_GNOME: "cat /host/extension-ready>/dev/null;/extension/install.sh install-enable"
       ROOTMODE: false
       DEBUG: true
       XVFB_GPU: false
+      XVFB_SCREEN_WIDTH: 1080
 
     # For systemd
     cgroup: host
@@ -25,13 +26,3 @@ services:
       # For vnc unix socket
       - ./host:/host:rw
       - ./:/extension
-
-    # For gpu
-    # security_opt:
-      # - "seccomp=unconfined"
-    # group_add:
-    #   # - video
-    #   - render
-    # devices:
-    #   - /dev/dri/renderD128
-    #   # - /dev/kfd
