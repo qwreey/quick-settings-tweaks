@@ -9,7 +9,8 @@
         "lib": ["ESNext"],
         "allowArbitraryExtensions": true,
         "incremental": true,
-        "tsBuildInfoFile": "target/.tsbuildinfo"
+        "tsBuildInfoFile": "target/.tsbuildinfo",
+        "useDefineForClassFields": false
     },
     "include": ["./src/**/*.ts", "src/types.d.ts", "src/contributors.js"],
 }

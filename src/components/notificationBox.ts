@@ -9,11 +9,10 @@ import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
 import { Global } from "../global.js"
 
 // #region Placeholder
-interface Placeholder {
+class Placeholder extends St.BoxLayout {
     _icon: St.Icon
     _label: St.Label
-}
-class Placeholder extends St.BoxLayout {
+
     _init() {
         super._init({
             style_class: 'QSTWEAKS-placeholder',
@@ -38,12 +37,11 @@ GObject.registerClass(Placeholder)
 // #endregion Placeholder
 
 // #region ClearButton
-interface ClearButton {
+class ClearButton extends St.Button {
     _icon: St.Icon
     _label: St.Label
     _container: St.BoxLayout
-}
-class ClearButton extends St.Button {
+
     _init() {
         // Child Container
         this._container = new St.BoxLayout({
@@ -85,11 +83,10 @@ namespace Header {
         createClearButton: boolean
     } & St.BoxLayout.ConstructorProps>
 }
-interface Header {
+class Header extends St.BoxLayout {
     _headerLabel: St.Label
     _clearButton: ClearButton
-}
-class Header extends St.BoxLayout {
+
     constructor(options: Header.Options) {
         super(options)
     }
@@ -119,13 +116,12 @@ GObject.registerClass(Header)
 // #endregion Header
 
 // #region NativeControl
-interface NativeControl {
+class NativeControl extends St.BoxLayout {
     _clearButton: St.Button
     _dndButton: St.Button
     _dndLabel: St.Label
     _dndSwitch: DoNotDisturbSwitch
-}
-class NativeControl extends St.BoxLayout {
+
     _init() {
         // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L979
         super._init({
@@ -172,10 +168,9 @@ GObject.registerClass(NativeControl)
 // #endregion NativeControl
 
 // #region NotificationList
-interface NotificationList {
-    _nUrgent: number
-}
 class NotificationList extends MessageList.MessageListSection {
+    _nUrgent: number
+
     _init() {
         super._init()
 

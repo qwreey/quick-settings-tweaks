@@ -9,7 +9,7 @@ import { Global } from "../global.js"
 import Gio from "gi://Gio"
 
 // #region ProgressControl
-interface ProgressControl {
+class ProgressControl extends St.BoxLayout {
     _positionLabel: St.Label
     _lengthLabel: St.Label
     _slider: Slider
@@ -17,8 +17,7 @@ interface ProgressControl {
     _positionTracker: number|null
     _dragging: boolean
     _shown: boolean
-}
-class ProgressControl extends St.BoxLayout {
+
     constructor(player: Player) {
         super(player as any)
     }
@@ -170,15 +169,14 @@ GObject.registerClass(ProgressControl)
 // #endregion ProgressControl
 
 // #region Player
-interface Player {
+class Player extends Mpris.MprisPlayer {
     _length: number | null
     _propertiesProxy: Gio.DBusProxy
     _seekProxy: Gio.DBusProxy
     _isPropertiesProxyReady: boolean
     _canSeek: boolean
     _trackid: string
-}
-class Player extends Mpris.MprisPlayer {
+
     constructor(busName: string) {
         super(busName)
 
@@ -262,10 +260,9 @@ class Player extends Mpris.MprisPlayer {
 // #endregion Player
 
 // #region MediaItem
-interface MediaItem {
-    _player: Player
-}
 class MediaItem extends Mpris.MediaMessage {
+    _player: Player
+
     constructor({ player, showProgress }: { player: Player, showProgress: boolean }) {
         super(player)
         if (showProgress) this.child.add_child(new ProgressControl(player))
@@ -280,12 +277,11 @@ namespace MediaList {
         showProgress: boolean
     } & St.BoxLayout.ConstructorProps>
 }
-interface MediaList {
+class MediaList extends Mpris.MediaSection {
     _options: MediaList.Options
     _messages: MediaItem[]
     _current: MediaItem
-}
-class MediaList extends Mpris.MediaSection {
+
     constructor(options: MediaList.Options) {
         // @ts-ignore
         super(options)
@@ -414,10 +410,9 @@ namespace Header {
     export type Options = Partial<{
     } & St.BoxLayout.ConstructorProps>
 }
-interface Header {
-    _headerLabel: St.Label
-}
 class Header extends St.BoxLayout {
+    _headerLabel: St.Label
+
     constructor(options: Header.Options) {
         super(options)
     }
@@ -446,14 +441,13 @@ namespace MediaBox {
         showProgress: boolean
     } & St.BoxLayout.ConstructorProps>
 }
-interface MediaBox {
+class MediaBox extends St.BoxLayout {
     _options: MediaBox.Options
     _scroll: St.ScrollView
     _list: MediaList
     _header: Header
     _sections: St.BoxLayout
-}
-class MediaBox extends St.BoxLayout {
+
     constructor(options: MediaBox.Options) {
         super(options)
     }
