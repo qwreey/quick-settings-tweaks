@@ -1,5 +1,5 @@
 import { featureReloader } from "../libs/utility.js"
-import { GnomeContext } from "../libs/gnome.js"
+import { Global } from "../global.js"
 import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
@@ -17,13 +17,13 @@ export class InputOutputFeature {
         this._inputListener = null
         this._inputVisibilityListener = null
 
-        if (this.settings.get_boolean("input-show-selected")) {
+        if (Global.Settings.get_boolean("input-show-selected")) {
             this._setupInputChangedListener()
         }
-        if (this.settings.get_boolean("input-always-show")) {
+        if (Global.Settings.get_boolean("input-always-show")) {
             this._setupInputVisibilityObserver()
         }
-        if (this.settings.get_boolean("output-show-selected")) {
+        if (Global.Settings.get_boolean("output-show-selected")) {
             this._setupOutputChangedListener()
         }
     }
@@ -40,7 +40,7 @@ export class InputOutputFeature {
         if (this._inputVisibilityListener) {
             let inputVisibilityListener = this._inputVisibilityListener
             this._inputVisibilityListener = null
-            GnomeContext.GetStreamSlider(({ InputStreamSlider }) => {
+            Global.GetStreamSlider(({ InputStreamSlider }) => {
                 InputStreamSlider.disconnect(inputVisibilityListener)
                 InputStreamSlider.visible = InputStreamSlider._shouldBeVisible()
             })
@@ -66,10 +66,10 @@ export class InputOutputFeature {
     _attachOutputLabel() {
         this.outputLabel = new St.Label()
         this.outputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        GnomeContext.QuickSettingsMenu.addItem(this.outputLabel, 2)
-        this.outputLabel.visible = this.settings.get_boolean("output-show-selected")
-        GnomeContext.GetStreamSlider(({ OutputStreamSlider }) => {
-            GnomeContext.QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider)
+        Global.QuickSettingsMenu.addItem(this.outputLabel, 2)
+        this.outputLabel.visible = Global.Settings.get_boolean("output-show-selected")
+        Global.GetStreamSlider(({ OutputStreamSlider }) => {
+            Global.QuickSettingsGrid.set_child_below_sibling(this.outputLabel, OutputStreamSlider)
             this.outputLabel.text = this._findActiveDevice(OutputStreamSlider)
         })
     }
@@ -90,9 +90,9 @@ export class InputOutputFeature {
     _attachInputLabel() {
         this.inputLabel = new St.Label()
         this.inputLabel.style_class = "QSTWEAKS-volume-mixer-label"
-        GnomeContext.QuickSettingsMenu.addItem(this.inputLabel, 2)
-        GnomeContext.GetStreamSlider(({ InputStreamSlider }) => {
-            GnomeContext.QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider)
+        Global.QuickSettingsMenu.addItem(this.inputLabel, 2)
+        Global.GetStreamSlider(({ InputStreamSlider }) => {
+            Global.QuickSettingsGrid.set_child_below_sibling(this.inputLabel, InputStreamSlider)
             this.inputLabel.text = this._findActiveDevice(InputStreamSlider)
         })
         this._setInputLabelVisibility()
@@ -112,7 +112,7 @@ export class InputOutputFeature {
 
     // =========================================== Input Visbility ===========================================
     _setupInputVisibilityObserver() {
-        GnomeContext.GetStreamSlider(({ InputStreamSlider }) => {
+        Global.GetStreamSlider(({ InputStreamSlider }) => {
             this._inputVisibilityListener = InputStreamSlider.connect("notify::visible", () => this._onInputStreamSliderSynced())
             this._onInputStreamSliderSynced()
         })
@@ -126,15 +126,15 @@ export class InputOutputFeature {
     }
 
     _setInputStreamSliderVisibility() {
-        GnomeContext.GetStreamSlider(({ InputStreamSlider }) => {
-            InputStreamSlider.visible = InputStreamSlider._shouldBeVisible() || this.settings.get_boolean("input-always-show")
+        Global.GetStreamSlider(({ InputStreamSlider }) => {
+            InputStreamSlider.visible = InputStreamSlider._shouldBeVisible() || Global.Settings.get_boolean("input-always-show")
         })
     }
 
 
     _setInputLabelVisibility() {
-        GnomeContext.GetStreamSlider(({ InputStreamSlider }) => {
-            this.inputLabel.visible = InputStreamSlider.visible && this.settings.get_boolean("input-show-selected")
+        Global.GetStreamSlider(({ InputStreamSlider }) => {
+            this.inputLabel.visible = InputStreamSlider.visible && Global.Settings.get_boolean("input-show-selected")
         })
     }
 

@@ -1,7 +1,7 @@
 import Gio from "gi://Gio"
 import Clutter from "gi://Clutter"
 
-import { GnomeContext } from "../libs/gnome.js"
+import { Global } from "../global.js"
 import { Indicator } from "../components/dndQuickToggleHandler.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
@@ -23,7 +23,8 @@ export class DndQuickToggleFeature extends FeatureBase {
             this.indicator = new Indicator()
         )
 
-        this.datemenuDnd = GnomeContext.DateMenu.last_child.last_child
+        // Hide DateMenu DND State Icon
+        this.datemenuDnd = Global.DateMenu.last_child.last_child
         this.datemenuDnd.hide()
         this.maid.connectJob(this.datemenuDnd, "show", () => this.datemenuDnd.hide())
         this.maid.functionJob(()=>{
@@ -34,30 +35,13 @@ export class DndQuickToggleFeature extends FeatureBase {
             }
             this.datemenuDnd = null
         })
+
         // Add to QS
         // @ts-ignore
-        GnomeContext.QuickSettings.addExternalIndicator(this.indicator)
+        Global.QuickSettings.addExternalIndicator(this.indicator)
 
     }
     override onUnload(): void {
         this.indicator = null
     }
 }
-
-
-// export class DndQuickToggleFeature {
-//     load() {
-
-//         //remove DND button from datemenu
-
-//     }
-
-
-
-//         // Remove DND Quick Toggle
-//         if (this.dndToggle) {
-//             this.dndToggle.destroy()
-//             this.dndToggle = null
-//         }
-//     }
-// }

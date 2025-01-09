@@ -4,6 +4,9 @@
     // Message Card
     .message {
         padding: 5px 6px;
+        &.media-message {
+            padding: 3px 6px 8px 6px !important; // idk required for some reason
+        }
 
         // Message Content Box (Outside)
         .message-box {

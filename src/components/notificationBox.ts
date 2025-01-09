@@ -6,7 +6,7 @@ import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.j
 import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
 
 import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
-import { GnomeContext } from "../libs/gnome.js"
+import { Global } from "../global.js"
 
 // #region Placeholder
 interface Placeholder {
@@ -133,7 +133,7 @@ class NativeControl extends St.BoxLayout {
         } as Partial<St.BoxLayout.ConstructorProps>)
 
         // DND Switch
-        this._dndSwitch = new (GnomeContext.MessageList._dndSwitch.constructor as any)() // Calendar.DoNotDisturbSwitch();
+        this._dndSwitch = new (Global.MessageList._dndSwitch.constructor as any)() // Calendar.DoNotDisturbSwitch();
         this._dndSwitch.style_class += " QSTWEAKS-native-dnd-switch"
         
         // DND Label
@@ -181,15 +181,15 @@ class NotificationList extends MessageList.MessageListSection {
 
         this._nUrgent = 0
 
-        // @ts-ignore // FIXME:
-        GnomeContext.MessageTray.connectObject('source-added', this._sourceAdded.bind(this), this)
-        GnomeContext.MessageTray.getSources().forEach(source => {
-            this._sourceAdded(GnomeContext.MessageTray, source)
+        // @ts-expect-error missing connectObject type support
+        Global.MessageTray.connectObject('source-added', this._sourceAdded.bind(this), this)
+        Global.MessageTray.getSources().forEach(source => {
+            this._sourceAdded(Global.MessageTray, source)
         })
 
         // sync notifications from gnome stock notifications
         // @ts-ignore
-        GnomeContext.NotificationSection._messages.forEach((notification) => {
+        Global.NotificationSection._messages.forEach((notification) => {
             this._onNotificationAdded(null, notification.notification)
         })
     }
@@ -197,19 +197,19 @@ class NotificationList extends MessageList.MessageListSection {
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L866
     _sourceAdded(tray, source) {
         // @ts-ignore
-        GnomeContext.NotificationSection._sourceAdded.call(this, tray, source)
+        Global.NotificationSection._sourceAdded.call(this, tray, source)
     }
 
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L871
     _onNotificationAdded(source, notification) {
         // @ts-ignore
-        GnomeContext.NotificationSection._onNotificationAdded.call(this, source, notification)
+        Global.NotificationSection._onNotificationAdded.call(this, source, notification)
     }
 
     // See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L900
     vfunc_map() {
         // @ts-ignore
-        GnomeContext.NotificationSection.vfunc_map.call(this)
+        Global.NotificationSection.vfunc_map.call(this)
     }
 }
 GObject.registerClass(NotificationList)

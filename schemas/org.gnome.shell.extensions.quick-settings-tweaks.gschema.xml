@@ -18,20 +18,11 @@
     <key name="volume-mixer-enabled" type="b">
       <default>true</default>
     </key>
+
+    <!-- notifications -->
     <key name="notifications-enabled" type="b">
       <default>true</default>
     </key>
-    <key name="media-control-enabled" type="b">
-      <default>true</default>
-    </key>
-    <key name="disable-adjust-content-border-radius" type="b">
-      <default>false</default>
-    </key>
-    <key name="disable-remove-shadow" type="b">
-      <default>false</default>
-    </key>
-
-    <!-- notifications -->
     <key name="notifications-position" type="s">
       <!-- "bottom" or "top" -->
       <default>"bottom"</default>
@@ -49,15 +40,16 @@
       <default>292</default>
     </key>
 
-    <key name="datemenu-remove-notifications" type="b">
+    <!-- media control -->
+    <key name="media-enabled" type="b">
       <default>true</default>
     </key>
-    <key name="datemenu-fix-weather-widget" type="b">
+    <key name="media-compact" type="b">
       <default>true</default>
     </key>
 
-    <!-- media control -->
-    <key name="media-control-compact-mode" type="b">
+    <!-- datemenu -->
+    <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
     </key>
     <key name="datemenu-remove-media-control" type="b">

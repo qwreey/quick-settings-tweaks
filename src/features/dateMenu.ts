@@ -1,4 +1,4 @@
-import { GnomeContext } from "../libs/gnome.js"
+import { Global } from "../global.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
 export class DateMenuFeature extends FeatureBase {
@@ -14,30 +14,28 @@ export class DateMenuFeature extends FeatureBase {
     onLoad() {
         // remove media control from date menu
         if (this.removeMediaControl) {
-            GnomeContext.MediaSection.hide()
+            Global.MediaSection.hide()
             this.maid.connectJob(
-                GnomeContext.MediaSection,
+                Global.MediaSection,
                 "show",
-                () => GnomeContext.MediaSection.hide()
+                () => Global.MediaSection.hide()
             )
         }
 
         // remove notifications from date menu
         if (this.removeNotifications) {
-            GnomeContext.NotificationSection.hide()
+            Global.NotificationSection.hide()
             this.maid.connectJob(
-                GnomeContext.NotificationSection,
+                Global.NotificationSection,
                 "show",
-                () => GnomeContext.NotificationSection.hide()
+                () => Global.NotificationSection.hide()
             )
-            // GnomeContext.DateMenuBox.style = "padding: 4px 6px 4px 0px;"
         }
-
-        // datemenu fix weather widget
-        // if (this.settings.get_boolean("datemenu-fix-weather-widget")) {
-        //     this.weatherFixBackupClass = GnomeContext.DateMenuBox.style_class
-        //     GnomeContext.DateMenuBox.style_class += " qwreey-fixed-weather"
-        // }
     }
-    onUnload(): void {}
+    onUnload(): void {
+        // @ts-ignore
+        if (Global.MediaSection._shouldShow()) Global.MediaSection.show();
+        // @ts-ignore
+        if (Global.NotificationSection._shouldShow()) Global.NotificationSection.show();
+    }
 }

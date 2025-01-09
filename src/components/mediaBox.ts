@@ -1,7 +1,13 @@
 import St from "gi://St"
+import Clutter from "gi://Clutter"
 import * as Mpris from "resource:///org/gnome/shell/ui/mpris.js"
 import { Slider } from 'resource:///org/gnome/shell/ui/slider.js'
 import GObject from "gi://GObject"
+import GLib from "gi://GLib"
+import { logger } from "../libs/utility.js"
+import { Global } from "../global.js"
+import Gio from "gi://Gio"
+
 
 // export class ProgressBar extends Slider {
 //     _init(value, manager, busName, timestamps) {
@@ -146,21 +152,121 @@ import GObject from "gi://GObject"
 //     }
 // }
 
-export class ProgressBar extends Slider {
-    _init(value, manager, busName, timestamps) {
+class ProgressSlider extends Slider {
+    _init(value) {
         super._init(value)
     }
 }
-GObject.registerClass(ProgressBar)
+GObject.registerClass(ProgressSlider)
 
+interface ProgressControl {
+    _progressLabel: St.Label
+    _lengthLabel: St.Label
+    _slider: ProgressSlider
+    _player: Player
+    _positionTracker: number|null
+}
+class ProgressControl extends St.BoxLayout {
+    constructor(player: Player) {
+        super(player as any)
+    }
+    _init(player: Player): void {
+        this._player = player
+        this._positionTracker = null
+
+        super._init({
+            vertical: false,
+            x_expand: true,
+        })
+
+        this._progressLabel = new St.Label({
+            text: "test",
+            y_expand: true,
+            y_align: Clutter.ActorAlign.CENTER,
+            style_class: "QSTWEAKS-progress-label",
+        })
+        this.add_child(this._progressLabel)
+
+        this._slider = new ProgressSlider(20)
+        this.add_child(this._slider)
+
+        this._lengthLabel = new St.Label({
+            text: "test",
+            y_expand: true,
+            y_align: Clutter.ActorAlign.CENTER,
+            style_class: "QSTWEAKS-length-label",
+        })
+        this.add_child(this._lengthLabel)
+
+        this.connect("notify::mapped", this._updateTracker.bind(this))
+        this.connect("destroy", this._dropTracker.bind(this))
+    }
+
+    _updatePosition() {
+        this._player._propertiesProxy.GetAsync(
+            "org.mpris.MediaPlayer2.Player",
+            "Position"
+        ).then(result => {
+            logger(result[0].get_int64())
+        })
+        return GLib.SOURCE_CONTINUE;
+    }
+    _dropTracker() {
+        if (this._positionTracker === null) return
+        GLib.source_remove(this._positionTracker)
+        this._positionTracker = null
+    }
+    _createTracker() {
+        this._updatePosition()
+        this._positionTracker = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, this._updatePosition.bind(this))
+    }
+    _updateTracker() {
+        if (this.mapped) this._createTracker()
+        else this._dropTracker()
+    }
+}
+GObject.registerClass(ProgressControl)
+
+// #region Player
+interface Player {
+    _propertiesProxy: Gio.DBusProxy
+    _isPropertiesProxyReady: boolean
+}
+class Player extends Mpris.MprisPlayer {
+    constructor(busName: string) {
+        super(busName)
+
+        const propertiesIface = Global.GetDbusInterface("media/dbus-properties.xml","org.freedesktop.DBus.Properties")
+        Gio.DBusProxy.new(
+            Gio.DBus.session,
+            Gio.DBusProxyFlags.NONE,
+            propertiesIface,
+            busName,
+            '/org/mpris/MediaPlayer2',
+            propertiesIface.name,
+            null,
+        // @ts-expect-error
+        ).then((proxy: Gio.DbusProxy) => this._propertiesProxy = proxy)
+    }
+
+    _close() {
+        this._propertiesProxy = null
+        super._close()
+    }
+}
+// #endregion Player
+
+// #region MediaItem
 class MediaItem extends Mpris.MediaMessage {
-    constructor(player) {
+    constructor(player: Player) {
         super(player)
-        this.child.add_child(new ProgressBar(10))
+        this.child.add_child(new ProgressControl(player))
     }
 }
 GObject.registerClass(MediaItem)
+// #endregion MediaItem
 
+// #region MediaList
 class MediaList extends Mpris.MediaSection {
     _init() {
         super._init()
@@ -172,7 +278,7 @@ class MediaList extends Mpris.MediaSection {
         if (this._players.get(busName))
             return
 
-        let player = new Mpris.MprisPlayer(busName)
+        let player = new Player(busName)
         let message = null
         player.connect('closed',
             () => {
@@ -191,24 +297,94 @@ class MediaList extends Mpris.MediaSection {
     }
 }
 GObject.registerClass(MediaList)
+// #endregion MediaList
 
-export class MediaBox extends St.BoxLayout {
+// #region Header
+namespace Header {   
+    export type Options = Partial<{
+    } & St.BoxLayout.ConstructorProps>
+}
+interface Header {
+    _headerLabel: St.Label
+}
+class Header extends St.BoxLayout {
+    constructor(options: Header.Options) {
+        super(options)
+    }
+    _init(options: Header.Options) {
+        super._init({
+            style_class: "QSTWEAKS-header"
+        } as Partial<St.BoxLayout.ConstructorProps>)
+
+        // Label
+        this._headerLabel = new St.Label({
+            text: _('Media'),
+            style_class: "QSTWEAKS-header-label",
+            y_align: Clutter.ActorAlign.CENTER,
+            x_align: Clutter.ActorAlign.START,
+            x_expand: true
+        })
+        this.add_child(this._headerLabel)
+    }
+}
+GObject.registerClass(Header)
+// #endregion Header
+
+// #region MediaBox
+namespace MediaBox {
+    export type Options = Partial<{
+
+    } & St.BoxLayout.ConstructorProps>
+}
+interface MediaBox {
+    _options: MediaBox.Options
+    _scroll: St.ScrollView
+    _list: MediaList
+    _header: Header
+    _sections: St.BoxLayout
+}
+class MediaBox extends St.BoxLayout {
+    constructor(options: MediaBox.Options) {
+        super(options)
+    }
     _init(options) {
-        super._init()
+        super._init({
+            vertical: true,
+            x_expand: true,
+            y_expand: true,
+        })
         this._options = options
+
+        this._header = new Header({})
+        this.add_child(this._header)
+
         this._createMediaScroll()
-        this.add_child(this._mediaScroll)
+        this.add_child(this._scroll)
+
+        this._list.connect('notify::empty', this._syncEmpty.bind(this))
+        this._syncEmpty()
     }
 
     _createMediaScroll() {
-        this._mediaScroll = new St.ScrollView({
-            style_class: 'vfade',
-            overlay_scrollbars: true,
-            x_expand: true, y_expand: true,
+        this._sections = new St.BoxLayout({
+            vertical: false,
+            x_expand: true,
         })
-        // fixStScrollViewScrollbarOverflow(this._mediaScroll)
-        this._mediaSection = new MediaList()
-        this._mediaScroll.child = this._mediaSection
+        this._scroll = new St.ScrollView({
+            x_expand: true,
+            y_expand: true,
+            hscrollbar_policy: St.PolicyType.EXTERNAL,
+            vscrollbar_policy: St.PolicyType.NEVER,
+            child: this._sections,
+        })
+        this._list = new MediaList()
+        this._sections.add_child(this._list)
+    }
+
+    _syncEmpty() {
+        this.visible = !this._list.empty
     }
 }
 GObject.registerClass(MediaBox)
+export { MediaBox }
+// #endregion MediaBox

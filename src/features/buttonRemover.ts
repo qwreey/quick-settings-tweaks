@@ -1,6 +1,6 @@
 // forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
 
-import { GnomeContext } from "../libs/gnome.js"
+import { Global } from "../global.js"
 
 export class ButtonRemoverFeature {
     constructor() {
@@ -15,7 +15,7 @@ export class ButtonRemoverFeature {
     _apply(removedItems) {
         this.systemHiddenItems = []
 
-        for (const item of GnomeContext.QuickSettingsGrid.get_children()) {
+        for (const item of Global.QuickSettingsGrid.get_children()) {
             let name = item.constructor.name.toString()
             if (!item.visible) {
                 this.systemHiddenItems.push(item)
@@ -49,32 +49,32 @@ export class ButtonRemoverFeature {
     }
     load() {
         const listButtons = []
-        for (const item of GnomeContext.QuickSettingsGrid.get_children()) {
-            if (item === GnomeContext.QuickSettingsGrid.layout_manager._overlay) continue
+        for (const item of Global.QuickSettingsGrid.get_children()) {
+            if (item === Global.QuickSettingsGrid.layout_manager._overlay) continue
             listButtons.push({
                 name: item.constructor?.name,
                 title: item.title || null,
                 visible: item.visible
             })
         }
-        this.settings.set_string("list-buttons", JSON.stringify(listButtons))
+        Global.Settings.set_string("list-buttons", JSON.stringify(listButtons))
 
-        let items = this.userRemovedItems = this.settings.get_strv("user-removed-buttons")
+        let items = this.userRemovedItems = Global.Settings.get_strv("user-removed-buttons")
         if (!items) {
             items = this.userRemovedItems = []
-            this.settings.set_strv("user-removed-buttons", items)
+            Global.Settings.set_strv("user-removed-buttons", items)
         }
 
         this._apply(items)
 
         this._removedItemsConnection =
-            this.settings.connect('changed::user-removed-buttons', (settings, key) => {
+            Global.Settings.connect('changed::user-removed-buttons', (settings, key) => {
                 this._unapply()
-                this._apply(this.userRemovedItems = this.settings.get_strv("user-removed-buttons"))
+                this._apply(this.userRemovedItems = Global.Settings.get_strv("user-removed-buttons"))
             })
     }
     unload() {
         this._unapply()
-        this.settings.disconnect(this._removedItemsConnection)
+        Global.Settings.disconnect(this._removedItemsConnection)
     }
 }

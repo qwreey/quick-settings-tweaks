@@ -41,6 +41,7 @@ function build() {
 		--extra-source=libs\
 		--extra-source=prefPages\
 		--extra-source=media\
+		--extra-source=global.js\
 		--out-dir=target\
 		--force
 	[ "$?" != "0" ] && echo "Failed to pack extension" && return 1

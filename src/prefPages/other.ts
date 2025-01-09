@@ -18,27 +18,13 @@ export const otherPage = GObject.registerClass({
         
         // description / enable
         const group = new Adw.PreferencesGroup()
-        makeSwitch({
-            parent: group,
-            title: _("Fix Weather Widget Overflow"),
-            subtitle: _("Fix overflow visual bug of weather widget in datemenu"),
-            value: settings.get_boolean("datemenu-fix-weather-widget"),
-            bind: [settings, "datemenu-fix-weather-widget"]
-        })
-        makeSwitch({
-            parent: group,
-            title: _("Remove Notifications On Date Menu"),
-            subtitle: _("Hide notifications on date menu.\n*this option removes media control on date menu too*"),
-            value: settings.get_boolean("datemenu-remove-notifications"),
-            bind: [settings, "datemenu-remove-notifications"]
-        })
-        makeSwitch({
-            parent: group,
-            title: _("Remove Media Control On Date Menu"),
-            subtitle: _("Hide media control on date menu."),
-            value: settings.get_boolean("datemenu-remove-media-control"),
-            bind: [settings, "datemenu-remove-media-control"]
-        })
+        // makeSwitch({
+        //     parent: group,
+        //     title: _("Fix Weather Widget Overflow"),
+        //     subtitle: _("Fix overflow visual bug of weather widget in datemenu"),
+        //     value: settings.get_boolean("datemenu-fix-weather-widget"),
+        //     bind: [settings, "datemenu-fix-weather-widget"]
+        // })
         makeSwitch({
             parent: group,
             title: _("Do not adjust the border radius of contents."),

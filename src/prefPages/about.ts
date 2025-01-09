@@ -10,7 +10,7 @@ import {
     makeExpander,
 } from "../libs/prefComponents.js"
 
-//@ts-ignore
+// @ts-expect-error This file will be added by packer
 import contributors from "../media/contributors/data.js"
 
 export const aboutPage = GObject.registerClass({

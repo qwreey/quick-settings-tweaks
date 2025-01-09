@@ -60,27 +60,6 @@ export const notificationsPage = GObject.registerClass({
             bind: [settings, "notifications-max-height"],
             sensitiveBind: [settings, "notifications-enabled"],
         })
-        // makeDropdown({
-        //     parent: notificationGroup,
-        //     title: _("Position"),
-        //     subtitle: _("Set Notifications widget position"),
-        //     value: settings.get_string('notifications-position'),
-        //     type: "string",
-        //     bind: [settings, 'notifications-position'],
-        //     items: [
-        //         {name: _("Top"), value: "top"},
-        //         {name: _("Bottom"), value: "bottom"},
-        //     ],
-        //     sensitiveBind: [settings, "notifications-enabled"],
-        // })
-        // makeSwitch({
-        //     parent: notificationGroup,
-        //     title: _("Attach to QS panel"),
-        //     subtitle: _("Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n(such as margin or padding not matching with the theme)"),
-        //     value: settings.get_boolean("notifications-integrated"),
-        //     bind: [settings, "notifications-integrated"],
-        //     sensitiveBind: [settings, "notifications-enabled"],
-        // })
         makeSwitch({
             parent: notificationGroup,
             title: _("Auto Hide"),
@@ -106,5 +85,26 @@ export const notificationsPage = GObject.registerClass({
             sensitiveBind: [settings, "notifications-enabled"],
         })
         this.add(notificationGroup)
+
+        // DateMenu
+        const datemenuGroup = new Adw.PreferencesGroup({
+            title: _("Date Menu"),
+            description: _("Adjust Date Menu layout"),
+        })
+        makeSwitch({
+            parent: datemenuGroup,
+            title: _("Remove Notifications"),
+            subtitle: _("Hide notifications on date menu.\n*this option removes media control on date menu too*"),
+            value: settings.get_boolean("datemenu-remove-notifications"),
+            bind: [settings, "datemenu-remove-notifications"]
+        })
+        makeSwitch({
+            parent: datemenuGroup,
+            title: _("Remove Media Control"),
+            subtitle: _("Hide media control on date menu."),
+            value: settings.get_boolean("datemenu-remove-media-control"),
+            bind: [settings, "datemenu-remove-media-control"]
+        })
+        this.add(datemenuGroup)
     }
 })

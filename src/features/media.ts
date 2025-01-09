@@ -1,30 +1,46 @@
 import { MediaBox } from "../components/mediaBox.js"
-import { GnomeContext } from "../libs/gnome.js"
+import { Global } from "../global.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
 export class MediaFeature extends FeatureBase {
     // #region settings
-    mediaControlEnabled: boolean
-    disableAdjustBorder: boolean
-    disableRemoveShadow: boolean
+    enabled: boolean
+    compact: boolean
     override loadSettings(loader: SettingLoader): void {
-        this.mediaControlEnabled = loader.loadBoolean("media-control-enabled")
-        this.disableAdjustBorder = loader.loadBoolean("disable-adjust-content-border-radius")
-        this.disableRemoveShadow = loader.loadBoolean("disable-remove-shadow")
+        this.enabled = loader.loadBoolean("media-enabled")
+        this.compact = loader.loadBoolean("media-compact")
     }
     // #endregion settings
 
     mediaBox?: MediaBox
+    updateStyleClass() {
+        let style = "QSTWEAKS-media"
+        if (this.compact) style += " QSTWEAKS-message-compact"
+        this.mediaBox.style_class = style
+    }
+
+    override reload(key: string): void {
+        switch (key) {
+            case "media-compact":
+                this.updateStyleClass()
+                break
+            default:
+                super.reload()
+                break
+        }
+    }
     override onLoad(): void {
-        if (!this.mediaControlEnabled) return
+        if (!this.enabled) return
         this.maid.destroyJob(
             this.mediaBox = new MediaBox({})
         )
 
-        GnomeContext.QuickSettingsGrid.add_child(this.mediaBox)
-        GnomeContext.QuickSettingsGrid.layout_manager.child_set_property(
-            GnomeContext.QuickSettingsGrid, this.mediaBox, 'column-span', 2
+        Global.QuickSettingsGrid.add_child(this.mediaBox)
+        Global.QuickSettingsGrid.layout_manager.child_set_property(
+            Global.QuickSettingsGrid, this.mediaBox, 'column-span', 2
         )
+
+        this.updateStyleClass()
     }
     override onUnload(): void {
         this.mediaBox = null

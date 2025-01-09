@@ -1,18 +1,9 @@
-// This module exports gnome's UI objects
-// For make codes simple, All the gnome objects should be getting in here
-// You can import gnome object like this
-// * gnome object means UI that made by gnome 
-//
-// const {
-//    QuickSettingsGrid,
-//    QuickSettingsBox
-// } = Me.imports.gnome
-//
-
 import Clutter from "gi://Clutter"
 import GLib from "gi://GLib"
+import Gio from "gi://Gio"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 
+import { type Extension } from "resource:///org/gnome/shell/extensions/extension.js"
 import { type MessageTray } from "resource:///org/gnome/shell/ui/messageTray.js"
 import { type DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js"
 import {
@@ -21,7 +12,7 @@ import {
 } from "resource:///org/gnome/shell/ui/calendar.js";
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
 
-export const GnomeContext = new (class GnomeContext {
+export const Global = new (class Global {
     QuickSettings: Clutter.Actor
     QuickSettingsMenu: Clutter.Actor
     QuickSettingsGrid: Clutter.Actor
@@ -33,6 +24,9 @@ export const GnomeContext = new (class GnomeContext {
     DateMenuHolder: Clutter.Actor
 
     MessageTray: MessageTray
+
+    Extension: Extension
+    Settings: Gio.Settings
 
     get MessageList(): CalendarMessageList {
         return (this.DateMenu as any)._messageList
@@ -81,6 +75,18 @@ export const GnomeContext = new (class GnomeContext {
         })
     }
 
+    private DBusFiles: Map<string, Gio.DBusNodeInfo>
+    private Decoder: TextDecoder
+    GetDbusInterface(path: string, interfaceName: string) {
+        let cachedInfo = this.DBusFiles.get(path)
+        if (!cachedInfo) {
+            const DbusFile = Gio.File.new_for_path(`${this.Extension.path}/${path}`)
+            cachedInfo = Gio.DBusNodeInfo.new_for_xml(this.Decoder.decode(DbusFile.load_contents(null)[1]))
+            this.DBusFiles.set(path, cachedInfo)
+        }
+        return cachedInfo.lookup_interface(interfaceName)
+    }
+
     unload() {
         this.QuickSettings = null
         this.QuickSettingsMenu = null
@@ -91,8 +97,16 @@ export const GnomeContext = new (class GnomeContext {
         this.DateMenuBox = null
         this.DateMenuHolder = null
         this.MessageTray = null
+        this.Extension = null
+        this.Settings = null
+        this.DBusFiles = null
     }
-    load() {
+    load(extension: Extension) {
+        this.Extension = extension
+        this.Settings = extension.getSettings()
+        this.DBusFiles = new Map()
+        this.Decoder = new TextDecoder()
+
         // Quick Settings Items
         const QuickSettings = this.QuickSettings = Main.panel.statusArea.quickSettings
         this.QuickSettingsMenu = QuickSettings.menu

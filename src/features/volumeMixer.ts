@@ -1,10 +1,10 @@
 import { featureReloader } from "../libs/utility.js"
 import { VolumeMixer } from "../libs/volumeMixerHandler.js"
-import { GnomeContext } from "../libs/gnome.js"
+import { Global } from "../global.js"
 
 export class VolumeMixerFeature {
     load() {
-        let settings = this.settings
+        let settings = Global.Settings
 
         // setup reloader
         featureReloader.enableWithSettingKeys(this, [
@@ -19,7 +19,7 @@ export class VolumeMixerFeature {
         ])
 
         // check is feature enabled
-        if (!this.settings.get_boolean("volume-mixer-enabled")) return
+        if (!Global.Settings.get_boolean("volume-mixer-enabled")) return
 
         // Make volume mixer
         this.volumeMixer = new VolumeMixer({
@@ -32,10 +32,10 @@ export class VolumeMixerFeature {
         })
 
         // Insert volume mixer into Quick Settings
-        GnomeContext.QuickSettingsMenu.addItem(this.volumeMixer.actor, 2)
-        if (this.settings.get_string("volume-mixer-position") === "top") {
-            GnomeContext.GetStreamSlider(({ InputStreamSlider }) => {
-                GnomeContext.QuickSettingsMenu._grid.set_child_above_sibling(
+        Global.QuickSettingsMenu.addItem(this.volumeMixer.actor, 2)
+        if (Global.Settings.get_string("volume-mixer-position") === "top") {
+            Global.GetStreamSlider(({ InputStreamSlider }) => {
+                Global.QuickSettingsMenu._grid.set_child_above_sibling(
                     this.volumeMixer.actor,
                     InputStreamSlider
                 )

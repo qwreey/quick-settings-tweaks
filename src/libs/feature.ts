@@ -1,16 +1,14 @@
 import Gio from "gi://Gio";
 import Maid from "./maid.js";
+import { Global } from "../global.js";
 
 export class SettingLoader {
-    settings: Gio.Settings
     records: Set<string>
     listeners: number[]
     onChange: (key: string)=>void
     constructor(
-        settings: Gio.Settings,
         onChange: SettingLoader['onChange']
     ) {
-        this.settings = settings
         this.records = new Set()
         this.listeners = []
         this.onChange = onChange
@@ -20,7 +18,7 @@ export class SettingLoader {
         if (this.records.has(key)) return
         this.records.add(key)
         this.listeners.push(
-            this.settings.connect(
+            Global.Settings.connect(
                 `changed::${key}`,
                 () => this.onChange(key)
             )
@@ -28,7 +26,7 @@ export class SettingLoader {
     }
     clear() {
         for (const source of this.listeners) {
-            this.settings.disconnect(source)
+            Global.Settings.disconnect(source)
         }
         this.listeners = []
         this.records.clear()
@@ -36,27 +34,25 @@ export class SettingLoader {
 
     loadBoolean(key: string): boolean {
         this.push(key)
-        return this.settings.get_boolean(key)
+        return Global.Settings.get_boolean(key)
     }
     loadString(key: string): string {
         this.push(key)
-        return this.settings.get_string(key)
+        return Global.Settings.get_string(key)
     }
     loadInt(key: string): number {
         this.push(key)
-        return this.settings.get_int(key)
+        return Global.Settings.get_int(key)
     }
 }
 
 export abstract class FeatureBase {
     loader: SettingLoader
-    settings: Gio.Settings
     maid: Maid
 
-    constructor(settings: Gio.Settings) {
+    constructor() {
         this.maid = new Maid()
-        this.settings = settings
-        this.loader = new SettingLoader(settings, (key: string)=>{
+        this.loader = new SettingLoader((key: string)=>{
             this.loader.clear()
             this.loadSettings(this.loader)
             this.reload(key)
