@@ -94,8 +94,8 @@ class ProgressControl extends St.BoxLayout {
 			this.opacity = opacity
 			return
 		}
-		// @ts-expect-error
 		if (this._shown) {
+			// @ts-expect-error
 			this.ease({
 				height,
 				duration: 150,
@@ -107,6 +107,7 @@ class ProgressControl extends St.BoxLayout {
 				}
 			})
 		} else {
+			// @ts-expect-error
 			this.ease({
 				opacity,
 				duration: 200,
@@ -246,6 +247,8 @@ class Player extends Mpris.MprisPlayer {
 			this._canSeek = false
 		}).then((result: any) => {
 			this._canSeek = result[0].get_boolean()
+		}).catch(()=>{
+			this._canSeek = false
 		}).finally(()=>{
 			super._updateState()
 		})
@@ -435,23 +438,23 @@ class Header extends St.BoxLayout {
 GObject.registerClass(Header)
 // #endregion Header
 
-// #region MediaBox
-namespace MediaBox {
+// #region MediaWidget
+namespace MediaWidget {
 	export type Options = Partial<{
 		showProgress: boolean
 	} & St.BoxLayout.ConstructorProps>
 }
-class MediaBox extends St.BoxLayout {
-	_options: MediaBox.Options
+class MediaWidget extends St.BoxLayout {
+	_options: MediaWidget.Options
 	_scroll: St.ScrollView
 	_list: MediaList
 	_header: Header
 	_sections: St.BoxLayout
 
-	constructor(options: MediaBox.Options) {
+	constructor(options: MediaWidget.Options) {
 		super(options)
 	}
-	_init(options: MediaBox.Options) {
+	_init(options: MediaWidget.Options) {
 		super._init({
 			vertical: true,
 			x_expand: true,
@@ -493,6 +496,6 @@ class MediaBox extends St.BoxLayout {
 		this.visible = !this._list.empty
 	}
 }
-GObject.registerClass(MediaBox)
-export { MediaBox }
-// #endregion MediaBox
+GObject.registerClass(MediaWidget)
+export { MediaWidget }
+// #endregion MediaWidget

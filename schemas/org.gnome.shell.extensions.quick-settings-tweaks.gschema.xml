@@ -8,18 +8,7 @@
       <default>"[]"</default>
     </key>
 
-    <!-- list of enabled features -->
-    <key name="add-dnd-quick-toggle-enabled" type="b">
-      <default>true</default>
-    </key>
-    <key name="add-unsafe-quick-toggle-enabled" type="b">
-      <default>false</default>
-    </key>
-    <key name="volume-mixer-enabled" type="b">
-      <default>true</default>
-    </key>
-
-    <!-- notifications -->
+    <!-- Notifications Widget -->
     <key name="notifications-enabled" type="b">
       <default>true</default>
     </key>
@@ -40,7 +29,7 @@
       <default>292</default>
     </key>
 
-    <!-- media control -->
+    <!-- Media Widget -->
     <key name="media-enabled" type="b">
       <default>true</default>
     </key>
@@ -51,7 +40,7 @@
       <default>true</default>
     </key>
 
-    <!-- datemenu -->
+    <!-- Date Menu Tweaks -->
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
     </key>
@@ -60,6 +49,9 @@
     </key>
 
     <!-- volume mixer -->
+    <key name="volume-mixer-enabled" type="b">
+      <default>true</default>
+    </key>
     <key name="volume-mixer-use-regex" type="b">
       <default>false</default>
     </key>
@@ -98,9 +90,63 @@
       <default>false</default>
     </key>
 
-    <!-- unsafe mode -->
+    <!-- Unsafe Mode Quick Toggle -->
+    <key name="add-unsafe-quick-toggle-enabled" type="b">
+      <default>false</default>
+    </key>
     <key name="last-unsafe-state" type="b">
       <default>false</default>
+    </key>
+
+    <!-- DND Quick Toggle -->
+    <key name="add-dnd-quick-toggle-enabled" type="b">
+      <default>true</default>
+    </key>
+
+    <!-- Weather Widget -->
+    <key name="weather-enabled" type="b">
+      <default>true</default>
+    </key>
+
+    <!-- Menu Animation -->
+    <key name="menu-animation-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="menu-animation-background-blur-radius" type="i">
+      <default>8</default>
+    </key>
+    <key name="menu-animation-background-opacity" type="i">
+      <default>160</default>
+    </key>
+    <key name="menu-animation-background-scale-x" type="i">
+      <default>900</default>
+    </key>
+    <key name="menu-animation-background-scale-y" type="i">
+      <default>900</default>
+    </key>
+    <key name="menu-animation-open-duration" type="i">
+      <default>380</default>
+    </key>
+    <key name="menu-animation-close-duration" type="i">
+      <default>380</default>
+    </key>
+
+    <!-- Overlay Menu -->
+    <key name="overlay-menu-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="overlay-menu-width" type="i">
+      <default>380</default>
+    </key>
+    <key name="layout" type="a{sai}">
+      <default>
+        {
+          'weather-widget': [0, 0],
+          'notifications-widget': [0, 0],
+          'media-widget': [0, 0],
+          'mixer-widget': [0, 0]
+        }
+      </default>
     </key>
   </schema>
 </schemalist>

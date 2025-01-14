@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sudo docker compose exec -u gnome gnome-docker env DISPLAY=":0" DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus gdbus call -e -d org.gnome.Shell -o /org/gnome/Shell -m org.gnome.Shell.Eval "$1"

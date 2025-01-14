@@ -51,6 +51,15 @@ function build() {
 	wait $SASS_PID
 	wait $COPYING_PID
 
+	case "$TARGET" in
+		DEV|dev )
+			sed 's/isDevelopmentBuild: false/isDevelopmentBuild: true/' -i target/out/config.js
+		;;
+		RELEASE|release )
+			sed 's/isReleaseBuild: false/isReleaseBuild: true/' -i target/out/config.js
+		;;
+	esac
+
 	gnome-extensions pack target/out\
 		--podir=../../po\
 		--extra-source=../../LICENSE\
@@ -62,6 +71,7 @@ function build() {
 		--extra-source=prefPages\
 		--extra-source=media\
 		--extra-source=global.js\
+		--extra-source=config.js\
 		--out-dir=target\
 		--force
 	[ "$?" != "0" ] && echo "Failed to pack extension" && return 1
@@ -101,6 +111,13 @@ function clear-old-po() {
 	rm ./po/*.po
 }
 
+function compile-preferences() {
+	glib-compile-schemas --targetdir=target/out/schemas schemas
+	[ "$?" != "0" ] && echo "compile-preferences: glib-compile-schemas command failed" && return 1
+
+	return 0
+}
+
 function dev() {
 	if ! sudo echo > /dev/null; then
 		return
@@ -113,7 +130,7 @@ function dev() {
 
 	# Build
 	(
-		build
+		TARGET=DEV build
 		echo > host/extension-ready
 	) > /dev/null &
 
@@ -122,7 +139,7 @@ function dev() {
 		cat host/extension-build > /dev/null
 		while true; do
 			cat host/extension-build > /dev/null
-			build
+			TARGET=DEV build
 			echo > host/extension-ready
 		done
 	) &

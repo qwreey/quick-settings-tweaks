@@ -1,4 +1,5 @@
 import Clutter from "gi://Clutter"
+import St from "gi://St"
 import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
@@ -14,14 +15,15 @@ import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
 
 export const Global = new (class Global {
 	QuickSettings: Clutter.Actor
-	QuickSettingsMenu: Clutter.Actor
-	QuickSettingsGrid: Clutter.Actor
-	QuickSettingsBox: Clutter.Actor
-	QuickSettingsActor: Clutter.Actor
+	QuickSettingsMenu: St.Widget
+	QuickSettingsGrid: St.Widget
+	QuickSettingsBox: St.BoxLayout
+	QuickSettingsActor: St.Widget
 
 	DateMenu: DateMenuButton
 	DateMenuBox: Clutter.Actor
 	DateMenuHolder: Clutter.Actor
+	DateMenuIndicator: Clutter.Actor
 
 	MessageTray: MessageTray
 
@@ -100,6 +102,7 @@ export const Global = new (class Global {
 		this.Extension = null
 		this.Settings = null
 		this.DBusFiles = null
+		this.DateMenuIndicator = null
 	}
 	load(extension: Extension) {
 		this.Extension = extension
@@ -118,6 +121,7 @@ export const Global = new (class Global {
 		const DateMenu = this.DateMenu = Main.panel.statusArea.dateMenu
 		this.DateMenuBox = (DateMenu.menu as any).box
 		this.DateMenuHolder = (DateMenu.menu as any).box.first_child.first_child
+		this.DateMenuIndicator = (DateMenu as any)._indicator
 
 		// Message
 		this.MessageTray = Main.messageTray

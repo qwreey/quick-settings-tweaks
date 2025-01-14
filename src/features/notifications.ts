@@ -1,4 +1,4 @@
-import { NotificationBox } from "../components/notificationBox.js"
+import { NotificationWidget } from "../components/notificationWidget.js"
 import { Global } from "../global.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
@@ -37,15 +37,15 @@ export class NotificationsFeature extends FeatureBase {
 	// }
 	// }
 
-	notificationBox: NotificationBox
+	notificationWidget: NotificationWidget
 	updateMaxHeight() {
-		this.notificationBox.style = `max-height:${this.maxHeight}px;`
+		this.notificationWidget.style = `max-height:${this.maxHeight}px;`
 	}
 	updateStyleClass() {
 		let style = "QSTWEAKS-notifications"
 		if (this.useNativeControls) style += " QSTWEAKS-use-native-controls"
 		if (this.compact) style += " QSTWEAKS-message-compact"
-		this.notificationBox.style_class = style
+		this.notificationWidget.style_class = style
 	}
 
 	override reload(key: string): void {
@@ -66,7 +66,7 @@ export class NotificationsFeature extends FeatureBase {
 
 		// Create Notification Box
 		this.maid.destroyJob(
-			this.notificationBox = new NotificationBox({
+			this.notificationWidget = new NotificationWidget({
 				autoHide: this.autoHide,
 				useNativeControls: this.useNativeControls
 			})
@@ -80,20 +80,20 @@ export class NotificationsFeature extends FeatureBase {
 		// FIXME: with layout manager
 		switch (this.position) {
 			case "top":
-				Global.QuickSettingsGrid.insert_child_at_index(this.notificationBox,
+				Global.QuickSettingsGrid.insert_child_at_index(this.notificationWidget,
 					// get system item index
 					Global.QuickSettingsGrid.get_children().findIndex((child) => child.constructor?.name == "SystemItem") + 1
 				)
 				break
 			case "bottom":
-				Global.QuickSettingsGrid.add_child(this.notificationBox)
+				Global.QuickSettingsGrid.add_child(this.notificationWidget)
 				break
 		}
 		Global.QuickSettingsGrid.layout_manager.child_set_property(
-			Global.QuickSettingsGrid, this.notificationBox, 'column-span', 2
+			Global.QuickSettingsGrid, this.notificationWidget, 'column-span', 2
 		)
 	}
 	override onUnload(): void {
-		this.notificationBox = null
+		this.notificationWidget = null
 	}
 }

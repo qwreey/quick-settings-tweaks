@@ -210,27 +210,25 @@ class NotificationList extends MessageList.MessageListSection {
 GObject.registerClass(NotificationList)
 // #endregion NotificationList
 
-// #region NotificationBox
-namespace NotificationBox {
+// #region NotificationWidget
+namespace NotificationWidget {
 	export type Options = Partial<{
 		useNativeControls: boolean
 		autoHide: boolean
 	} & St.BoxLayout.ConstructorProps>
 }
-interface NotificationBox {
-	_options: NotificationBox.Options
+class NotificationWidget extends St.BoxLayout {
+	_options: NotificationWidget.Options
 	_header: Header
 	_placeholder: Placeholder
 	_list: NotificationList
 	_scroll: St.ScrollView
 	_nativeControl: NativeControl
 	_sections: St.BoxLayout
-}
-class NotificationBox extends St.BoxLayout {
-	constructor(options: NotificationBox.Options) {
+	constructor(options: NotificationWidget.Options) {
 		super(options)
 	}
-	_init(options: NotificationBox.Options) {
+	_init(options: NotificationWidget.Options) {
 		super._init({
 			vertical: true,
 		} as Partial<St.BoxLayout.ConstructorProps>)
@@ -327,6 +325,6 @@ class NotificationBox extends St.BoxLayout {
 			: "message-list-sections"
 	}
 }
-GObject.registerClass(NotificationBox)
-export { NotificationBox }
-// #endregion NotificationBox
+GObject.registerClass(NotificationWidget)
+export { NotificationWidget }
+// #endregion NotificationWidget

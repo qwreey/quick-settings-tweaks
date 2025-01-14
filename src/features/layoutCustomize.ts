@@ -1,107 +1,45 @@
-// forked from https://github.com/qwreey75/gnome-quick-settings-button-remover
-
+import St from "gi://St"
 import { Global } from "../global.js"
+import { FeatureBase, SettingLoader } from "../libs/feature.js"
+import { logger } from "../libs/utility.js"
+import { QuickMenuToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
-// reorder
-// remove
+export class LayoutCustomize extends FeatureBase {
+	_scroll: St.ScrollView
+	_sections: St.BoxLayout
 
-export class LayoutCustomizeFeature {
-	constructor() { }
-
-	load() {
-		this.saveButtonLise()
+	// #region settings
+	override loadSettings(loader: SettingLoader): void {
 	}
-	unload() {
+	// #endregion settings
 
+	onChild(actor: QuickMenuToggle) {
+		actor.get_parent().remove_child(actor)
+		this._sections.add_child(actor)
 	}
-
-	saveButtonLise() {
-		const listButtons = []
+	checkChildren() {
 		for (const item of Global.QuickSettingsGrid.get_children()) {
-			if (item === Global.QuickSettingsGrid.layout_manager._overlay) continue
-			listButtons.push({
-				name: item.constructor?.name,
-				title: item.title || null,
-				visible: item.visible
-			})
+			if (item instanceof QuickMenuToggle) this.onChild(item)
 		}
-		Global.Settings.set_string("list-buttons", JSON.stringify(listButtons))
 	}
 
-
-
-	constructor() {
-		this.removedItems = []
-		this.visibleListeners = []
-		this.systemHiddenItems = []
+	update() {
+		
 	}
-	onMenuItemAdded() {
-		this._unapply()
-		this._apply(this.userRemovedItems)
-	}
-	_apply(removedItems) {
-		this.systemHiddenItems = []
 
-		for (const item of Global.QuickSettingsGrid.get_children()) {
-			let name = item.constructor.name.toString()
-			if (!item.visible) {
-				this.systemHiddenItems.push(item)
+	override onLoad(): void {
+		Global.QuickSettingsBox.vertical = false
+		Global.QuickSettingsBox.add_child(
+			new St.Button({height: 100, width: 100, style: "background-color:red;"})
+		)
+
+		this.maid.connectJob(
+			Global.QuickSettingsBox, "notify::mapped", ()=>{
+				if (Global.QuickSettingsBox.mapped) this.update()
 			}
-			if (name && removedItems.includes(name)) {
-				item.hide()
-				this.removedItems.push(item)
-				this.visibleListeners.push([item,
-					item.connect("show", () => {
-						const index = this.systemHiddenItems.indexOf(item)
-						if (index > -1) {
-							this.systemHiddenItems.splice(index, 1)
-						}
-						this._unapply()
-						this._apply(removedItems)
-					})
-				])
-			}
-		}
+		)
 	}
-	_unapply() {
-		for (const connection of this.visibleListeners) {
-			connection[0].disconnect(connection[1])
-		}
-		this.visibleListeners = []
-		for (const item of this.removedItems) {
-			if (!this.systemHiddenItems.includes(item)) item.show()
-		}
-		this.removedItems = []
-		this.systemHiddenItems = []
-	}
-	load() {
-		// const listButtons = []
-		// for (const item of GnomeContext.QuickSettingsGrid.get_children()){
-		//     if (item === GnomeContext.QuickSettingsGrid.layout_manager._overlay) continue;
-		//     listButtons.push({
-		//         name: item.constructor?.name,
-		//         title: item.title || null,
-		//         visible: item.visible
-		//     })
-		// }
-		// Global.Settings.set_string("list-buttons", JSON.stringify(listButtons))
-
-		let items = this.userRemovedItems = Global.Settings.get_strv("user-removed-buttons")
-		if (!items) {
-			items = this.userRemovedItems = []
-			Global.Settings.set_strv("user-removed-buttons", items)
-		}
-
-		this._apply(items)
-
-		this._removedItemsConnection =
-			Global.Settings.connect('changed::user-removed-buttons', (settings, key) => {
-				this._unapply()
-				this._apply(this.userRemovedItems = Global.Settings.get_strv("user-removed-buttons"))
-			})
-	}
-	unload() {
-		this._unapply()
-		Global.Settings.disconnect(this._removedItemsConnection)
+	override onUnload(): void {
+		Global.QuickSettingsBox.vertical = true
 	}
 }

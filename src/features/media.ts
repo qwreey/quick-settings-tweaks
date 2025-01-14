@@ -1,4 +1,4 @@
-import { MediaBox } from "../components/mediaBox.js"
+import { MediaWidget } from "../components/mediaWidget.js"
 import { Global } from "../global.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
@@ -14,11 +14,11 @@ export class MediaFeature extends FeatureBase {
 	}
 	// #endregion settings
 
-	mediaBox?: MediaBox
+	mediaWidget?: MediaWidget
 	updateStyleClass() {
 		let style = "QSTWEAKS-media"
 		if (this.compact) style += " QSTWEAKS-message-compact"
-		this.mediaBox.style_class = style
+		this.mediaWidget.style_class = style
 	}
 
 	override reload(key: string): void {
@@ -34,19 +34,19 @@ export class MediaFeature extends FeatureBase {
 	override onLoad(): void {
 		if (!this.enabled) return
 		this.maid.destroyJob(
-			this.mediaBox = new MediaBox({
+			this.mediaWidget = new MediaWidget({
 				showProgress: this.showProgress
 			})
 		)
 
-		Global.QuickSettingsGrid.add_child(this.mediaBox)
+		Global.QuickSettingsGrid.add_child(this.mediaWidget)
 		Global.QuickSettingsGrid.layout_manager.child_set_property(
-			Global.QuickSettingsGrid, this.mediaBox, 'column-span', 2
+			Global.QuickSettingsGrid, this.mediaWidget, 'column-span', 2
 		)
 
 		this.updateStyleClass()
 	}
 	override onUnload(): void {
-		this.mediaBox = null
+		this.mediaWidget = null
 	}
 }

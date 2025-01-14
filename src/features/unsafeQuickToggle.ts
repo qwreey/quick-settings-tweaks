@@ -1,4 +1,4 @@
-import { UnsafeIndicator } from "../components/unsafeQuickToggleHandler.js"
+import { UnsafeIndicator } from "../components/unsafeQuickToggle.js"
 import { Global } from "../global.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 

@@ -2,7 +2,7 @@ import Gio from "gi://Gio"
 import Clutter from "gi://Clutter"
 
 import { Global } from "../global.js"
-import { DndIndicator } from "../components/dndQuickToggleHandler.js"
+import { DndIndicator } from "../components/dndQuickToggle.js"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 
 export class DndQuickToggleFeature extends FeatureBase {
@@ -24,16 +24,14 @@ export class DndQuickToggleFeature extends FeatureBase {
 		)
 
 		// Hide DateMenu DND State Icon
-		this.datemenuDnd = Global.DateMenu.last_child.last_child
-		this.datemenuDnd.hide()
-		this.maid.connectJob(this.datemenuDnd, "show", () => this.datemenuDnd.hide())
+		this.maid.connectJob(Global.DateMenuIndicator, "show", () => Global.DateMenuIndicator.hide())
 		this.maid.functionJob(()=>{
 			if (!(new Gio.Settings({
 				schema_id: "org.gnome.desktop.notifications",
 			})).get_boolean("show-banners")) {
-				this.datemenuDnd.show()
+				Global.DateMenuIndicator.show()
 			}
-			this.datemenuDnd = null
+			Global.DateMenuIndicator = null
 		})
 
 		// Add to QS
