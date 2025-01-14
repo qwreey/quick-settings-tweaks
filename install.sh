@@ -141,7 +141,7 @@ function log() {
 }
 
 function clear-old-po() {
-	rm ./po/*.po
+	rm ./po/*.po~
 }
 
 function compile-preferences() {
