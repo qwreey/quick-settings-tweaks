@@ -153,6 +153,13 @@
     <key name="overlay-menu-animate-duration" type="i">
       <default>360</default>
     </key>
+    <key name="overlay-menu-animate-style" type="s">
+      <choices>
+        <choice value='flyout'/>
+        <choice value='dialog'/>
+      </choices>
+      <default>'dialog'</default>
+    </key>
     <key name="layout" type="a{sai}">
       <default>
         {

@@ -10,10 +10,12 @@ export class OverlayMenu extends FeatureBase {
 	enabled: boolean
 	width: number
 	duration: number
+	animationStyle: string
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("overlay-menu-enabled")
 		this.width = loader.loadInt("overlay-menu-width")
 		this.duration = loader.loadInt("overlay-menu-animate-duration")
+		this.animationStyle = loader.loadString("overlay-menu-animate-style")
 	}
 	// #endregion settings
 
@@ -67,18 +69,34 @@ export class OverlayMenu extends FeatureBase {
 				opacity: 255,
 				duration: Math.floor(this.duration / 3),
 			})
-			menu.box.translationX = Math.floor(coords.sourceX - coords.offsetX + menu.box.marginLeft)
-			menu.box.translationY = Math.floor(coords.sourceY - coords.offsetY + menu.box.marginTop)
-			menu.box.scaleX = coords.sourceWidth / coords.targetWidth
-			menu.box.scaleY = coords.sourceHeight / coords.targetHeight
-			menu.box.ease({
-				translationX: 0,
-				translationY: 0,
-				scaleX: 1,
-				scaleY: 1,
-				mode: Clutter.AnimationMode.EASE_OUT_EXPO,
-				duration: this.duration,
-			})
+			if (this.animationStyle == 'flyout') {
+				menu.box.translationX = Math.floor(coords.sourceX - coords.offsetX + menu.box.marginLeft)
+				menu.box.translationY = Math.floor(coords.sourceY - coords.offsetY + menu.box.marginTop)
+				menu.box.scaleX = coords.sourceWidth / coords.targetWidth
+				menu.box.scaleY = coords.sourceHeight / coords.targetHeight
+				menu.box.ease({
+					translationX: 0,
+					translationY: 0,
+					scaleX: 1,
+					scaleY: 1,
+					mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+					duration: this.duration,
+				})
+			} else if (this.animationStyle == "dialog") {
+				menu.box.translationX = 0.2*coords.targetWidth*.5
+				menu.box.translationY = 0.2*coords.targetHeight*.5
+				menu.box.scaleX = 0.8
+				menu.box.scaleY = 0.8
+				menu.box.ease({
+					translationX: 0,
+					translationY: 0,
+					scaleX: 1,
+					scaleY: 1,
+					mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+					duration: this.duration,
+				})
+			}
+			
 		}
 	}
 
@@ -92,6 +110,11 @@ export class OverlayMenu extends FeatureBase {
 
 	tracker: QuickSettingsMenuTracker
 	yconstraint: Clutter.BindConstraint
+	reload(changedKey?: string): void {
+		if (changedKey == "overlay-menu-animate-duration") return
+		if (changedKey == "overlay-menu-animate-style") return
+		super.reload(changedKey)
+	}
 	override onLoad(): void {
 		if (!this.enabled) return
 

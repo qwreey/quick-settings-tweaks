@@ -8,6 +8,7 @@ import {
 	baseGTypeName,
 	Switch,
 	Adjustment,
+	Dropdown,
 	Group,
 } from "../libs/prefComponents.js"
 
@@ -42,18 +43,30 @@ export const MenuPage = GObject.registerClass({
 			Adjustment({
 				settings,
 				title: _("Overlay Animation Duration"),
-				subtitle: _("Custom open animation duration in microseconds\nSet this to 0 to disable custom animation"),
+				subtitle: _("Custom menu open animation duration in microseconds\nSet this to 0 to disable custom animation"),
 				sensitiveBind: "overlay-menu-enabled",
 				bind: "overlay-menu-animate-duration",
 				max: 4000,
 			}),
+			Dropdown({
+				settings,
+				title: _("Overlay Animation Style"),
+				subtitle: _("Custom menu open animation style"),
+				items: [
+					{ "name": _("Flyout"), "value": "flyout" },
+					{ "name": _("Dialog"), "value": "dialog" },
+
+				],
+				bind: "overlay-menu-animate-style",
+				sensitiveBind: "overlay-menu-enabled"
+			})
 		])
 
 		// Animation
 		Group({
 			parent: this,
 			title: _("Animation"),
-			description: _("Add animation on toggle menu opening and closing\nTo get the best feel, turn on overlay mode"),
+			description: _("Add background animation on toggle menu opening and closing\nTo get the best feel, turn on overlay mode"),
 			headerSuffix: Switch({
 				settings,
 				bind: "menu-animation-enabled",

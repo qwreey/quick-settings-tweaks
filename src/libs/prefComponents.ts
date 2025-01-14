@@ -254,7 +254,7 @@ export const DropdownItems = GObject.registerClass({
 })
 export interface DropdownOptions {
 	settings?: Gio.Settings
-	items: [{ name: string, value: string }]
+	items: { name: string, value: string }[]
 	bind?: string
 	parent?: any
 	value?: string
