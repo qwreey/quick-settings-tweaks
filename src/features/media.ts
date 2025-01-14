@@ -7,10 +7,12 @@ export class MediaFeature extends FeatureBase {
 	enabled: boolean
 	compact: boolean
 	showProgress: boolean
+	removeShadow: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
 		this.compact = loader.loadBoolean("media-compact")
 		this.showProgress = loader.loadBoolean("media-show-progress")
+		this.removeShadow = loader.loadBoolean("media-remove-shadow")
 	}
 	// #endregion settings
 
@@ -18,12 +20,14 @@ export class MediaFeature extends FeatureBase {
 	updateStyleClass() {
 		let style = "QSTWEAKS-media"
 		if (this.compact) style += " QSTWEAKS-message-compact"
+		if (this.removeShadow) style += " QSTWEAKS-message-remove-shadow"
 		this.mediaWidget.style_class = style
 	}
 
 	override reload(key: string): void {
 		switch (key) {
 			case "media-compact":
+			case "media-remove-shadow":
 				this.updateStyleClass()
 				break
 			default:

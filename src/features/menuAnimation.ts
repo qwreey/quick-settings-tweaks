@@ -55,14 +55,12 @@ export class MenuAnimation extends FeatureBase {
 		if (!this.enabled) return
 
 		if (this.backgroundBlurRadius) {
-			this.maid.destroyJob(
-				this.blur = new Shell.BlurEffect({
-					brightness: 1,
-					enabled: false,
-					mode: Shell.BlurMode.ACTOR,
-					radius: this.backgroundBlurRadius,
-				})
-			)
+			this.blur = new Shell.BlurEffect({
+				brightness: 1,
+				enabled: false,
+				mode: Shell.BlurMode.ACTOR,
+				radius: this.backgroundBlurRadius,
+			})
 			Global.QuickSettingsMenu._boxPointer.add_effect_with_name('blur', this.blur)
 		}
 

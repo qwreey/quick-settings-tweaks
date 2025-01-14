@@ -11,6 +11,7 @@ export class NotificationsFeature extends FeatureBase {
 	position: string
 	maxHeight: number
 	compact: boolean
+	removeShadow: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("notifications-enabled")
 		this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
@@ -18,24 +19,9 @@ export class NotificationsFeature extends FeatureBase {
 		this.position = loader.loadString("notifications-position")
 		this.maxHeight = loader.loadInt("notifications-max-height")
 		this.compact = loader.loadBoolean("notifications-compact")
+		this.removeShadow = loader.loadBoolean("notifications-remove-shadow")
 	}
 	// #endregion settings
-
-	// onMenuOpen() {
-	// // reorder on menu open
-	// if (this.mediaControlEnabled) {
-	//     GnomeContext.QuickSettingsMenu._grid.set_child_at_index(
-	//         this.notificationHandler.mediaSection,
-	//         -1
-	//     )
-	// }
-	// if (this.enabled) {
-	//     GnomeContext.QuickSettingsMenu._grid.set_child_above_sibling(
-	//         this.notificationHandler,
-	//         this.notificationsPosition === "top" ? SystemItem : null
-	//     )
-	// }
-	// }
 
 	notificationWidget: NotificationWidget
 	updateMaxHeight() {
@@ -45,6 +31,7 @@ export class NotificationsFeature extends FeatureBase {
 		let style = "QSTWEAKS-notifications"
 		if (this.useNativeControls) style += " QSTWEAKS-use-native-controls"
 		if (this.compact) style += " QSTWEAKS-message-compact"
+		if (this.removeShadow) style += " QSTWEAKS-message-remove-shadow"
 		this.notificationWidget.style_class = style
 	}
 
@@ -54,6 +41,7 @@ export class NotificationsFeature extends FeatureBase {
 				this.updateMaxHeight()
 				break
 			case "notifications-compact":
+			case "notifications-remove-shadow":
 				this.updateStyleClass()
 				break
 			default:

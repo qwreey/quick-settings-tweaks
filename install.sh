@@ -23,6 +23,32 @@ function update-po() {
 	return 0
 }
 
+function fetch-contributors() {
+	LABELS=$(cat contributor-labels.json)
+	echo "["
+	FIRST="1"
+	curl -Ls "https://api.github.com/repos/qwreey/quick-settings-tweaks/contributors?per_page=16&page=1" | while read line; do
+		if echo $line | grep -oP '^ *{ *$' > /dev/null; then
+			[ "$FIRST" = "0" ] && echo "  },"
+			FIRST="0"
+			echo "  {"
+		fi
+
+		if NAME=$(echo $line | grep -oP '(?<="login": ").*(?=")'); then
+			USER_LABEL=$(printf "%s" "$LABELS" | grep -oP "(?<=\"$NAME\": \").*(?=\")")
+			echo "    \"name\": \"$NAME\","
+			echo "    \"image\": \"$NAME\","
+			echo "    \"label\": \"${USER_LABEL:-ETC}\","
+			curl -Lso target/contributors/$NAME.png "https://github.com/$NAME.png?size=64"
+		fi
+		if HOMEPAGE=$(echo $line | grep -oP '(?<="html_url": ").*(?=")'); then
+			echo "    \"link\": \"$HOMEPAGE\""
+		fi
+	done
+	echo "  }"
+	echo "]"
+}
+
 function build() {
 	rm -rf target/out
 	mkdir -p target/out
@@ -42,8 +68,14 @@ function build() {
 	SASS_PID=$!
 
 	(
+		if [ ! -e target/contributors ]; then
+			mkdir -p target/contributors
+			fetch-contributors > target/contributors/data.json
+		fi
 		cp metadata.json target/out
 		cp -r schemas target/out
+		cp -r media target/out
+		cp -r target/contributors target/out/media
 	) &
 	COPYING_PID=$!
 
@@ -63,7 +95,6 @@ function build() {
 	gnome-extensions pack target/out\
 		--podir=../../po\
 		--extra-source=../../LICENSE\
-		--extra-source=../../media\
 		--extra-source=../../LICENSE-gnome-volume-mixer\
 		--extra-source=features\
 		--extra-source=components\

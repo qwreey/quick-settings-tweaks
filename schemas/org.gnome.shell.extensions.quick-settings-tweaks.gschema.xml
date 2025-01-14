@@ -28,6 +28,9 @@
     <key name="notifications-max-height" type="i">
       <default>292</default>
     </key>
+    <key name="notifications-remove-shadow" type="b">
+      <default>true</default>
+    </key>
 
     <!-- Media Widget -->
     <key name="media-enabled" type="b">
@@ -37,6 +40,17 @@
       <default>true</default>
     </key>
     <key name="media-show-progress" type="b">
+      <default>true</default>
+    </key>
+    <key name="media-remove-shadow" type="b">
+      <default>true</default>
+    </key>
+
+    <!-- Weather Widget -->
+    <key name="weather-enabled" type="b">
+      <default>true</default>
+    </key>
+    <key name="weather-remove-shadow" type="b">
       <default>true</default>
     </key>
 
@@ -103,11 +117,6 @@
       <default>true</default>
     </key>
 
-    <!-- Weather Widget -->
-    <key name="weather-enabled" type="b">
-      <default>true</default>
-    </key>
-
     <!-- Menu Animation -->
     <key name="menu-animation-enabled" type="b">
       <default>false</default>
@@ -116,7 +125,7 @@
       <default>8</default>
     </key>
     <key name="menu-animation-background-opacity" type="i">
-      <default>160</default>
+      <default>190</default>
     </key>
     <key name="menu-animation-background-scale-x" type="i">
       <default>900</default>

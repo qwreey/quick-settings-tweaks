@@ -1,6 +1,14 @@
 @use "../global.scss" as *;
 
 #{$p}-media {
+    padding: 0px;
+    margin: 0px 0px 0px 0px;
+
+    // Message Card
+    .message {
+        margin: 0px;
+    }
+
     // Header
     #{$p}-header {
         margin-bottom: 8px;

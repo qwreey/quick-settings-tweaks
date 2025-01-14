@@ -25,9 +25,9 @@ export default class QuickSettingsMenuTracker {
         if (this.onMenuCreated) this.onMenuCreated(menuMaid, menu)
         this.appliedChild.set(menu, menuMaid)
     }
-
     get menus() {
-        return this.appliedChild.keys().toArray()
+        if (!this.appliedChild) return []
+        return [...this.appliedChild.keys()]
     }
     load(): void {
         this.appliedChild = new Map()
