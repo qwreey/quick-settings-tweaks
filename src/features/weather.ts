@@ -5,10 +5,12 @@ import { FeatureBase, SettingLoader } from "../libs/feature.js"
 export class WeatherFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
+	compact: boolean
 	removeShadow: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("weather-enabled")
 		this.removeShadow = loader.loadBoolean("weather-remove-shadow")
+		this.compact = loader.loadBoolean("weather-compact")
 	}
 	// #endregion settings
 
@@ -16,6 +18,7 @@ export class WeatherFeature extends FeatureBase {
 	updateStyleClass() {
 		let style = "QSTWEAKS-weather"
 		if (this.removeShadow) style += " QSTWEAKS-weather-remove-shadow"
+		if (this.compact) style += " QSTWEAKS-weather-compact"
 		this.weatherWidget.styleClass = style
 	}
 

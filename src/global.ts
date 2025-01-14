@@ -23,7 +23,6 @@ export const Global = new (class Global {
 	DateMenu: DateMenuButton
 	DateMenuBox: Clutter.Actor
 	DateMenuHolder: Clutter.Actor
-	DateMenuIndicator: Clutter.Actor
 
 	MessageTray: MessageTray
 
@@ -38,6 +37,9 @@ export const Global = new (class Global {
 	}
 	get MediaSection(): MediaSection {
 		return (this.DateMenu as any)._messageList._mediaSection
+	}
+	get DateMenuIndicator(): Clutter.Actor {
+		return (this.DateMenu as any)._indicator
 	}
 
 	GetShutdownMenuBox(): Promise<Clutter.Actor> {
@@ -102,7 +104,6 @@ export const Global = new (class Global {
 		this.Extension = null
 		this.Settings = null
 		this.DBusFiles = null
-		this.DateMenuIndicator = null
 	}
 	load(extension: Extension) {
 		this.Extension = extension
@@ -121,7 +122,6 @@ export const Global = new (class Global {
 		const DateMenu = this.DateMenu = Main.panel.statusArea.dateMenu
 		this.DateMenuBox = (DateMenu.menu as any).box
 		this.DateMenuHolder = (DateMenu.menu as any).box.first_child.first_child
-		this.DateMenuIndicator = (DateMenu as any)._indicator
 
 		// Message
 		this.MessageTray = Main.messageTray

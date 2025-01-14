@@ -32,6 +32,7 @@ export class MenuAnimation extends FeatureBase {
 			Global.QuickSettingsBox.set_pivot_point(0.5, 0.5)
 			Global.QuickSettingsBox.ease({
 				duration: this.openDuration,
+				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
 				scaleX: this.backgroundScaleX,
 				scaleY: this.backgroundScaleY,
 				opacity: this.backgroundOpacity,
@@ -39,6 +40,7 @@ export class MenuAnimation extends FeatureBase {
 		} else {
 			Global.QuickSettingsBox.ease({
 				duration: this.closeDuration,
+				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
 				scaleX: 1,
 				scaleY: 1,
 				opacity: 255,

@@ -4,7 +4,6 @@ import Clutter from "gi://Clutter"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
 import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
-
 import { fixStScrollViewScrollbarOverflow } from "../libs/utility.js"
 import { Global } from "../global.js"
 

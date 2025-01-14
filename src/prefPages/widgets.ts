@@ -64,6 +64,13 @@ export const WidgetsPage = GObject.registerClass({
 			}),
 			description: _("Turn on to make the notification widget visible on the Quick Settings panel"),
 		},[
+			Switch({
+				settings,
+				title: _("Compact Mode"),
+				subtitle: _("Make notifications smaller"),
+				bind: "notifications-compact",
+				sensitiveBind: "notifications-enabled",
+			}),
 			Adjustment({
 				settings,
 				title: _("Max height"),
@@ -88,13 +95,6 @@ export const WidgetsPage = GObject.registerClass({
 			}),
 			Switch({
 				settings,
-				title: _("Compact Mode"),
-				subtitle: _("Make notifications smaller"),
-				bind: "notifications-compact",
-				sensitiveBind: "notifications-enabled",
-			}),
-			Switch({
-				settings,
 				title: _("Remove Shadow"),
 				subtitle: _("Remove shadow from notification message\nUse if your theme creates unnecessary shadows"),
 				bind: "notifications-remove-shadow",
@@ -112,6 +112,13 @@ export const WidgetsPage = GObject.registerClass({
 			}),
 			description: _("Turn on to make the weather widget visible on the Quick Settings panel"),
 		},[
+			Switch({
+				settings,
+				title: _("Compact Mode"),
+				subtitle: _("Make weather widget smaller"),
+				bind: "weather-compact",
+				sensitiveBind: "weather-enabled",
+			}),
 			Switch({
 				settings,
 				title: _("Remove Shadow"),

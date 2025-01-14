@@ -34,10 +34,18 @@ export const MenuPage = GObject.registerClass({
 			Adjustment({
 				settings,
 				title: _("Overlay Width"),
-				subtitle: _("Adjust overlay menu width.\nSet this to 0 to disable adjusting."),
+				subtitle: _("Adjust overlay menu width\nSet this to 0 to disable adjusting"),
 				sensitiveBind: "overlay-menu-enabled",
 				bind: "overlay-menu-width",
 				max: 2048,
+			}),
+			Adjustment({
+				settings,
+				title: _("Overlay Animation Duration"),
+				subtitle: _("Custom open animation duration in microseconds\nSet this to 0 to disable custom animation"),
+				sensitiveBind: "overlay-menu-enabled",
+				bind: "overlay-menu-animate-duration",
+				max: 4000,
 			}),
 		])
 
@@ -45,7 +53,7 @@ export const MenuPage = GObject.registerClass({
 		Group({
 			parent: this,
 			title: _("Animation"),
-			description: _("Add animation on toggle menu opening and closing.\nTo get the best feel, turn on overlay mode."),
+			description: _("Add animation on toggle menu opening and closing\nTo get the best feel, turn on overlay mode"),
 			headerSuffix: Switch({
 				settings,
 				bind: "menu-animation-enabled",

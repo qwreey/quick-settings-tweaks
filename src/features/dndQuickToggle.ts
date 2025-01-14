@@ -31,7 +31,6 @@ export class DndQuickToggleFeature extends FeatureBase {
 			})).get_boolean("show-banners")) {
 				Global.DateMenuIndicator.show()
 			}
-			Global.DateMenuIndicator = null
 		})
 
 		// Add to QS

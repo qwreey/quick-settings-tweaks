@@ -53,6 +53,9 @@
     <key name="weather-remove-shadow" type="b">
       <default>true</default>
     </key>
+    <key name="weather-compact" type="b">
+      <default>true</default>
+    </key>
 
     <!-- Date Menu Tweaks -->
     <key name="datemenu-remove-notifications" type="b">
@@ -125,13 +128,13 @@
       <default>8</default>
     </key>
     <key name="menu-animation-background-opacity" type="i">
-      <default>190</default>
+      <default>220</default>
     </key>
     <key name="menu-animation-background-scale-x" type="i">
-      <default>900</default>
+      <default>920</default>
     </key>
     <key name="menu-animation-background-scale-y" type="i">
-      <default>900</default>
+      <default>920</default>
     </key>
     <key name="menu-animation-open-duration" type="i">
       <default>380</default>
@@ -146,6 +149,9 @@
     </key>
     <key name="overlay-menu-width" type="i">
       <default>380</default>
+    </key>
+    <key name="overlay-menu-animate-duration" type="i">
+      <default>360</default>
     </key>
     <key name="layout" type="a{sai}">
       <default>

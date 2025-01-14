@@ -29,9 +29,9 @@ export class LayoutCustomize extends FeatureBase {
 
 	override onLoad(): void {
 		Global.QuickSettingsBox.vertical = false
-		Global.QuickSettingsBox.add_child(
-			new St.Button({height: 100, width: 100, style: "background-color:red;"})
-		)
+		// Global.QuickSettingsBox.add_child(
+		// 	new St.Button({height: 100, width: 100, style: "background-color:red;"})
+		// )
 
 		this.maid.connectJob(
 			Global.QuickSettingsBox, "notify::mapped", ()=>{

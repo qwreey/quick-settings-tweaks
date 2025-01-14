@@ -9,24 +9,77 @@ export class OverlayMenu extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	width: number
+	duration: number
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("overlay-menu-enabled")
 		this.width = loader.loadInt("overlay-menu-width")
+		this.duration = loader.loadInt("overlay-menu-animate-duration")
 	}
 	// #endregion settings
 
-	onOpen(_maid: Maid, menu: QuickSettingsMenu, isOpen: boolean) {
-		menu.actor.set_easing_duration(0)
-		if (!isOpen) return
-
-		const previousHeight = menu.actor.height
+	getCoords(menu: QuickSettingsMenu): {
+		outerHeight: number,
+		targetHeight: number,
+		targetWidth: number,
+		sourceX: number,
+		sourceY: number,
+		sourceHeight: number,
+		sourceWidth: number,
+		offsetY: number,
+		offsetX: number,
+	} {
 		menu.actor.height = -1
-		const [targetHeight] = menu.actor.get_preferred_height(-1)
-		menu.actor.height = previousHeight
-		this.yconstraint.offset = Math.max(
+		let [outerHeight] = menu.actor.get_preferred_height(-1)
+		const targetWidth = menu.actor.width - menu.box.marginLeft - menu.box.marginRight
+		const targetHeight = outerHeight - menu.box.marginTop
+		const offsetY = Math.max(
 			Math.floor((Global.QuickSettingsBox.height - targetHeight) / 2),
 			0
 		)
+		const sourceX = Math.floor(Global.QuickSettingsGrid.x + menu.sourceActor.x + 0.5)
+		const sourceY = Math.floor(Global.QuickSettingsGrid.y + menu.sourceActor.y + 0.5)
+		const sourceHeight = Math.floor(menu.sourceActor.height + 0.5)
+		const sourceWidth = Math.floor(menu.sourceActor.width + 0.5)
+		const offsetX = Math.floor((Global.QuickSettingsBox.width - targetWidth) / 2)
+		return {
+			outerHeight,
+			targetHeight,
+			targetWidth,
+			sourceX,
+			sourceY,
+			sourceHeight,
+			sourceWidth,
+			offsetY,
+			offsetX,
+		}
+	}
+	onOpen(_maid: Maid, menu: QuickSettingsMenu, isOpen: boolean) {
+		if (!isOpen || !this.duration) menu.actor.set_easing_duration(0)
+		else menu.actor.remove_all_transitions()
+		if (!isOpen) return
+
+		const coords = this.getCoords(menu)
+		this.yconstraint.offset = coords.offsetY
+
+		if (this.duration) {
+			menu.box.opacity = 0
+			menu.box.ease({
+				opacity: 255,
+				duration: Math.floor(this.duration / 3),
+			})
+			menu.box.translationX = Math.floor(coords.sourceX - coords.offsetX + menu.box.marginLeft)
+			menu.box.translationY = Math.floor(coords.sourceY - coords.offsetY + menu.box.marginTop)
+			menu.box.scaleX = coords.sourceWidth / coords.targetWidth
+			menu.box.scaleY = coords.sourceHeight / coords.targetHeight
+			menu.box.ease({
+				translationX: 0,
+				translationY: 0,
+				scaleX: 1,
+				scaleY: 1,
+				mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+				duration: this.duration,
+			})
+		}
 	}
 
 	onMenuCreated(_maid: Maid, menu: QuickSettingsMenu) {
@@ -69,6 +122,7 @@ export class OverlayMenu extends FeatureBase {
 			menu.actor.get_constraints()[0].enabled = true
 		}
 		this.tracker.unload()
+		this.tracker = null
 		Global.QuickSettingsMenu._overlay.get_constraints()[0].enabled = true
 		Global.QuickSettingsGrid.layout_manager._overlay.get_constraints()[0].enabled = true
 		Global.QuickSettingsMenu._overlay.remove_constraint(this.yconstraint)

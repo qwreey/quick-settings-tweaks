@@ -1,0 +1,43 @@
+@use "../global.scss" as *;
+
+#{$p}-weather {
+    &#{$p}-weather-remove-shadow {
+        .weather-button {
+            box-shadow: none !important;
+        }
+    }
+    &#{$p}-weather-compact {
+        .weather-button {
+            padding: 0px 0px 10px 0px;
+            .weather-forecast-time {
+                padding-top: 4px;
+                padding-bottom: 2px;
+            }
+            .weather-forecast-icon {
+                margin-bottom: 2px;
+            }
+        }
+    }
+    .weather-button {
+        margin: 0px;
+    }
+
+    // Header
+    #{$p}-header {
+        margin-bottom: 8px;
+
+        // Header Label
+        #{$p}-header-label {
+            font-weight: bold;
+            font-size: 0.98em;
+            margin-left: 4px;
+        }
+
+        // Clear button
+        #{$p}-location-label {
+            font-weight: bold;
+            font-size: 0.98em;
+            margin-right: 4px;
+        }
+    }
+}
