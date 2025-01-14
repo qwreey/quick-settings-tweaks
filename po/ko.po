@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 18:26+0900\n"
+"POT-Creation-Date: 2025-01-15 02:15+0900\n"
 "PO-Revision-Date: 2023-10-18 10:07+0000\n"
 "Last-Translator: CrackThrough <crackthrough@gmail.com>\n"
 "Language-Team: Korean <http://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/ko/>\n"
@@ -16,23 +16,50 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.12.1\n"
 
-#: src/prefPages/other.js:15
+#: target/out/components/dndQuickToggle.js:7
+#: target/out/components/notificationWidget.js:101
+msgid "Do Not Disturb"
+msgstr "방해 금지 모드"
+
+#: target/out/components/notificationWidget.js:24
+msgid "No Notifications"
+msgstr "알림이 없습니다"
+
+#: target/out/components/notificationWidget.js:56
+#: target/out/components/notificationWidget.js:118
+msgid "Clear"
+msgstr "모두 읽기"
+
+# Quick settings notifications title text
+#: target/out/components/notificationWidget.js:72
+msgid "Notifications"
+msgstr "알림"
+
+#: target/out/components/unsafeQuickToggle.js:7
+msgid "Unsafe Mode"
+msgstr "위험모드"
+
+#: target/out/components/mediaWidget.js:346
+msgid "Media"
+msgstr "미디어"
+
+#: target/out/prefPages/other.js:11
 msgid "Other"
 msgstr "기타"
 
-#: src/prefPages/other.js:23
-msgid "Fix Weather Widget Overflow"
-msgstr "날씨 위젯 오버플로우 고치기"
+#: target/out/prefPages/other.js:17
+msgid "Date Menu"
+msgstr ""
 
-#: src/prefPages/other.js:24
-msgid "Fix overflow visual bug of weather widget in datemenu"
-msgstr "날짜 메뉴의 날씨 위젯이 흘러 넘쳐 보이는 비쥬얼 버그를 고칩니다"
+#: target/out/prefPages/other.js:18
+msgid "Adjust Date Menu layout"
+msgstr ""
 
-#: src/prefPages/other.js:30
-msgid "Remove Notifications On Date Menu"
-msgstr "날짜 메뉴 알림 제거"
+#: target/out/prefPages/other.js:22
+msgid "Remove Notifications"
+msgstr ""
 
-#: src/prefPages/other.js:31
+#: target/out/prefPages/other.js:23
 msgid ""
 "Hide notifications on date menu.\n"
 "*this option removes media control on date menu too*"
@@ -40,143 +67,55 @@ msgstr ""
 "날짜 메뉴에서 알림 항목을 제거합니다.\n"
 "*이 옵션은 날짜 메뉴에서 미디어 컨트롤 영역 또한 같이 제거합니다*"
 
-#: src/prefPages/other.js:37
-msgid "Remove Media Control On Date Menu"
-msgstr "날짜 메뉴 미디어 컨트롤 제거"
+#: target/out/prefPages/other.js:28
+msgid "Remove Media Control"
+msgstr ""
 
-#: src/prefPages/other.js:38
+#: target/out/prefPages/other.js:29
 msgid "Hide media control on date menu."
 msgstr "날짜 메뉴에서 미디어 컨트롤 항목을 제거합니다"
 
-#: src/prefPages/other.js:44
-msgid "Do not adjust the border radius of contents."
-msgstr "콘텐츠의 가장자리 둥글기 정도를 조정하지 않기"
-
-#: src/prefPages/other.js:45
-msgid "Don't adjust the border of messages and media controls."
-msgstr "메시지와 미디어 컨트롤의 가장자리 둥글기 정도를 조정하지 않습니다"
-
-#: src/prefPages/other.js:51
-msgid "Do not remove the shadow of contents."
-msgstr "콘텐츠의 그림자 지우지 않기"
-
-#: src/prefPages/other.js:52
-msgid "Don't remove the shadow of messages and media controls."
-msgstr "메시지와 미디어 컨트롤의 그림자를 지우지 않습니다"
-
-#: src/prefPages/notifications.js:20
-msgid "Noti&Media"
-msgstr "알림&미디어"
-
-#: src/prefPages/notifications.js:26
-msgid "Media Controls widget"
-msgstr "미디어 컨트롤 위젯"
-
-#: src/prefPages/notifications.js:32
-msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
-msgstr "미디어 위젯을 퀵패널에 추가합니다"
-
-#: src/prefPages/notifications.js:36
-msgid "Compact Mode"
-msgstr "깔끔한 모드"
-
-#: src/prefPages/notifications.js:37
-msgid ""
-"Make Media Controls widget smaller\n"
-"Make it more similar in size to the notification message"
-msgstr ""
-"미디어 컨트롤 위젯을 작게 만듭니다\n"
-"알림 메시지와 비슷한 크기로 조정됩니다"
-
-#: src/prefPages/notifications.js:46
-msgid "Notification Widget"
-msgstr "알림 위젯"
-
-#: src/prefPages/notifications.js:52
-msgid "Turn on to make the notification widget visible on the Quick Settings panel"
-msgstr "퀵패널에 알림 위젯을 보여줍니다"
-
-#: src/prefPages/notifications.js:57
-msgid "Max height"
-msgstr "최대 높이"
-
-#: src/prefPages/notifications.js:58
-msgid "Set maximum height of the Notifications widget. default is 292"
-msgstr "알림 위젯의 최대 높이(px)를 설정합니다. 기본값은 292 입니다"
-
-#: src/prefPages/notifications.js:65 src/prefPages/volumeMixer.js:144
-msgid "Position"
-msgstr "위치"
-
-#: src/prefPages/notifications.js:66
-msgid "Set Notifications widget position"
-msgstr "알림 위젯의 위치"
-
-#: src/prefPages/notifications.js:71
-msgid "Top"
-msgstr "상단"
-
-#: src/prefPages/notifications.js:72 src/prefPages/volumeMixer.js:151
-msgid "Bottom"
-msgstr "아래"
-
-#: src/prefPages/notifications.js:86
-msgid "Auto Hide"
-msgstr "자동 숨기기"
-
-#: src/prefPages/notifications.js:87
-msgid "Hide the Notifications widget when have no notifications"
-msgstr "알림 위젯을 알림이 없을 때 자동으로 숨깁니다"
-
-#: src/prefPages/notifications.js:94
-msgid "Use native controls"
-msgstr "네이티브 컨트롤 사용"
-
-#: src/prefPages/notifications.js:95
-msgid "Use native dnd switch and clear button"
-msgstr "그놈의 기본 방해 금지 스위치와 알림 모두 읽기 버튼을 사용합니다"
-
-#: src/prefPages/about.js:21
+#: target/out/prefPages/about.js:117
 msgid "About"
 msgstr "정보"
 
-#: src/prefPages/about.js:59 src/prefPages/about.js:116
+#: target/out/prefPages/about.js:131
 msgid "This extension is distributed with license GPL 3+"
 msgstr "이 확장 프로그램은 GPL 3+ 라이선스 아래 배포됩니다"
 
-#: src/prefPages/about.js:60 src/prefPages/about.js:117
+#: target/out/prefPages/about.js:132
 msgid "excludes Third-party. Third party codes follow their license"
 msgstr "서드파티는 제외합니다. 서드파티 코드는 각각 원본 코드의 라이선스를 따릅니다"
 
-#: src/prefPages/about.js:64
+#: target/out/prefPages/about.js:135
 msgid "Extension Version"
 msgstr "확장프로그램 버전"
 
-#: src/prefPages/about.js:66
+#: target/out/prefPages/about.js:137
 msgid "Unknown (Built from source)"
 msgstr "알 수 없음 (소스에서 직접 빌드됨)"
 
-#: src/prefPages/about.js:73
+#: target/out/prefPages/about.js:144
 msgid "Links"
 msgstr "링크"
 
-#: src/prefPages/about.js:79
+#: target/out/prefPages/about.js:148
 msgid "Donate via patreon"
 msgstr "Patreon 으로 후원하기"
 
-#: src/prefPages/about.js:80
+#: target/out/prefPages/about.js:149
 msgid "Support development!"
 msgstr "개발에 후원하세요!"
 
-#: src/prefPages/about.js:86
+#: target/out/prefPages/about.js:154
 msgid "Rate and comment the extension!"
 msgstr "확장 프로그램에 평가를 주세요!"
 
-#: src/prefPages/about.js:91
+#: target/out/prefPages/about.js:158
 msgid "Github Repository"
 msgstr "Github 저장소"
 
-#: src/prefPages/about.js:92
+#: target/out/prefPages/about.js:159
 msgid ""
 "Add Star on Repository is helping me a lot!\n"
 "Please, if you found bug from this extension, you can make issue to make me know that!\n"
@@ -186,246 +125,446 @@ msgstr ""
 "만약 버그를 찾은 경우, issue 를 남겨 우리가 알 수 있게 해주세요!\n"
 "또는, 환상적인 기능을 만들어 PR 을 남기는 것도 환영입니다!"
 
-#: src/prefPages/about.js:98
+#: target/out/prefPages/about.js:164
 msgid "Add translation to this extension!"
 msgstr ""
 
-#: src/prefPages/about.js:103
+#: target/out/prefPages/about.js:170
 msgid "Contributor"
 msgstr "기여자"
 
-#: src/prefPages/about.js:104
+#: target/out/prefPages/about.js:171
 msgid "The creators of this extension"
 msgstr "이 확장프로그램을 만든 이들"
 
-#: src/prefPages/about.js:153
+#: target/out/prefPages/about.js:176
 msgid "Third party LICENSE"
 msgstr "서드파티 라이선스"
 
-#: src/prefPages/about.js:154
+#: target/out/prefPages/about.js:177
 msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
 msgstr "*이 확장 프로그램에 포함되어있는 일부 코드의 라이선스입니다*"
 
-#: src/prefPages/volumeMixer.js:27
+#: target/out/prefPages/volumeMixer.js:17
 msgid "Add Application to filtering"
 msgstr "필터링할 애플리케이션을 추가하기"
 
-#: src/prefPages/volumeMixer.js:32
+#: target/out/prefPages/volumeMixer.js:20
 msgid "Add"
 msgstr "추가"
 
-#: src/prefPages/volumeMixer.js:35
+#: target/out/prefPages/volumeMixer.js:23
 msgid "Cancel"
 msgstr "취소"
 
-#: src/prefPages/volumeMixer.js:44
+#: target/out/prefPages/volumeMixer.js:30
 msgid "Application name"
 msgstr "애플리케이션 이름"
 
-#: src/prefPages/volumeMixer.js:98
+#: target/out/prefPages/volumeMixer.js:75
 msgid "Volume Mixer"
 msgstr "볼륨 믹서"
 
-#: src/prefPages/volumeMixer.js:106
+#: target/out/prefPages/volumeMixer.js:81
 msgid "General"
 msgstr "일반"
 
-#: src/prefPages/volumeMixer.js:107
+#: target/out/prefPages/volumeMixer.js:82
 msgid "Enchant input/output slider"
 msgstr "입력/출력 슬라이더를 강화합니다"
 
-#: src/prefPages/volumeMixer.js:111
+#: target/out/prefPages/volumeMixer.js:86
 msgid "Show current audio output selection"
 msgstr "현재 오디오 출력 보여주기"
 
-#: src/prefPages/volumeMixer.js:113
+#: target/out/prefPages/volumeMixer.js:88
 msgid "Always show the current audio output selection above the volume slider"
 msgstr "현재 오디오 출력을 슬라이더 위에 보여줍니다"
 
-#: src/prefPages/volumeMixer.js:118
+#: target/out/prefPages/volumeMixer.js:93
 msgid "Show current audio input selection"
 msgstr "현재 오디오 입력 보여주기"
 
-#: src/prefPages/volumeMixer.js:120
+#: target/out/prefPages/volumeMixer.js:95
 msgid "Always show the current audio input selection above the volume slider"
 msgstr "현재 오디오 입력을 슬라이더 위에 보여줍니다"
 
-#: src/prefPages/volumeMixer.js:125
+#: target/out/prefPages/volumeMixer.js:100
 msgid "Always show input"
 msgstr "항상 입력 보이기"
 
-#: src/prefPages/volumeMixer.js:127
+#: target/out/prefPages/volumeMixer.js:102
 msgid "Always show the audio input volume slider, even when there is no audio input stream."
 msgstr "오디오 입력 스트림이 없더라도 항상 오디오 입력 슬라이더를 보여줍니다"
 
-#: src/prefPages/volumeMixer.js:134
+#: target/out/prefPages/volumeMixer.js:108
 msgid "Add volume mixer (PulseAudio, Pipewire)"
 msgstr "볼륨 믹서 추가 (PulseAudio, Pipewire 호환)"
 
-#: src/prefPages/volumeMixer.js:135
+#: target/out/prefPages/volumeMixer.js:109
 msgid ""
 "Turn on to make the volume mixer visible\n"
 "Forked from https://github.com/mymindstorm/gnome-volume-mixer"
 msgstr "볼륨 믹서를 활성화합니다. https://github.com/mymindstorm/gnome-volume-mixer 에서 포크된 기능입니다"
 
-#: src/prefPages/volumeMixer.js:145
+#: target/out/prefPages/volumeMixer.js:118
+msgid "Position"
+msgstr "위치"
+
+#: target/out/prefPages/volumeMixer.js:119
 msgid "Set volume mixer position"
 msgstr "볼륨 믹서의 위치를 선택합니다"
 
-#: src/prefPages/volumeMixer.js:150
+#: target/out/prefPages/volumeMixer.js:124
 msgid "Top (Below Output/Input slider)"
 msgstr "위 (출력/입력 슬라이더 아래에 표시됩니다)"
 
-#: src/prefPages/volumeMixer.js:156
+#: target/out/prefPages/volumeMixer.js:125
+msgid "Bottom"
+msgstr "아래"
+
+#: target/out/prefPages/volumeMixer.js:130
 msgid "Show stream Description"
 msgstr "스트림의 설명을 표시하기"
 
-#: src/prefPages/volumeMixer.js:157
+#: target/out/prefPages/volumeMixer.js:131
 msgid "Show audio stream description above the slider"
 msgstr "오디오 스트림의 설명을 슬라이더 아래에 표시합니다"
 
-#: src/prefPages/volumeMixer.js:164
+#: target/out/prefPages/volumeMixer.js:138
 msgid "Show stream Icon"
 msgstr "스트림의 아이콘 표시하기"
 
-#: src/prefPages/volumeMixer.js:165
+#: target/out/prefPages/volumeMixer.js:139
 msgid "Show application icon in front of the slider"
 msgstr "애플리케이션의 아이콘을 슬라이더 앞에 추가합니다"
 
-#: src/prefPages/volumeMixer.js:176
+#: target/out/prefPages/volumeMixer.js:149
 msgid "Filter applications shown in the volume mixer."
 msgstr "볼륨 믹서에 보일 애플리케이션을 필터링합니다"
 
-#: src/prefPages/volumeMixer.js:183
+#: target/out/prefPages/volumeMixer.js:155
 msgid "Filter Mode"
 msgstr "필터 모드"
 
-#: src/prefPages/volumeMixer.js:188
+#: target/out/prefPages/volumeMixer.js:160
 msgid "Blacklist"
 msgstr "블랙리스트"
 
-#: src/prefPages/volumeMixer.js:189
+#: target/out/prefPages/volumeMixer.js:161
 msgid "Whitelist"
 msgstr "화이트리스트"
 
-#: src/prefPages/volumeMixer.js:195
+#: target/out/prefPages/volumeMixer.js:167
 msgid "Using Javascript Regex"
 msgstr "자바스크립트 정규 표현식을 사용합니다"
 
-#: src/prefPages/volumeMixer.js:196
+#: target/out/prefPages/volumeMixer.js:168
 msgid "Use Javascript RegExp for filtering app name or description"
 msgstr "자바스크립트의 정규 표현식을 사용해 애플리케이션 이름 혹은 설명을 필터링합니다"
 
-#: src/prefPages/volumeMixer.js:203
+#: target/out/prefPages/volumeMixer.js:175
 msgid "Check Stream Description"
 msgstr "스트림의 설명도 확인하기"
 
-#: src/prefPages/volumeMixer.js:204
+#: target/out/prefPages/volumeMixer.js:176
 msgid "Check Description also"
 msgstr "스트림의 설명도 필터링에 사용합니다"
 
-#: src/prefPages/quickToggles.js:19
+#: target/out/prefPages/menu.js:11
+msgid "Menu"
+msgstr ""
+
+#: target/out/prefPages/menu.js:17
+msgid "Overlay Mode"
+msgstr ""
+
+#: target/out/prefPages/menu.js:18
+msgid "Display toggle, power, and sound menus as overlay"
+msgstr ""
+
+#: target/out/prefPages/menu.js:26
+msgid "Overlay Width"
+msgstr ""
+
+#: target/out/prefPages/menu.js:27
+msgid ""
+"Adjust overlay menu width.\n"
+"Set this to 0 to disable adjusting."
+msgstr ""
+
+#: target/out/prefPages/menu.js:36
+msgid "Animation"
+msgstr ""
+
+#: target/out/prefPages/menu.js:37
+msgid ""
+"Add animation on toggle menu opening and closing.\n"
+"To get the best feel, turn on overlay mode."
+msgstr ""
+
+#: target/out/prefPages/menu.js:45
+msgid "Open Duration"
+msgstr ""
+
+#: target/out/prefPages/menu.js:46
+msgid "Open animation duration in microseconds"
+msgstr ""
+
+#: target/out/prefPages/menu.js:53
+msgid "Close Duration"
+msgstr ""
+
+#: target/out/prefPages/menu.js:54
+msgid "Close animation duration in microseconds"
+msgstr ""
+
+#: target/out/prefPages/menu.js:61
+msgid "Background Blur Radius"
+msgstr ""
+
+#: target/out/prefPages/menu.js:62
+msgid ""
+"Adjust background blur radius.\n"
+"Set this to 0 to disable blur effect"
+msgstr ""
+
+#: target/out/prefPages/menu.js:69
+msgid "Background Opacity"
+msgstr ""
+
+#: target/out/prefPages/menu.js:70
+msgid ""
+"Adjust background opacity.\n"
+"Set this to 255 to opaque, and 0 to transparent"
+msgstr ""
+
+#: target/out/prefPages/menu.js:77
+msgid "Background X Scale"
+msgstr ""
+
+#: target/out/prefPages/menu.js:78
+msgid "Adjust background x scale, 1000 means 1.0 scale"
+msgstr ""
+
+#: target/out/prefPages/menu.js:85
+msgid "Background Y Scale"
+msgstr ""
+
+#: target/out/prefPages/menu.js:86
+msgid "Adjust background y scale, 1000 means 1.0 scale"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:11
+msgid "Widgets"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:17
+msgid "Media Controls widget"
+msgstr "미디어 컨트롤 위젯"
+
+#: target/out/prefPages/widgets.js:22
+msgid "Turn on to make the Media Control widget visible on the Quick Settings panel"
+msgstr "미디어 위젯을 퀵패널에 추가합니다"
+
+#: target/out/prefPages/widgets.js:26 target/out/prefPages/widgets.js:80
+msgid "Compact Mode"
+msgstr "깔끔한 모드"
+
+#: target/out/prefPages/widgets.js:27
+msgid ""
+"Make Media Controls widget smaller\n"
+"Make it more similar in size to the notification message"
+msgstr ""
+"미디어 컨트롤 위젯을 작게 만듭니다\n"
+"알림 메시지와 비슷한 크기로 조정됩니다"
+
+#: target/out/prefPages/widgets.js:33
+msgid "Show Progress Bar"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:34
+msgid "Add Progress Bar under description"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:40 target/out/prefPages/widgets.js:87
+#: target/out/prefPages/widgets.js:105
+msgid "Remove Shadow"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:41
+msgid ""
+"Remove shadow from media message\n"
+"Use if your theme creates unnecessary shadows"
+msgstr ""
+"미디어 메시지에서 그림자를 지웁니다\n"
+"만약 사용중인 테마가 불필요한 그림자를 만드는 경우 사용하십시오"
+
+#: target/out/prefPages/widgets.js:49
+msgid "Notification Widget"
+msgstr "알림 위젯"
+
+#: target/out/prefPages/widgets.js:54
+msgid "Turn on to make the notification widget visible on the Quick Settings panel"
+msgstr "퀵패널에 알림 위젯을 보여줍니다"
+
+#: target/out/prefPages/widgets.js:58
+msgid "Max height"
+msgstr "최대 높이"
+
+#: target/out/prefPages/widgets.js:59
+msgid "Set maximum height of the Notifications widget. default is 292"
+msgstr "알림 위젯의 최대 높이(px)를 설정합니다. 기본값은 292 입니다"
+
+#: target/out/prefPages/widgets.js:66
+msgid "Auto Hide"
+msgstr "자동 숨기기"
+
+#: target/out/prefPages/widgets.js:67
+msgid "Hide the Notifications widget when have no notifications"
+msgstr "알림 위젯을 알림이 없을 때 자동으로 숨깁니다"
+
+#: target/out/prefPages/widgets.js:73
+msgid "Use native controls"
+msgstr "네이티브 컨트롤 사용"
+
+#: target/out/prefPages/widgets.js:74
+msgid "Use native dnd switch and clear button"
+msgstr "그놈의 기본 방해 금지 스위치와 알림 모두 읽기 버튼을 사용합니다"
+
+#: target/out/prefPages/widgets.js:81
+msgid "Make notifications smaller"
+msgstr "알림을 작게 만듭니다"
+
+#: target/out/prefPages/widgets.js:88
+msgid ""
+"Remove shadow from notification message\n"
+"Use if your theme creates unnecessary shadows"
+msgstr ""
+"알림 메시지에서 그림자를 지웁니다\n"
+"만약 사용중인 테마가 불필요한 그림자를 만드는 경우 사용하십시오"
+
+#: target/out/prefPages/widgets.js:96
+msgid "Weather Widget"
+msgstr "날씨 위젯"
+
+#: target/out/prefPages/widgets.js:101
+msgid "Turn on to make the weather widget visible on the Quick Settings panel"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:106
+msgid ""
+"Remove shadow from weather widget\n"
+"Use if your theme creates unnecessary shadows"
+msgstr ""
+"날씨 위젯에서 그림자를 지웁니다\n"
+"만약 사용중인 테마가 불필요한 그림자를 만드는 경우 사용하십시오"
+
+#: target/out/prefPages/quickToggles.js:11
 msgid "Quick Toggles"
 msgstr "퀵 토글"
 
-#: src/prefPages/quickToggles.js:24
+#: target/out/prefPages/quickToggles.js:16
 msgid "Add more buttons"
 msgstr "버튼 추가하기"
 
-#: src/prefPages/quickToggles.js:25
+#: target/out/prefPages/quickToggles.js:17
 msgid "Turn on the buttons you want to add on Quick Settings"
 msgstr "퀵패널에 추가하고싶은 버튼을 채크하세요"
 
-#: src/prefPages/quickToggles.js:29
+#: target/out/prefPages/quickToggles.js:21
 msgid "DND Quick Toggle"
 msgstr "방해 금지 모드 퀵토글"
 
-#: src/prefPages/quickToggles.js:30
+#: target/out/prefPages/quickToggles.js:22
 msgid "Turn on to make the DND quick toggle visible on the Quick Settings panel"
 msgstr "방해 금지 모드 퀵토글을 퀵패널에 보여줍니다"
 
-#: src/prefPages/quickToggles.js:36
+#: target/out/prefPages/quickToggles.js:27
 msgid "Unsafe Mode Quick Toggle"
 msgstr "위험 모드 퀵토글"
 
-#: src/prefPages/quickToggles.js:37
+#: target/out/prefPages/quickToggles.js:28
 msgid "Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
 msgstr "위험 모드 퀵토글을 퀵패널에 보여줍니다"
 
-#: src/prefPages/quickToggles.js:45
-msgid "Buttons to remove"
-msgstr "지울 버튼"
-
-#: src/prefPages/quickToggles.js:46
-msgid "Turn on the buttons you want to remove from Quick Settings"
-msgstr "퀵패널에서 지우고 싶은 버튼을 채크하세요"
-
-#: src/prefPages/quickToggles.js:50
-msgid "Remove chosen buttons from quick panel"
-msgstr "선택한 버튼들이 퀵패널에서 제거됩니다"
-
-#: src/prefPages/quickToggles.js:51
-msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
-msgstr "나의 익스텐션 https://github.com/qwreey75/gnome-quick-settings-button-remover 에서 포크되었습니다"
-
-#: src/prefPages/quickToggles.js:55
-msgid "This feature is unstable sometime"
-msgstr "이 기능은 때때로 불안정합니다"
-
-#: src/prefPages/quickToggles.js:56
-msgid ""
-"When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
-"Please do not report issue about known issue, Almost duplicated\n"
-"Known issue:\n"
-"  button doesn't remove after lockscreen\n"
-"  modal get bigger after lockscreen"
-msgstr ""
-"그놈 화면 보호기를 켜고 끌 때, 예상하지 않은 동작이 발생합니다\n"
-"알려진 이슈를 보고하지 마세요. 대부분 버그 리포트가 존재합니다\n"
-"알려진 이슈:\n"
-"  버튼이 화면 보호기가 작동한 후 지워지지 않습니다\n"
-"  패널이 화면 보호기가 작동한 후 더 크게 보입니다"
-
-#: src/prefPages/quickToggles.js:60
-msgid "Please turn off if some bug occurred"
-msgstr "문제가 발생하면 끄십시오"
-
-#: src/prefPages/quickToggles.js:72
-msgid "Unknown"
-msgstr "알 수 없음"
-
-#: src/prefPages/quickToggles.js:72
-msgid " (invisible by system)"
-msgstr " (시스템에 의해 보이지 않는 항목임)"
-
-#: src/libs/streamSlider.js:60
+#: target/out/libs/streamSlider.js:47
 msgid "Sound Settings"
 msgstr "소리 설정"
 
-#: src/libs/streamSlider.js:197
+#: target/out/libs/streamSlider.js:155
 msgid "Volume changed"
 msgstr "볼륨 변경됨"
 
-#: src/libs/dndQuickToggleHandler.js:9 src/libs/notificationBox.js:92
-msgid "Do Not Disturb"
-msgstr "방해 금지 모드"
+#~ msgid "Fix Weather Widget Overflow"
+#~ msgstr "날씨 위젯 오버플로우 고치기"
 
-#: src/libs/unsafeQuickToggleHandler.js:13
-msgid "Unsafe Mode"
-msgstr "위험모드"
+#~ msgid "Fix overflow visual bug of weather widget in datemenu"
+#~ msgstr "날짜 메뉴의 날씨 위젯이 흘러 넘쳐 보이는 비쥬얼 버그를 고칩니다"
 
-#: src/libs/notificationBox.js:26
-msgid "No Notifications"
-msgstr "알림이 없습니다"
+#~ msgid "Remove Notifications On Date Menu"
+#~ msgstr "날짜 메뉴 알림 제거"
 
-#: src/libs/notificationBox.js:57 src/libs/notificationBox.js:113
-msgid "Clear"
-msgstr "모두 읽기"
+#~ msgid "Remove Media Control On Date Menu"
+#~ msgstr "날짜 메뉴 미디어 컨트롤 제거"
 
-# Quick settings notifications title text
-#: src/libs/notificationBox.js:69
-msgid "Notifications"
-msgstr "알림"
+#~ msgid "Do not adjust the border radius of contents."
+#~ msgstr "콘텐츠의 가장자리 둥글기 정도를 조정하지 않기"
+
+#~ msgid "Don't adjust the border of messages and media controls."
+#~ msgstr "메시지와 미디어 컨트롤의 가장자리 둥글기 정도를 조정하지 않습니다"
+
+#~ msgid "Do not remove the shadow of contents."
+#~ msgstr "콘텐츠의 그림자 지우지 않기"
+
+#~ msgid "Don't remove the shadow of messages and media controls."
+#~ msgstr "메시지와 미디어 컨트롤의 그림자를 지우지 않습니다"
+
+#~ msgid "Noti&Media"
+#~ msgstr "알림&미디어"
+
+#~ msgid "Set Notifications widget position"
+#~ msgstr "알림 위젯의 위치"
+
+#~ msgid "Top"
+#~ msgstr "상단"
+
+#~ msgid "Buttons to remove"
+#~ msgstr "지울 버튼"
+
+#~ msgid "Turn on the buttons you want to remove from Quick Settings"
+#~ msgstr "퀵패널에서 지우고 싶은 버튼을 채크하세요"
+
+#~ msgid "Remove chosen buttons from quick panel"
+#~ msgstr "선택한 버튼들이 퀵패널에서 제거됩니다"
+
+#~ msgid "Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover"
+#~ msgstr "나의 익스텐션 https://github.com/qwreey75/gnome-quick-settings-button-remover 에서 포크되었습니다"
+
+#~ msgid "This feature is unstable sometime"
+#~ msgstr "이 기능은 때때로 불안정합니다"
+
+#~ msgid ""
+#~ "When lock/unlock with gnome-screensaver, unexpected behavior occurs\n"
+#~ "Please do not report issue about known issue, Almost duplicated\n"
+#~ "Known issue:\n"
+#~ "  button doesn't remove after lockscreen\n"
+#~ "  modal get bigger after lockscreen"
+#~ msgstr ""
+#~ "그놈 화면 보호기를 켜고 끌 때, 예상하지 않은 동작이 발생합니다\n"
+#~ "알려진 이슈를 보고하지 마세요. 대부분 버그 리포트가 존재합니다\n"
+#~ "알려진 이슈:\n"
+#~ "  버튼이 화면 보호기가 작동한 후 지워지지 않습니다\n"
+#~ "  패널이 화면 보호기가 작동한 후 더 크게 보입니다"
+
+#~ msgid "Please turn off if some bug occurred"
+#~ msgstr "문제가 발생하면 끄십시오"
+
+#~ msgid "Unknown"
+#~ msgstr "알 수 없음"
+
+#~ msgid " (invisible by system)"
+#~ msgstr " (시스템에 의해 보이지 않는 항목임)"
 
 #~ msgid "Attach to QS panel"
 #~ msgstr "퀵패널 아래에 부착하기"

@@ -2,13 +2,15 @@
 cd "$(dirname "$(readlink -f "$0")")"
 
 function update-po() {
+	build
+
 	echo '' > messages.po
 	[ "$?" != "0" ] && echo "update-po: Unable to create ./messages.po file" && return 1
 
 	which xgettext 2>/dev/null >/dev/null
 	[ "$?" != "0" ] && echo "update-po: xgettext is not installed on this system. please install and try again" && return 1
 
-	find ./src -type f \( -name "*.ui" -or -name "*.js" \) | xgettext --from-code utf-8 -j messages.po -f -
+	find ./target/out -type f \( -name "*.ui" -or -name "*.js" \) | xgettext --from-code utf-8 -j messages.po -f -
 	[ "$?" != "0" ] && echo "update-po: Unable to update messages.po file by xgettext" && return 1
 
 	sed -i 's|"Content\-Type: text/plain; charset=CHARSET\\n"|"Content-Type: text/plain; charset=UTF-8\\n"|g' messages.po
@@ -196,6 +198,7 @@ function dev() {
 	COMPOSEFILE="./docker-compose.yml" ./host/gnome-docker/test.sh
 	kill $BUILDWATCH_PID
 }
+
 function dev-guest() {
 	echo > /host/extension-build
 	cat /host/extension-ready > /dev/null
@@ -206,17 +209,18 @@ function dev-guest() {
 function usage() {
 	echo 'Usage: ./install.sh COMMAND'
 	echo 'COMMAND:'
-	echo "  install        install the extension in the user's home directory"
-	echo '                 under ~/.local'
-	echo '  build          Creates a zip file of the extension'
-	echo '  update-po      Update po files to match source files'
-	echo '  dev-xorg       Update installed extension and reload gnome shell.'
-	echo '                 only works on x11 unsafe mode.'
-	ecoh '  dev            Run dev docker'
-	echo '  log            show extension logs (live)'
-	echo '  clear-old-po   clear *.po~'
-	echo '  enable         enable extension'
-	echo '  install-enable install and enable'
+	echo "  install             install the extension in the user's home directory"
+	echo '                      under ~/.local'
+	echo '  build               Creates a zip file of the extension'
+	echo '  update-po           Update po files to match source files'
+	echo '  dev-xorg            Update installed extension and reload gnome shell.'
+	echo '                      only works on x11 unsafe mode.'
+	ecoh '  dev                 Run dev docker'
+	echo '  log                 show extension logs (live)'
+	echo '  clear-old-po        clear *.po~'
+	echo '  enable              enable extension'
+	echo '  install-enable      install and enable'
+	echo '  compile-preferences compile schema file (test)'
 }
 
 case "$1" in
