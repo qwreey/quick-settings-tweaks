@@ -13,6 +13,7 @@ export class MenuAnimation extends FeatureBase {
 	backgroundOpacity: number
 	backgroundScaleX: number
 	backgroundScaleY: number
+	gridContentOpacity: number
 	openDuration: number
 	closeDuration: number
 	override loadSettings(loader: SettingLoader): void {
@@ -23,6 +24,7 @@ export class MenuAnimation extends FeatureBase {
 		this.backgroundScaleY = loader.loadInt("menu-animation-background-scale-y") / 1000
 		this.openDuration = loader.loadInt("menu-animation-open-duration")
 		this.closeDuration = loader.loadInt("menu-animation-close-duration")
+		this.gridContentOpacity = loader.loadInt("menu-animation-grid-content-opacity")
 	}
 	// #endregion settings
 
@@ -37,6 +39,11 @@ export class MenuAnimation extends FeatureBase {
 				scaleY: this.backgroundScaleY,
 				opacity: this.backgroundOpacity,
 			})
+			Global.QuickSettingsGrid.ease({
+				duration: this.openDuration,
+				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
+				opacity: this.gridContentOpacity,
+			})
 		} else {
 			Global.QuickSettingsBox.ease({
 				duration: this.closeDuration,
@@ -47,6 +54,11 @@ export class MenuAnimation extends FeatureBase {
 				onComplete: ()=>{
 					Global.QuickSettingsBox.set_pivot_point(0, 0)
 				}
+			})
+			Global.QuickSettingsGrid.ease({
+				duration: this.openDuration,
+				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
+				opacity: 255,
 			})
 		}
 	}

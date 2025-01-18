@@ -1,6 +1,7 @@
 import Clutter from "gi://Clutter"
 import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
+import St from "gi://St"
 import { FeatureBase, SettingLoader } from "../libs/feature.js"
 import QuickSettingsMenuTracker from "../libs/quickSettingsMenuTracker.js"
 import Maid from "../libs/maid.js"
@@ -96,16 +97,20 @@ export class OverlayMenu extends FeatureBase {
 					duration: this.duration,
 				})
 			}
-			
 		}
 	}
 
-	onMenuCreated(_maid: Maid, menu: QuickSettingsMenu) {
+	onMenuCreated(maid: Maid, menu: QuickSettingsMenu) {
 		menu.actor.get_constraints()[0].enabled = false
 		if (this.width) {
 			menu.actor.width = this.width
 			menu.actor.x_expand = false
 		}
+		maid.connectJob(menu.box, "notify::height", ()=>{
+			if (!menu.isOpen) return
+			const coords = this.getCoords(menu)
+			this.yconstraint.offset = coords.offsetY
+		})
 	}
 
 	tracker: QuickSettingsMenuTracker

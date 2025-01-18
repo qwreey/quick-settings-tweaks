@@ -9,9 +9,15 @@
         margin: 0px;
     }
 
+    // Message Content (Texts)
+    .message-content {
+        width: 0px; // Min size, texts will be expended
+        text-overflow: ellipsis;
+    }
+
     // Header
     #{$p}-header {
-        margin-bottom: 8px;
+        margin-bottom: 6px;
 
         // Header Label
         #{$p}-header-label {

@@ -90,6 +90,14 @@ export const MenuPage = GObject.registerClass({
 			}),
 			Adjustment({
 				settings,
+				title: _("Grid Content Opacity"),
+				subtitle: _("Adjust grid content opacity.\nSet this to 255 to opaque, and 0 to transparent"),
+				sensitiveBind: "menu-animation-enabled",
+				bind: "menu-animation-grid-content-opacity",
+				max: 255,
+			}),
+			Adjustment({
+				settings,
 				title: _("Background Blur Radius"),
 				subtitle: _("Adjust background blur radius.\nSet this to 0 to disable blur effect"),
 				sensitiveBind: "menu-animation-enabled",

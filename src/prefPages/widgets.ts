@@ -18,7 +18,7 @@ export const WidgetsPage = GObject.registerClass({
 		super({
 			name: 'Widgets',
 			title: _('Widgets'),
-			iconName: 'user-available-symbolic',
+			iconName: 'window-new-symbolic',
 		})
 
 		// media

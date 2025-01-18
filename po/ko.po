@@ -285,7 +285,7 @@ msgstr ""
 
 #: target/out/prefPages/menu.js:26
 msgid "Overlay Width"
-msgstr ""
+msgstr "오버레이 너비"
 
 #: target/out/prefPages/menu.js:27
 msgid ""

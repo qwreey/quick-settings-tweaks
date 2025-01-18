@@ -18,7 +18,7 @@ export const quickTogglesPage = GObject.registerClass({
 		super({
 			name: 'quickToggles',
 			title: _('Quick Toggles'),
-			iconName: 'org.gnome.Settings-symbolic',
+			iconName: 'view-grid-symbolic',
 		})
 
 		Group({

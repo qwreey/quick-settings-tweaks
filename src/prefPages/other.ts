@@ -13,7 +13,7 @@ export const otherPage = GObject.registerClass({
 		super({
 			name: 'other',
 			title: _('Other'),
-			iconName: 'non-starred-symbolic'
+			iconName: 'preferences-system-symbolic'
 		})
 
 		// DateMenu

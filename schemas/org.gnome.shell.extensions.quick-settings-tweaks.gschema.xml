@@ -130,6 +130,9 @@
     <key name="menu-animation-background-opacity" type="i">
       <default>220</default>
     </key>
+    <key name="menu-animation-grid-content-opacity" type="i">
+      <default>190</default>
+    </key>
     <key name="menu-animation-background-scale-x" type="i">
       <default>920</default>
     </key>

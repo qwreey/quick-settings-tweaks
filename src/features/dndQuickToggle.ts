@@ -24,6 +24,7 @@ export class DndQuickToggleFeature extends FeatureBase {
 		)
 
 		// Hide DateMenu DND State Icon
+		Global.DateMenuIndicator.hide()
 		this.maid.connectJob(Global.DateMenuIndicator, "show", () => Global.DateMenuIndicator.hide())
 		this.maid.functionJob(()=>{
 			if (!(new Gio.Settings({

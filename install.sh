@@ -165,17 +165,21 @@ function dev() {
 	(
 		TARGET=DEV build
 		echo > host/extension-ready
-	) > /dev/null &
+	) &
 
 	# Watch Build Request
-	(
+read -d '' INNER_BUILDWATCH << EOF
+	cat host/extension-build > /dev/null
+	while true; do
 		cat host/extension-build > /dev/null
-		while true; do
-			cat host/extension-build > /dev/null
-			TARGET=DEV build
-			echo > host/extension-ready
-		done
-	) &
+		if [ ! -e host/vncready ]; then
+			break
+		fi
+		TARGET=DEV build
+		echo > host/extension-ready
+	done
+EOF
+	setsid bash -c "$INNER_BUILDWATCH" &
 	BUILDWATCH_PID=$!
 
 	[ ! -e ./docker-compose.yml ] && cp ./docker-compose.example.yml ./docker-compose.yml
@@ -196,7 +200,10 @@ function dev() {
 	fi
 
 	COMPOSEFILE="./docker-compose.yml" ./host/gnome-docker/test.sh
-	kill $BUILDWATCH_PID
+	rm host/extension-build host/extension-ready
+	kill $BUILDWATCH_PID 2> /dev/null
+	wait $BUILDWATCH_PID
+	exit 0
 }
 
 function dev-guest() {
