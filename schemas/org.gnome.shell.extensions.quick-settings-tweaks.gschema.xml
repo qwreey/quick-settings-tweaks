@@ -48,7 +48,7 @@
 
     <!-- Weather Widget -->
     <key name="weather-enabled" type="b">
-      <default>true</default>
+      <default>false</default>
     </key>
     <key name="weather-remove-shadow" type="b">
       <default>true</default>
