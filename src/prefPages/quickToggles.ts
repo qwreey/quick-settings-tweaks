@@ -3,10 +3,9 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-
+import { type OrderItem } from "../features/quickToggles.js"
 import {
 	baseGTypeName,
-	Row,
 	SwitchRow,
 	Group,
 } from "../libs/prefComponents.js"
@@ -21,6 +20,7 @@ export const quickTogglesPage = GObject.registerClass({
 			iconName: 'view-grid-symbolic',
 		})
 
+		// Add
 		Group({
 			parent: this,
 			title: _('Add more buttons'),
@@ -38,6 +38,36 @@ export const quickTogglesPage = GObject.registerClass({
 				subtitle: _("Turn on to make the unsafe quick toggle visible on the Quick Settings panel"),
 				bind: "add-unsafe-quick-toggle-enabled",
 			}),
+		])
+
+		const IGNORE_XGETTEXT=_
+		const SystemToggleNames = {
+			NMWiredToggle: IGNORE_XGETTEXT("Wired Connections"),
+			NMWirelessToggle: IGNORE_XGETTEXT("Wi-Fi"),
+			NMModemToggle: IGNORE_XGETTEXT("Mobile Connections"),
+			NMBluetoothToggle: IGNORE_XGETTEXT("Bluetooth Tethers"),
+			NMVpnToggle: IGNORE_XGETTEXT("VPN"),
+			BluetoothToggle: IGNORE_XGETTEXT("Bluetooth"),
+			PowerProfilesToggle: IGNORE_XGETTEXT("Power Mode"),
+			NightLightToggle: IGNORE_XGETTEXT("Night Light"),
+			DarkModeToggle: IGNORE_XGETTEXT("Dark Style"),
+			KeyboardBrightnessToggle: IGNORE_XGETTEXT("Keyboard"),
+			RfkillToggle: IGNORE_XGETTEXT("Airplane Mode"),
+			RotationToggle: IGNORE_XGETTEXT("Auto Rotate"),
+			DndQuickToggle: _("Do Not Disturb"),
+			UnsafeQuickToggle: _("Unsafe Mode"),
+		}
+		// Order
+		Group({
+			parent: this,
+			title: _("Ordering and Hiding"),
+			description: _("Reorder and hide quick toggles"),
+			headerSuffix: SwitchRow({
+				settings,
+				bind: "quick-toggle-order-enabled",
+			}),
+		},[
+			
 		])
 
 		// description / enable

@@ -45,6 +45,7 @@ export function ExperimentalIcon(): Gtk.Image {
 		pixel_size: 16,
 		margin_end: 8,
 		margin_start: 2,
+		opacity: 0.8,
 		has_tooltip: true,
 		tooltip_text: _("This feature marked as experimental"),
 	})
@@ -95,7 +96,7 @@ export function Row({
 }: Row.Options): Adw.ActionRow {
 	const row = new Adw.ActionRow({
 		title: title ?? null,
-		subtitle: subtitle ?? null
+		subtitle: subtitle ?? null,
 	})
 	if (parent) {
 		parent.add(row)
@@ -147,6 +148,48 @@ export namespace Row {
 	}
 }
 
+export function ResetButton(options: ResetButton.Options): Gtk.Box {
+	const { settings, bind } = options
+	options.iconName ??= "view-refresh-symbolic"
+	const box = Button({
+		...options,
+		onCreated: null,
+		action: ()=>{
+			settings.reset(bind)
+		}
+	})
+	const button: Gtk.Button = box.get_first_child() as any
+	button.valign = Gtk.Align.CENTER
+	button.has_frame = false
+	button.tooltip_text = _("Reset to default")
+	const image: Gtk.Image = button.get_first_child() as any
+	image.pixel_size = 12
+	image.opacity = 0.75
+	const setVisible = ()=>{
+		box.visible = (settings.get_user_value(bind) != null)
+	}
+	const settingsConnection = settings.connect(`changed::${bind}`, setVisible)
+	setVisible()
+	box.connect("destroy", ()=>{
+		settings.disconnect(settingsConnection)
+	})
+	return box
+}
+export namespace ResetButton {
+	export interface Options extends Button.OptionsBase {
+		bind: string,
+	}
+}
+function pushResetButton(row_with_suffix: Adw.ActionRow, options: ResetButton.Options) {
+	ResetButton(options)
+	.insert_after(
+		row_with_suffix
+			.get_first_child() // GtkBox header
+			.get_last_child(), // GtkBox suffixes
+		null
+	)
+}
+
 export function SwitchRow({
 	bind,
 	parent,
@@ -181,6 +224,7 @@ export function SwitchRow({
 			row, 'active',
 			Gio.SettingsBindFlags.DEFAULT
 		)
+		pushResetButton(row, { settings, bind })
 	}
 
 	if (sensitiveBind) {
@@ -223,7 +267,7 @@ export function ToggleButtonRow({
 	experimental,
 	text,
 	onCreated,
-}: ToggleButton.Options): Adw.ActionRow {
+}: ToggleButtonRow.Options): Adw.ActionRow {
 	if (bind) value ??= settings.get_boolean(bind)
 
 	const row = new Adw.ActionRow({
@@ -300,16 +344,21 @@ export function Button({
 	text,
 	marginTop,
 	marginBottom,
+	iconName,
 	onCreated,
 }: Button.Options): Gtk.Box {
 	const box = new Gtk.Box({
 		margin_bottom: marginBottom ?? 8,
 		margin_top: marginTop ?? 8,
 	})
-	const button = new Gtk.Button({
-		label: text,
-	})
+	const button = new Gtk.Button()
 	box.insert_child_after(button, null)
+	if (iconName) {
+		button.icon_name = iconName
+	}
+	if (text) {
+		button.label = text
+	}
 
 	if (action) {
 		button.connect("clicked", () => action())
@@ -343,6 +392,7 @@ export namespace Button {
 		text?: string
 		marginTop?: number
 		marginBottom?: number
+		iconName?: string
 	}
 }
 

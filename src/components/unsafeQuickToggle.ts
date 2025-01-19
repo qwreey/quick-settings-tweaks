@@ -3,7 +3,9 @@ import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.j
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
 class UnsafeQuickToggle extends QuickToggle {
-	_init(onUpdate) {
+	_onUpdate: (value: boolean)=>void
+	constructor(onUpdate: UnsafeQuickToggle['_onUpdate']) { super(onUpdate as any) }
+	_init(onUpdate: any) {
 		super._init({
 			title: _("Unsafe Mode"),
 			iconName: "channel-insecure-symbolic",
@@ -38,11 +40,12 @@ class UnsafeQuickToggle extends QuickToggle {
 GObject.registerClass(UnsafeQuickToggle)
 
 class UnsafeIndicator extends SystemIndicator {
-	_init(onUpdate) {
+	constructor(onUpdate: UnsafeQuickToggle['_onUpdate']) { super(onUpdate as any) }
+	// @ts-expect-error
+	_init(onUpdate: any) {
 		super._init()
 		this.quickSettingsItems.push(new UnsafeQuickToggle(onUpdate))
 	}
-
 	destroy() {
 		this.quickSettingsItems.forEach(item => item.destroy())
 		super.destroy()

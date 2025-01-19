@@ -271,6 +271,10 @@ case "$1" in
 		dev-guest
 	;;
 	
+	"compile-preferences")
+		compile-preferences
+	;;
+
 	* )
 		usage
 	;;

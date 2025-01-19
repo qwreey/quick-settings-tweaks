@@ -58,6 +58,12 @@
     </key>
 
     <!-- Date Menu Tweaks -->
+    <key name="datemenu-hide-left-box" type="b">
+      <default>true</default>
+    </key>
+    <key name="datemenu-hide-right-box" type="b">
+      <default>false</default>
+    </key>
     <key name="datemenu-remove-notifications" type="b">
       <default>true</default>
     </key>
@@ -131,6 +137,32 @@
     </key>
     <key name="input-always-show" type="b">
       <default>false</default>
+    </key>
+
+    <!-- Quick Toggle Order -->
+    <key name="quick-toggle-order-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="quick-toggle-order" type="aa{sv}">
+      <default><![CDATA[
+        [
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMWiredToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMWirelessToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMModemToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMBluetoothToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMVpnToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'BluetoothToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'PowerProfilesToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NightLightToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'DarkModeToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'KeyboardBrightnessToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'RfkillToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'RotationToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'DndQuickToggle'> },
+          { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'UnsafeQuickToggle'> },
+          { 'nonOrdered': <true>, 'hide': <false> }
+        ]
+      ]]></default>
     </key>
 
     <!-- Unsafe Mode Quick Toggle -->

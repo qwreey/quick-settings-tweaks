@@ -100,6 +100,7 @@ class ProgressControl extends St.BoxLayout {
 				height,
 				duration: 150,
 				onComplete: ()=>{
+					// @ts-expect-error
 					this.ease({
 						opacity,
 						duration: 150,
@@ -112,6 +113,7 @@ class ProgressControl extends St.BoxLayout {
 				opacity,
 				duration: 200,
 				onComplete: ()=>{
+					// @ts-expect-error
 					this.ease({
 						height,
 						duration: 150,
@@ -303,20 +305,22 @@ class MediaList extends Mpris.MediaSection {
 
 		let player = new Player(busName)
 		let message = null
-		player.connect('closed',
-			() => {
-				this._players.delete(busName)
-			})
+		player.connect('closed',() => {
+			this._players.delete(busName)
+			return false
+		})
 		player.connect('show', () => {
 			message = new MediaItem({
 				player,
 				showProgress: this._options.showProgress,
 			}) // modified
 			this.addMessage(message, true)
+			return false
 		})
 		player.connect('hide', () => {
 			this.removeMessage(message, true)
 			message = null
+			return false
 		})
 
 		this._players.set(busName, player)
@@ -358,6 +362,7 @@ class MediaList extends Mpris.MediaSection {
 				to.opacity = 0
 				to.translationX = toIndex > currentIndex ? 120 : -120
 				to.show()
+				// @ts-expect-error
 				to.ease({
 					duration: 120,
 					translationX: 0,
