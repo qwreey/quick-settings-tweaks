@@ -180,25 +180,25 @@ export const aboutPage = GObject.registerClass({
 				uri: "https://patreon.com/user?u=44216831",
 				title: _("Donate via patreon"),
 				subtitle: _("Support development!"),
-				uriIcon: "qst-patreon-logo",
+				uriIcon: "qst-patreon-logo-symbolic",
 			}),
 			Row({
 				uri: "https://extensions.gnome.org/extension/5446/quick-settings-tweaker/",
 				title: "Gnome Extension",
 				subtitle: _("Rate and comment the extension!"),
-				uriIcon: "qst-gnome-extension-logo",
+				uriIcon: "qst-gnome-extension-logo-symbolic",
 			}),
 			Row({
 				uri: "https://github.com/qwreey75/quick-settings-tweaks",
 				title: _("Github Repository"),
 				subtitle: _("Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!\nOr, you can create PR with wonderful features!"),
-				uriIcon: "qst-github-logo",
+				uriIcon: "qst-github-logo-symbolic",
 			}),
 			Row({
 				uri: "https://weblate.paring.moe/projects/gs-quick-settings-tweaks/",
 				title: "Webslate",
 				subtitle: _("Add translation to this extension!"),
-				uriIcon: "qst-weblate-logo",
+				uriIcon: "qst-weblate-logo-symbolic",
 			}),
 		])
 

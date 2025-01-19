@@ -17,13 +17,13 @@ function addChildren(target: any, funcName: string, children?: any[]) {
 }
 
 function applyLinkStyle(row: any) {
-	const style = new Gtk.CssProvider()
-	style.load_from_string(`
-		* {
-			color: #e0a6f5;
-		}
-	`)
-	row.get_style_context().add_provider(style, 1000)
+	// const style = new Gtk.CssProvider()
+	// style.load_from_string(`
+	// 	* {
+	// 		color: #e0a6f5;
+	// 	}
+	// `)
+	// row.get_style_context().add_provider(style, 1000)
 }
 
 function appendLinkIcon(row: any, name: string) {

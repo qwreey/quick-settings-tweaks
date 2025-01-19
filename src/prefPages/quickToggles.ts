@@ -3,7 +3,7 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-import { type OrderItem } from "../features/quickToggles.js"
+import { type OrderItem } from "../features/quickTogglesOrder.js"
 import {
 	baseGTypeName,
 	SwitchRow,
