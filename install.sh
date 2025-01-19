@@ -31,23 +31,23 @@ function fetch-contributors() {
 	FIRST="1"
 	curl -Ls "https://api.github.com/repos/qwreey/quick-settings-tweaks/contributors?per_page=16&page=1" | while read line; do
 		if echo $line | grep -oP '^ *{ *$' > /dev/null; then
-			[ "$FIRST" = "0" ] && echo "  },"
+			[ "$FIRST" = "0" ] && echo -e "\t},"
 			FIRST="0"
-			echo "  {"
+			echo -e "\t{"
 		fi
 
 		if NAME=$(echo $line | grep -oP '(?<="login": ").*(?=")'); then
 			USER_LABEL=$(printf "%s" "$LABELS" | grep -oP "(?<=\"$NAME\": \").*(?=\")")
-			echo "    \"name\": \"$NAME\","
-			echo "    \"image\": \"$NAME\","
-			echo "    \"label\": \"${USER_LABEL:-ETC}\","
-			curl -Lso target/contributors/$NAME.png "https://github.com/$NAME.png?size=64"
+			echo -e "\t\t\"name\": \"$NAME\","
+			echo -e "\t\t\"image\": \"$NAME\","
+			echo -e "\t\t\"label\": \"${USER_LABEL:-ETC}\","
+			curl -Lso target/contributors/$NAME.png "https://github.com/$NAME.png?size=38"
 		fi
 		if HOMEPAGE=$(echo $line | grep -oP '(?<="html_url": ").*(?=")'); then
-			echo "    \"link\": \"$HOMEPAGE\""
+			echo -e "\t\t\"link\": \"$HOMEPAGE\""
 		fi
 	done
-	echo "  }"
+	echo -e "\t}"
 	echo "]"
 }
 
@@ -111,6 +111,9 @@ function build() {
 		VERSION=$(git branch --show-current)
 	fi
 	sed "s/version: \"unknown\"/version: \"$VERSION\"/" -i target/out/config.js
+
+	# Change indents for reducing size of target
+	node scripts/reindent.js -- target/out/**/*.js
 
 	# Pack extension
 	gnome-extensions pack target/out\
@@ -183,8 +186,9 @@ function create-release() {
 		;;
 	esac
 	VERSION="$VERSION_MAJOR.$VERSION_MINOR$VERSION_TAG"
-}release
-github-release
+	VERSION=$VERSION build
+}
+
 function dev() {
 	if ! sudo echo > /dev/null; then
 		return
