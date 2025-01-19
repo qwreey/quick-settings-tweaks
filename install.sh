@@ -55,12 +55,14 @@ function build() {
 	rm -rf target/out
 	mkdir -p target/out
 
+	# Typescript compiling
 	(
 		npx tsc --noCheck
 		cp -r target/tsc/* target/out
 	) &
 	TSC_PID=$!
 
+	# Stylesheet compiling
 	(
 		npx sass\
 			--no-source-map\
@@ -69,6 +71,7 @@ function build() {
 	) &
 	SASS_PID=$!
 
+	# Fetch contributors & Copy assets
 	(
 		if [ ! -e target/contributors ]; then
 			mkdir -p target/contributors
@@ -81,19 +84,35 @@ function build() {
 	) &
 	COPYING_PID=$!
 
+	# Wait for tasks
 	wait $TSC_PID
 	wait $SASS_PID
 	wait $COPYING_PID
 
+	# Update config metadata
 	case "$TARGET" in
-		DEV|dev )
+		dev )
 			sed 's/isDevelopmentBuild: false/isDevelopmentBuild: true/' -i target/out/config.js
 		;;
-		RELEASE|release )
+		preview )
+		;;
+		release )
 			sed 's/isReleaseBuild: false/isReleaseBuild: true/' -i target/out/config.js
 		;;
+		github-release )
+			sed 's/isReleaseBuild: false/isReleaseBuild: true/' -i target/out/config.js
+			sed 's/isGithubBuild: false/isGithubBuild: true/' -i target/out/config.js
+		;;
+		github-preview )
+			sed 's/isGithubBuild: false/isGithubBuild: true/' -i target/out/config.js
+		;;
 	esac
+	if [ -z "$VERSION" ]; then
+		VERSION=$(git branch --show-current)
+	fi
+	sed "s/version: \"unknown\"/version: \"$VERSION\"/" -i target/out/config.js
 
+	# Pack extension
 	gnome-extensions pack target/out\
 		--podir=../../po\
 		--extra-source=../../LICENSE\
@@ -126,16 +145,6 @@ function install() {
 	return 0
 }
 
-function dev-xorg() {
-	build
-	echo "Warn: Dev hot reload (restarting) only works on unsafe mode"
-	if [[ "$XDG_SESSION_TYPE" == "x11" ]]; then
-		busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…", global.context)'
-	else
-		echo "Session is not x11 ($XDG_SESSION_TYPE). this session not supports hot reloading. you should logout and login shell again for apply changes"
-	fi
-}
-
 function log() {
 	journalctl /usr/bin/gnome-shell -f -q --output cat | grep '\[EXTENSION QSTweaks\] '
 }
@@ -151,6 +160,31 @@ function compile-preferences() {
 	return 0
 }
 
+function create-release() {
+	VERSION_MAJOR=$(cat scripts/version/major-version)
+	VERSION_MINOR=$(( $(cat scripts/version/latest-release-version) + 1 ))
+	echo $VERSION_MINOR > scripts/version/latest-release-version
+	VERSION_TAG=""
+	case "$TARGET" in
+		dev )
+			VERSION_TAG="-dev"
+		;;
+		preview )
+			VERSION_TAG="-preview"
+		;;
+		release )
+			VERSION_TAG="-stable"
+		;;
+		github-release )
+			VERSION_TAG="-stable"
+		;;
+		github-preview )
+			VERSION_TAG="-preview"
+		;;
+	esac
+	VERSION="$VERSION_MAJOR.$VERSION_MINOR$VERSION_TAG"
+}release
+github-release
 function dev() {
 	if ! sudo echo > /dev/null; then
 		return
@@ -163,7 +197,7 @@ function dev() {
 
 	# Build
 	(
-		TARGET=DEV build
+		TARGET=dev build
 		echo > host/extension-ready
 	) &
 
@@ -191,7 +225,7 @@ EOF
 		git clone https://github.com/qwreey/gnome-docker host/gnome-docker --recursive --tags
 	fi
 
-	TARTAG="$(cat gnome-docker-version)"
+	TARTAG="$(cat scripts/version/gnome-docker-version)"
 	if [[ "$CURTAG" != "$TARTAG" ]]; then
 		git -C host/gnome-docker pull origin master --tags
 		git -C host/gnome-docker submodule update
@@ -220,8 +254,6 @@ function usage() {
 	echo '                      under ~/.local'
 	echo '  build               Creates a zip file of the extension'
 	echo '  update-po           Update po files to match source files'
-	echo '  dev-xorg            Update installed extension and reload gnome shell.'
-	echo '                      only works on x11 unsafe mode.'
 	ecoh '  dev                 Run dev docker'
 	echo '  log                 show extension logs (live)'
 	echo '  clear-old-po        clear *.po~'
@@ -246,10 +278,6 @@ case "$1" in
 
 	"log" )
 		log
-	;;
-
-	"dev-xorg" )
-		dev-xorg
 	;;
 
 	"update-po" )

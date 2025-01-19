@@ -135,9 +135,22 @@ function LogoBox(metadata: ExtensionMetadata): Gtk.Box {
 		halign: Gtk.Align.CENTER,
 	})
 	logoBox.append(logoText)
-	let version = metadata.version ?? _("Unknown (Built from source)")
-	if (!Config.isReleaseBuild) {
-		version += " " + _("Preview")
+	let version = Config.version.toUpperCase()
+	if (metadata.version) {
+		version += "." + metadata.version
+	}
+	version += "   —   "
+	if (Config.isReleaseBuild) {
+		version += _("Stable") 
+	} else if (Config.isDevelopmentBuild) {
+		version += _("Development")
+	} else {
+		version += _("Preview")
+	}
+	if (Config.isGithubBuild) {
+		version += "  " + _("(Github Release)")
+	} else if (!metadata.version) {
+		version += "  " + _("(Built from source)")
 	}
 	const logoVersion = new Gtk.Button({
 		css_classes: ["success"],

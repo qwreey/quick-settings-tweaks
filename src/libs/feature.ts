@@ -47,6 +47,10 @@ export class SettingLoader {
 		this.push(key)
 		return Global.Settings.get_strv(key)
 	}
+	loadValue<T>(key: string): T {
+		this.push(key)
+		return Global.Settings.get_value(key).recursiveUnpack()
+	}
 }
 
 export abstract class FeatureBase {

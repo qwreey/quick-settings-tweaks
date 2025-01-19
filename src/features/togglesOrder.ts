@@ -12,10 +12,10 @@ export interface OrderItem {
 export class TogglesOrderFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
-	order: string[]
+	order: OrderItem[]
 	loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("toggle-order-enabled")
-		this.order = loader.loadStrv("toggle-order")
+		this.order = loader.loadValue("toggle-order")
 	}
 	// #endregion settings
 
