@@ -136,10 +136,10 @@
     <!-- #endregion Input Output -->
 
     <!-- #region Quick Toggle Order -->
-    <key name="quick-toggle-order-enabled" type="b">
+    <key name="toggle-order-enabled" type="b">
       <default>false</default>
     </key>
-    <key name="quick-toggle-order" type="aa{sv}">
+    <key name="toggle-order" type="aa{sv}">
       <default><![CDATA[
         [
           { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMWiredToggle'> },

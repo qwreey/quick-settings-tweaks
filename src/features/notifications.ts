@@ -8,7 +8,6 @@ export class NotificationsFeature extends FeatureBase {
 	enabled: boolean
 	useNativeControls: boolean
 	autoHide: boolean
-	position: string
 	maxHeight: number
 	compact: boolean
 	removeShadow: boolean
@@ -16,7 +15,6 @@ export class NotificationsFeature extends FeatureBase {
 		this.enabled = loader.loadBoolean("notifications-enabled")
 		this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
 		this.autoHide = loader.loadBoolean("notifications-autohide")
-		this.position = loader.loadString("notifications-position")
 		this.maxHeight = loader.loadInt("notifications-max-height")
 		this.compact = loader.loadBoolean("notifications-compact")
 		this.removeShadow = loader.loadBoolean("notifications-remove-shadow")

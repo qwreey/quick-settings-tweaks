@@ -3,20 +3,20 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-import { type OrderItem } from "../features/quickTogglesOrder.js"
+import { type OrderItem } from "../features/togglesOrder.js"
 import {
 	baseGTypeName,
 	SwitchRow,
 	Group,
 } from "../libs/prefComponents.js"
 
-export const quickTogglesPage = GObject.registerClass({
-	GTypeName: baseGTypeName+'quickTogglesPage',
-}, class quickTogglesPage extends Adw.PreferencesPage {
+export const TogglesPage = GObject.registerClass({
+	GTypeName: baseGTypeName+'TogglesPage',
+}, class TogglesPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings) {
 		super({
-			name: 'quickToggles',
-			title: _('Quick Toggles'),
+			name: 'Toggles',
+			title: _('Toggles'),
 			iconName: 'view-grid-symbolic',
 		})
 
@@ -57,6 +57,7 @@ export const quickTogglesPage = GObject.registerClass({
 			DndQuickToggle: _("Do Not Disturb"),
 			UnsafeQuickToggle: _("Unsafe Mode"),
 		}
+
 		// Order
 		Group({
 			parent: this,
@@ -64,7 +65,7 @@ export const quickTogglesPage = GObject.registerClass({
 			description: _("Reorder and hide quick toggles"),
 			headerSuffix: SwitchRow({
 				settings,
-				bind: "quick-toggle-order-enabled",
+				bind: "toggle-order-enabled",
 			}),
 		},[
 			

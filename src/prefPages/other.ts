@@ -130,12 +130,12 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 	])
 }
 
-export const otherPage = GObject.registerClass({
-	GTypeName: baseGTypeName+'otherPage',
-}, class otherPagePage extends Adw.PreferencesPage {
+export const OtherPage = GObject.registerClass({
+	GTypeName: baseGTypeName+'OtherPage',
+}, class OtherPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings) {
 		super({
-			name: 'other',
+			name: 'Other',
 			title: _('Other'),
 			iconName: 'preferences-system-symbolic'
 		})

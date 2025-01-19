@@ -5,19 +5,19 @@ import Gio from "gi://Gio"
 import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import { volumeMixerPage } from "./prefPages/volumeMixer.js"
 import { WidgetsPage } from "./prefPages/widgets.js"
-import { quickTogglesPage } from "./prefPages/quickToggles.js"
-import { otherPage } from "./prefPages/other.js"
-import { aboutPage } from "./prefPages/about.js"
+import { TogglesPage } from "./prefPages/toggles.js"
+import { OtherPage } from "./prefPages/other.js"
+import { AboutPage } from "./prefPages/about.js"
 import { MenuPage } from "./prefPages/menu.js"
 import Adw from "gi://Adw"
 
 var pageList = [
 	// volumeMixerPage,
 	WidgetsPage,
-	quickTogglesPage,
+	TogglesPage,
 	MenuPage,
-	otherPage,
-	aboutPage,
+	OtherPage,
+	AboutPage,
 ]
 
 export default class QstExtensionPreferences extends ExtensionPreferences {

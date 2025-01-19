@@ -2,6 +2,7 @@
 import Adw from "gi://Adw"
 import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
+import Gdk from "gi://Gdk"
 import GObject from "gi://GObject"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
@@ -16,43 +17,27 @@ function addChildren(target: any, funcName: string, children?: any[]) {
 	}
 }
 
-function applyLinkStyle(row: any) {
-	// const style = new Gtk.CssProvider()
-	// style.load_from_string(`
-	// 	* {
-	// 		color: #e0a6f5;
-	// 	}
-	// `)
-	// row.get_style_context().add_provider(style, 1000)
-}
-
-function appendLinkIcon(row: any, name: string) {
-	const linkText = row.child.get_first_child()
-	linkText.margin_start = 32
-	const image = new Gtk.Image({
-		css_classes: ["icon"],
-		icon_name: name,
-		pixel_size: 24,
-		margin_start: 4,
-		halign: Gtk.Align.START,
-	})
-	image.insert_before(row.child, linkText)
-}
-
-export function ExperimentalIcon(): Gtk.Image {
+export function ExperimentalIcon(options?: ExperimentalIcon.Options): Gtk.Image {
 	return new Gtk.Image({
-		icon_name: "dialog-warning-symbolic",
-		pixel_size: 16,
-		margin_end: 8,
-		margin_start: 2,
+		css_classes: ["icon"],
+		icon_name: "applications-science-symbolic",
+		pixel_size: options?.pixelSize ?? 16,
+		margin_end: options?.marginEnd ?? 4,
+		margin_start: options?.marginStart ?? 2,
 		opacity: 0.8,
 		has_tooltip: true,
 		tooltip_text: _("This feature marked as experimental"),
 	})
 }
-
-function prependExperimentalIcon(holder: Gtk.Widget) {
-	ExperimentalIcon().insert_before(holder,holder.get_first_child())
+export namespace ExperimentalIcon {
+	export interface Options {
+		marginEnd?: number
+		marginStart?: number
+		pixelSize?: number
+	}
+	export function prependExperimentalIcon(holder: Gtk.Widget, options?: ExperimentalIcon.Options) {
+		ExperimentalIcon(options).insert_before(holder,holder.get_first_child())
+	}
 }
 
 export function Group(options: Group.Options, children?: any[]): Adw.PreferencesGroup {
@@ -64,8 +49,9 @@ export function Group(options: Group.Options, children?: any[]): Adw.Preferences
 	delete options.nesting
 	const target = new Adw.PreferencesGroup(options)
 	if (nesting) target.marginTop = 14
-	if (experimental) prependExperimentalIcon(
-		target.get_first_child().get_first_child()
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(
+		target.get_first_child().get_first_child(),
+		{ marginEnd: 18, marginStart: 4, pixelSize: 20 }
 	)
 	addChildren(target, "add", children)
 	if (parent) parent.add(target)
@@ -87,7 +73,7 @@ export function Row({
 	title,
 	subtitle,
 	uri,
-	uriIcon,
+	icon,
 	sensitiveBind,
 	suffix,
 	prefix,
@@ -97,23 +83,26 @@ export function Row({
 	const row = new Adw.ActionRow({
 		title: title ?? null,
 		subtitle: subtitle ?? null,
+		activatable: !!uri,
 	})
 	if (parent) {
 		parent.add(row)
 	}
 	if (uri) {
-		const child = new Adw.ActionRow({
-			title: title ?? null,
-			subtitle: subtitle ?? null,
+		row.connect("activated", ()=>{
+			Gio.AppInfo.launch_default_for_uri_async(uri, null, null, null)
 		})
-		applyLinkStyle(child)
-		row.set_child(new Gtk.LinkButton({
-			uri,
-			visited: true, // for disable coloring
-			child
+		row.add_suffix(new Gtk.Image({
+			css_classes: ["icon"],
+			icon_name: "adw-external-link-symbolic",
+			pixel_size: 16,
+			valign: Gtk.Align.CENTER,
 		}))
-		if (uriIcon) appendLinkIcon(row, uriIcon)
+		row.cursor = Gdk.Cursor.new_from_name("pointer", null)
+		row.tooltip_text = uri
+		row.has_tooltip = true
 	}
+	if (icon) Row.appendLinkIcon(row, icon)
 	if (suffix) {
 		row.add_suffix(suffix)
 	}
@@ -128,7 +117,7 @@ export function Row({
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
 	}
-	if (experimental) prependExperimentalIcon(row.child)
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
 	if (onCreated) onCreated(row)
 	return row
 }
@@ -138,13 +127,26 @@ export namespace Row {
 		title?: string
 		subtitle?: string
 		uri?: string
-		uriIcon?: string
+		icon?: string
 		settings?: Gio.Settings
 		sensitiveBind?: string
 		suffix?: Gtk.Widget
 		prefix?: Gtk.Widget
 		experimental?: boolean
 		onCreated?: (row: Adw.ActionRow)=>void
+	}
+	export function appendLinkIcon(row: any, name: string) {
+		const linkText = row.child.get_first_child()
+		linkText.margin_start = 32
+		const image = new Gtk.Image({
+			css_classes: ["icon"],
+			icon_name: name,
+			pixel_size: 20,
+			margin_start: 2,
+			margin_end: 2,
+			halign: Gtk.Align.START,
+		})
+		image.insert_before(row.child, linkText)
 	}
 }
 
@@ -154,19 +156,19 @@ export function ResetButton(options: ResetButton.Options): Gtk.Box {
 	const box = Button({
 		...options,
 		onCreated: null,
-		action: ()=>{
-			settings.reset(bind)
-		}
 	})
+	box.halign = Gtk.Align.END
 	const button: Gtk.Button = box.get_first_child() as any
 	button.valign = Gtk.Align.CENTER
 	button.has_frame = false
 	button.tooltip_text = _("Reset to default")
+	button.connect("clicked", ()=>settings.reset(bind))
 	const image: Gtk.Image = button.get_first_child() as any
 	image.pixel_size = 12
 	image.opacity = 0.75
 	const setVisible = ()=>{
-		box.visible = (settings.get_user_value(bind) != null)
+		const state = ResetButton.getOptionState(settings, bind)
+		box.visible = options.dontHideWhenMatch ? state.isSet : (!state.isMatch)
 	}
 	const settingsConnection = settings.connect(`changed::${bind}`, setVisible)
 	setVisible()
@@ -178,16 +180,31 @@ export function ResetButton(options: ResetButton.Options): Gtk.Box {
 export namespace ResetButton {
 	export interface Options extends Button.OptionsBase {
 		bind: string,
+		dontHideWhenMatch?: boolean
 	}
-}
-function pushResetButton(row_with_suffix: Adw.ActionRow, options: ResetButton.Options) {
-	ResetButton(options)
-	.insert_after(
-		row_with_suffix
-			.get_first_child() // GtkBox header
-			.get_last_child(), // GtkBox suffixes
-		null
-	)
+	export function getOptionState(settings: Gio.Settings, key: string): {
+		isMatch: boolean,
+		isSet: boolean,
+	} {
+		const userValue = settings.get_user_value(key)
+		const defaultValue = settings.get_default_value(key)
+		return {
+			isSet: userValue != null,
+			isMatch:
+				(userValue == null)
+				|| (userValue && defaultValue && userValue.equal(defaultValue)),
+		}
+	}
+	export function pushResetButton(row_with_suffix: Adw.ActionRow, options: ResetButton.Options) {
+		const suffixes = row_with_suffix
+		.get_first_child() // GtkBox header
+		.get_last_child() // GtkBox suffixes
+
+		ResetButton(options)
+		.insert_before(
+			suffixes, suffixes.get_first_child()
+		)
+	}
 }
 
 export function SwitchRow({
@@ -200,6 +217,7 @@ export function SwitchRow({
 	sensitiveBind,
 	settings,
 	experimental,
+	noResetButton,
 	onCreated,
 }: SwitchRow.Options): Adw.SwitchRow {
 	if (bind) value ??= settings.get_boolean(bind)
@@ -224,7 +242,7 @@ export function SwitchRow({
 			row, 'active',
 			Gio.SettingsBindFlags.DEFAULT
 		)
-		pushResetButton(row, { settings, bind })
+		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
 	}
 
 	if (sensitiveBind) {
@@ -235,7 +253,7 @@ export function SwitchRow({
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
 	}
-	if (experimental) prependExperimentalIcon(row.child)
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
 	if (onCreated) onCreated(row)
 
 	return row
@@ -251,6 +269,7 @@ export namespace SwitchRow {
 		action?: (value: boolean)=>void
 		sensitiveBind?: string
 		experimental?: boolean
+		noResetButton?: boolean
 		onCreated?: (row: Adw.SwitchRow)=>void
 	}
 }
@@ -266,6 +285,7 @@ export function ToggleButtonRow({
 	settings,
 	experimental,
 	text,
+	noResetButton,
 	onCreated,
 }: ToggleButtonRow.Options): Adw.ActionRow {
 	if (bind) value ??= settings.get_boolean(bind)
@@ -299,6 +319,7 @@ export function ToggleButtonRow({
 			toggle, 'active',
 			Gio.SettingsBindFlags.DEFAULT
 		)
+		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
 	}
 
 	if (sensitiveBind) {
@@ -315,7 +336,7 @@ export function ToggleButtonRow({
 		)
 		toggle.sensitive = settings.get_boolean(sensitiveBind)
 	}
-	if (experimental) prependExperimentalIcon(row.child)
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
 	if (onCreated) onCreated(row)
 
 	return row
@@ -332,6 +353,7 @@ export namespace ToggleButtonRow {
 		sensitiveBind?: string
 		experimental?: boolean
 		text?: string
+		noResetButton?: boolean
 		onCreated?: (row: Adw.ActionRow)=>void
 	}
 }
@@ -361,7 +383,7 @@ export function Button({
 	}
 
 	if (action) {
-		button.connect("clicked", () => action())
+		button.connect("activate", () => action())
 	}
 
 	if (parent) {
@@ -417,7 +439,7 @@ export function ButtonRow(options: ButtonRow.Options): Adw.ActionRow {
 		parent.add(row)
 	}
 
-	if (experimental) prependExperimentalIcon(row.child)
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
 	if (onCreated) onCreated(row)
 
 	return row
@@ -463,8 +485,8 @@ export function UpDownButton({
 	box.insert_child_after(down, up)
 
 	if (action) {
-		down.connect("clicked", () => action(UpDownButton.Direction.Down))
-		up.connect("clicked", () => action(UpDownButton.Direction.Up))
+		down.connect("activate", () => action(UpDownButton.Direction.Down))
+		up.connect("activate", () => action(UpDownButton.Direction.Up))
 	}
 
 	if (parent) {
@@ -520,6 +542,7 @@ export function AdjustmentRow({
 	sensitiveBind,
 	settings,
 	experimental,
+	noResetButton,
 	onCreated,
 }: AdjustmentRow.Options): Adw.SpinRow {
 	if (bind) value ??= settings.get_int(bind)
@@ -535,6 +558,15 @@ export function AdjustmentRow({
 			value: value
 		}),
 	})
+	const header = row
+	.get_first_child() // GtkBox header
+	const suffixes = header
+	.get_last_child() // GtkBox suffixes
+	const spin = suffixes
+	.get_first_child() // GtkSpinButton spin_button
+	spin.hexpand = false
+	suffixes.hexpand = false
+	new Gtk.Box({ hexpand: true }).insert_before(header, suffixes)
 
 	if (action) {
 		row.connect("notify::value", () => {
@@ -552,6 +584,7 @@ export function AdjustmentRow({
 			row, 'value',
 			Gio.SettingsBindFlags.DEFAULT
 		)
+		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
 	}
 
 	if (sensitiveBind) {
@@ -562,7 +595,7 @@ export function AdjustmentRow({
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
 	}
-	if (experimental) prependExperimentalIcon(row.child)
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
 	if (onCreated) onCreated(row)
 
 	return row
@@ -582,6 +615,7 @@ export namespace AdjustmentRow {
 		action?: (value: number)=>void
 		sensitiveBind?: string
 		experimental?: boolean
+		noResetButton?: boolean
 		onCreated?: (row: Adw.SpinRow)=>void
 	}
 }
@@ -605,7 +639,7 @@ export function ExpanderRow({
 	if (expanded === false || expanded === true) {
 		row.expanded = expanded
 	}
-	if (experimental) prependExperimentalIcon(row.child)
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
 	if (onCreated) onCreated(row)
 	return row
 }
@@ -620,35 +654,6 @@ export namespace ExpanderRow {
 	}
 }
 
-export const DropdownItems = GObject.registerClass({
-	Properties: {
-		'name': GObject.ParamSpec.string(
-			'name', 'name', 'name',
-			GObject.ParamFlags.READWRITE,
-			null),
-		'value': GObject.ParamSpec.string(
-			'value', 'value', 'value',
-			GObject.ParamFlags.READWRITE,
-			null),
-	},
-}, class DropdownItems extends GObject.Object {
-	_init(name, value) {
-		super._init({ name, value })
-	}
-})
-export interface DropdownOptions {
-	settings?: Gio.Settings
-	items: { name: string, value: string }[]
-	bind?: string
-	parent?: any
-	value?: string
-	title?: string
-	subtitle?: string
-	sensitiveBind?: string
-	action?: (value: string)=>void
-	experimental?: boolean
-	onCreated?: (row: Adw.ComboRow)=>void
-}
 export function Dropdown({
 	settings,
 	items,
@@ -660,13 +665,14 @@ export function Dropdown({
 	action,
 	sensitiveBind,
 	experimental,
+	noResetButton,
 	onCreated,
-}: DropdownOptions) {
+}: Dropdown.Options) {
 	if (bind) value ??= settings.get_string(bind)
 
-	let filterModeModel = new Gio.ListStore({ item_type: DropdownItems as any })
+	let filterModeModel = new Gio.ListStore({ item_type: Dropdown.Items as any })
 	for (const item of items) {
-		filterModeModel.append(new (DropdownItems as any)(item.name, item.value))
+		filterModeModel.append(new (Dropdown.Items as any)(item.name, item.value))
 	}
 
 	let selected = null
@@ -678,36 +684,73 @@ export function Dropdown({
 	}
 	if (selected === null) selected = -1
 
-	let filterModeRow = new Adw.ComboRow({
+	let row = new Adw.ComboRow({
 		title: title ?? "",
 		subtitle: subtitle ?? null,
 		model: filterModeModel,
-		expression: new (Gtk.PropertyExpression as any)(DropdownItems, null, 'name'),
+		expression: new (Gtk.PropertyExpression as any)(Dropdown.Items, null, 'name'),
 		selected: selected
 	})
+
 	if (parent) {
-		parent.add(filterModeRow)
+		parent.add(row)
 	}
 
-	if (bind || action) filterModeRow.connect('notify::selected', () => {
+	if (bind) {
+		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
+	}
+
+	if (bind || action) row.connect('notify::selected', () => {
 		if (bind) {
-			settings.set_string(bind, (filterModeRow.selectedItem as any).value)
+			settings.set_string(bind, (row.selectedItem as any).value)
 		}
 		if (action) {
-			action((filterModeRow.selectedItem as any).value)
+			action((row.selectedItem as any).value)
 		}
 	})
 		
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			filterModeRow, 'sensitive',
+			row, 'sensitive',
 			Gio.SettingsBindFlags.DEFAULT
 		)
-		filterModeRow.sensitive = settings.get_boolean(sensitiveBind)
+		row.sensitive = settings.get_boolean(sensitiveBind)
 	}
-	if (experimental) prependExperimentalIcon(filterModeRow.child)
-	if (onCreated) onCreated(filterModeRow)
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
 
-	return filterModeRow
+	return row
+}
+export namespace Dropdown {
+	export interface Options {
+		settings?: Gio.Settings
+		items: { name: string, value: string }[]
+		bind?: string
+		parent?: any
+		value?: string
+		title?: string
+		subtitle?: string
+		sensitiveBind?: string
+		action?: (value: string)=>void
+		experimental?: boolean
+		noResetButton?: boolean
+		onCreated?: (row: Adw.ComboRow)=>void
+	}
+	export const Items = GObject.registerClass({
+		Properties: {
+			'name': GObject.ParamSpec.string(
+				'name', 'name', 'name',
+				GObject.ParamFlags.READWRITE,
+				null),
+			'value': GObject.ParamSpec.string(
+				'value', 'value', 'value',
+				GObject.ParamFlags.READWRITE,
+				null),
+		},
+	}, class DropdownItems extends GObject.Object {
+		_init(name, value) {
+			super._init({ name, value })
+		}
+	})
 }

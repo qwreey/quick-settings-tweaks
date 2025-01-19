@@ -17,7 +17,7 @@ import { LayoutCustomize } from "./features/layoutCustomize.js"
 import { WeatherFeature } from "./features/weather.js"
 import { MenuAnimation } from "./features/menuAnimation.js"
 import { SystemItemsFeature } from "./features/systemItems.js"
-import { QuickTogglesOrderFeature } from "./features/quickTogglesOrder.js"
+import { TogglesOrderFeature } from "./features/togglesOrder.js"
 
 export default class QstExtension extends Extension {
 	private features: FeatureBase[]
@@ -70,7 +70,7 @@ export default class QstExtension extends Extension {
 			new OverlayMenu(),
 			new MenuAnimation(),
 			new SystemItemsFeature(),
-			new QuickTogglesOrderFeature(),
+			new TogglesOrderFeature(),
 		]) {
 			logger(`Loading feature '${feature.constructor.name}'`)
 			feature.load()

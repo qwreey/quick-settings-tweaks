@@ -9,13 +9,18 @@ export interface OrderItem {
 	friendlyName?: string
 }
 
-export class QuickTogglesOrderFeature extends FeatureBase {
+export class TogglesOrderFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	order: string[]
 	loadSettings(loader: SettingLoader): void {
-		this.enabled = loader.loadBoolean("quick-toggle-order-enabled")
-		this.order = loader.loadStrv("quick-toggle-order")
+		this.enabled = loader.loadBoolean("toggle-order-enabled")
+		this.order = loader.loadStrv("toggle-order")
 	}
 	// #endregion settings
+
+	onLoad(): void {
+		
+	}
+	onUnload(): void {}
 }

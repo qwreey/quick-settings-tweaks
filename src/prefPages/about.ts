@@ -2,6 +2,7 @@ import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gtk from "gi://Gtk"
 import Gio from "gi://Gio"
+import Config from "../config.js"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 
@@ -12,6 +13,7 @@ import {
 	Group,
 	Row,
 } from "../libs/prefComponents.js"
+import { type ExtensionMetadata } from "resource:///org/gnome/shell/extensions/extension.js"
 
 interface Contributor {
 	name: string
@@ -32,50 +34,6 @@ function getContributorRows(pref: QstExtensionPreferences): Contributor[][] {
 	}, rows[0])
 	return rows
 }
-interface License {
-	url: string
-	author: string
-	name: string
-	file?: string
-	content?: string
-}
-function getLicenses(pref: QstExtensionPreferences): License[] {
-	const licenses = JSON.parse(
-		pref.readExtensionFile("media/licenses.json")
-	) as License[]
-	for (const item of licenses) {
-		if (item.file) {
-			item.content = pref.readExtensionFile(item.file)
-		}
-	}
-	return licenses
-}
-
-function LogoBox(): Gtk.Box {
-	const logoBox = new Gtk.Box({
-		baseline_position: Gtk.BaselinePosition.CENTER,
-		// hexpand: false,
-		// vexpand: false,
-		// homogeneous: true,
-		orientation: Gtk.Orientation.VERTICAL,
-	})
-	const logoImage = new Gtk.Image({
-		margin_bottom: 20,
-		margin_top: 10,
-		icon_name: "qst-project-icon",
-		pixel_size: 100,
-	})
-	logoBox.append(logoImage)
-	const logoText = new Gtk.Label({
-		label: "Quick Setting Tweaker",
-		css_classes: ["title-2"],
-		vexpand: true,
-		valign: Gtk.Align.FILL,
-	})
-	logoBox.append(logoText)
-	return logoBox
-}
-
 function ContributorsRow(row: Contributor[]): Adw.ActionRow {
 	const target = Row({})
 	const box = new Gtk.Box({
@@ -115,32 +73,84 @@ function ContributorsRow(row: Contributor[]): Adw.ActionRow {
 	return target
 }
 
+interface License {
+	url: string
+	author: string
+	name: string
+	file?: string
+	content?: string
+	licenseUri?: string
+}
+function getLicenses(pref: QstExtensionPreferences): License[] {
+	const licenses = JSON.parse(
+		pref.readExtensionFile("media/licenses.json")
+	) as License[]
+	for (const item of licenses) {
+		if (item.file) {
+			item.content = pref.readExtensionFile(item.file)
+		}
+	}
+	return licenses
+}
 function LicenseRow(item: License): Adw.ExpanderRow {
 	return ExpanderRow({
-		title: "gnome-volume-mixer",
+		title: item.name,
 		subtitle: `by ${item.author}`,
 		expanded: false,
 	},[
-		// Row({
-		//     title: "Affected on files",
-		//     subtitle: 
-		// }),
 		Row({
 			title: "Homepage",
 			subtitle: item.url,
 			uri: item.url,
-			uriIcon: "go-home",
+			icon: "go-home",
 		}),
-		Row({
+		item.content ? Row({
 			title: "License",
 			subtitle: item.content,
-		}),
+		}) : null,
+		item.licenseUri ? Row({
+			title: "License",
+			subtitle: item.licenseUri,
+			icon: "emblem-documents-symbolic",
+			uri: item.licenseUri
+		}) : null,
 	])
 }
 
-export const aboutPage = GObject.registerClass({
-	GTypeName: baseGTypeName+'aboutPage',
-}, class aboutPage extends Adw.PreferencesPage {
+function LogoBox(metadata: ExtensionMetadata): Gtk.Box {
+	const logoBox = new Gtk.Box({
+		baseline_position: Gtk.BaselinePosition.CENTER,
+		margin_top: 10,
+		spacing: 20,
+		orientation: Gtk.Orientation.VERTICAL,
+	})
+	const logoImage = new Gtk.Image({
+		icon_name: "qst-project-icon",
+		pixel_size: 100,
+	})
+	logoBox.append(logoImage)
+	const logoText = new Gtk.Label({
+		label: metadata.name,
+		css_classes: ["title-2"],
+		halign: Gtk.Align.CENTER,
+	})
+	logoBox.append(logoText)
+	let version = metadata.version ?? _("Unknown (Built from source)")
+	if (!Config.isReleaseBuild) {
+		version += " " + _("Preview")
+	}
+	const logoVersion = new Gtk.Button({
+		css_classes: ["success"],
+		label: version,
+		halign: Gtk.Align.CENTER,
+	})
+	logoBox.append(logoVersion)
+	return logoBox
+}
+
+export const AboutPage = GObject.registerClass({
+	GTypeName: baseGTypeName+'AboutPage',
+}, class AboutPage extends Adw.PreferencesPage {
 	constructor(_settings: Gio.Settings, pref: QstExtensionPreferences) {
 		super({
 			name: 'about',
@@ -152,23 +162,7 @@ export const aboutPage = GObject.registerClass({
 		Group({
 			parent: this,
 		},[
-			LogoBox(),
-		])
-
-		// Informations
-		Group({
-			parent: this,
-		},[
-			Row({
-				title: _("This extension is distributed with license GPL 3+"),
-				subtitle: _("excludes Third-party. Third party codes follow their license"),
-			}),
-			Row({
-				title: _("Extension Version"),
-				suffix: new Gtk.Label({
-					label: pref.metadata.version?.toString() || _("Unknown (Built from source)")
-				}),
-			}),
+			LogoBox(pref.metadata),
 		])
 
 		// Links
@@ -180,25 +174,25 @@ export const aboutPage = GObject.registerClass({
 				uri: "https://patreon.com/user?u=44216831",
 				title: _("Donate via patreon"),
 				subtitle: _("Support development!"),
-				uriIcon: "qst-patreon-logo-symbolic",
+				icon: "qst-patreon-logo-symbolic",
 			}),
 			Row({
 				uri: "https://extensions.gnome.org/extension/5446/quick-settings-tweaker/",
 				title: "Gnome Extension",
 				subtitle: _("Rate and comment the extension!"),
-				uriIcon: "qst-gnome-extension-logo-symbolic",
+				icon: "qst-gnome-extension-logo-symbolic",
 			}),
 			Row({
 				uri: "https://github.com/qwreey75/quick-settings-tweaks",
 				title: _("Github Repository"),
 				subtitle: _("Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!\nOr, you can create PR with wonderful features!"),
-				uriIcon: "qst-github-logo-symbolic",
+				icon: "qst-github-logo-symbolic",
 			}),
 			Row({
 				uri: "https://weblate.paring.moe/projects/gs-quick-settings-tweaks/",
 				title: "Webslate",
 				subtitle: _("Add translation to this extension!"),
-				uriIcon: "qst-weblate-logo-symbolic",
+				icon: "qst-weblate-logo-symbolic",
 			}),
 		])
 
@@ -212,8 +206,8 @@ export const aboutPage = GObject.registerClass({
 		// third party LICENSE
 		Group({
 			parent: this,
-			title: _('Third party LICENSE'),
-			description: _('LICENSE OF CODES WHICH USED ON THIS EXTENSION')
+			title: _('License'),
+			description: _('License of codes')
 		}, getLicenses(pref).map(LicenseRow))
 	}
 })
