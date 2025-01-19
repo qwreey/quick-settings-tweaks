@@ -1,17 +1,16 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gio from "gi://Gio"
-
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
+import Config from "../config.js"
 import { type OrderItem } from "../features/togglesOrder.js"
 import {
-	baseGTypeName,
 	SwitchRow,
 	Group,
 } from "../libs/prefComponents.js"
 
 export const TogglesPage = GObject.registerClass({
-	GTypeName: baseGTypeName+'TogglesPage',
+	GTypeName: Config.baseGTypeName+'TogglesPage',
 }, class TogglesPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings) {
 		super({

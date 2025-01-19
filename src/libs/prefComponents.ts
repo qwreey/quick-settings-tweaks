@@ -7,8 +7,6 @@ import GObject from "gi://GObject"
 
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 
-export const baseGTypeName = "quick-settings-tweaks_prefs_"
-
 function addChildren(target: any, funcName: string, children?: any[]) {
 	if (!children) return
 	for (const item of children) {

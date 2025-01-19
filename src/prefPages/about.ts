@@ -2,13 +2,10 @@ import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gtk from "gi://Gtk"
 import Gio from "gi://Gio"
-import Config from "../config.js"
-
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-
 import type QstExtensionPreferences from "../prefs.js"
+import Config from "../config.js"
 import {
-	baseGTypeName,
 	ExpanderRow,
 	Group,
 	Row,
@@ -117,25 +114,8 @@ function LicenseRow(item: License): Adw.ExpanderRow {
 	])
 }
 
-function LogoBox(metadata: ExtensionMetadata): Gtk.Box {
-	const logoBox = new Gtk.Box({
-		baseline_position: Gtk.BaselinePosition.CENTER,
-		margin_top: 10,
-		spacing: 20,
-		orientation: Gtk.Orientation.VERTICAL,
-	})
-	const logoImage = new Gtk.Image({
-		icon_name: "qst-project-icon",
-		pixel_size: 100,
-	})
-	logoBox.append(logoImage)
-	const logoText = new Gtk.Label({
-		label: metadata.name,
-		css_classes: ["title-2"],
-		halign: Gtk.Align.CENTER,
-	})
-	logoBox.append(logoText)
-	let version = Config.version.toUpperCase()
+function getVersionString(metadata: ExtensionMetadata): string {
+	let version = Config.version.toUpperCase().replace(/-.*?$/, "")
 	if (metadata.version) {
 		version += "." + metadata.version
 	}
@@ -152,17 +132,44 @@ function LogoBox(metadata: ExtensionMetadata): Gtk.Box {
 	} else if (!metadata.version) {
 		version += "  " + _("(Built from source)")
 	}
+	return version
+}
+function LogoBox(metadata: ExtensionMetadata): Gtk.Box {
+	const logoBox = new Gtk.Box({
+		baseline_position: Gtk.BaselinePosition.CENTER,
+		margin_top: 10,
+		spacing: 20,
+		orientation: Gtk.Orientation.VERTICAL,
+	})
+
+	// Logo icon
+	const logoImage = new Gtk.Image({
+		icon_name: "qst-project-icon",
+		pixel_size: 100,
+	})
+	logoBox.append(logoImage)
+
+	// Extension name
+	const logoText = new Gtk.Label({
+		label: metadata.name,
+		css_classes: ["title-2"],
+		halign: Gtk.Align.CENTER,
+	})
+	logoBox.append(logoText)
+
+	// Version
 	const logoVersion = new Gtk.Button({
 		css_classes: ["success"],
-		label: version,
+		label: getVersionString(metadata),
 		halign: Gtk.Align.CENTER,
 	})
 	logoBox.append(logoVersion)
+
 	return logoBox
 }
 
 export const AboutPage = GObject.registerClass({
-	GTypeName: baseGTypeName+'AboutPage',
+	GTypeName: Config.baseGTypeName+'AboutPage',
 }, class AboutPage extends Adw.PreferencesPage {
 	constructor(_settings: Gio.Settings, pref: QstExtensionPreferences) {
 		super({

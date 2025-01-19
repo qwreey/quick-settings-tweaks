@@ -111,6 +111,7 @@ function build() {
 		VERSION=$(git branch --show-current)
 	fi
 	sed "s/version: \"unknown\"/version: \"$VERSION\"/" -i target/out/config.js
+	[ ! -z "$BUILD_NUMBER" ] && sed "s/buildNumber: 0/buildNumber: $BUILD_NUMBER/" -i target/out/config.js
 
 	# Change indents for reducing size of target
 	node scripts/reindent.js -- target/out/**/*.js
@@ -163,30 +164,36 @@ function compile-preferences() {
 	return 0
 }
 
+function increase-version() {
+	echo $(( $(cat scripts/version/latest-release-version) + 1 )) > scripts/version/latest-release-version
+	echo $(( $(cat scripts/version/latest-build-number) + 1 )) > scripts/version/latest-build-number
+}
+
 function create-release() {
 	VERSION_MAJOR=$(cat scripts/version/major-version)
-	VERSION_MINOR=$(( $(cat scripts/version/latest-release-version) + 1 ))
-	echo $VERSION_MINOR > scripts/version/latest-release-version
+	VERSION_MINOR=$(cat scripts/version/latest-release-version)
+	BUILD_NUMBER=$(cat scripts/version/latest-build-number)
 	VERSION_TAG=""
 	case "$TARGET" in
 		dev )
 			VERSION_TAG="-dev"
 		;;
 		preview )
-			VERSION_TAG="-preview"
+			VERSION_TAG="-pre"
 		;;
 		release )
-			VERSION_TAG="-stable"
+			VERSION_TAG=""
 		;;
 		github-release )
-			VERSION_TAG="-stable"
+			VERSION_TAG=""
 		;;
 		github-preview )
-			VERSION_TAG="-preview"
+			VERSION_TAG="-pre"
 		;;
 	esac
 	VERSION="$VERSION_MAJOR.$VERSION_MINOR$VERSION_TAG"
-	VERSION=$VERSION build
+	VERSION=$VERSION BUILD_NUMBER=$BUILD_NUMBER build
+	cp target/quick-settings-tweaks@qwreey.shell-extension.zip target/$VERSION-$TARGET.zip
 }
 
 function dev() {
@@ -201,7 +208,7 @@ function dev() {
 
 	# Build
 	(
-		TARGET=dev build
+		TARGET="${TARGET:-dev}" create-release
 		echo > host/extension-ready
 	) &
 
@@ -213,7 +220,7 @@ read -d '' INNER_BUILDWATCH << EOF
 		if [ ! -e host/vncready ]; then
 			break
 		fi
-		TARGET=DEV build
+		TARGET="\${TARGET:-dev}" create-release
 		echo > host/extension-ready
 	done
 EOF
@@ -305,6 +312,13 @@ case "$1" in
 	
 	"compile-preferences")
 		compile-preferences
+	;;
+
+	"increase-version")
+		increase-version
+	;;
+	"create-release")
+		create-release
 	;;
 
 	* )

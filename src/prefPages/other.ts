@@ -2,10 +2,16 @@ import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
-
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-
-import { baseGTypeName, Group, Row, SwitchRow, ResetButton, ToggleButtonRow, UpDownButton } from "../libs/prefComponents.js"
+import Config from "../config.js"
+import {
+	Group,
+	Row,
+	SwitchRow,
+	ResetButton,
+	ToggleButtonRow,
+	UpDownButton
+} from "../libs/prefComponents.js"
 
 const DefaultOrder = ['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']
 function copyOrder(order: string[]): string[] {
@@ -131,7 +137,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 }
 
 export const OtherPage = GObject.registerClass({
-	GTypeName: baseGTypeName+'OtherPage',
+	GTypeName: Config.baseGTypeName+'OtherPage',
 }, class OtherPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings) {
 		super({
