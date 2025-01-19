@@ -52,6 +52,20 @@ class Maid {
 		patchObject[patchName] = handleFunc(original)
 	}
 
+	// [ patchObject, connection, original, undo? ]
+	hideJob<T extends {hide: any, visible: boolean, connect: any}>(
+		patchObject: T,
+		undo?: (old: boolean, patchObject: T)=>(boolean|null|void|undefined),
+		priority: number = 0
+	) {
+		const original = patchObject.visible
+		const connection = patchObject.connect("show", ()=>{
+			patchObject.hide()
+		})
+		patchObject.hide()
+		this.getRecords().push([Maid.TaskType.Hide, priority, patchObject, connection, original, undo])
+	}
+
 	clear() {
 		const records = this.getRecords()
 		records.sort((a, b) => b[1] - a[1])
@@ -75,6 +89,22 @@ class Maid {
 				case Maid.TaskType.Patch:
 					record[2][record[1]] = record[2]
 					break
+				case Maid.TaskType.Hide:
+					{
+						const patchObject = record[2]
+						const original = record[4]
+						const undo = record[5]
+						patchObject.disconnect(record[3])
+						if (undo) {
+							const result = undo(original, patchObject)
+							if (result === true) {
+								patchObject.show()
+							}
+						} else {
+							if (original) patchObject.show()
+						}
+					}
+					break
 				default:
 					throw Error("Unknown task type.")
 			}
@@ -90,6 +120,7 @@ namespace Maid {
 		RunDispose,
 		Destroy,
 		Patch,
+		Hide,
 	}
 	export const Priority = {
 		High: 2000,

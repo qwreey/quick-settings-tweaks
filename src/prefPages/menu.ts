@@ -6,8 +6,8 @@ import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensio
 
 import {
 	baseGTypeName,
-	Switch,
-	Adjustment,
+	SwitchRow,
+	AdjustmentRow,
 	Dropdown,
 	Group,
 } from "../libs/prefComponents.js"
@@ -27,12 +27,13 @@ export const MenuPage = GObject.registerClass({
 			parent: this,
 			title: _("Overlay Mode"),
 			description: _("Display toggle, power, and sound menus as overlay"),
-			headerSuffix: Switch({
+			headerSuffix: SwitchRow({
 				settings,
 				bind: "overlay-menu-enabled",
 			}),
+			experimental: true,
 		},[
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Overlay Width"),
 				subtitle: _("Adjust overlay menu width\nSet this to 0 to disable adjusting"),
@@ -40,7 +41,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "overlay-menu-width",
 				max: 2048,
 			}),
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Overlay Animation Duration"),
 				subtitle: _("Custom menu open animation duration in microseconds\nSet this to 0 to disable custom animation"),
@@ -55,7 +56,6 @@ export const MenuPage = GObject.registerClass({
 				items: [
 					{ "name": _("Flyout"), "value": "flyout" },
 					{ "name": _("Dialog"), "value": "dialog" },
-
 				],
 				bind: "overlay-menu-animate-style",
 				sensitiveBind: "overlay-menu-enabled"
@@ -67,12 +67,13 @@ export const MenuPage = GObject.registerClass({
 			parent: this,
 			title: _("Animation"),
 			description: _("Add background animation on toggle menu opening and closing\nTo get the best feel, turn on overlay mode"),
-			headerSuffix: Switch({
+			headerSuffix: SwitchRow({
 				settings,
 				bind: "menu-animation-enabled",
 			}),
+			experimental: true,
 		},[
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Open Duration"),
 				subtitle: _("Open animation duration in microseconds"),
@@ -80,7 +81,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "menu-animation-open-duration",
 				max: 4000,
 			}),
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Close Duration"),
 				subtitle: _("Close animation duration in microseconds"),
@@ -88,7 +89,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "menu-animation-close-duration",
 				max: 4000,
 			}),
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Grid Content Opacity"),
 				subtitle: _("Adjust grid content opacity.\nSet this to 255 to opaque, and 0 to transparent"),
@@ -96,7 +97,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "menu-animation-grid-content-opacity",
 				max: 255,
 			}),
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Background Blur Radius"),
 				subtitle: _("Adjust background blur radius.\nSet this to 0 to disable blur effect"),
@@ -104,7 +105,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "menu-animation-background-blur-radius",
 				max: 32,
 			}),
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Background Opacity"),
 				subtitle: _("Adjust background opacity.\nSet this to 255 to opaque, and 0 to transparent"),
@@ -112,7 +113,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "menu-animation-background-opacity",
 				max: 255,
 			}),
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Background X Scale"),
 				subtitle: _("Adjust background x scale, 1000 means 1.0 scale"),
@@ -120,7 +121,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "menu-animation-background-scale-x",
 				max: 4000,
 			}),
-			Adjustment({
+			AdjustmentRow({
 				settings,
 				title: _("Background Y Scale"),
 				subtitle: _("Adjust background y scale, 1000 means 1.0 scale"),

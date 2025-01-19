@@ -65,6 +65,32 @@
       <default>true</default>
     </key>
 
+    <!-- System items -->
+    <key name="system-items-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-hide" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-hide-screenshot" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-hide-settings" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-hide-lock" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-hide-shutdown" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-hide-battery" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-order" type="as">
+      <default>['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']</default>
+    </key>
+
     <!-- volume mixer -->
     <key name="volume-mixer-enabled" type="b">
       <default>true</default>

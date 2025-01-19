@@ -7,7 +7,7 @@ import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensio
 import {
 	baseGTypeName,
 	Row,
-	Switch,
+	SwitchRow,
 	Group,
 } from "../libs/prefComponents.js"
 
@@ -26,13 +26,13 @@ export const quickTogglesPage = GObject.registerClass({
 			title: _('Add more buttons'),
 			description: _('Turn on the buttons you want to add on Quick Settings'),
 		}, [
-			Switch({
+			SwitchRow({
 				settings,
 				title: _("DND Quick Toggle"),
 				subtitle: _("Turn on to make the DND quick toggle visible on the Quick Settings panel"),
 				bind: "add-dnd-quick-toggle-enabled",
 			}),
-			Switch({
+			SwitchRow({
 				settings,
 				title: _("Unsafe Mode Quick Toggle"),
 				subtitle: _("Turn on to make the unsafe quick toggle visible on the Quick Settings panel"),

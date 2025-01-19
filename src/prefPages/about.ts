@@ -8,7 +8,7 @@ import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensio
 import type QstExtensionPreferences from "../prefs.js"
 import {
 	baseGTypeName,
-	Expander,
+	ExpanderRow,
 	Group,
 	Row,
 } from "../libs/prefComponents.js"
@@ -62,7 +62,7 @@ function LogoBox(): Gtk.Box {
 	const logoImage = new Gtk.Image({
 		margin_bottom: 20,
 		margin_top: 10,
-		icon_name: "project-icon",
+		icon_name: "qst-project-icon",
 		pixel_size: 100,
 	})
 	logoBox.append(logoImage)
@@ -116,7 +116,7 @@ function ContributorsRow(row: Contributor[]): Adw.ActionRow {
 }
 
 function LicenseRow(item: License): Adw.ExpanderRow {
-	return Expander({
+	return ExpanderRow({
 		title: "gnome-volume-mixer",
 		subtitle: `by ${item.author}`,
 		expanded: false,
@@ -129,6 +129,7 @@ function LicenseRow(item: License): Adw.ExpanderRow {
 			title: "Homepage",
 			subtitle: item.url,
 			uri: item.url,
+			uriIcon: "go-home",
 		}),
 		Row({
 			title: "License",
@@ -173,27 +174,31 @@ export const aboutPage = GObject.registerClass({
 		// Links
 		Group({
 			parent: this,
-			title: _('Links')
+			title: _('Links'),
 		},[
 			Row({
 				uri: "https://patreon.com/user?u=44216831",
 				title: _("Donate via patreon"),
 				subtitle: _("Support development!"),
+				uriIcon: "qst-patreon-logo",
 			}),
 			Row({
 				uri: "https://extensions.gnome.org/extension/5446/quick-settings-tweaker/",
 				title: "Gnome Extension",
 				subtitle: _("Rate and comment the extension!"),
+				uriIcon: "qst-gnome-extension-logo",
 			}),
 			Row({
 				uri: "https://github.com/qwreey75/quick-settings-tweaks",
 				title: _("Github Repository"),
 				subtitle: _("Add Star on Repository is helping me a lot!\nPlease, if you found bug from this extension, you can make issue to make me know that!\nOr, you can create PR with wonderful features!"),
+				uriIcon: "qst-github-logo",
 			}),
 			Row({
 				uri: "https://weblate.paring.moe/projects/gs-quick-settings-tweaks/",
 				title: "Webslate",
 				subtitle: _("Add translation to this extension!"),
+				uriIcon: "qst-weblate-logo",
 			}),
 		])
 

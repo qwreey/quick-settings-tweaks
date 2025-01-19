@@ -348,6 +348,7 @@ class MediaList extends Mpris.MediaSection {
 		const currentIndex = this._messages.findIndex(message => message == current)
 		const toIndex = this._messages.findIndex(message => message == to)
 
+		// @ts-expect-error
 		current.ease({
 			opacity: 0,
 			translationX: toIndex > currentIndex ? -120 : 120,

@@ -17,6 +17,7 @@ import { InputOutputFeature } from "./features/inputOutput.js"
 import { LayoutCustomize } from "./features/layoutCustomize.js"
 import { WeatherFeature } from "./features/weather.js"
 import { MenuAnimation } from "./features/menuAnimation.js"
+import { SystemItemsFeature } from "./features/systemItems.js"
 
 export default class QstExtension extends Extension {
 	private features: FeatureBase[]
@@ -43,6 +44,16 @@ export default class QstExtension extends Extension {
 		logger("Loading ...")
 		let start = +Date.now()
 
+		if (Config.isDevelopmentBuild) {
+			logger("!! Development build !!")
+			// @ts-ignore
+			global.QST = {
+				Global,
+				Extension: this,
+				Config,
+			}
+		}
+
 		// Load features
 		Global.load(this)
 		for (const feature of this.features = [
@@ -58,18 +69,14 @@ export default class QstExtension extends Extension {
 			new WeatherFeature(),
 			new OverlayMenu(),
 			new MenuAnimation(),
+			new SystemItemsFeature(),
 		]) {
 			logger(`Loading feature '${feature.constructor.name}'`)
 			feature.load()
 		}
 
 		// @ts-ignore
-		if (Config.isDevelopmentBuild) global.QST = {
-			Global,
-			Features: this.features,
-			Extension: this,
-			Config,
-		}
+		if (Config.isDevelopmentBuild) global.QST.Features = this.features,
 
 		logger("Loaded. " + (+Date.now() - start) + "ms taken")
 	}

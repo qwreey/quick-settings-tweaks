@@ -4,6 +4,8 @@ import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
 import GObject from "gi://GObject"
 
+import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
+
 export const baseGTypeName = "quick-settings-tweaks_prefs_"
 
 function addChildren(target: any, funcName: string, children?: any[]) {
@@ -14,39 +16,83 @@ function addChildren(target: any, funcName: string, children?: any[]) {
 	}
 }
 
-export type GroupOptions = Partial<Adw.PreferencesGroup.ConstructorProps & {
-	parent?: any
-}>
-export function Group(options: GroupOptions, children?: any[]): Adw.PreferencesGroup {
-	options.title ??= ""
-	const { parent } = options
-	delete options.parent
-	const target = new Adw.PreferencesGroup(options)
-	addChildren(target, "add", children)
-	if (parent) parent.add(target)
-	return target
+function applyLinkStyle(row: any) {
+	const style = new Gtk.CssProvider()
+	style.load_from_string(`
+		* {
+			color: #e0a6f5;
+		}
+	`)
+	row.get_style_context().add_provider(style, 1000)
 }
 
-export interface RowOptions {
-	parent?: any
-	title?: string
-	subtitle?: string
-	uri?: string
-	settings?: Gio.Settings
-	sensitiveBind?: string
-	suffix?: Gtk.Widget
-	prefix?: Gtk.Widget
+function appendLinkIcon(row: any, name: string) {
+	const linkText = row.child.get_first_child()
+	linkText.margin_start = 32
+	const image = new Gtk.Image({
+		css_classes: ["icon"],
+		icon_name: name,
+		pixel_size: 24,
+		margin_start: 4,
+		halign: Gtk.Align.START,
+	})
+	image.insert_before(row.child, linkText)
 }
+
+export function ExperimentalIcon(): Gtk.Image {
+	return new Gtk.Image({
+		icon_name: "dialog-warning-symbolic",
+		pixel_size: 16,
+		margin_end: 8,
+		margin_start: 2,
+		has_tooltip: true,
+		tooltip_text: _("This feature marked as experimental"),
+	})
+}
+
+function prependExperimentalIcon(holder: Gtk.Widget) {
+	ExperimentalIcon().insert_before(holder,holder.get_first_child())
+}
+
+export function Group(options: Group.Options, children?: any[]): Adw.PreferencesGroup {
+	options.title ??= ""
+	const { experimental, parent, onCreated, nesting } = options
+	delete options.parent
+	delete options.experimental
+	delete options.onCreated
+	delete options.nesting
+	const target = new Adw.PreferencesGroup(options)
+	if (nesting) target.marginTop = 14
+	if (experimental) prependExperimentalIcon(
+		target.get_first_child().get_first_child()
+	)
+	addChildren(target, "add", children)
+	if (parent) parent.add(target)
+	if (onCreated) onCreated(target)
+	return target
+}
+export namespace Group {
+	export type Options = Partial<Adw.PreferencesGroup.ConstructorProps & {
+		parent: any,
+		experimental: boolean,
+		nesting: boolean,
+		onCreated?: (row: Adw.PreferencesGroup)=>void,
+	}>
+}
+
 export function Row({
 	settings,
 	parent,
 	title,
 	subtitle,
 	uri,
+	uriIcon,
 	sensitiveBind,
 	suffix,
 	prefix,
-}: RowOptions): Adw.ActionRow {
+	experimental,
+	onCreated,
+}: Row.Options): Adw.ActionRow {
 	const row = new Adw.ActionRow({
 		title: title ?? null,
 		subtitle: subtitle ?? null
@@ -55,15 +101,17 @@ export function Row({
 		parent.add(row)
 	}
 	if (uri) {
-		// row.uri = options.uri
+		const child = new Adw.ActionRow({
+			title: title ?? null,
+			subtitle: subtitle ?? null,
+		})
+		applyLinkStyle(child)
 		row.set_child(new Gtk.LinkButton({
 			uri,
 			visited: true, // for disable coloring
-			child: new Adw.ActionRow({
-				title: title ?? null,
-				subtitle: subtitle ?? null
-			})
+			child
 		}))
+		if (uriIcon) appendLinkIcon(row, uriIcon)
 	}
 	if (suffix) {
 		row.add_suffix(suffix)
@@ -79,20 +127,27 @@ export function Row({
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
 	}
+	if (experimental) prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
 	return row
 }
-
-export interface SwitchOptions {
-	settings?: Gio.Settings
-	value?: boolean,
-	bind?: string,
-	parent?: any,
-	title?: string,
-	subtitle?: string,
-	action?: (value: boolean)=>void,
-	sensitiveBind?: string,
+export namespace Row {
+	export interface Options {
+		parent?: any
+		title?: string
+		subtitle?: string
+		uri?: string
+		uriIcon?: string
+		settings?: Gio.Settings
+		sensitiveBind?: string
+		suffix?: Gtk.Widget
+		prefix?: Gtk.Widget
+		experimental?: boolean
+		onCreated?: (row: Adw.ActionRow)=>void
+	}
 }
-export function Switch({
+
+export function SwitchRow({
 	bind,
 	parent,
 	value,
@@ -101,7 +156,9 @@ export function Switch({
 	action,
 	sensitiveBind,
 	settings,
-}: SwitchOptions): Adw.SwitchRow {
+	experimental,
+	onCreated,
+}: SwitchRow.Options): Adw.SwitchRow {
 	if (bind) value ??= settings.get_boolean(bind)
 
 	const row = new Adw.SwitchRow({
@@ -134,25 +191,272 @@ export function Switch({
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
 	}
+	if (experimental) prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
 
 	return row
 }
-
-export interface AdjustmentOptions {
-	settings?: Gio.Settings
-	max?: number,
-	min?: number,
-	stepIncrement?: number,
-	pageIncrement?: number,
-	bind?: string,
-	parent?: any,
-	value?: number,
-	title?: string,
-	subtitle?: string,
-	action?: (value: number)=>void,
-	sensitiveBind?: string,
+export namespace SwitchRow {
+	export interface Options {
+		settings?: Gio.Settings
+		value?: boolean
+		bind?: string
+		parent?: any
+		title?: string
+		subtitle?: string
+		action?: (value: boolean)=>void
+		sensitiveBind?: string
+		experimental?: boolean
+		onCreated?: (row: Adw.SwitchRow)=>void
+	}
 }
-export function Adjustment({
+
+export function ToggleButtonRow({
+	bind,
+	parent,
+	value,
+	title,
+	subtitle,
+	action,
+	sensitiveBind,
+	settings,
+	experimental,
+	text,
+	onCreated,
+}: ToggleButton.Options): Adw.ActionRow {
+	if (bind) value ??= settings.get_boolean(bind)
+
+	const row = new Adw.ActionRow({
+		title: title ?? "",
+		subtitle: subtitle ?? null,
+	})
+	const box = new Gtk.Box({
+		margin_bottom: 8,
+		margin_top: 8,
+	})
+	const toggle = new Gtk.ToggleButton({
+		label: text,
+		active: value,
+	})
+	box.insert_child_after(toggle, null)
+	row.add_suffix(box)
+
+	if (action) {
+		toggle.connect("notify::active", () => action(toggle.get_active()))
+	}
+
+	if (parent) {
+		parent.add(row)
+	}
+
+	if (bind) {
+		settings.bind(
+			bind,
+			toggle, 'active',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+	}
+
+	if (sensitiveBind) {
+		settings.bind(
+			sensitiveBind,
+			row, 'sensitive',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		row.sensitive = settings.get_boolean(sensitiveBind)
+		settings.bind(
+			sensitiveBind,
+			toggle, 'sensitive',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		toggle.sensitive = settings.get_boolean(sensitiveBind)
+	}
+	if (experimental) prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
+
+	return row
+}
+export namespace ToggleButtonRow {
+	export interface Options {
+		settings?: Gio.Settings
+		value?: boolean
+		bind?: string
+		parent?: any
+		title?: string
+		subtitle?: string
+		action?: (value: boolean)=>void
+		sensitiveBind?: string
+		experimental?: boolean
+		text?: string
+		onCreated?: (row: Adw.ActionRow)=>void
+	}
+}
+
+export function Button({
+	parent,
+	action,
+	sensitiveBind,
+	settings,
+	text,
+	marginTop,
+	marginBottom,
+	onCreated,
+}: Button.Options): Gtk.Box {
+	const box = new Gtk.Box({
+		margin_bottom: marginBottom ?? 8,
+		margin_top: marginTop ?? 8,
+	})
+	const button = new Gtk.Button({
+		label: text,
+	})
+	box.insert_child_after(button, null)
+
+	if (action) {
+		button.connect("clicked", () => action())
+	}
+
+	if (parent) {
+		parent.add(box)
+	}
+
+	if (sensitiveBind) {
+		settings.bind(
+			sensitiveBind,
+			button, 'sensitive',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		button.sensitive = settings.get_boolean(sensitiveBind)
+	}
+	if (onCreated) onCreated(box)
+
+	return box
+}
+export namespace Button {
+	export interface Options extends OptionsBase {
+		onCreated?: (row: Gtk.Box)=>void
+	}
+	export interface OptionsBase {
+		settings?: Gio.Settings
+		parent?: any
+		action?: ()=>void
+		sensitiveBind?: string
+		text?: string
+		marginTop?: number
+		marginBottom?: number
+	}
+}
+
+export function ButtonRow(options: ButtonRow.Options): Adw.ActionRow {
+	const {
+		parent,
+		title,
+		subtitle,
+		experimental,
+		onCreated,
+	} = options
+	const row = new Adw.ActionRow({
+		title: title ?? "",
+		subtitle: subtitle ?? null,
+	})
+	row.add_suffix(Button({
+		...options,
+		onCreated: null,
+	}))
+
+	if (parent) {
+		parent.add(row)
+	}
+
+	if (experimental) prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
+
+	return row
+}
+export namespace ButtonRow {
+	export interface Options extends Button.OptionsBase {
+		settings?: Gio.Settings
+		parent?: any
+		title?: string
+		subtitle?: string
+		action?: ()=>void
+		sensitiveBind?: string
+		experimental?: boolean
+		text?: string
+		marginTop?: number
+		marginBottom?: number
+		onCreated?: (row: Adw.ActionRow)=>void
+	}
+}
+
+export function UpDownButton({
+	parent,
+	action,
+	sensitiveBind,
+	settings,
+	marginTop,
+	marginBottom,
+	spacing,
+	onCreated,
+}: UpDownButton.Options): Gtk.Box {
+	const box = new Gtk.Box({
+		margin_bottom: marginTop ?? 8,
+		margin_top: marginBottom ?? 8,
+		spacing: spacing ?? 8
+	})
+	const down = new Gtk.Button({
+		icon_name: "go-down-symbolic"
+	})
+	const up = new Gtk.Button({
+		icon_name: "go-up-symbolic"
+	})
+	box.insert_child_after(up, null)
+	box.insert_child_after(down, up)
+
+	if (action) {
+		down.connect("clicked", () => action(UpDownButton.Direction.Down))
+		up.connect("clicked", () => action(UpDownButton.Direction.Up))
+	}
+
+	if (parent) {
+		parent.add(box)
+	}
+
+	if (sensitiveBind) {
+		settings.bind(
+			sensitiveBind,
+			up, 'sensitive',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		up.sensitive = settings.get_boolean(sensitiveBind)
+		settings.bind(
+			sensitiveBind,
+			down, 'sensitive',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		down.sensitive = settings.get_boolean(sensitiveBind)
+	}
+	if (onCreated) onCreated(box)
+
+	return box
+}
+export namespace UpDownButton {
+	export interface Options {
+		settings?: Gio.Settings
+		parent?: any
+		marginTop?: number
+		marginBottom?: number
+		spacing?: number
+		action?: (direction: Direction)=>void
+		sensitiveBind?: string
+		onCreated?: (row: Gtk.Box)=>void
+	}
+	export enum Direction {
+		Up,
+		Down,
+	}
+}
+
+export function AdjustmentRow({
 	max,
 	min,
 	stepIncrement,
@@ -165,7 +469,9 @@ export function Adjustment({
 	action,
 	sensitiveBind,
 	settings,
-}: AdjustmentOptions): Adw.SpinRow {
+	experimental,
+	onCreated,
+}: AdjustmentRow.Options): Adw.SpinRow {
 	if (bind) value ??= settings.get_int(bind)
 
 	const row = new Adw.SpinRow({
@@ -206,22 +512,38 @@ export function Adjustment({
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
 	}
+	if (experimental) prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
 
 	return row
 }
-
-export interface ExpanderOptions {
-	parent?: any
-	title?: string
-	subtitle?: string
-	expanded?: boolean
+export namespace AdjustmentRow {
+	export interface Options {
+		settings?: Gio.Settings
+		max?: number
+		min?: number
+		stepIncrement?: number
+		pageIncrement?: number
+		bind?: string
+		parent?: any
+		value?: number
+		title?: string
+		subtitle?: string
+		action?: (value: number)=>void
+		sensitiveBind?: string
+		experimental?: boolean
+		onCreated?: (row: Adw.SpinRow)=>void
+	}
 }
-export function Expander({
+
+export function ExpanderRow({
 	parent,
 	title,
 	subtitle,
 	expanded,
-}: ExpanderOptions, children?: any[]): Adw.ExpanderRow {
+	experimental,
+	onCreated,
+}: ExpanderRow.Options, children?: any[]): Adw.ExpanderRow {
 	const row = new Adw.ExpanderRow({
 		title: title ?? null,
 		subtitle: subtitle ?? null
@@ -233,7 +555,19 @@ export function Expander({
 	if (expanded === false || expanded === true) {
 		row.expanded = expanded
 	}
+	if (experimental) prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
 	return row
+}
+export namespace ExpanderRow {
+	export interface Options {
+		parent?: any
+		title?: string
+		subtitle?: string
+		expanded?: boolean
+		experimental?: boolean
+		onCreated?: (row: Adw.ExpanderRow)=>void
+	}
 }
 
 export const DropdownItems = GObject.registerClass({
@@ -258,10 +592,12 @@ export interface DropdownOptions {
 	bind?: string
 	parent?: any
 	value?: string
-	title?: string,
-	subtitle?: string,
-	sensitiveBind?: string,
-	action?: (value: string)=>void,
+	title?: string
+	subtitle?: string
+	sensitiveBind?: string
+	action?: (value: string)=>void
+	experimental?: boolean
+	onCreated?: (row: Adw.ComboRow)=>void
 }
 export function Dropdown({
 	settings,
@@ -273,6 +609,8 @@ export function Dropdown({
 	subtitle,
 	action,
 	sensitiveBind,
+	experimental,
+	onCreated,
 }: DropdownOptions) {
 	if (bind) value ??= settings.get_string(bind)
 
@@ -318,6 +656,8 @@ export function Dropdown({
 		)
 		filterModeRow.sensitive = settings.get_boolean(sensitiveBind)
 	}
+	if (experimental) prependExperimentalIcon(filterModeRow.child)
+	if (onCreated) onCreated(filterModeRow)
 
 	return filterModeRow
 }

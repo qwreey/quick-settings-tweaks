@@ -12,6 +12,8 @@ import {
 	type CalendarMessageList
 } from "resource:///org/gnome/shell/ui/calendar.js";
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
+import { QuickSettingsItem } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import { type SystemItem, type Indicator as SystemIndicator } from "resource:///org/gnome/shell/ui/status/system.js"
 
 export const Global = new (class Global {
 	QuickSettings: Clutter.Actor
@@ -19,6 +21,24 @@ export const Global = new (class Global {
 	QuickSettingsGrid: St.Widget
 	QuickSettingsBox: St.BoxLayout
 	QuickSettingsActor: St.Widget
+	get QuickSettingsSystemIndicator(): Promise<SystemIndicator> {
+		return new Promise(resolve => {
+			let system = (this.QuickSettings as any)._system
+			if (system) {
+				resolve(system)
+				return
+			}
+			GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+				system = (this.QuickSettings as any)._system
+				if (!system) return GLib.SOURCE_CONTINUE
+				resolve(system)
+				return GLib.SOURCE_REMOVE
+			})
+		})
+	}
+	get QuickSettingsSystemItem(): Promise<SystemItem> {
+		return this.QuickSettingsSystemIndicator.then(system=>(system as any)._systemItem)
+	}
 
 	DateMenu: DateMenuButton
 	DateMenuBox: Clutter.Actor

@@ -7,7 +7,7 @@ import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensio
 
 import {
 	baseGTypeName,
-	Switch,
+	SwitchRow,
 	makeDropdown
 } from "../libs/prefComponents.js"
 
@@ -106,21 +106,21 @@ export const volumeMixerPage = GObject.registerClass({
 			title: _("General"),
 			description: _("Enchant input/output slider")
 		})
-		Switch({
+		SwitchRow({
 			parent: generalGroup,
 			title: _("Show current audio output selection"),
 			value: settings.get_boolean("output-show-selected"),
 			subtitle: _("Always show the current audio output selection above the volume slider"),
 			bind: "output-show-selected]
 		})
-		Switch({
+		SwitchRow({
 			parent: generalGroup,
 			title: _("Show current audio input selection"),
 			value: settings.get_boolean("input-show-selected"),
 			subtitle: _("Always show the current audio input selection above the volume slider"),
 			bind: "input-show-selected]
 		})
-		Switch({
+		SwitchRow({
 			parent: generalGroup,
 			title: _("Always show input"),
 			value: settings.get_boolean("input-always-show"),
@@ -133,7 +133,7 @@ export const volumeMixerPage = GObject.registerClass({
 		const volumeMixerGroup = new Adw.PreferencesGroup({
 			title: _("Add volume mixer (PulseAudio, Pipewire)"),
 			description: _("Turn on to make the volume mixer visible\nForked from https://github.com/mymindstorm/gnome-volume-mixer"),
-			headerSuffix: Switch({
+			headerSuffix: SwitchRow({
 				title: "",
 				value: settings.get_boolean("volume-mixer-enabled"),
 				bind: "volume-mixer-enabled",
@@ -152,7 +152,7 @@ export const volumeMixerPage = GObject.registerClass({
 			],
 			sensitiveBind: "volume-mixer-enabled",
 		})
-		Switch({ // show-description
+		SwitchRow({ // show-description
 			title: _('Show stream Description'),
 			subtitle: _('Show audio stream description above the slider'),
 			value: this.settings.get_boolean('volume-mixer-show-description'),
@@ -160,7 +160,7 @@ export const volumeMixerPage = GObject.registerClass({
 			bind: [this.settings, 'volume-mixer-show-description'],
 			sensitiveBind: "volume-mixer-enabled",
 		})
-		Switch({ // show-icon
+		SwitchRow({ // show-icon
 			title: _('Show stream Icon'),
 			subtitle: _('Show application icon in front of the slider'),
 			value: this.settings.get_boolean('volume-mixer-show-icon'),
@@ -190,7 +190,7 @@ export const volumeMixerPage = GObject.registerClass({
 			],
 			sensitiveBind: "volume-mixer-enabled",
 		})
-		Switch({
+		SwitchRow({
 			parent: filterGroup,
 			title: _('Using Javascript Regex'),
 			subtitle: _('Use Javascript RegExp for filtering app name or description'),
@@ -198,7 +198,7 @@ export const volumeMixerPage = GObject.registerClass({
 			bind: [this.settings, 'volume-mixer-use-regex'],
 			sensitiveBind: "volume-mixer-enabled",
 		})
-		Switch({
+		SwitchRow({
 			parent: filterGroup,
 			title: _("Check Stream Description"),
 			subtitle: _("Check Description also"),

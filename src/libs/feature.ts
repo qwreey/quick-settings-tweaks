@@ -43,6 +43,10 @@ export class SettingLoader {
 		this.push(key)
 		return Global.Settings.get_int(key)
 	}
+	loadStrv(key: string): string[] {
+		this.push(key)
+		return Global.Settings.get_strv(key)
+	}
 }
 
 export abstract class FeatureBase {
