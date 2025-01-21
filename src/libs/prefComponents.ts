@@ -5,7 +5,6 @@ import Gtk from "gi://Gtk"
 import Gdk from "gi://Gdk"
 import GObject from "gi://GObject"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-import { type ExtensionMetadata } from "resource:///org/gnome/shell/extensions/extension.js"
 
 function addChildren(target: any, funcName: string, children?: any[]) {
 	if (!children) return

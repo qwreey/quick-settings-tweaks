@@ -15,21 +15,11 @@ import {
 	DialogRow,
 } from "../libs/prefComponents.js"
 
-const DefaultOrder = ['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']
-function copyOrder(order: string[]): string[] {
-	return DefaultOrder
-	.map(item => ({
-		item,
-		index: order.indexOf(item),
-	}))
-	.sort((a, b)=>a.index-b.index)
-	.map(item => item.item)
-}
 function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Adw.PreferencesGroup {
 	let items = new Map<string, Adw.ActionRow>()
 	let group: Adw.PreferencesGroup
 	const reorder = ()=>{
-		const order = copyOrder(settings.get_strv("system-items-order"))
+		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-order"))
 		for (const name of order) {
 			const target = items.get(name)
 			group.remove(target)
@@ -37,14 +27,14 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 		}
 	}
 	const move = (direction: UpDownButton.Direction, name: string)=>{
-		const order = copyOrder(settings.get_strv("system-items-order"))
+		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-order"))
 		const index = order.indexOf(name)
 		if (direction == UpDownButton.Direction.Up) {
 			if (index == 0) return
 			order[index] = order[index - 1]
 			order[index - 1] = name
 		} else {
-			if (index == (DefaultOrder.length - 1)) return
+			if (index == (SystemItemOrderGroup.DefaultOrder.length - 1)) return
 			order[index] = order[index + 1]
 			order[index + 1] = name
 		}
@@ -135,6 +125,18 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 			},
 		}))
 	])
+}
+namespace SystemItemOrderGroup {
+	export const DefaultOrder = ['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']
+	export function copyOrder(order: string[]): string[] {
+		return DefaultOrder
+		.map(item => ({
+			item,
+			index: order.indexOf(item),
+		}))
+		.sort((a, b)=>a.index-b.index)
+		.map(item => item.item)
+	}
 }
 
 export const OtherPage = GObject.registerClass({

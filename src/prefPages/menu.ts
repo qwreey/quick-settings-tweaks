@@ -12,7 +12,7 @@ import {
 	DialogRow,
 } from "../libs/prefComponents.js"
 
-function AdvancedAnimationStyle(settings: Gio.Settings): Adw.PreferencesGroup {
+function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGroup {
 	return Group({
 		title: _("Advanced animation style"),
 	},[
@@ -143,7 +143,7 @@ export const MenuPage = GObject.registerClass({
 				subtitle: _("Adjust speed, blur, scale, and opacity"),
 				dialogTitle: _("Animation"),
 				sensitiveBind: "menu-animation-enabled",
-				childrenRequest: ()=>[AdvancedAnimationStyle(settings)],
+				childrenRequest: ()=>[AdvancedAnimationStyleGroup(settings)],
 			}),
 		])
 	}
