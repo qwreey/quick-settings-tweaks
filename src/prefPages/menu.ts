@@ -7,7 +7,7 @@ import type QstExtensionPreferences from "../prefs.js"
 import {
 	SwitchRow,
 	AdjustmentRow,
-	Dropdown,
+	DropdownRow,
 	Group,
 	DialogRow,
 } from "../libs/prefComponents.js"
@@ -112,7 +112,7 @@ export const MenuPage = GObject.registerClass({
 				bind: "overlay-menu-animate-duration",
 				max: 4000,
 			}),
-			Dropdown({
+			DropdownRow({
 				settings,
 				title: _("Overlay Animation Style"),
 				subtitle: _("Custom menu open animation style"),

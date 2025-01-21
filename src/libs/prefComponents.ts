@@ -4,8 +4,8 @@ import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
 import Gdk from "gi://Gdk"
 import GObject from "gi://GObject"
-
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
+import { type ExtensionMetadata } from "resource:///org/gnome/shell/extensions/extension.js"
 
 function addChildren(target: any, funcName: string, children?: any[]) {
 	if (!children) return
@@ -19,6 +19,7 @@ function setLinkCursor(target: any) {
 	target.cursor = Gdk.Cursor.new_from_name("pointer", null)
 }
 
+// #region Dialog
 export function Dialog({
 	window,
 	title,
@@ -57,7 +58,9 @@ export namespace Dialog {
 		}
 	})
 }
+// #endregion Dialog
 
+// #region ExperimentalIcon
 export function ExperimentalIcon(options?: ExperimentalIcon.Options): Gtk.Image {
 	return new Gtk.Image({
 		css_classes: ["icon"],
@@ -80,7 +83,9 @@ export namespace ExperimentalIcon {
 		ExperimentalIcon(options).insert_before(holder,holder.get_first_child())
 	}
 }
+// #endregion ExperimentalIcon
 
+// #region Group
 export function Group(options: Group.Options, children?: any[]): Adw.PreferencesGroup {
 	options.title ??= ""
 	const { experimental, parent, onCreated, nesting } = options
@@ -107,7 +112,9 @@ export namespace Group {
 		onCreated?: (row: Adw.PreferencesGroup)=>void,
 	}>
 }
+// #endregion Group
 
+// #region Row
 export function Row({
 	settings,
 	parent,
@@ -201,7 +208,9 @@ export namespace Row {
 		}))
 	}
 }
+// #endregion Row
 
+// #region DialogRow
 export function DialogRow(options: DialogRow.Options): Adw.ActionRow {
 	return Row({
 		...options,
@@ -216,7 +225,9 @@ export namespace DialogRow {
 		dialogTitle?: string
 	}
 }
+// #endregion DialogRow
 
+// #region ResetButton
 export function ResetButton(options: ResetButton.Options): Gtk.Box {
 	const { settings, bind } = options
 	options.iconName ??= "view-refresh-symbolic"
@@ -273,7 +284,9 @@ export namespace ResetButton {
 		)
 	}
 }
+// #endregion ResetButton
 
+// #region SwitchRow
 export function SwitchRow({
 	bind,
 	parent,
@@ -341,7 +354,9 @@ export namespace SwitchRow {
 		onCreated?: (row: Adw.SwitchRow)=>void
 	}
 }
+// #endregion SwitchRow
 
+// #region ToggleButtonRow
 export function ToggleButtonRow({
 	bind,
 	parent,
@@ -426,7 +441,9 @@ export namespace ToggleButtonRow {
 		onCreated?: (row: Adw.ActionRow)=>void
 	}
 }
+// #endregion ToggleButtonRow
 
+// #region Button
 export function Button({
 	parent,
 	action,
@@ -487,7 +504,9 @@ export namespace Button {
 		iconName?: string
 	}
 }
+// #endregion Button
 
+// #region ButtonRow
 export function ButtonRow(options: ButtonRow.Options): Adw.ActionRow {
 	const {
 		parent,
@@ -530,7 +549,9 @@ export namespace ButtonRow {
 		onCreated?: (row: Adw.ActionRow)=>void
 	}
 }
+// #endregion ButtonRow
 
+// #region UpDownButton
 export function UpDownButton({
 	parent,
 	action,
@@ -600,7 +621,9 @@ export namespace UpDownButton {
 		Down,
 	}
 }
+// #endregion UpDownButton
 
+// #region AdjustmentRow
 export function AdjustmentRow({
 	max,
 	min,
@@ -693,7 +716,9 @@ export namespace AdjustmentRow {
 		onCreated?: (row: Adw.SpinRow)=>void
 	}
 }
+// #endregion AdjustmentRow
 
+// #region ExpanderRow
 export function ExpanderRow({
 	parent,
 	title,
@@ -731,8 +756,10 @@ export namespace ExpanderRow {
 		onCreated?: (row: Adw.ExpanderRow)=>void
 	}
 }
+// #endregion ExpanderRow
 
-export function Dropdown({
+// #region DropdownRow
+export function DropdownRow({
 	settings,
 	items,
 	bind,
@@ -745,12 +772,12 @@ export function Dropdown({
 	experimental,
 	noResetButton,
 	onCreated,
-}: Dropdown.Options) {
+}: DropdownRow.Options) {
 	if (bind) value ??= settings.get_string(bind)
 
-	let filterModeModel = new Gio.ListStore({ item_type: Dropdown.Items as any })
+	let filterModeModel = new Gio.ListStore({ item_type: DropdownRow.Items as any })
 	for (const item of items) {
-		filterModeModel.append(new (Dropdown.Items as any)(item.name, item.value))
+		filterModeModel.append(new (DropdownRow.Items as any)(item.name, item.value))
 	}
 
 	const getIndex = (value: string) => {
@@ -766,7 +793,7 @@ export function Dropdown({
 		title: title ?? "",
 		subtitle: subtitle ?? null,
 		model: filterModeModel,
-		expression: new (Gtk.PropertyExpression as any)(Dropdown.Items, null, 'name'),
+		expression: new (Gtk.PropertyExpression as any)(DropdownRow.Items, null, 'name'),
 		selected: getIndex(value),
 	})
 	setLinkCursor(row)
@@ -809,7 +836,7 @@ export function Dropdown({
 
 	return row
 }
-export namespace Dropdown {
+export namespace DropdownRow {
 	export interface Options {
 		settings?: Gio.Settings
 		items: { name: string, value: string }[]
@@ -841,7 +868,9 @@ export namespace Dropdown {
 		}
 	})
 }
+// #endregion DropdownRow
 
+// #region ContributorsRow
 export function ContributorsRow(row: ContributorsRow.Contributor[]): Adw.ActionRow {
 	const target = Row({})
 	const box = new Gtk.Box({
@@ -906,7 +935,9 @@ export namespace ContributorsRow {
 		image: string
 	}
 }
+// #endregion ContributorsRow
 
+// #region LicenseRow
 export function LicenseRow(item: LicenseRow.License): Adw.ExpanderRow {
 	let contentRow: Adw.ActionRow
 	let loaded = false
@@ -952,6 +983,67 @@ export namespace LicenseRow {
 		licenseUri?: string
 	}
 }
+// #endregion LicenseRow
+
+// #region LogoBox
+export function LogoBox({
+	icon, name, version,
+}: LogoBox.Options): Gtk.Box {
+	const logoBox = new Gtk.Box({
+		baseline_position: Gtk.BaselinePosition.CENTER,
+		margin_top: 6,
+		spacing: 20,
+		orientation: Gtk.Orientation.VERTICAL,
+	})
+
+	// Logo icon
+	const logoImage = new Gtk.Image({
+		icon_name: icon,
+		pixel_size: 100,
+	})
+	logoBox.append(logoImage)
+
+	// Extension name
+	const logoText = new Gtk.Label({
+		label: name,
+		css_classes: ["title-2"],
+		halign: Gtk.Align.CENTER,
+	})
+	logoBox.append(logoText)
+
+	// Version
+	const logoVersion = new Gtk.Button({
+		css_classes: ["success"],
+		label: version,
+		halign: Gtk.Align.CENTER,
+	})
+	logoBox.append(logoVersion)
+
+	return logoBox
+}
+export namespace LogoBox {
+	export interface Options {
+		name: string
+		version: string
+		icon: string
+	}
+}
+// #endregion LogoBox
+
+// #region LogoGroup
+export function LogoGroup(options: LogoGroup.Options): Adw.PreferencesGroup {
+	return Group({
+		parent: options.parent,
+	},[
+		LogoBox(options),
+	])
+}
+export namespace LogoGroup {
+	export interface Options extends LogoBox.Options {
+		parent: any,
+	}
+}
+// #endregion LogoGroup
 
 const LITEM = (t: string)=>`<span alpha="70%"> • </span>${t}`
 const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${'#'.repeat(lv)}</span><span weight="bold">${t}</span></span>`
