@@ -266,7 +266,7 @@ function usage() {
 	echo '                      under ~/.local'
 	echo '  build               Creates a zip file of the extension'
 	echo '  update-po           Update po files to match source files'
-	ecoh '  dev                 Run dev docker'
+	echo '  dev                 Run dev docker'
 	echo '  log                 show extension logs (live)'
 	echo '  clear-old-po        clear *.po~'
 	echo '  enable              enable extension'
