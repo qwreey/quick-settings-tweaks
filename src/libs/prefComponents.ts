@@ -15,6 +15,49 @@ function addChildren(target: any, funcName: string, children?: any[]) {
 	}
 }
 
+function setLinkCursor(target: any) {
+	target.cursor = Gdk.Cursor.new_from_name("pointer", null)
+}
+
+export function Dialog({
+	window,
+	title,
+	childrenRequest,
+}: Dialog.Options): Adw.PreferencesDialog {
+	const dialog = new Dialog.PrefDialog(title, childrenRequest)
+	dialog.present(window)
+	return dialog
+}
+export namespace Dialog {
+	export interface Options {
+		title?: string
+		childrenRequest: (page: Adw.PreferencesPage)=>any
+		window: Adw.PreferencesWindow
+	}
+	export const PrefDialogPage = GObject.registerClass({
+		GTypeName: "qwreey-pref-components-PrefDialogPage",
+	}, class PrefDialogPage extends Adw.PreferencesPage {
+		constructor(childrenRequest: (page: Adw.PreferencesPage)=>any) {
+			super({
+				name: "SystemItemOrderPage",
+			})
+			addChildren(this, "add", childrenRequest(this))
+		}
+	})
+	export const PrefDialog = GObject.registerClass({
+		GTypeName: "qwreey-pref-components-PrefDialog",
+	}, class PrefDialog extends Adw.PreferencesDialog {
+		constructor(title: string, childrenRequest: (page: Adw.PreferencesPage)=>any) {
+			super({
+				title: title ?? "",
+				search_enabled: true,
+				presentation_mode: Adw.DialogPresentationMode.BOTTOM_SHEET,
+			})
+			this.add(new PrefDialogPage(childrenRequest))
+		}
+	})
+}
+
 export function ExperimentalIcon(options?: ExperimentalIcon.Options): Gtk.Image {
 	return new Gtk.Image({
 		css_classes: ["icon"],
@@ -76,12 +119,13 @@ export function Row({
 	suffix,
 	prefix,
 	experimental,
+	action,
 	onCreated,
 }: Row.Options): Adw.ActionRow {
 	const row = new Adw.ActionRow({
 		title: title ?? null,
 		subtitle: subtitle ?? null,
-		activatable: !!uri,
+		activatable: (!!uri) || (!!action),
 	})
 	if (parent) {
 		parent.add(row)
@@ -90,15 +134,15 @@ export function Row({
 		row.connect("activated", ()=>{
 			Gio.AppInfo.launch_default_for_uri_async(uri, null, null, null)
 		})
-		row.add_suffix(new Gtk.Image({
-			css_classes: ["icon"],
-			icon_name: "adw-external-link-symbolic",
-			pixel_size: 16,
-			valign: Gtk.Align.CENTER,
-		}))
-		row.cursor = Gdk.Cursor.new_from_name("pointer", null)
+		setLinkCursor(row)
+		Row.addSuffixIcon(row, "adw-external-link-symbolic")
 		row.tooltip_text = uri
 		row.has_tooltip = true
+	}
+	if (action) {
+		row.connect("activated", ()=>action())
+		setLinkCursor(row)
+		Row.addSuffixIcon(row, "go-next-symbolic")
 	}
 	if (icon) Row.appendLinkIcon(row, icon)
 	if (suffix) {
@@ -131,6 +175,7 @@ export namespace Row {
 		suffix?: Gtk.Widget
 		prefix?: Gtk.Widget
 		experimental?: boolean
+		action?: ()=>void
 		onCreated?: (row: Adw.ActionRow)=>void
 	}
 	export function appendLinkIcon(row: any, name: string) {
@@ -145,6 +190,30 @@ export namespace Row {
 			halign: Gtk.Align.START,
 		})
 		image.insert_before(row.child, linkText)
+	}
+	export function addSuffixIcon(row: Adw.ActionRow, name: string) {
+		row.add_suffix(new Gtk.Image({
+			css_classes: ["icon"],
+			icon_name: name,
+			pixel_size: 16,
+			margin_end: 4,
+			valign: Gtk.Align.CENTER,
+		}))
+	}
+}
+
+export function DialogRow(options: DialogRow.Options): Adw.ActionRow {
+	return Row({
+		...options,
+		action: () => Dialog({
+			...options,
+			title: options.dialogTitle,
+		})
+	})
+}
+export namespace DialogRow {
+	export interface Options extends Dialog.Options, Row.Options {
+		dialogTitle?: string
 	}
 }
 
@@ -225,6 +294,7 @@ export function SwitchRow({
 		subtitle: subtitle ?? null,
 		active: value,
 	})
+	setLinkCursor(row)
 
 	if (action) {
 		row.connect("notify::active", () => action(row.get_active()))
@@ -302,6 +372,7 @@ export function ToggleButtonRow({
 	})
 	box.insert_child_after(toggle, null)
 	row.add_suffix(box)
+	setLinkCursor(row)
 
 	if (action) {
 		toggle.connect("notify::active", () => action(toggle.get_active()))
@@ -373,6 +444,7 @@ export function Button({
 	})
 	const button = new Gtk.Button()
 	box.insert_child_after(button, null)
+	setLinkCursor(button)
 	if (iconName) {
 		button.icon_name = iconName
 	}
@@ -428,6 +500,7 @@ export function ButtonRow(options: ButtonRow.Options): Adw.ActionRow {
 		title: title ?? "",
 		subtitle: subtitle ?? null,
 	})
+	setLinkCursor(row)
 	row.add_suffix(Button({
 		...options,
 		onCreated: null,
@@ -479,12 +552,14 @@ export function UpDownButton({
 	const up = new Gtk.Button({
 		icon_name: "go-up-symbolic"
 	})
+	setLinkCursor(up)
+	setLinkCursor(down)
 	box.insert_child_after(up, null)
 	box.insert_child_after(down, up)
 
 	if (action) {
-		down.connect("activate", () => action(UpDownButton.Direction.Down))
-		up.connect("activate", () => action(UpDownButton.Direction.Up))
+		down.connect("clicked", () => action(UpDownButton.Direction.Down))
+		up.connect("clicked", () => action(UpDownButton.Direction.Up))
 	}
 
 	if (parent) {
@@ -556,6 +631,7 @@ export function AdjustmentRow({
 			value: value
 		}),
 	})
+	setLinkCursor(row)
 	const header = row
 	.get_first_child() // GtkBox header
 	const suffixes = header
@@ -630,6 +706,7 @@ export function ExpanderRow({
 		title: title ?? null,
 		subtitle: subtitle ?? null
 	})
+	setLinkCursor(row)
 	if (parent) {
 		parent.add(row)
 	}
@@ -673,22 +750,23 @@ export function Dropdown({
 		filterModeModel.append(new (Dropdown.Items as any)(item.name, item.value))
 	}
 
-	let selected = null
-	for (let i = 0; i < filterModeModel.get_n_items(); i++) {
-		if ((filterModeModel.get_item(i) as any).value === value) {
-			selected = i
-			break
+	const getIndex = (value: string) => {
+		for (let i = 0; i < filterModeModel.get_n_items(); i++) {
+			if ((filterModeModel.get_item(i) as any).value === value) {
+				return i
+			}
 		}
+		return -1
 	}
-	if (selected === null) selected = -1
-
+	
 	let row = new Adw.ComboRow({
 		title: title ?? "",
 		subtitle: subtitle ?? null,
 		model: filterModeModel,
 		expression: new (Gtk.PropertyExpression as any)(Dropdown.Items, null, 'name'),
-		selected: selected
+		selected: getIndex(value),
 	})
+	setLinkCursor(row)
 
 	if (parent) {
 		parent.add(row)
@@ -696,14 +774,22 @@ export function Dropdown({
 
 	if (bind) {
 		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
+		const settingsConnection = settings.connect(`changed::${bind}`, ()=>{
+			const selected = (row.selectedItem as any).value
+			const changedTo = settings.get_string(bind)
+			if (selected != changedTo) {
+				row.selected = getIndex(changedTo)
+			}
+		})
+		row.connect("destroy", ()=>settings.disconnect(settingsConnection))
 	}
-
 	if (bind || action) row.connect('notify::selected', () => {
-		if (bind) {
-			settings.set_string(bind, (row.selectedItem as any).value)
+		const selected = (row.selectedItem as any).value
+		if (bind && (selected != settings.get_string(bind))) {
+			settings.set_string(bind, selected)
 		}
 		if (action) {
-			action((row.selectedItem as any).value)
+			action(selected)
 		}
 	})
 		

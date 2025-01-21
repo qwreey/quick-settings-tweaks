@@ -3,17 +3,82 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
+import type QstExtensionPreferences from "../prefs.js"
 import {
 	SwitchRow,
 	AdjustmentRow,
 	Dropdown,
 	Group,
+	DialogRow,
 } from "../libs/prefComponents.js"
+
+function AdvancedAnimationStyle(settings: Gio.Settings): Adw.PreferencesGroup {
+	return Group({
+		title: _("Advanced animation style"),
+	},[
+		AdjustmentRow({
+			settings,
+			title: _("Open Duration"),
+			subtitle: _("Open animation duration in microseconds"),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-open-duration",
+			max: 4000,
+		}),
+		AdjustmentRow({
+			settings,
+			title: _("Close Duration"),
+			subtitle: _("Close animation duration in microseconds"),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-close-duration",
+			max: 4000,
+		}),
+		AdjustmentRow({
+			settings,
+			title: _("Grid Content Opacity"),
+			subtitle: _("Adjust grid content opacity.\nSet this to 255 to opaque, and 0 to transparent"),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-grid-content-opacity",
+			max: 255,
+		}),
+		AdjustmentRow({
+			settings,
+			title: _("Background Blur Radius"),
+			subtitle: _("Adjust background blur radius.\nSet this to 0 to disable blur effect"),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-background-blur-radius",
+			max: 32,
+		}),
+		AdjustmentRow({
+			settings,
+			title: _("Background Opacity"),
+			subtitle: _("Adjust background opacity.\nSet this to 255 to opaque, and 0 to transparent"),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-background-opacity",
+			max: 255,
+		}),
+		AdjustmentRow({
+			settings,
+			title: _("Background X Scale"),
+			subtitle: _("Adjust background x scale, 1000 means 1.0 scale"),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-background-scale-x",
+			max: 4000,
+		}),
+		AdjustmentRow({
+			settings,
+			title: _("Background Y Scale"),
+			subtitle: _("Adjust background y scale, 1000 means 1.0 scale"),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-background-scale-y",
+			max: 4000,
+		}),
+	])
+}
 
 export const MenuPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'MenuPage',
 }, class MenuPage extends Adw.PreferencesPage {
-	constructor(settings: Gio.Settings) {
+	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
 			name: 'Menu',
 			title: _('Menu'),
@@ -64,68 +129,21 @@ export const MenuPage = GObject.registerClass({
 		Group({
 			parent: this,
 			title: _("Animation"),
-			description: _("Add background animation on toggle menu opening and closing\nTo get the best feel, turn on overlay mode"),
+			description: _("Add menu animation on toggle menu opening and closing\nTo get the best feel, turn on overlay mode"),
 			headerSuffix: SwitchRow({
 				settings,
 				bind: "menu-animation-enabled",
 			}),
 			experimental: true,
 		},[
-			AdjustmentRow({
+			DialogRow({
+				window,
 				settings,
-				title: _("Open Duration"),
-				subtitle: _("Open animation duration in microseconds"),
+				title: _("Advanced animation style"),
+				subtitle: _("Adjust speed, blur, scale, and opacity"),
+				dialogTitle: _("Animation"),
 				sensitiveBind: "menu-animation-enabled",
-				bind: "menu-animation-open-duration",
-				max: 4000,
-			}),
-			AdjustmentRow({
-				settings,
-				title: _("Close Duration"),
-				subtitle: _("Close animation duration in microseconds"),
-				sensitiveBind: "menu-animation-enabled",
-				bind: "menu-animation-close-duration",
-				max: 4000,
-			}),
-			AdjustmentRow({
-				settings,
-				title: _("Grid Content Opacity"),
-				subtitle: _("Adjust grid content opacity.\nSet this to 255 to opaque, and 0 to transparent"),
-				sensitiveBind: "menu-animation-enabled",
-				bind: "menu-animation-grid-content-opacity",
-				max: 255,
-			}),
-			AdjustmentRow({
-				settings,
-				title: _("Background Blur Radius"),
-				subtitle: _("Adjust background blur radius.\nSet this to 0 to disable blur effect"),
-				sensitiveBind: "menu-animation-enabled",
-				bind: "menu-animation-background-blur-radius",
-				max: 32,
-			}),
-			AdjustmentRow({
-				settings,
-				title: _("Background Opacity"),
-				subtitle: _("Adjust background opacity.\nSet this to 255 to opaque, and 0 to transparent"),
-				sensitiveBind: "menu-animation-enabled",
-				bind: "menu-animation-background-opacity",
-				max: 255,
-			}),
-			AdjustmentRow({
-				settings,
-				title: _("Background X Scale"),
-				subtitle: _("Adjust background x scale, 1000 means 1.0 scale"),
-				sensitiveBind: "menu-animation-enabled",
-				bind: "menu-animation-background-scale-x",
-				max: 4000,
-			}),
-			AdjustmentRow({
-				settings,
-				title: _("Background Y Scale"),
-				subtitle: _("Adjust background y scale, 1000 means 1.0 scale"),
-				sensitiveBind: "menu-animation-enabled",
-				bind: "menu-animation-background-scale-y",
-				max: 4000,
+				childrenRequest: ()=>[AdvancedAnimationStyle(settings)],
 			}),
 		])
 	}

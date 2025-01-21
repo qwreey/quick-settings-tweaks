@@ -2,6 +2,7 @@ import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gtk from "gi://Gtk"
 import Gio from "gi://Gio"
+import Gdk from "gi://Gdk"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import type QstExtensionPreferences from "../prefs.js"
 import Config from "../config.js"
@@ -40,13 +41,21 @@ function ContributorsRow(row: Contributor[]): Adw.ActionRow {
 	})
 	target.set_child(box)
 	for (const item of row) {
+		let itemButton = new Gtk.Button({
+			has_frame: false,
+		})
 		let itemBox = new Gtk.Box({
 			baseline_position: Gtk.BaselinePosition.CENTER,
 			orientation: Gtk.Orientation.VERTICAL,
+			cursor: Gdk.Cursor.new_from_name("pointer", null),
+		})
+		itemButton.child = itemBox
+		itemButton.connect("clicked", ()=>{
+			Gio.AppInfo.launch_default_for_uri_async(item.link, null, null, null)
 		})
 		const itemImage = new Gtk.Image({
 			margin_bottom: 2,
-			margin_top: 10,
+			margin_top: 2,
 			icon_name: item.image,
 			pixel_size: 38,
 		})
@@ -57,15 +66,25 @@ function ContributorsRow(row: Contributor[]): Adw.ActionRow {
 			hexpand: true,
 		})
 		itemBox.append(nameText)
-		const labelText = new Gtk.Label({
-			label: '<span size="small">'+item.label+'</span>',
-			useMarkup: true,
+		let labelBox = new Gtk.Box({
+			baseline_position: Gtk.BaselinePosition.CENTER,
+			orientation: Gtk.Orientation.VERTICAL,
+			vexpand: true,
 			hexpand: true,
-			opacity: 0.7,
-			margin_bottom: 8,
+			margin_bottom: 2,
+			valign: Gtk.Align.CENTER
 		})
-		itemBox.append(labelText)
-		box.append(itemBox)
+		for (const label of item.label.split("\n")) {
+			const labelText = new Gtk.Label({
+				label: '<span size="small">'+label+'</span>',
+				useMarkup: true,
+				hexpand: true,
+				opacity: 0.7,
+			})
+			labelBox.append(labelText)
+		}
+		itemBox.append(labelBox)
+		box.append(itemButton)
 	}
 	return target
 }
@@ -171,7 +190,7 @@ function LogoBox(metadata: ExtensionMetadata): Gtk.Box {
 export const AboutPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'AboutPage',
 }, class AboutPage extends Adw.PreferencesPage {
-	constructor(_settings: Gio.Settings, pref: QstExtensionPreferences) {
+	constructor(_settings: Gio.Settings, prefs: QstExtensionPreferences, _window: Adw.PreferencesWindow) {
 		super({
 			name: 'about',
 			title: _('About'),
@@ -182,7 +201,7 @@ export const AboutPage = GObject.registerClass({
 		Group({
 			parent: this,
 		},[
-			LogoBox(pref.metadata),
+			LogoBox(prefs.metadata),
 		])
 
 		// Links
@@ -221,13 +240,13 @@ export const AboutPage = GObject.registerClass({
 			parent: this,
 			title: _('Contributor'),
 			description: _("The creators of this extension"),
-		}, getContributorRows(pref).map(ContributorsRow))
+		}, getContributorRows(prefs).map(ContributorsRow))
 
 		// third party LICENSE
 		Group({
 			parent: this,
 			title: _('License'),
 			description: _('License of codes')
-		}, getLicenses(pref).map(LicenseRow))
+		}, getLicenses(prefs).map(LicenseRow))
 	}
 })

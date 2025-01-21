@@ -3,6 +3,7 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
+import type QstExtensionPreferences from "../prefs.js"
 import {
 	SwitchRow,
 	AdjustmentRow,
@@ -12,7 +13,7 @@ import {
 export const WidgetsPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'WidgetsPage',
 }, class WidgetsPage extends Adw.PreferencesPage {
-	constructor(settings: Gio.Settings) {
+	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, _window: Adw.PreferencesWindow) {
 		super({
 			name: 'Widgets',
 			title: _('Widgets'),
@@ -22,12 +23,12 @@ export const WidgetsPage = GObject.registerClass({
 		// media
 		Group({
 			parent: this,
-			title: _("Media Controls widget"),
+			title: _("Media Widget"),
 			headerSuffix: SwitchRow({
 				settings,
 				bind: "media-enabled",
 			}),
-			description: _("Turn on to make the Media Control widget visible on the Quick Settings panel"),
+			description: _("Turn on to make the media widget visible on the Quick Settings panel"),
 		},[
 			SwitchRow({
 				settings,

@@ -4,13 +4,15 @@ import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
+import type QstExtensionPreferences from "../prefs.js"
 import {
 	Group,
 	Row,
 	SwitchRow,
 	ResetButton,
 	ToggleButtonRow,
-	UpDownButton
+	UpDownButton,
+	DialogRow,
 } from "../libs/prefComponents.js"
 
 const DefaultOrder = ['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']
@@ -53,8 +55,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 	page.connect("destroy", ()=>settings.disconnect(orderConnection))
 
 	return Group({
-		description: _("Ordering and Hiding"),
-		nesting: true,
+		title: _("Ordering and Hiding"),
 		headerSuffix: ResetButton({ settings, bind: "system-items-order", marginBottom: 0, marginTop: 0 }),
 		onCreated(row: Adw.PreferencesGroup) {
 			group = row
@@ -139,11 +140,12 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 export const OtherPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'OtherPage',
 }, class OtherPage extends Adw.PreferencesPage {
-	constructor(settings: Gio.Settings) {
+	window: Adw.PreferencesWindow
+	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
-			name: 'Other',
-			title: _('Other'),
-			iconName: 'preferences-system-symbolic'
+			name: "Other",
+			title: _("Other"),
+			iconName: "preferences-system-symbolic",
 		})
 
 		// System Items
@@ -164,7 +166,15 @@ export const OtherPage = GObject.registerClass({
 				bind: "system-items-hide",
 				sensitiveBind: "system-items-enabled",
 			}),
-			SystemItemOrderGroup(settings, this)
+			DialogRow({
+				settings,
+				window,
+				sensitiveBind: "system-items-enabled",
+				title: _("Ordering and Hiding"),
+				subtitle: _("Hide all buttons and layout box"),
+				dialogTitle: _("Adjust system items layout"),
+				childrenRequest: page => [SystemItemOrderGroup(settings, page)],
+			}),
 		])
 
 		// DateMenu

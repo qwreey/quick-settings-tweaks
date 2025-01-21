@@ -44,7 +44,7 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
 		this.appendIconPath(this.path + "/media/contributors")
 
 		for (const page of pageList) {
-			window.add(new page(settings, this))
+			window.add(new page(settings, this, window))
 		}
 	}
 }

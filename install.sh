@@ -40,7 +40,8 @@ function fetch-contributors() {
 			USER_LABEL=$(printf "%s" "$LABELS" | grep -oP "(?<=\"$NAME\": \").*(?=\")")
 			echo -e "\t\t\"name\": \"$NAME\","
 			echo -e "\t\t\"image\": \"$NAME\","
-			echo -e "\t\t\"label\": \"${USER_LABEL:-ETC}\","
+			echo -en "\t\t"
+			echo "\"label\": \"${USER_LABEL:-ETC}\","
 			curl -Lso target/contributors/$NAME.png "https://github.com/$NAME.png?size=38"
 		fi
 		if HOMEPAGE=$(echo $line | grep -oP '(?<="html_url": ").*(?=")'); then

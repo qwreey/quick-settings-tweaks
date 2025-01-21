@@ -3,6 +3,7 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
+import type QstExtensionPreferences from "../prefs.js"
 import { type OrderItem } from "../features/togglesOrder.js"
 import {
 	SwitchRow,
@@ -12,7 +13,7 @@ import {
 export const TogglesPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'TogglesPage',
 }, class TogglesPage extends Adw.PreferencesPage {
-	constructor(settings: Gio.Settings) {
+	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, _window: Adw.PreferencesWindow) {
 		super({
 			name: 'Toggles',
 			title: _('Toggles'),
