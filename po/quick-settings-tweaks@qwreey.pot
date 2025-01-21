@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-15 02:15+0900\n"
+"POT-Creation-Date: 2025-01-21 07:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,16 @@ msgstr ""
 
 #: target/out/components/dndQuickToggle.js:7
 #: target/out/components/notificationWidget.js:101
+#: target/out/prefPages/quickToggles.js:47 target/out/prefPages/toggles.js:48
 msgid "Do Not Disturb"
+msgstr ""
+
+#: target/out/components/mediaWidget.js:353
+msgid "Media"
+msgstr ""
+
+#: target/out/components/weatherWidget.js:15
+msgid "Weather"
 msgstr ""
 
 #: target/out/components/notificationWidget.js:24
@@ -35,85 +44,175 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: target/out/components/unsafeQuickToggle.js:7
+#: target/out/components/unsafeQuickToggle.js:8
+#: target/out/prefPages/quickToggles.js:48 target/out/prefPages/toggles.js:49
 msgid "Unsafe Mode"
 msgstr ""
 
-#: target/out/components/mediaWidget.js:346
-msgid "Media"
+#: target/out/libs/streamSlider.js:47
+msgid "Sound Settings"
 msgstr ""
 
-#: target/out/prefPages/other.js:11
-msgid "Other"
+#: target/out/libs/streamSlider.js:155
+msgid "Volume changed"
 msgstr ""
 
-#: target/out/prefPages/other.js:17
-msgid "Date Menu"
+#: target/out/libs/prefComponents.js:57
+msgid "This feature marked as experimental"
 msgstr ""
 
-#: target/out/prefPages/other.js:18
-msgid "Adjust Date Menu layout"
+#: target/out/libs/prefComponents.js:172
+msgid "Reset to default"
 msgstr ""
 
-#: target/out/prefPages/other.js:22
-msgid "Remove Notifications"
+#: target/out/prefPages/widgets.js:12
+msgid "Widgets"
 msgstr ""
 
-#: target/out/prefPages/other.js:23
+#: target/out/prefPages/widgets.js:18
+msgid "Media Widget"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:23
+msgid "Turn on to make the media widget visible on the Quick Settings panel"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:27 target/out/prefPages/widgets.js:60
+#: target/out/prefPages/widgets.js:108
+msgid "Compact mode"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:28
 msgid ""
-"Hide notifications on date menu.\n"
-"*this option removes media control on date menu too*"
+"Make Media Controls widget smaller\n"
+"Make it more similar in size to the notification message"
 msgstr ""
 
-#: target/out/prefPages/other.js:28
-msgid "Remove Media Control"
+#: target/out/prefPages/widgets.js:34
+msgid "Show progress bar"
 msgstr ""
 
-#: target/out/prefPages/other.js:29
-msgid "Hide media control on date menu."
+#: target/out/prefPages/widgets.js:35
+msgid "Add progress bar under description"
 msgstr ""
 
-#: target/out/prefPages/about.js:117
+#: target/out/prefPages/widgets.js:42 target/out/prefPages/widgets.js:89
+#: target/out/prefPages/widgets.js:115
+msgid "Remove shadow"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:43
+msgid ""
+"Remove shadow from media message\n"
+"Use if your theme creates unnecessary shadows"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:51
+msgid "Notification Widget"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:56
+msgid ""
+"Turn on to make the notification widget visible on the Quick Settings panel"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:61
+msgid "Make notifications smaller"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:67
+msgid "Max height"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:68
+msgid "Set maximum height of the Notifications widget. default is 292"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:75
+msgid "Auto hide"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:76
+msgid "Hide the Notifications widget when have no notifications"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:82
+msgid "Use native controls"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:83
+msgid "Use native dnd switch and clear button"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:90
+msgid ""
+"Remove shadow from notification message\n"
+"Use if your theme creates unnecessary shadows"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:98
+msgid "Weather Widget"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:103
+msgid "Turn on to make the weather widget visible on the Quick Settings panel"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:109
+msgid "Make weather widget smaller"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:116
+msgid ""
+"Remove shadow from weather widget\n"
+"Use if your theme creates unnecessary shadows"
+msgstr ""
+
+#: target/out/prefPages/about.js:118
+msgid "Stable"
+msgstr ""
+
+#: target/out/prefPages/about.js:121
+msgid "Development"
+msgstr ""
+
+#: target/out/prefPages/about.js:124
+msgid "Preview"
+msgstr ""
+
+#: target/out/prefPages/about.js:127
+msgid "(Github Release)"
+msgstr ""
+
+#: target/out/prefPages/about.js:130
+msgid "(Built from source)"
+msgstr ""
+
+#: target/out/prefPages/about.js:169
 msgid "About"
 msgstr ""
 
-#: target/out/prefPages/about.js:131
-msgid "This extension is distributed with license GPL 3+"
-msgstr ""
-
-#: target/out/prefPages/about.js:132
-msgid "excludes Third-party. Third party codes follow their license"
-msgstr ""
-
-#: target/out/prefPages/about.js:135
-msgid "Extension Version"
-msgstr ""
-
-#: target/out/prefPages/about.js:137
-msgid "Unknown (Built from source)"
-msgstr ""
-
-#: target/out/prefPages/about.js:144
+#: target/out/prefPages/about.js:181
 msgid "Links"
 msgstr ""
 
-#: target/out/prefPages/about.js:148
+#: target/out/prefPages/about.js:185
 msgid "Donate via patreon"
 msgstr ""
 
-#: target/out/prefPages/about.js:149
+#: target/out/prefPages/about.js:186
 msgid "Support development!"
 msgstr ""
 
-#: target/out/prefPages/about.js:154
+#: target/out/prefPages/about.js:192
 msgid "Rate and comment the extension!"
 msgstr ""
 
-#: target/out/prefPages/about.js:158
+#: target/out/prefPages/about.js:197
 msgid "Github Repository"
 msgstr ""
 
-#: target/out/prefPages/about.js:159
+#: target/out/prefPages/about.js:198
 msgid ""
 "Add Star on Repository is helping me a lot!\n"
 "Please, if you found bug from this extension, you can make issue to make me "
@@ -121,24 +220,107 @@ msgid ""
 "Or, you can create PR with wonderful features!"
 msgstr ""
 
-#: target/out/prefPages/about.js:164
+#: target/out/prefPages/about.js:204
 msgid "Add translation to this extension!"
 msgstr ""
 
-#: target/out/prefPages/about.js:170
+#: target/out/prefPages/about.js:211
 msgid "Contributor"
 msgstr ""
 
-#: target/out/prefPages/about.js:171
+#: target/out/prefPages/about.js:212
 msgid "The creators of this extension"
 msgstr ""
 
-#: target/out/prefPages/about.js:176
-msgid "Third party LICENSE"
+#: target/out/prefPages/about.js:217
+msgid "License"
 msgstr ""
 
-#: target/out/prefPages/about.js:177
-msgid "LICENSE OF CODES WHICH USED ON THIS EXTENSION"
+#: target/out/prefPages/about.js:218
+msgid "License of codes"
+msgstr ""
+
+#: target/out/prefPages/other.js:48 target/out/prefPages/other.js:160
+#: target/out/prefPages/quickToggles.js:53 target/out/prefPages/toggles.js:54
+msgid "Ordering and Hiding"
+msgstr ""
+
+#: target/out/prefPages/other.js:56
+msgid "Desktop Spacer"
+msgstr ""
+
+#: target/out/prefPages/other.js:67
+msgid "Laptop Spacer"
+msgstr ""
+
+#: target/out/prefPages/other.js:79
+msgid "Capture button"
+msgstr ""
+
+#: target/out/prefPages/other.js:85
+msgid "Settings button"
+msgstr ""
+
+#: target/out/prefPages/other.js:91
+msgid "Lock button"
+msgstr ""
+
+#: target/out/prefPages/other.js:97
+msgid "Shutdown button"
+msgstr ""
+
+#: target/out/prefPages/other.js:103
+msgid "Battery button"
+msgstr ""
+
+#: target/out/prefPages/other.js:110
+msgid "Hide"
+msgstr ""
+
+#: target/out/prefPages/other.js:135
+msgid "Other"
+msgstr ""
+
+#: target/out/prefPages/other.js:141
+msgid "System Items"
+msgstr ""
+
+#: target/out/prefPages/other.js:147 target/out/prefPages/other.js:162
+msgid "Adjust system items layout"
+msgstr ""
+
+#: target/out/prefPages/other.js:151
+msgid "Hide layout"
+msgstr ""
+
+#: target/out/prefPages/other.js:152 target/out/prefPages/other.js:161
+msgid "Hide all buttons and layout box"
+msgstr ""
+
+#: target/out/prefPages/other.js:169
+msgid "Date Menu"
+msgstr ""
+
+#: target/out/prefPages/other.js:170
+msgid "Adjust Date Menu layout"
+msgstr ""
+
+#: target/out/prefPages/other.js:174
+msgid "Hide Notifications"
+msgstr ""
+
+#: target/out/prefPages/other.js:175
+msgid ""
+"Hide notifications on date menu.\n"
+"*this option removes media control on date menu too*"
+msgstr ""
+
+#: target/out/prefPages/other.js:180
+msgid "Hide Media Control"
+msgstr ""
+
+#: target/out/prefPages/other.js:181
+msgid "Hide media control on date menu."
 msgstr ""
 
 #: target/out/prefPages/volumeMixer.js:17
@@ -269,223 +451,164 @@ msgstr ""
 msgid "Check Description also"
 msgstr ""
 
-#: target/out/prefPages/menu.js:11
-msgid "Menu"
+#: target/out/prefPages/quickToggles.js:11 target/out/prefPages/toggles.js:12
+msgid "Toggles"
 msgstr ""
 
-#: target/out/prefPages/menu.js:17
-msgid "Overlay Mode"
+#: target/out/prefPages/quickToggles.js:17 target/out/prefPages/toggles.js:18
+msgid "Add more buttons"
 msgstr ""
 
-#: target/out/prefPages/menu.js:18
-msgid "Display toggle, power, and sound menus as overlay"
+#: target/out/prefPages/quickToggles.js:18 target/out/prefPages/toggles.js:19
+msgid "Turn on the buttons you want to add on Quick Settings"
 msgstr ""
 
-#: target/out/prefPages/menu.js:26
-msgid "Overlay Width"
+#: target/out/prefPages/quickToggles.js:22 target/out/prefPages/toggles.js:23
+msgid "DND Quick Toggle"
 msgstr ""
 
-#: target/out/prefPages/menu.js:27
+#: target/out/prefPages/quickToggles.js:23 target/out/prefPages/toggles.js:24
 msgid ""
-"Adjust overlay menu width.\n"
-"Set this to 0 to disable adjusting."
+"Turn on to make the DND quick toggle visible on the Quick Settings panel"
 msgstr ""
 
-#: target/out/prefPages/menu.js:36
-msgid "Animation"
+#: target/out/prefPages/quickToggles.js:28 target/out/prefPages/toggles.js:29
+msgid "Unsafe Mode Quick Toggle"
 msgstr ""
 
-#: target/out/prefPages/menu.js:37
+#: target/out/prefPages/quickToggles.js:29 target/out/prefPages/toggles.js:30
 msgid ""
-"Add animation on toggle menu opening and closing.\n"
-"To get the best feel, turn on overlay mode."
+"Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
 msgstr ""
 
-#: target/out/prefPages/menu.js:45
+#: target/out/prefPages/quickToggles.js:54 target/out/prefPages/toggles.js:55
+msgid "Reorder and hide quick toggles"
+msgstr ""
+
+#: target/out/prefPages/menu.js:8 target/out/prefPages/menu.js:130
+msgid "Advanced animation style"
+msgstr ""
+
+#: target/out/prefPages/menu.js:12
 msgid "Open Duration"
 msgstr ""
 
-#: target/out/prefPages/menu.js:46
+#: target/out/prefPages/menu.js:13
 msgid "Open animation duration in microseconds"
 msgstr ""
 
-#: target/out/prefPages/menu.js:53
+#: target/out/prefPages/menu.js:20
 msgid "Close Duration"
 msgstr ""
 
-#: target/out/prefPages/menu.js:54
+#: target/out/prefPages/menu.js:21
 msgid "Close animation duration in microseconds"
 msgstr ""
 
-#: target/out/prefPages/menu.js:61
+#: target/out/prefPages/menu.js:28
+msgid "Grid Content Opacity"
+msgstr ""
+
+#: target/out/prefPages/menu.js:29
+msgid ""
+"Adjust grid content opacity.\n"
+"Set this to 255 to opaque, and 0 to transparent"
+msgstr ""
+
+#: target/out/prefPages/menu.js:36
 msgid "Background Blur Radius"
 msgstr ""
 
-#: target/out/prefPages/menu.js:62
+#: target/out/prefPages/menu.js:37
 msgid ""
 "Adjust background blur radius.\n"
 "Set this to 0 to disable blur effect"
 msgstr ""
 
-#: target/out/prefPages/menu.js:69
+#: target/out/prefPages/menu.js:44
 msgid "Background Opacity"
 msgstr ""
 
-#: target/out/prefPages/menu.js:70
+#: target/out/prefPages/menu.js:45
 msgid ""
 "Adjust background opacity.\n"
 "Set this to 255 to opaque, and 0 to transparent"
 msgstr ""
 
-#: target/out/prefPages/menu.js:77
+#: target/out/prefPages/menu.js:52
 msgid "Background X Scale"
 msgstr ""
 
-#: target/out/prefPages/menu.js:78
+#: target/out/prefPages/menu.js:53
 msgid "Adjust background x scale, 1000 means 1.0 scale"
 msgstr ""
 
-#: target/out/prefPages/menu.js:85
+#: target/out/prefPages/menu.js:60
 msgid "Background Y Scale"
 msgstr ""
 
-#: target/out/prefPages/menu.js:86
+#: target/out/prefPages/menu.js:61
 msgid "Adjust background y scale, 1000 means 1.0 scale"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:11
-msgid "Widgets"
+#: target/out/prefPages/menu.js:74
+msgid "Menu"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:17
-msgid "Media Controls widget"
+#: target/out/prefPages/menu.js:80
+msgid "Overlay Mode"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:22
+#: target/out/prefPages/menu.js:81
+msgid "Display toggle, power, and sound menus as overlay"
+msgstr ""
+
+#: target/out/prefPages/menu.js:90
+msgid "Overlay Width"
+msgstr ""
+
+#: target/out/prefPages/menu.js:91
 msgid ""
-"Turn on to make the Media Control widget visible on the Quick Settings panel"
+"Adjust overlay menu width\n"
+"Set this to 0 to disable adjusting"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:26 target/out/prefPages/widgets.js:80
-msgid "Compact Mode"
+#: target/out/prefPages/menu.js:98
+msgid "Overlay Animation Duration"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:27
+#: target/out/prefPages/menu.js:99
 msgid ""
-"Make Media Controls widget smaller\n"
-"Make it more similar in size to the notification message"
+"Custom menu open animation duration in microseconds\n"
+"Set this to 0 to disable custom animation"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:33
-msgid "Show Progress Bar"
+#: target/out/prefPages/menu.js:106
+msgid "Overlay Animation Style"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:34
-msgid "Add Progress Bar under description"
+#: target/out/prefPages/menu.js:107
+msgid "Custom menu open animation style"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:40 target/out/prefPages/widgets.js:87
-#: target/out/prefPages/widgets.js:105
-msgid "Remove Shadow"
+#: target/out/prefPages/menu.js:109
+msgid "Flyout"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:41
+#: target/out/prefPages/menu.js:110
+msgid "Dialog"
+msgstr ""
+
+#: target/out/prefPages/menu.js:119 target/out/prefPages/menu.js:132
+msgid "Animation"
+msgstr ""
+
+#: target/out/prefPages/menu.js:120
 msgid ""
-"Remove shadow from media message\n"
-"Use if your theme creates unnecessary shadows"
+"Add menu animation on toggle menu opening and closing\n"
+"To get the best feel, turn on overlay mode"
 msgstr ""
 
-#: target/out/prefPages/widgets.js:49
-msgid "Notification Widget"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:54
-msgid ""
-"Turn on to make the notification widget visible on the Quick Settings panel"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:58
-msgid "Max height"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:59
-msgid "Set maximum height of the Notifications widget. default is 292"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:66
-msgid "Auto Hide"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:67
-msgid "Hide the Notifications widget when have no notifications"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:73
-msgid "Use native controls"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:74
-msgid "Use native dnd switch and clear button"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:81
-msgid "Make notifications smaller"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:88
-msgid ""
-"Remove shadow from notification message\n"
-"Use if your theme creates unnecessary shadows"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:96
-msgid "Weather Widget"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:101
-msgid "Turn on to make the weather widget visible on the Quick Settings panel"
-msgstr ""
-
-#: target/out/prefPages/widgets.js:106
-msgid ""
-"Remove shadow from weather widget\n"
-"Use if your theme creates unnecessary shadows"
-msgstr ""
-
-#: target/out/prefPages/quickToggles.js:11
-msgid "Quick Toggles"
-msgstr ""
-
-#: target/out/prefPages/quickToggles.js:16
-msgid "Add more buttons"
-msgstr ""
-
-#: target/out/prefPages/quickToggles.js:17
-msgid "Turn on the buttons you want to add on Quick Settings"
-msgstr ""
-
-#: target/out/prefPages/quickToggles.js:21
-msgid "DND Quick Toggle"
-msgstr ""
-
-#: target/out/prefPages/quickToggles.js:22
-msgid ""
-"Turn on to make the DND quick toggle visible on the Quick Settings panel"
-msgstr ""
-
-#: target/out/prefPages/quickToggles.js:27
-msgid "Unsafe Mode Quick Toggle"
-msgstr ""
-
-#: target/out/prefPages/quickToggles.js:28
-msgid ""
-"Turn on to make the unsafe quick toggle visible on the Quick Settings panel"
-msgstr ""
-
-#: target/out/libs/streamSlider.js:47
-msgid "Sound Settings"
-msgstr ""
-
-#: target/out/libs/streamSlider.js:155
-msgid "Volume changed"
+#: target/out/prefPages/menu.js:131
+msgid "Adjust speed, blur, scale, and opacity"
 msgstr ""
