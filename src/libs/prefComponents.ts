@@ -700,11 +700,12 @@ export function ExpanderRow({
 	subtitle,
 	expanded,
 	experimental,
+	action,
 	onCreated,
 }: ExpanderRow.Options, children?: any[]): Adw.ExpanderRow {
 	const row = new Adw.ExpanderRow({
 		title: title ?? null,
-		subtitle: subtitle ?? null
+		subtitle: subtitle ?? null,
 	})
 	setLinkCursor(row)
 	if (parent) {
@@ -714,6 +715,7 @@ export function ExpanderRow({
 	if (expanded === false || expanded === true) {
 		row.expanded = expanded
 	}
+	if (action) row.connect("notify::expanded", ()=>action(row.expanded))
 	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
 	if (onCreated) onCreated(row)
 	return row
@@ -725,6 +727,7 @@ export namespace ExpanderRow {
 		subtitle?: string
 		expanded?: boolean
 		experimental?: boolean
+		action?: (expanded: boolean)=>void
 		onCreated?: (row: Adw.ExpanderRow)=>void
 	}
 }
@@ -833,8 +836,143 @@ export namespace Dropdown {
 				null),
 		},
 	}, class DropdownItems extends GObject.Object {
-		_init(name, value) {
+		_init(name: string, value: string) {
 			super._init({ name, value })
 		}
 	})
 }
+
+export function ContributorsRow(row: ContributorsRow.Contributor[]): Adw.ActionRow {
+	const target = Row({})
+	const box = new Gtk.Box({
+		baseline_position: Gtk.BaselinePosition.CENTER,
+		homogeneous: true,
+		orientation: Gtk.Orientation.HORIZONTAL,
+	})
+	target.set_child(box)
+	for (const item of row) {
+		let itemButton = new Gtk.Button({
+			has_frame: false,
+		})
+		let itemBox = new Gtk.Box({
+			baseline_position: Gtk.BaselinePosition.CENTER,
+			orientation: Gtk.Orientation.VERTICAL,
+			cursor: Gdk.Cursor.new_from_name("pointer", null),
+		})
+		itemButton.child = itemBox
+		itemButton.connect("clicked", ()=>{
+			Gio.AppInfo.launch_default_for_uri_async(item.link, null, null, null)
+		})
+		const itemImage = new Gtk.Image({
+			margin_bottom: 2,
+			margin_top: 2,
+			icon_name: item.image,
+			pixel_size: 38,
+		})
+		itemBox.append(itemImage)
+		const nameText = new Gtk.Label({
+			label: '<span size="small">'+item.name+'</span>',
+			useMarkup: true,
+			hexpand: true,
+		})
+		itemBox.append(nameText)
+		let labelBox = new Gtk.Box({
+			baseline_position: Gtk.BaselinePosition.CENTER,
+			orientation: Gtk.Orientation.VERTICAL,
+			vexpand: true,
+			hexpand: true,
+			margin_bottom: 2,
+			valign: Gtk.Align.CENTER
+		})
+		for (const label of item.label.split("\n")) {
+			const labelText = new Gtk.Label({
+				label: '<span size="small">'+label+'</span>',
+				useMarkup: true,
+				hexpand: true,
+				opacity: 0.7,
+			})
+			labelBox.append(labelText)
+		}
+		itemBox.append(labelBox)
+		box.append(itemButton)
+	}
+	return target
+}
+export namespace ContributorsRow {
+	export interface Contributor {
+		name: string
+		label: string
+		link: string
+		image: string
+	}
+}
+
+export function LicenseRow(item: LicenseRow.License): Adw.ExpanderRow {
+	let contentRow: Adw.ActionRow
+	let loaded = false
+	return ExpanderRow({
+		title: item.name,
+		subtitle: `by ${item.author}`,
+		expanded: false,
+		action: (expanded)=>{
+			if (!expanded) return
+			if (loaded) return
+			item.content().then(
+				subtitle => contentRow.subtitle = subtitle
+			).catch(
+				error => contentRow.subtitle = `ERROR: ${error}`
+			)
+		}
+	},[
+		Row({
+			title: "Homepage",
+			subtitle: item.url,
+			uri: item.url,
+			icon: "go-home",
+		}),
+		item.content ? (contentRow = Row({
+			title: "License",
+			subtitle: "Loading . . .",
+		})) : null,
+		item.licenseUri ? Row({
+			title: "License",
+			subtitle: item.licenseUri,
+			icon: "emblem-documents-symbolic",
+			uri: item.licenseUri
+		}) : null,
+	])
+}
+export namespace LicenseRow {
+	export interface License {
+		url: string
+		author: string
+		name: string
+		file?: string
+		content?: ()=>Promise<string>
+		licenseUri?: string
+	}
+}
+
+const LITEM = (t: string)=>`<span alpha="70%"> • </span>${t}`
+const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${'#'.repeat(lv)}</span><span weight="bold">${t}</span></span>`
+const QUOTE = (t: string)=>` <span size="90%" alpha="70%">&gt;</span><span size="90%" alpha="85%" weight="light">${t}</span>`
+export const SimpleMarked =
+(mdlike: string): string => mdlike.split("\n").map(
+	line => line
+	.replaceAll(
+		/^ *\-  *(.*)/g,
+		(_, t: string)=>LITEM(t)
+	)
+	.replaceAll(
+		/^ *\>  *(.*)/g,
+		(_, t: string)=>QUOTE(t)
+	)
+	.replaceAll(
+		/^ *(\#*)  *(.*)/g,
+		(_, h: string, t: string)=>TITLE(t, h.length)
+	)
+	.replaceAll(
+		/\<\!\-\-.*?\-\-\>/,
+		""
+	)
+).join("\n")

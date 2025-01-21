@@ -1,7 +1,8 @@
+import Clutter from "gi://Clutter"
 import GObject from "gi://GObject"
 import St from "gi://St"
-import { Global } from "../global.js"
-import Clutter from "gi://Clutter"
+import { FeatureBase, SettingLoader } from "../../libs/feature.js"
+import { Global } from "../../global.js"
 
 // #region Header
 namespace Header {   
@@ -80,3 +81,52 @@ class WeatherWidget extends St.BoxLayout {
 GObject.registerClass(WeatherWidget)
 export { WeatherWidget }
 // #endregion WeatherWidget
+
+// #region WeatherWidgetFeature
+export class WeatherWidgetFeature extends FeatureBase {
+	// #region settings
+	enabled: boolean
+	compact: boolean
+	removeShadow: boolean
+	override loadSettings(loader: SettingLoader): void {
+		this.enabled = loader.loadBoolean("weather-enabled")
+		this.removeShadow = loader.loadBoolean("weather-remove-shadow")
+		this.compact = loader.loadBoolean("weather-compact")
+	}
+	// #endregion settings
+
+	weatherWidget: WeatherWidget
+	updateStyleClass() {
+		let style = "QSTWEAKS-weather"
+		if (this.removeShadow) style += " QSTWEAKS-weather-remove-shadow"
+		if (this.compact) style += " QSTWEAKS-weather-compact"
+		this.weatherWidget.styleClass = style
+	}
+
+	override reload(key: string): void {
+		switch (key) {
+			case "weather-remove-shadow":
+				this.updateStyleClass()
+				break
+			default:
+				super.reload()
+				break
+		}
+	}
+	override onLoad(): void {
+		if (!this.enabled) return
+		this.maid.destroyJob(
+			this.weatherWidget = new WeatherWidget()
+		)
+		this.updateStyleClass()
+
+		Global.QuickSettingsGrid.add_child(this.weatherWidget)
+		Global.QuickSettingsGrid.layout_manager.child_set_property(
+			Global.QuickSettingsGrid, this.weatherWidget, 'column-span', 2
+		)
+	}
+	override onUnload(): void {
+		this.weatherWidget = null
+	}
+}
+// #endregion WeatherWidgetFeature

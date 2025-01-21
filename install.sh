@@ -123,7 +123,6 @@ function build() {
 		--extra-source=../../LICENSE\
 		--extra-source=../../LICENSE-gnome-volume-mixer\
 		--extra-source=features\
-		--extra-source=components\
 		--extra-source=libs\
 		--extra-source=prefPages\
 		--extra-source=media\
@@ -183,10 +182,10 @@ function create-release() {
 	VERSION_TAG=""
 	case "$TARGET" in
 		dev )
-			VERSION_TAG="-dev"
+			VERSION_TAG="-dev$VERSION_MINOR"
 		;;
 		preview )
-			VERSION_TAG="-pre"
+			VERSION_TAG="-pre$VERSION_MINOR"
 		;;
 		release )
 			VERSION_TAG=""
@@ -195,10 +194,10 @@ function create-release() {
 			VERSION_TAG=""
 		;;
 		github-preview )
-			VERSION_TAG="-pre"
+			VERSION_TAG="-pre$VERSION_MINOR"
 		;;
 	esac
-	VERSION="$VERSION_MAJOR.$VERSION_MIDDLE.$VERSION_MINOR$VERSION_TAG"
+	VERSION="$VERSION_MAJOR.$VERSION_MIDDLE$VERSION_TAG"
 	VERSION=$VERSION BUILD_NUMBER=$BUILD_NUMBER build
 	cp target/quick-settings-tweaks@qwreey.shell-extension.zip target/$VERSION-$TARGET.zip
 }

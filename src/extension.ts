@@ -4,20 +4,18 @@ import { logger } from "./libs/utility.js"
 import { Global } from "./global.js"
 import Config from "./config.js"
 import { type FeatureBase } from "./libs/feature.js"
-
-import { DndQuickToggleFeature } from "./features/dndQuickToggle.js"
-import { UnsafeQuickToggleFeature } from "./features/unsafeQuickToggle.js"
-import { NotificationsFeature } from "./features/notifications.js"
+import { DndQuickToggleFeature } from "./features/toggle/dndQuickToggle.js"
+import { UnsafeQuickToggleFeature } from "./features/toggle/unsafeQuickToggle.js"
+import { MediaWidgetFeature } from "./features/widget/media.js"
+import { WeatherWidgetFeature } from "./features/widget/weather.js"
+import { NotificationsWidgetFeature } from "./features/widget/notifications.js"
+import { TogglesOrderFeature } from "./features/order/toggles.js"
+import { SystemItemsOrderFeature } from "./features/order/systemItems.js"
 import { DateMenuFeature } from "./features/dateMenu.js"
-import { MediaFeature } from "./features/media.js"
 import { OverlayMenu } from "./features/overlayMenu.js"
-import { VolumeMixerFeature } from "./features/volumeMixer.js"
 import { InputOutputFeature } from "./features/inputOutput.js"
 import { LayoutCustomize } from "./features/layoutCustomize.js"
-import { WeatherFeature } from "./features/weather.js"
 import { MenuAnimation } from "./features/menuAnimation.js"
-import { SystemItemsFeature } from "./features/systemItems.js"
-import { TogglesOrderFeature } from "./features/togglesOrder.js"
 
 export default class QstExtension extends Extension {
 	private features: FeatureBase[]
@@ -63,13 +61,13 @@ export default class QstExtension extends Extension {
 			// new ButtonRemoverFeature(),
 			// new InputOutputFeature(),
 			new LayoutCustomize(),
-			new NotificationsFeature(),
-			new MediaFeature(),
+			new NotificationsWidgetFeature(),
+			new MediaWidgetFeature(),
 			new DateMenuFeature(),
-			new WeatherFeature(),
+			new WeatherWidgetFeature(),
 			new OverlayMenu(),
 			new MenuAnimation(),
-			new SystemItemsFeature(),
+			new SystemItemsOrderFeature(),
 			new TogglesOrderFeature(),
 		]) {
 			logger(`Loading feature '${feature.constructor.name}'`)

@@ -3,7 +3,6 @@ import Gdk from "gi://Gdk"
 import Gio from "gi://Gio"
 
 import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-import { volumeMixerPage } from "./prefPages/volumeMixer.js"
 import { WidgetsPage } from "./prefPages/widgets.js"
 import { TogglesPage } from "./prefPages/toggles.js"
 import { OtherPage } from "./prefPages/other.js"
@@ -12,7 +11,6 @@ import { MenuPage } from "./prefPages/menu.js"
 import Adw from "gi://Adw"
 
 var pageList = [
-	// volumeMixerPage,
 	WidgetsPage,
 	TogglesPage,
 	MenuPage,

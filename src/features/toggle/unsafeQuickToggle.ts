@@ -1,7 +1,10 @@
 import GObject from "gi://GObject"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import { Global } from "../../global.js"
+import { FeatureBase, SettingLoader } from "../../libs/feature.js"
 
+// #region UnsafeQuickToggle
 class UnsafeQuickToggle extends QuickToggle {
 	_onUpdate: (value: boolean)=>void
 	constructor(onUpdate: UnsafeQuickToggle['_onUpdate']) { super(onUpdate as any) }
@@ -38,7 +41,9 @@ class UnsafeQuickToggle extends QuickToggle {
 	}
 }
 GObject.registerClass(UnsafeQuickToggle)
+// #endregion UnsafeQuickToggle
 
+// #region UnsafeIndicator
 class UnsafeIndicator extends SystemIndicator {
 	constructor(onUpdate: UnsafeQuickToggle['_onUpdate']) { super(onUpdate as any) }
 	// @ts-expect-error
@@ -53,3 +58,36 @@ class UnsafeIndicator extends SystemIndicator {
 }
 GObject.registerClass(UnsafeIndicator)
 export { UnsafeIndicator }
+// #endregion UnsafeIndicator
+
+// #region UnsafeQuickToggleFeature
+export class UnsafeQuickToggleFeature extends FeatureBase {
+	// #region settings
+	enabled: boolean
+	override loadSettings(loader: SettingLoader): void {
+		this.enabled = loader.loadBoolean("add-unsafe-quick-toggle-enabled")
+	}
+	// #endregion settings
+
+	indicator: UnsafeIndicator
+	override onLoad(): void {
+		if (!this.enabled) return
+
+		// Load last state
+		global.context.unsafe_mode = Global.Settings.get_boolean("last-unsafe-state")
+
+		// Add Unsafe Quick Toggle
+		this.maid.destroyJob(
+			this.indicator = new UnsafeIndicator(
+				(state) => Global.Settings.set_boolean("last-unsafe-state", state)
+			)
+		)
+		// @ts-ignore
+		Global.QuickSettings.addExternalIndicator(this.indicator)
+	}
+	override onUnload(): void {
+		global.context.unsafe_mode = false
+		this.indicator = null
+	}
+}
+// #endregion UnsafeQuickToggleFeature

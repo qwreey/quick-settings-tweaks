@@ -1,5 +1,5 @@
-import { Global } from "../global.js"
-import { FeatureBase, SettingLoader } from "../libs/feature.js"
+import { Global } from "../../global.js"
+import { FeatureBase, SettingLoader } from "../../libs/feature.js"
 
 export interface OrderItem {
 	constructorName?: string
@@ -16,10 +16,11 @@ export namespace OrderItem {
 		) return false
 		if (a.nonOrdered) return true
 		if (a.isSystem) return a.constructorName == b.constructorName
-		return
+		return (
 			a.constructorName == b.constructorName
 			&& a.labelTextRegex == b.labelTextRegex
 			&& a.friendlyName == b.friendlyName
+		)
 	}
 }
 

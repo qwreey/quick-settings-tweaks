@@ -4,7 +4,7 @@ import Gio from "gi://Gio"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
-import { OrderItem } from "../features/togglesOrder.js"
+import { OrderItem } from "../features/order/toggles.js"
 import {
 	SwitchRow,
 	UpDownButton,

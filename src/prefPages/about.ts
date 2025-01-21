@@ -10,127 +10,35 @@ import {
 	ExpanderRow,
 	Group,
 	Row,
+	ContributorsRow,
+	LicenseRow,
 } from "../libs/prefComponents.js"
 import { type ExtensionMetadata } from "resource:///org/gnome/shell/extensions/extension.js"
 
-interface Contributor {
-	name: string
-	label: string
-	link: string
-	image: string
-}
-function getContributorRows(pref: QstExtensionPreferences): Contributor[][] {
+function getContributorRows(pref: QstExtensionPreferences): ContributorsRow.Contributor[][] {
 	const contributors = JSON.parse(
 		pref.readExtensionFile("media/contributors/data.json")
-	) as Contributor[]
+	) as ContributorsRow.Contributor[]
 	if (!contributors.length) return []
-	const rows: Contributor[][] = [[]]
-	contributors.reduce((currentRow: Contributor[], obj: Contributor)=>{
+	const rows: ContributorsRow.Contributor[][] = [[]]
+	contributors.reduce((currentRow: ContributorsRow.Contributor[], obj: ContributorsRow.Contributor)=>{
 		if (currentRow.length >= 4) rows.push(currentRow = [])
 		currentRow.push(obj)
 		return currentRow
 	}, rows[0])
 	return rows
 }
-function ContributorsRow(row: Contributor[]): Adw.ActionRow {
-	const target = Row({})
-	const box = new Gtk.Box({
-		baseline_position: Gtk.BaselinePosition.CENTER,
-		homogeneous: true,
-		orientation: Gtk.Orientation.HORIZONTAL,
-	})
-	target.set_child(box)
-	for (const item of row) {
-		let itemButton = new Gtk.Button({
-			has_frame: false,
-		})
-		let itemBox = new Gtk.Box({
-			baseline_position: Gtk.BaselinePosition.CENTER,
-			orientation: Gtk.Orientation.VERTICAL,
-			cursor: Gdk.Cursor.new_from_name("pointer", null),
-		})
-		itemButton.child = itemBox
-		itemButton.connect("clicked", ()=>{
-			Gio.AppInfo.launch_default_for_uri_async(item.link, null, null, null)
-		})
-		const itemImage = new Gtk.Image({
-			margin_bottom: 2,
-			margin_top: 2,
-			icon_name: item.image,
-			pixel_size: 38,
-		})
-		itemBox.append(itemImage)
-		const nameText = new Gtk.Label({
-			label: '<span size="small">'+item.name+'</span>',
-			useMarkup: true,
-			hexpand: true,
-		})
-		itemBox.append(nameText)
-		let labelBox = new Gtk.Box({
-			baseline_position: Gtk.BaselinePosition.CENTER,
-			orientation: Gtk.Orientation.VERTICAL,
-			vexpand: true,
-			hexpand: true,
-			margin_bottom: 2,
-			valign: Gtk.Align.CENTER
-		})
-		for (const label of item.label.split("\n")) {
-			const labelText = new Gtk.Label({
-				label: '<span size="small">'+label+'</span>',
-				useMarkup: true,
-				hexpand: true,
-				opacity: 0.7,
-			})
-			labelBox.append(labelText)
-		}
-		itemBox.append(labelBox)
-		box.append(itemButton)
-	}
-	return target
-}
 
-interface License {
-	url: string
-	author: string
-	name: string
-	file?: string
-	content?: string
-	licenseUri?: string
-}
-function getLicenses(pref: QstExtensionPreferences): License[] {
+function getLicenses(pref: QstExtensionPreferences): LicenseRow.License[] {
 	const licenses = JSON.parse(
 		pref.readExtensionFile("media/licenses.json")
-	) as License[]
+	) as LicenseRow.License[]
 	for (const item of licenses) {
 		if (item.file) {
-			item.content = pref.readExtensionFile(item.file)
+			item.content = async () => pref.readExtensionFile(item.file)
 		}
 	}
 	return licenses
-}
-function LicenseRow(item: License): Adw.ExpanderRow {
-	return ExpanderRow({
-		title: item.name,
-		subtitle: `by ${item.author}`,
-		expanded: false,
-	},[
-		Row({
-			title: "Homepage",
-			subtitle: item.url,
-			uri: item.url,
-			icon: "go-home",
-		}),
-		item.content ? Row({
-			title: "License",
-			subtitle: item.content,
-		}) : null,
-		item.licenseUri ? Row({
-			title: "License",
-			subtitle: item.licenseUri,
-			icon: "emblem-documents-symbolic",
-			uri: item.licenseUri
-		}) : null,
-	])
 }
 
 function getVersionString(metadata: ExtensionMetadata): string {
@@ -153,6 +61,7 @@ function getVersionString(metadata: ExtensionMetadata): string {
 	}
 	return version
 }
+
 function LogoBox(metadata: ExtensionMetadata): Gtk.Box {
 	const logoBox = new Gtk.Box({
 		baseline_position: Gtk.BaselinePosition.CENTER,
@@ -207,7 +116,7 @@ export const AboutPage = GObject.registerClass({
 		// Links
 		Group({
 			parent: this,
-			title: _('Links'),
+			// title: _('Links'),
 		},[
 			Row({
 				uri: "https://patreon.com/user?u=44216831",
