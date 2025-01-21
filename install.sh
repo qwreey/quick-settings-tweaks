@@ -165,14 +165,20 @@ function compile-preferences() {
 	return 0
 }
 
-function increase-version() {
-	echo $(( $(cat scripts/version/latest-release-version) + 1 )) > scripts/version/latest-release-version
+function increase-middle-version() {
+	echo $(( $(cat scripts/version/latest-middle-version) + 1 )) > scripts/version/latest-middle-version
 	echo $(( $(cat scripts/version/latest-build-number) + 1 )) > scripts/version/latest-build-number
+	echo 1 > scripts/version/latest-minor-version
+}
+function increase-minor-version() {
+	echo $(( $(cat scripts/version/latest-build-number) + 1 )) > scripts/version/latest-build-number
+	echo $(( $(cat scripts/version/latest-minor-version) + 1 )) > scripts/version/latest-minor-version
 }
 
 function create-release() {
 	VERSION_MAJOR=$(cat scripts/version/major-version)
-	VERSION_MINOR=$(cat scripts/version/latest-release-version)
+	VERSION_MIDDLE=$(cat scripts/version/latest-middle-version)
+	VERSION_MINOR=$(cat scripts/version/latest-minor-version)
 	BUILD_NUMBER=$(cat scripts/version/latest-build-number)
 	VERSION_TAG=""
 	case "$TARGET" in
@@ -192,7 +198,7 @@ function create-release() {
 			VERSION_TAG="-pre"
 		;;
 	esac
-	VERSION="$VERSION_MAJOR.$VERSION_MINOR$VERSION_TAG"
+	VERSION="$VERSION_MAJOR.$VERSION_MIDDLE.$VERSION_MINOR$VERSION_TAG"
 	VERSION=$VERSION BUILD_NUMBER=$BUILD_NUMBER build
 	cp target/quick-settings-tweaks@qwreey.shell-extension.zip target/$VERSION-$TARGET.zip
 }

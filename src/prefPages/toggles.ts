@@ -4,11 +4,73 @@ import Gio from "gi://Gio"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
-import { type OrderItem } from "../features/togglesOrder.js"
+import { OrderItem } from "../features/togglesOrder.js"
 import {
 	SwitchRow,
+	UpDownButton,
 	Group,
 } from "../libs/prefComponents.js"
+
+function getSystemToggleNames(): Map<string, string> {
+	const IGNORE_XGETTEXT=_
+	return new Map<string, string>([
+		[ "NMWiredToggle", IGNORE_XGETTEXT("Wired Connections") ],
+		[ "NMWirelessToggle", IGNORE_XGETTEXT("Wi-Fi") ],
+		[ "NMModemToggle", IGNORE_XGETTEXT("Mobile Connections") ],
+		[ "NMBluetoothToggle", IGNORE_XGETTEXT("Bluetooth Tethers") ],
+		[ "NMVpnToggle", IGNORE_XGETTEXT("VPN") ],
+		[ "BluetoothToggle", IGNORE_XGETTEXT("Bluetooth") ],
+		[ "PowerProfilesToggle", IGNORE_XGETTEXT("Power Mode") ],
+		[ "NightLightToggle", IGNORE_XGETTEXT("Night Light") ],
+		[ "DarkModeToggle", IGNORE_XGETTEXT("Dark Style") ],
+		[ "KeyboardBrightnessToggle", IGNORE_XGETTEXT("Keyboard") ],
+		[ "RfkillToggle", IGNORE_XGETTEXT("Airplane Mode") ],
+		[ "RotationToggle", IGNORE_XGETTEXT("Auto Rotate") ],
+		[ "DndQuickToggle", _("Do Not Disturb") ],
+		[ "UnsafeQuickToggle", _("Unsafe Mode") ],
+	])
+}
+
+function getOrderListFromSettings(settings: Gio.Settings): OrderItem[] {
+	return settings.get_value("toggle-order").recursiveUnpack() as OrderItem[]
+}
+
+function ToggleEditorGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Adw.PreferencesGroup {
+	const SystemToggleNames = getSystemToggleNames()
+	const toggleItems = new Map<string, [Adw.ActionRow, OrderItem]>()
+
+	const removeOrphans = (list: OrderItem[])=>{
+		for (const [name, [row, item]] of toggleItems.entries()) {
+			if (list.some(element => OrderItem.match(element, item))) continue
+			toggleItems.delete(name)
+			row.destroy()
+		}
+	}
+
+	for (const item of order) {
+		const toggleItem = new Adw.ActionRow({
+			title: 여기에알려진이름을입력,
+			subtitle: 여기에컨스트럭터명을입력,
+		})
+	
+		const updown = UpDownButton({
+			settings,
+			sensitiveBind: "toggle-order-enabled",
+			action(direction) {
+				
+			},
+		})
+		toggleItem.add_prefix(updown)
+	
+		const toggle = new Gtk.ToggleButton({
+			label: "",
+			active: value,
+		})
+		toggleItem.add_suffix(toggle)
+	
+		toggle.connect("notify::active", () => action(toggle.get_active()))
+	}
+}
 
 export const TogglesPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'TogglesPage',
@@ -39,24 +101,6 @@ export const TogglesPage = GObject.registerClass({
 				bind: "add-unsafe-quick-toggle-enabled",
 			}),
 		])
-
-		const IGNORE_XGETTEXT=_
-		const SystemToggleNames = {
-			NMWiredToggle: IGNORE_XGETTEXT("Wired Connections"),
-			NMWirelessToggle: IGNORE_XGETTEXT("Wi-Fi"),
-			NMModemToggle: IGNORE_XGETTEXT("Mobile Connections"),
-			NMBluetoothToggle: IGNORE_XGETTEXT("Bluetooth Tethers"),
-			NMVpnToggle: IGNORE_XGETTEXT("VPN"),
-			BluetoothToggle: IGNORE_XGETTEXT("Bluetooth"),
-			PowerProfilesToggle: IGNORE_XGETTEXT("Power Mode"),
-			NightLightToggle: IGNORE_XGETTEXT("Night Light"),
-			DarkModeToggle: IGNORE_XGETTEXT("Dark Style"),
-			KeyboardBrightnessToggle: IGNORE_XGETTEXT("Keyboard"),
-			RfkillToggle: IGNORE_XGETTEXT("Airplane Mode"),
-			RotationToggle: IGNORE_XGETTEXT("Auto Rotate"),
-			DndQuickToggle: _("Do Not Disturb"),
-			UnsafeQuickToggle: _("Unsafe Mode"),
-		}
 
 		// Order
 		Group({
