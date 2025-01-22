@@ -1,4 +1,4 @@
-<!-- markdownlink-ignore: MD025 -->
+<!-- markdownlint-disable-file MD025, MD024 -->
 # 2.1-pre2
 <!-- @BuildNumber: 2 -->
 <!-- @Includes: [] -->
