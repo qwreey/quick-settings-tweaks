@@ -2,8 +2,8 @@ import Clutter from "gi://Clutter"
 import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
 import St from "gi://St"
-import { FeatureBase, SettingLoader } from "../libs/feature.js"
-import QuickSettingsMenuTracker from "../libs/quickSettingsMenuTracker.js"
+import { FeatureBase, type SettingLoader } from "../libs/feature.js"
+import { QuickSettingsMenuTracker } from "../libs/quickSettingsTracker.js"
 import Maid from "../libs/maid.js"
 
 export class OverlayMenu extends FeatureBase {
@@ -66,6 +66,7 @@ export class OverlayMenu extends FeatureBase {
 
 		if (this.duration) {
 			menu.box.opacity = 0
+			// @ts-expect-error
 			menu.box.ease({
 				opacity: 255,
 				duration: Math.floor(this.duration / 3),
@@ -75,6 +76,7 @@ export class OverlayMenu extends FeatureBase {
 				menu.box.translationY = Math.floor(coords.sourceY - coords.offsetY + menu.box.marginTop)
 				menu.box.scaleX = coords.sourceWidth / coords.targetWidth
 				menu.box.scaleY = coords.sourceHeight / coords.targetHeight
+				// @ts-expect-error
 				menu.box.ease({
 					translationX: 0,
 					translationY: 0,
@@ -88,6 +90,7 @@ export class OverlayMenu extends FeatureBase {
 				menu.box.translationY = 0.2*coords.targetHeight*.5
 				menu.box.scaleX = 0.8
 				menu.box.scaleY = 0.8
+				// @ts-expect-error
 				menu.box.ease({
 					translationX: 0,
 					translationY: 0,
@@ -126,12 +129,14 @@ export class OverlayMenu extends FeatureBase {
 		// Offset handle
 		this.yconstraint = new Clutter.BindConstraint({
 			coordinate: Clutter.BindCoordinate.Y,
+			// @ts-expect-error
 			source: Global.QuickSettingsMenu._boxPointer,
 		})
 
 		// Disable Y sync (overlay y offset)
 		// @ts-expect-error
 		Global.QuickSettingsMenu._overlay.get_constraints()[0].enabled = false
+		// @ts-expect-error
 		Global.QuickSettingsMenu._overlay.add_constraint(this.yconstraint)
 
 		// Disable Placeholder height sync (grid height increase)
@@ -151,8 +156,11 @@ export class OverlayMenu extends FeatureBase {
 		}
 		this.tracker.unload()
 		this.tracker = null
+		// @ts-expect-error
 		Global.QuickSettingsMenu._overlay.get_constraints()[0].enabled = true
+		// @ts-expect-error
 		Global.QuickSettingsGrid.layout_manager._overlay.get_constraints()[0].enabled = true
+		// @ts-expect-error
 		Global.QuickSettingsMenu._overlay.remove_constraint(this.yconstraint)
 	}
 }

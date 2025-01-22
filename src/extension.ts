@@ -13,7 +13,6 @@ import { TogglesOrderFeature } from "./features/order/toggles.js"
 import { SystemItemsOrderFeature } from "./features/order/systemItems.js"
 import { DateMenuFeature } from "./features/dateMenu.js"
 import { OverlayMenu } from "./features/overlayMenu.js"
-import { InputOutputFeature } from "./features/inputOutput.js"
 import { LayoutCustomize } from "./features/layoutCustomize.js"
 import { MenuAnimation } from "./features/menuAnimation.js"
 

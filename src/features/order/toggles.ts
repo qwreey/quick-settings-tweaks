@@ -1,5 +1,5 @@
 import { Global } from "../../global.js"
-import { FeatureBase, SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 
 export interface OrderItem {
 	constructorName?: string
@@ -35,7 +35,7 @@ export class TogglesOrderFeature extends FeatureBase {
 	// #endregion settings
 
 	onLoad(): void {
-		
+		this
 	}
 	onUnload(): void {}
 }

@@ -2,9 +2,9 @@ import Clutter from "gi://Clutter"
 import Shell from "gi://Shell"
 import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
-import { FeatureBase, SettingLoader } from "../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../libs/feature.js"
 import Maid from "../libs/maid.js"
-import QuickSettingsMenuTracker from "../libs/quickSettingsMenuTracker.js"
+import { QuickSettingsMenuTracker } from "../libs/quickSettingsTracker.js"
 
 export class MenuAnimation extends FeatureBase {
 	// #region settings
@@ -32,6 +32,7 @@ export class MenuAnimation extends FeatureBase {
 		if (this.blur) this.blur.enabled = isOpen
 		if (isOpen) {
 			Global.QuickSettingsBox.set_pivot_point(0.5, 0.5)
+			// @ts-expect-error
 			Global.QuickSettingsBox.ease({
 				duration: this.openDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
@@ -39,12 +40,14 @@ export class MenuAnimation extends FeatureBase {
 				scaleY: this.backgroundScaleY,
 				opacity: this.backgroundOpacity,
 			})
+			// @ts-expect-error
 			Global.QuickSettingsGrid.ease({
 				duration: this.openDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
 				opacity: this.gridContentOpacity,
 			})
 		} else {
+			// @ts-expect-error
 			Global.QuickSettingsBox.ease({
 				duration: this.closeDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
@@ -55,6 +58,7 @@ export class MenuAnimation extends FeatureBase {
 					Global.QuickSettingsBox.set_pivot_point(0, 0)
 				}
 			})
+			// @ts-expect-error
 			Global.QuickSettingsGrid.ease({
 				duration: this.openDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
@@ -75,6 +79,7 @@ export class MenuAnimation extends FeatureBase {
 				mode: Shell.BlurMode.ACTOR,
 				radius: this.backgroundBlurRadius,
 			})
+			// @ts-expect-error
 			Global.QuickSettingsMenu._boxPointer.add_effect_with_name('blur', this.blur)
 		}
 
@@ -87,6 +92,7 @@ export class MenuAnimation extends FeatureBase {
 		this.tracker.unload()
 		this.tracker = null
 		if (this.blur) {
+			// @ts-expect-error
 			Global.QuickSettingsMenu._boxPointer.remove_effect(this.blur)
 			this.blur = null
 		}

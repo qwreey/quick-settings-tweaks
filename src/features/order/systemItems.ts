@@ -1,6 +1,6 @@
 import Clutter from "gi://Clutter"
 import { Global } from "../../global.js"
-import { FeatureBase, SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import {
 	type PowerToggle,
 } from "resource:///org/gnome/shell/ui/status/system.js"

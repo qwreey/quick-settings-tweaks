@@ -3,7 +3,7 @@ import Gio from "gi://Gio"
 import GObject from "gi://GObject"
 import Clutter from "gi://Clutter"
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
-import { FeatureBase, SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { Global } from "../../global.js"
 
 // #region DndQuickToggle

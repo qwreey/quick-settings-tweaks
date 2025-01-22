@@ -6,7 +6,7 @@ import Gio from "gi://Gio"
 import * as Mpris from "resource:///org/gnome/shell/ui/mpris.js"
 import { Slider } from 'resource:///org/gnome/shell/ui/slider.js'
 import { Global } from "../../global.js"
-import { FeatureBase, SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { logger } from "../../libs/utility.js"
 
 // #region ProgressControl

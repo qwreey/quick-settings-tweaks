@@ -1,8 +1,8 @@
 import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
-import Maid from "../libs/maid.js"
+import Maid from "./maid.js"
 
-export default class QuickSettingsMenuTracker {
+export class QuickSettingsMenuTracker {
     onOpen: (maid: Maid, menu: QuickSettingsMenu, isOpen: boolean)=>void
     onMenuCreated: (maid: Maid, menu: QuickSettingsMenu)=>void
     appliedChild: Map<QuickSettingsMenu, Maid>

@@ -1,7 +1,7 @@
 import Clutter from "gi://Clutter"
 import GObject from "gi://GObject"
 import St from "gi://St"
-import { FeatureBase, SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { Global } from "../../global.js"
 
 // #region Header

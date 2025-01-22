@@ -320,9 +320,14 @@ case "$1" in
 		compile-preferences
 	;;
 
-	"increase-version")
-		increase-version
+	"increase-minor-version")
+		increase-minor-version
 	;;
+
+	"increase-middle-version")
+		increase-middle-version
+	;;
+
 	"create-release")
 		create-release
 	;;

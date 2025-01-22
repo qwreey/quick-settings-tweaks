@@ -1,5 +1,5 @@
 import { Global } from "../global.js"
-import { FeatureBase, SettingLoader } from "../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../libs/feature.js"
 
 export class DateMenuFeature extends FeatureBase {
 	// #region settings
