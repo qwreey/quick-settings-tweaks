@@ -10,6 +10,7 @@ import {
 	ContributorsRow,
 	LicenseRow,
 	LogoGroup,
+	DialogRow,
 	ChangelogDialog,
 } from "../libs/prefComponents.js"
 
@@ -29,19 +30,54 @@ export const AboutPage = GObject.registerClass({
 			name: prefs.metadata.name,
 			icon: "qst-project-icon",
 			version: prefs.getVersionString(),
+			versionAction: () => ChangelogDialog({
+				window,
+				content: async () => prefs.getChangelog(),
+				currentBuildNumber: Config.buildNumber,
+				defaultPageBuildNumber: Config.buildNumber,
+			})
 		})
+
+		// About
+		Group({
+			parent: this,
+			title: _("About"),
+			description: _("Common extension informations"),
+		},[
+			Row({
+				title: _("Changelogs"),
+				subtitle: _("View the change history for this extension"),
+				action: ()=>ChangelogDialog({
+					window,
+					title: _("Changelogs"),
+					subtitle: _("View the change history for this extension"),
+					content: async () => prefs.getChangelog(),
+					currentBuildNumber: Config.buildNumber,
+				}),
+				icon: "object-rotate-right-symbolic",
+			}),
+			DialogRow({
+				window,
+				title: _('License'),
+				subtitle: _('License of codes'),
+				dialogTitle: _("License"),
+				minHeight: 520,
+				icon: "emblem-documents-symbolic",
+				childrenRequest: _page=>[
+					Group({
+						title: _('License'),
+						description: _('License of codes')
+					}, prefs.getLicenses().map(LicenseRow)),
+				],
+			}),
+		])
 
 		// Links
 		Group({
 			parent: this,
-			// title: _('Links'),
+			title: _("Link"),
+			description: _("External links about this extension")
 		},[
-			Row({
-				title: _("Changelog"),
-				subtitle: _("Support development!"),
-				action: ()=>ChangelogDialog({ window, content: async () => prefs.getChangelog() }),
-				icon: "qst-patreon-logo-symbolic",
-			}),
 			Row({
 				uri: "https://patreon.com/user?u=44216831",
 				title: _("Donate via patreon"),
@@ -73,13 +109,13 @@ export const AboutPage = GObject.registerClass({
 			parent: this,
 			title: _('Contributor'),
 			description: _("The creators of this extension"),
-		}, prefs.getContributorRows().map(ContributorsRow))
-
-		// third party LICENSE
-		Group({
-			parent: this,
-			title: _('License'),
-			description: _('License of codes')
-		}, prefs.getLicenses().map(LicenseRow))
+		}, [
+			...prefs.getContributorRows().map(ContributorsRow),
+			Row({
+				title: _("More contributors"),
+				subtitle: _("See more contributors on github"),
+				uri: "https://github.com/qwreey/quick-settings-tweaks/graphs/contributors"
+			}),
+		])
 	}
 })

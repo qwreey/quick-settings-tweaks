@@ -22,15 +22,18 @@ function setLinkCursor(target: any) {
 export function Dialog({
 	window,
 	title,
+	minHeight,
 	childrenRequest,
 }: Dialog.Options): Adw.PreferencesDialog {
 	const dialog = new Dialog.PrefDialog(title, childrenRequest)
+	if (minHeight) dialog.height_request = minHeight
 	dialog.present(window)
 	return dialog
 }
 export namespace Dialog {
 	export interface Options {
 		title?: string
+		minHeight?: number
 		childrenRequest: (page: Adw.PreferencesPage)=>any
 		window: Adw.PreferencesWindow
 	}
@@ -228,15 +231,21 @@ export namespace Row {
 export function DialogRow(options: DialogRow.Options): Adw.ActionRow {
 	return Row({
 		...options,
-		action: () => Dialog({
-			...options,
-			title: options.dialogTitle,
-		})
+		action: () => {
+			const dialog = Dialog({
+				...options,
+				title: options.dialogTitle,
+			})
+			if (options.onDialogCreated) {
+				options.onDialogCreated(dialog)
+			}
+		}
 	})
 }
 export namespace DialogRow {
 	export interface Options extends Dialog.Options, Row.Options {
 		dialogTitle?: string
+		onDialogCreated?: (dialog: Adw.PreferencesDialog)=>void
 	}
 }
 // #endregion DialogRow
@@ -962,7 +971,7 @@ export function LicenseRow(item: LicenseRow.License): Adw.ExpanderRow {
 		action: (expanded)=>{
 			if (!expanded) return
 			if (loaded) return
-			item.content().then(
+			if (item.content) item.content().then(
 				subtitle => contentRow.subtitle = subtitle
 			).catch(
 				error => contentRow.subtitle = `ERROR: ${error}`
@@ -1001,7 +1010,7 @@ export namespace LicenseRow {
 
 // #region LogoBox
 export function LogoBox({
-	icon, name, version,
+	icon, name, version, versionAction,
 }: LogoBox.Options): Gtk.Box {
 	const logoBox = new Gtk.Box({
 		baseline_position: Gtk.BaselinePosition.CENTER,
@@ -1032,6 +1041,10 @@ export function LogoBox({
 		halign: Gtk.Align.CENTER,
 	})
 	logoBox.append(logoVersion)
+	if (versionAction) {
+		logoVersion.connect("clicked", ()=>versionAction())
+		setLinkCursor(logoVersion)
+	}
 
 	return logoBox
 }
@@ -1040,6 +1053,7 @@ export namespace LogoBox {
 		name: string
 		version: string
 		icon: string
+		versionAction?: ()=>void
 	}
 }
 // #endregion LogoBox
@@ -1063,20 +1077,35 @@ export namespace LogoGroup {
 export function ChangelogDialog({
 	content,
 	window,
+	currentBuildNumber,
+	defaultPageBuildNumber,
+	title,
+	subtitle,
 }: ChangelogDialog.Options): Adw.PreferencesDialog {
 	const dialog = Dialog({
 		window,
-		title: _("Changelog"),
+		title: title ?? _("Changelog"),
 		childrenRequest: ()=>[Group({
+			title: title ?? "",
+			description: subtitle ?? "",
 			onCreated: (group: Adw.PreferencesGroup) => {
 				content()
-					.then(ChangelogDialog.getReleases)
-					.then(releases => releases.map(release => Row({
-						title: release.version,
-						subtitle: release.Date ?? "",
-						action: ()=>ChangelogDialog.ChangelogPage(dialog, release),
-					})))
-					.then(rows => rows.forEach(row => group.add(row)))
+				.then(ChangelogDialog.getReleases)
+				.then(releases => releases.map(release => Row({
+					title: release.version,
+					subtitle: release.Date ?? "",
+					action: ()=>ChangelogDialog.ChangelogPage(dialog, release),
+					onCreated: (row)=>{
+						if (release.BuildNumber == currentBuildNumber) {
+							row.add_css_class("success")
+							row.title += " " + _("(Current)")
+						}
+						if (release.BuildNumber == defaultPageBuildNumber) {
+							ChangelogDialog.ChangelogPage(dialog, release)
+						}
+						group.add(row)
+					}
+				})))
 			},
 		})]
 	})
@@ -1086,7 +1115,11 @@ export function ChangelogDialog({
 export namespace ChangelogDialog {
 	export interface Options {
 		window: Adw.PreferencesWindow
+		currentBuildNumber: number
 		content: ()=>Promise<string>
+		defaultPageBuildNumber?: number
+		title?: string
+		subtitle?: string
 	}
 	const LITEM = (t: string,lv: number)=>`${"　 ".repeat(lv)}<span alpha="70%">　•　</span>${t}`
 	const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${'#'.repeat(lv)} </span><span weight="bold">${t}</span></span>`
