@@ -61,20 +61,26 @@ GObject.registerClass(DndQuickToggle)
 class DndIndicator extends SystemIndicator {
 	_indicator: St.Icon
 	_settings: Gio.Settings
-	_init() {
+	_showIndicator: boolean
+	constructor(showIndicator: boolean) {
+		super(showIndicator as any)
+	}
+	// @ts-ignore
+	_init(showIndicator: boolean) {
 		super._init()
-
-		this._indicator = this._addIndicator()
-		this._indicator.icon_name = "notifications-disabled-symbolic"
 
 		this.quickSettingsItems.push(new DndQuickToggle())
 
-		this._settings = new Gio.Settings({
-			schema_id: "org.gnome.desktop.notifications",
-		})
-		// @ts-expect-error missing connectObject type support
-		this._settings.connectObject("changed::show-banners", this._sync.bind(this), this)
-		this._sync()
+		if (showIndicator) {
+			this._indicator = this._addIndicator()
+			this._indicator.icon_name = "notifications-disabled-symbolic"
+			this._settings = new Gio.Settings({
+				schema_id: "org.gnome.desktop.notifications",
+			})
+			// @ts-expect-error missing connectObject type support
+			this._settings.connectObject("changed::show-banners", this._sync.bind(this), this)
+			this._sync()
+		}
 	}
 
 	_sync() {
@@ -100,31 +106,31 @@ export { DndIndicator }
 export class DndQuickToggleFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
+	indicatorPosition: "system-tray" | "date-menu"
 	override loadSettings(loader: SettingLoader): void {
-		this.enabled = loader.loadBoolean("add-dnd-quick-toggle-enabled")
+		this.enabled = loader.loadBoolean("dnd-quick-toggle-enabled")
+		this.indicatorPosition = loader.loadString("dnd-quick-toggle-indicator-position") as any
 	}
 	// #endregion settings
 
 	indicator: DndIndicator
-	datemenuDnd: Clutter.Actor
 	override onLoad(): void {
 		if (!this.enabled) return
+		const indicatorSystemTray = this.indicatorPosition == "system-tray"
 
 		// Create Indicator
 		this.maid.destroyJob(
-			this.indicator = new DndIndicator()
+			this.indicator = new DndIndicator(indicatorSystemTray)
 		)
 
 		// Hide DateMenu DND State Icon
-		Global.DateMenuIndicator.hide()
-		this.maid.connectJob(Global.DateMenuIndicator, "show", () => Global.DateMenuIndicator.hide())
-		this.maid.functionJob(()=>{
-			if (!(new Gio.Settings({
-				schema_id: "org.gnome.desktop.notifications",
-			})).get_boolean("show-banners")) {
-				Global.DateMenuIndicator.show()
-			}
-		})
+		if (indicatorSystemTray) {
+			this.maid.hideJob(Global.DateMenuIndicator, ()=>
+				!(new Gio.Settings({
+					schema_id: "org.gnome.desktop.notifications",
+				})).get_boolean("show-banners")
+			)
+		}
 
 		// Add to QS
 		// @ts-ignore

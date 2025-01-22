@@ -65,7 +65,7 @@ export class UnsafeQuickToggleFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	override loadSettings(loader: SettingLoader): void {
-		this.enabled = loader.loadBoolean("add-unsafe-quick-toggle-enabled")
+		this.enabled = loader.loadBoolean("unsafe-quick-toggle-enabled")
 	}
 	// #endregion settings
 
@@ -74,12 +74,14 @@ export class UnsafeQuickToggleFeature extends FeatureBase {
 		if (!this.enabled) return
 
 		// Load last state
-		global.context.unsafe_mode = Global.Settings.get_boolean("last-unsafe-state")
+		if (Global.Settings.get_boolean("unsafe-quick-toggle-save-last-state")) {
+			global.context.unsafe_mode = Global.Settings.get_boolean("unsafe-quick-toggle-last-state")
+		}
 
 		// Add Unsafe Quick Toggle
 		this.maid.destroyJob(
 			this.indicator = new UnsafeIndicator(
-				(state) => Global.Settings.set_boolean("last-unsafe-state", state)
+				(state) => Global.Settings.set_boolean("unsafe-quick-toggle-last-state", state)
 			)
 		)
 		// @ts-ignore

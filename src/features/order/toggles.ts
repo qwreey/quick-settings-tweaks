@@ -10,8 +10,8 @@ export class TogglesOrderFeature extends FeatureBase {
 	enabled: boolean
 	order: QuickToggleOrderItem[]
 	loadSettings(loader: SettingLoader): void {
-		this.enabled = loader.loadBoolean("toggle-layout-enabled")
-		this.order = loader.loadValue("toggle-layout-order")
+		this.enabled = loader.loadBoolean("toggles-layout-enabled")
+		this.order = loader.loadValue("toggles-layout-order")
 	}
 	// #endregion settings
 

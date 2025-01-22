@@ -6,6 +6,7 @@ import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import { WidgetsPage } from "./prefPages/widgets.js"
 import { TogglesPage } from "./prefPages/toggles.js"
+import { LayoutPage } from "./prefPages/layout.js"
 import { OtherPage } from "./prefPages/other.js"
 import { AboutPage } from "./prefPages/about.js"
 import { MenuPage } from "./prefPages/menu.js"
@@ -15,6 +16,7 @@ import Config from "./config.js"
 var pageList = [
 	WidgetsPage,
 	TogglesPage,
+	LayoutPage,
 	MenuPage,
 	OtherPage,
 	AboutPage,

@@ -8,6 +8,8 @@
 
 - Add quick toggle ordering and hiding
 - Add page indicator on media widget
+- Add DND indicator position option
+- Add save last session state option on unsafe mode quick toggle
 
 ## Fix
 

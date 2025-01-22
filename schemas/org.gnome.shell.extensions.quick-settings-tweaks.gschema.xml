@@ -136,10 +136,10 @@
     <!-- #endregion Input Output -->
 
     <!-- #region Quick Toggle Layout -->
-    <key name="toggle-layout-enabled" type="b">
+    <key name="toggles-layout-enabled" type="b">
       <default>false</default>
     </key>
-    <key name="toggle-layout-order" type="aa{sv}">
+    <key name="toggles-layout-order" type="aa{sv}">
       <default><![CDATA[
         [
           { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMWiredToggle'> },
@@ -163,17 +163,27 @@
     <!-- #endregion Quick Toggle Order -->
 
     <!-- #region Unsafe Mode Quick Toggle -->
-    <key name="add-unsafe-quick-toggle-enabled" type="b">
+    <key name="unsafe-quick-toggle-enabled" type="b">
       <default>false</default>
     </key>
-    <key name="last-unsafe-state" type="b">
+    <key name="unsafe-quick-toggle-last-state" type="b">
       <default>false</default>
+    </key>
+    <key name="unsafe-quick-toggle-save-last-state" type="b">
+      <default>true</default>
     </key>
     <!-- #endregion Unsafe Mode Quick Toggle -->
 
     <!-- #region DND Quick Toggle -->
-    <key name="add-dnd-quick-toggle-enabled" type="b">
+    <key name="dnd-quick-toggle-enabled" type="b">
       <default>true</default>
+    </key>
+    <key name="dnd-quick-toggle-indicator-position" type="s">
+      <default>"system-tray"</default>
+      <choices>
+        <choice value='system-tray'/>
+        <choice value='date-menu'/>
+      </choices>
     </key>
     <!-- #endregion DND Quick Toggle -->
 
