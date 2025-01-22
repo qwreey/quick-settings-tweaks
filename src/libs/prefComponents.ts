@@ -37,7 +37,7 @@ export function fixPageScrollIssue(page: Adw.PreferencesPage) {
 		setScrollToFocus(page, false)
 	})
 	page.connect("map", ()=>{
-		setScrollToFocus(page, true)
+		delayedSetScrollToFocus(page, true)
 	})
 }
 
@@ -166,6 +166,7 @@ export function Row({
 	suffix,
 	prefix,
 	experimental,
+	noLinkIcon,
 	action,
 	onCreated,
 }: Row.Options): Adw.ActionRow {
@@ -182,14 +183,14 @@ export function Row({
 			Gio.AppInfo.launch_default_for_uri_async(uri, null, null, null)
 		})
 		setLinkCursor(row)
-		Row.addSuffixIcon(row, "adw-external-link-symbolic")
+		if (!noLinkIcon) Row.addSuffixIcon(row, "adw-external-link-symbolic")
 		row.tooltip_text = uri
 		row.has_tooltip = true
 	}
 	if (action) {
 		row.connect("activated", ()=>action())
 		setLinkCursor(row)
-		Row.addSuffixIcon(row, "go-next-symbolic")
+		if (!noLinkIcon) Row.addSuffixIcon(row, "go-next-symbolic")
 	}
 	if (icon) Row.appendLinkIcon(row, icon)
 	if (suffix) {
@@ -222,6 +223,7 @@ export namespace Row {
 		suffix?: Gtk.Widget
 		prefix?: Gtk.Widget
 		experimental?: boolean
+		noLinkIcon?: boolean,
 		action?: ()=>void
 		onCreated?: (row: Adw.ActionRow)=>void
 	}
@@ -1193,6 +1195,7 @@ export namespace ChangelogDialog {
 				last[meta[1]] = JSON.parse(meta[2])
 				continue
 			}
+			if (!last) continue
 			last.buffer.push(line)
 		}
 		for (const item of releases) {
@@ -1213,7 +1216,8 @@ export namespace ChangelogDialog {
 					new Gtk.Label({
 						use_markup: true,
 						label: ChangelogDialog.simpleMarked(release.content),
-						halign: Gtk.Align.CENTER,
+						halign: Gtk.Align.START,
+						hexpand: true,
 					})
 				])
 			]

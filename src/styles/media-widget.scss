@@ -25,6 +25,16 @@
             font-size: 0.98em;
             margin-left: 4px;
         }
+
+        .page-indicators {
+            margin-right: 4px;
+            spacing: 6px;
+            .page-indicator {
+                height: 8px;
+                width: 8px;
+                padding: 0px;
+            }
+        }
     }
 
     // Progress Control (Position/Length Text and Slider)

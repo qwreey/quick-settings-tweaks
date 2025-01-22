@@ -63,14 +63,15 @@ class WeatherWidget extends St.BoxLayout {
 		(this._item as any)._titleLocation.hide();
 		(this._item as any)._titleLocation.connect("show", ()=>{
 			(this._item as any)._titleLocation.hide()
-		});
+		})
 
 		// Hide Title
-		(this._item as any)._titleLabel.hide();
-		(this._item as any)._titleLabel.connect("show", ()=>{
-			(this._item as any)._titleLabel.hide()
-		});
-	
+		const syncTitleVisible = ()=>{
+			(this._item as any)._titleLabel.visible = !(this._item as any)._weatherClient.hasLocation
+		}
+		syncTitleVisible();
+		(this._item as any)._weatherClient.connect("changed", syncTitleVisible);
+
 		// Sync Location
 		(this._item as any)._titleLocation.bind_property('text',
 			this._header._locationLabel, 'text',

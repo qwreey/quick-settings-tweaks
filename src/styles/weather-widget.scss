@@ -20,6 +20,9 @@
     }
     .weather-button {
         margin: 0px;
+        .weather-header {
+            margin: 12px 2px 2px 12px;
+        }
     }
 
     // Header
@@ -33,11 +36,12 @@
             margin-left: 4px;
         }
 
-        // Clear button
+        // Location Label
         #{$p}-location-label {
             font-weight: bold;
             font-size: 0.98em;
-            margin-right: 4px;
+            margin-right: 6px;
+            margin-top: 2px;
         }
     }
 }

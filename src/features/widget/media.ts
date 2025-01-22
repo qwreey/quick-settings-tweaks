@@ -4,7 +4,9 @@ import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import * as Mpris from "resource:///org/gnome/shell/ui/mpris.js"
-import { Slider } from 'resource:///org/gnome/shell/ui/slider.js'
+import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
+// @ts-expect-error
+import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
 import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { logger } from "../../libs/utility.js"
@@ -287,6 +289,15 @@ class MediaList extends Mpris.MediaSection {
 	_options: MediaList.Options
 	_messages: MediaItem[]
 	_current: MediaItem
+	_currentMaxPage: number
+	_currentPage: number
+
+	get page(): number {
+		return this._currentPage
+	}
+	get maxPage(): number {
+		return this._currentMaxPage
+	}
 
 	constructor(options: MediaList.Options) {
 		// @ts-ignore
@@ -296,6 +307,8 @@ class MediaList extends Mpris.MediaSection {
 		super._init()
 		this._current = null
 		this._options = options ?? {}
+		this._currentMaxPage = 0
+		this._currentPage = 0
 	}
 
 	// Override for custom message and player
@@ -329,29 +342,32 @@ class MediaList extends Mpris.MediaSection {
 
 	// Show first playing message
 	_showFirstPlaying() {
+		const messages = this._messages
 		this._setPage(
-			this._messages.find(message => message?._player.status === 'Playing')
-			?? this._messages[0]
+			messages.find(message => message?._player.status === 'Playing')
+			?? messages[0]
 		)
 	}
 
 	// Handle page action
 	_setPage(to: MediaItem) {
 		const current = this._current
+		const messages = this._messages
 		this._current = to
 		if (!to || to == current) return
-		for (const message of this._messages) {
+		for (const message of messages) {
 			message.remove_all_transitions()
 			if (message == current) continue
 			message.hide()
 		}
+		const toIndex = messages.findIndex(message => message == to)
+		this._currentPage = toIndex
+		this.emit("page-updated", toIndex)
 		if (!current) {
 			to.show()
 			return
 		}
-
-		const currentIndex = this._messages.findIndex(message => message == current)
-		const toIndex = this._messages.findIndex(message => message == to)
+		const currentIndex = messages.findIndex(message => message == current)
 
 		// @ts-expect-error
 		current.ease({
@@ -383,25 +399,34 @@ class MediaList extends Mpris.MediaSection {
 		})
 	}
 	_seekPage(offset: number) {
+		const messages = this._messages
 		if (this._current === null) return
-		let currentIndex = this._messages.findIndex(message => message == this._current)
+		let currentIndex = messages.findIndex(message => message == this._current)
 		if (currentIndex == -1) currentIndex = 0
-		const length = this._messages.length
-		this._setPage(this._messages[((currentIndex + offset + length) % length)])
+		const length = messages.length
+		this._setPage(messages[((currentIndex + offset + length) % length)])
 	}
 
 	// New message / Remove message
 	_sync() {
 		// @ts-expect-error
 		super._sync()
+		const messages = this._messages
+
+		// Emit max page update
+		if (this._currentMaxPage != messages.length) {
+			this.emit("max-page-updated",
+				this._currentMaxPage = messages.length
+			)
+		}
 
 		// Current message destroyed
-		if (this._current && (this.empty || !this._messages.includes(this._current))) {
+		if (this._current && (this.empty || !messages.includes(this._current))) {
 			this._current = null
 		}
 
 		// Hide new message
-		for (const message of this._messages) {
+		for (const message of messages) {
 			if (message == this._current) continue
 			message.hide()
 		}
@@ -412,7 +437,12 @@ class MediaList extends Mpris.MediaSection {
 		}
 	}
 }
-GObject.registerClass(MediaList)
+GObject.registerClass({
+	Signals: {
+		'page-updated': {param_types: [GObject.TYPE_INT]},
+		'max-page-updated': {param_types: [GObject.TYPE_INT]},
+	}
+}, MediaList)
 // #endregion MediaList
 
 // #region Header
@@ -422,6 +452,7 @@ namespace Header {
 }
 class Header extends St.BoxLayout {
 	_headerLabel: St.Label
+	_pageIndicator: St.BoxLayout
 
 	constructor(options: Header.Options) {
 		super(options)
@@ -440,9 +471,32 @@ class Header extends St.BoxLayout {
 			x_expand: true
 		})
 		this.add_child(this._headerLabel)
+
+		this._pageIndicator = new PageIndicators(Clutter.Orientation.HORIZONTAL)
+		this._pageIndicator.x_align = Clutter.ActorAlign.END
+		this._pageIndicator.connect("page-activated", this.emit.bind(this, "page-activated"))
+		this._pageIndicator.y_align = Clutter.ActorAlign.CENTER
+		this.add_child(this._pageIndicator)
+	}
+
+	set maxPage(maxPage: number) {
+		(this._pageIndicator as any).setNPages(maxPage)
+	}
+	get maxPage(): number {
+		return (this._pageIndicator as any).nPages
+	}
+	set page(page: number) {
+		(this._pageIndicator as any).setCurrentPosition(page)
+	}
+	get page(): number {
+		return (this._pageIndicator as any)._currentPosition
 	}
 }
-GObject.registerClass(Header)
+GObject.registerClass({
+	Signals: {
+		'page-activated': {param_types: [GObject.TYPE_INT]},
+	}
+}, Header)
 // #endregion Header
 
 // #region MediaWidget
@@ -470,12 +524,17 @@ class MediaWidget extends St.BoxLayout {
 		} as Partial<St.BoxLayout.ConstructorProps>)
 		this._options = options
 
+		// Create header
 		this._header = new Header({})
 		this.add_child(this._header)
 
+		// Create list
 		this._list = new MediaList({ showProgress: options.showProgress })
 		this.add_child(this._list)
 		this._list.connect('notify::empty', this._syncEmpty.bind(this))
+		this._syncEmpty()
+
+		// Page navigation
 		this.connect("scroll-event", (_: Clutter.Actor, event: Clutter.Event) => {
 			const direction = event.get_scroll_direction();
 			if (direction === Clutter.ScrollDirection.UP) {
@@ -496,7 +555,18 @@ class MediaWidget extends St.BoxLayout {
 			}
 		})
 		this.add_action(swipeAction)
-		this._syncEmpty()
+
+		// Sync page update & page indicator
+		this._header.page = this._list.page
+		this._header.maxPage = this._list.maxPage
+		this._list.connect("page-updated", (_, page: number): void => {
+			if (this._header.page == page) return
+			this._header.page = page
+		})
+		this._list.connect("max-page-updated", (_, maxPage: number): void => {
+			if (this._header.maxPage == maxPage) return
+			this._header.maxPage = maxPage
+		})
 	}
 
 	_syncEmpty() {

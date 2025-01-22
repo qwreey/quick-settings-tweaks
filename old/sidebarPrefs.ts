@@ -9,7 +9,7 @@ import { TogglesPage } from "./prefPages/toggles.js"
 import { OtherPage } from "./prefPages/other.js"
 import { AboutPage } from "./prefPages/about.js"
 import { MenuPage } from "./prefPages/menu.js"
-import { ContributorsRow, LicenseRow } from "./libs/prefComponents.js"
+import { ContributorsRow, LicenseRow, Row, Group } from "./libs/prefComponents.js"
 import Config from "./config.js"
 
 var pageList = [
@@ -88,16 +88,65 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
 	async fillPreferencesWindow(window: Adw.PreferencesWindow) {
 		let settings = this.getSettings()
 
-		// Window options
-		window.set_search_enabled(true)
-		window.set_default_size(640, 640)
-
 		// Register icon path
 		this.appendIconPath(this.path + "/media")
 		this.appendIconPath(this.path + "/media/contributors")
 
-		for (const page of pageList) {
-			window.add(new page(settings, this, window))
+		// Set window options
+		window.set_search_enabled(true)
+		window.set_default_size(720, 640)
+
+		// Create sidebar area
+		const sidebar = new Adw.NavigationPage({
+			title: this.metadata.name,
+			width_request: 196,
+		})
+		const sidebarToolbar = new Adw.ToolbarView()
+		const sidebarHeader = new Adw.HeaderBar()
+		sidebarToolbar.add_top_bar(sidebarHeader)
+		sidebar.set_child(sidebarToolbar)
+		const sidebarPage = new Adw.PreferencesPage()
+		sidebarToolbar.set_content(sidebarPage)
+		
+		// Create content area
+		const content = new Adw.NavigationPage({
+			title: "undefined"
+		})
+		const contentToolbar = new Adw.ToolbarView()
+		const contentHeader = new Adw.HeaderBar()
+		contentToolbar.add_top_bar(contentHeader)
+		content.set_child(contentToolbar)
+
+		// Create navigation
+		const navigation = new Adw.NavigationSplitView({
+			vexpand: true,
+			hexpand: true,
+		})
+		navigation.set_show_content(true)
+		navigation.set_sidebar(sidebar)
+		navigation.set_content(content)
+		window.set_content(navigation)
+		window.add(new Adw.PreferencesPage())
+
+		const open = (page: Adw.PreferencesPage) => {
+			contentToolbar.content = page
+			content.title = page.title
+		}
+		const sidebarGroup = Group({
+			parent: sidebarPage,
+		})
+		for (const PageClass of pageList) {
+			const page = new PageClass(settings, this, window)
+			const row = Row({
+				parent: sidebarGroup,
+				title: page.title,
+				icon: page.iconName,
+				noLinkIcon: true,
+				action: ()=>{
+					open(page)
+				}
+			})
+			if (!contentToolbar.content) open(page)
 		}
 	}
 }

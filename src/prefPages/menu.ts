@@ -13,6 +13,7 @@ import {
 	fixPageScrollIssue,
 } from "../libs/prefComponents.js"
 
+// #region AdvancedAnimationStyleGroup
 function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGroup {
 	return Group({
 		title: _("Advanced animation style"),
@@ -75,6 +76,7 @@ function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGro
 		}),
 	])
 }
+// #endregion AdvancedAnimationStyleGroup
 
 export const MenuPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'MenuPage',

@@ -1,3 +1,4 @@
+<!-- markdownlink-ignore: MD025 -->
 # 2.1-pre2
 <!-- @BuildNumber: 2 -->
 <!-- @Includes: [] -->
@@ -5,11 +6,14 @@
 
 ## New Features
 
-- Quick toggle ordering and hiding
+- Add quick toggle ordering and hiding
+- Add page indicator on media widget
 
 ## Fix
 
+- Fix changelog text align
 - Fix pref page scroll flickering issue
+- Fix weather widget empty when no location selected issue
 
 # 2.1-pre1
 <!-- @BuildNumber: 1 -->
