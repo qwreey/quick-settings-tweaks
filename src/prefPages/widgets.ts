@@ -8,6 +8,7 @@ import {
 	SwitchRow,
 	AdjustmentRow,
 	Group,
+	fixPageScrollIssue,
 } from "../libs/prefComponents.js"
 
 export const WidgetsPage = GObject.registerClass({
@@ -19,6 +20,7 @@ export const WidgetsPage = GObject.registerClass({
 			title: _('Widgets'),
 			iconName: 'window-new-symbolic',
 		})
+		fixPageScrollIssue(this)
 
 		// media
 		Group({

@@ -88,9 +88,10 @@ export class MenuAnimation extends FeatureBase {
 		this.tracker.load()
 	}
 	override onUnload(): void {
-		if (!this.tracker) return
-		this.tracker.unload()
+		const tracker = this.tracker
+		if (!tracker) return
 		this.tracker = null
+		tracker.unload()
 		if (this.blur) {
 			// @ts-expect-error
 			Global.QuickSettingsMenu._boxPointer.remove_effect(this.blur)

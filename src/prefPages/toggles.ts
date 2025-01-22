@@ -1,52 +1,109 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gio from "gi://Gio"
+import GLib from "gi://GLib"
 import Gtk from "gi://Gtk"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
-import { type OrderItem } from "../features/order/toggles.js"
+import { QuickToggleOrderItem } from "../libs/quickToggleOrderItem.js"
 import {
 	SwitchRow,
 	UpDownButton,
+	Row,
 	Group,
+	setScrollToFocus,
+	delayedSetScrollToFocus,
+	fixPageScrollIssue,
 } from "../libs/prefComponents.js"
 
 function ToggleEditorGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Adw.PreferencesGroup {
-	const SystemToggleNames = ToggleEditorGroup.getSystemToggleNames()
-	const toggleItems = new Map<string, [Adw.ActionRow, OrderItem]>()
+	const systemToggleNames = ToggleEditorGroup.getSystemToggleNames()
+	const itemRows = new Map<QuickToggleOrderItem, Adw.ActionRow>()
 
-	const removeOrphans = (list: OrderItem[])=>{
-		for (const [name, [row, item]] of toggleItems.entries()) {
-			if (list.some(element => OrderItem.match(element, item))) continue
-			toggleItems.delete(name)
-			row.destroy()
+	const group = Group({
+	})
+
+	const setHide = (item: QuickToggleOrderItem, hide: boolean)=>{
+		const list = ToggleEditorGroup.getOrderListFromSettings(settings)
+		list.find(targetItem => QuickToggleOrderItem.match(targetItem, item)).hide = hide
+		ToggleEditorGroup.setOrderListToSettings(settings, list)
+	}
+	const move = (item: QuickToggleOrderItem, direction: UpDownButton.Direction)=>{
+		const list = ToggleEditorGroup.getOrderListFromSettings(settings)
+		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
+		const targetIndex = index + (direction == UpDownButton.Direction.Up ? -1 : 1)
+		if (targetIndex < 0 || targetIndex >= list.length) return
+		const row = list[index]
+		list[index] = list[targetIndex]
+		list[targetIndex] = row
+		ToggleEditorGroup.setOrderListToSettings(settings, list)
+	}
+	const removeOrphans = (list: QuickToggleOrderItem[])=>{
+		for (const [targetItem, row] of itemRows.entries()) {
+			if (list.some(item => QuickToggleOrderItem.match(item, targetItem))) continue
+			itemRows.delete(targetItem)
+			group.remove(row)
+		}
+	}
+	const pushChildren = (list: QuickToggleOrderItem[])=>{
+		for (const newItem of list) {
+			if ([...itemRows.entries()].find(([item]) => QuickToggleOrderItem.match(item, newItem)))
+				continue
+			const row = Row({
+				settings,
+				title: ToggleEditorGroup.getDisplayName(newItem, systemToggleNames),
+				subtitle: ToggleEditorGroup.getSubtitle(newItem),
+				sensitiveBind: "toggle-order-enabled"
+			})
+
+			const updown = UpDownButton({
+				settings,
+				sensitiveBind: "toggle-order-enabled",
+				action: (direction)=>move(newItem, direction)
+			})
+			row.add_prefix(updown)
+
+			const toggle = new Gtk.ToggleButton({
+				margin_bottom: 8,
+				margin_top: 8,
+				label: _("Hide"),
+				active: newItem.hide ?? false,
+			})
+			toggle.connect("notify::active", () => setHide(newItem, toggle.get_active()))
+			row.add_suffix(toggle)
+
+			itemRows.set(newItem, row)
+			group.add(row)
+		}
+	}
+	const orderChildren = (list: QuickToggleOrderItem[])=>{
+		const rows = [...itemRows.entries()]
+		const orderedRows = list
+			.map(
+				targetItem=>rows.find(
+					([item]) => QuickToggleOrderItem.match(targetItem, item)
+				)[1]
+			)
+		for (const row of orderedRows) {
+			group.remove(row)
+			group.add(row)
 		}
 	}
 
-	for (const item of order) {
-		const toggleItem = new Adw.ActionRow({
-			title: 여기에알려진이름을입력,
-			subtitle: 여기에컨스트럭터명을입력,
-		})
-	
-		const updown = UpDownButton({
-			settings,
-			sensitiveBind: "toggle-order-enabled",
-			action(direction) {
-				
-			},
-		})
-		toggleItem.add_prefix(updown)
-	
-		const toggle = new Gtk.ToggleButton({
-			label: "",
-			active: value,
-		})
-		toggleItem.add_suffix(toggle)
-	
-		toggle.connect("notify::active", () => action(toggle.get_active()))
+	const update = ()=>{
+		setScrollToFocus(page, false)
+		const list = ToggleEditorGroup.getOrderListFromSettings(settings)
+		pushChildren(list)
+		removeOrphans(list)
+		orderChildren(list)
+		delayedSetScrollToFocus(page, true)
 	}
+	const settingsConnection = settings.connect("changed::toggle-order", update.bind(null))
+	update()
+	page.connect("destroy", ()=>settings.disconnect(settingsConnection))
+
+	return group
 }
 namespace ToggleEditorGroup {
 	export function getSystemToggleNames(): Map<string, string> {
@@ -68,8 +125,44 @@ namespace ToggleEditorGroup {
 			[ "UnsafeQuickToggle", _("Unsafe Mode") ],
 		])
 	}
-	export function getOrderListFromSettings(settings: Gio.Settings): OrderItem[] {
-		return settings.get_value("toggle-order").recursiveUnpack() as OrderItem[]
+	export function getOrderListFromSettings(settings: Gio.Settings): QuickToggleOrderItem[] {
+		return settings.get_value("toggle-order").recursiveUnpack() as QuickToggleOrderItem[]
+	}
+	export function setOrderListToSettings(settings: Gio.Settings, list: QuickToggleOrderItem[]): void {
+		const mappedList = list.map(item => {
+			const out = {}
+			for (const [key, value] of Object.entries(item)) {
+				switch (typeof value) {
+					case "boolean":
+						out[key] = GLib.Variant.new_variant(
+							GLib.Variant.new_boolean(value)
+						)
+						break
+					case "string":
+						out[key] = GLib.Variant.new_variant(
+							GLib.Variant.new_string(value)
+						)
+				}
+			}
+			return out
+		})
+		settings.set_value("toggle-order", new GLib.Variant("aa{sv}", mappedList))
+	}
+	export function getDisplayName(
+		item: QuickToggleOrderItem,
+		systemToggleNames: Map<string, string>
+	): string {
+		if (item.nonOrdered) return _("Unsorted items")
+		if (item.isSystem) return systemToggleNames.get(item.constructorName)
+		return item.friendlyName || item.constructorName || item.titleRegex || "Unknown"
+	}
+	export function getSubtitle(
+		item: QuickToggleOrderItem,
+	): string {
+		if (item.nonOrdered) return ""
+		if (item.isSystem) return item.constructorName
+		if (item.friendlyName) return item.constructorName || item.titleRegex || "Unknown"
+		return ""
 	}
 }
 
@@ -82,6 +175,7 @@ export const TogglesPage = GObject.registerClass({
 			title: _('Toggles'),
 			iconName: 'view-grid-symbolic',
 		})
+		fixPageScrollIssue(this)
 
 		// Add
 		Group({
@@ -113,56 +207,7 @@ export const TogglesPage = GObject.registerClass({
 				bind: "toggle-order-enabled",
 			}),
 		},[
-			
+			ToggleEditorGroup( settings, this )
 		])
-
-		// description / enable
-		// const descriptionGroup = new Adw.PreferencesGroup({
-		//     title: _('Buttons to remove'),
-		//     description: _('Turn on the buttons you want to remove from Quick Settings')
-		// })
-		// makeRow({
-		//     parent: descriptionGroup,
-		//     title: _("Remove chosen buttons from quick panel"),
-		//     subtitle: _("Forked from my extension https://github.com/qwreey75/gnome-quick-settings-button-remover")
-		// })
-		// makeRow({
-		//     parent: descriptionGroup,
-		//     title: _("This feature is unstable sometime"),
-		//     subtitle: _("When lock/unlock with gnome-screensaver, unexpected behavior occurs\nPlease do not report issue about known issue, Almost duplicated\nKnown issue:\n  button doesn't remove after lockscreen\n  modal get bigger after lockscreen")
-		// })
-		// makeRow({
-		//     parent: descriptionGroup,
-		//     title: _("Please turn off if some bug occurred")
-		// })
-		// this.add(descriptionGroup)
-
-		// // general
-		// const removeGroup = new Adw.PreferencesGroup()
-		// this.add(removeGroup)
-
-		// let listButtons = JSON.parse(settings.get_string("list-buttons"))
-		// let removedButtons = settings.get_strv("user-removed-buttons")
-		// for (let button of listButtons) {
-		//     makeSwitch({
-		//         title: (button.name || _("Unknown")) + (button.visible ? "" : _(" (invisible by system)")),
-		//         subtitle: button.title,
-		//         parent: removeGroup,
-		//         value: removedButtons.includes(button.name),
-		//         action: (active)=>{
-		//             if (active) {
-		//                 removedButtons.push(button.name)
-		//             } else {
-		//                 while (true) {
-		//                     let index = removedButtons.indexOf(button.name)
-		//                     if (index != -1) {
-		//                         removedButtons.splice(index,1)
-		//                     } else break
-		//                 }
-		//             }
-		//             settings.set_strv("user-removed-buttons",removedButtons)
-		//         }
-		//     })
-		// }
 	}
 })

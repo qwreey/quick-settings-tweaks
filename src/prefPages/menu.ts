@@ -10,6 +10,7 @@ import {
 	DropdownRow,
 	Group,
 	DialogRow,
+	fixPageScrollIssue,
 } from "../libs/prefComponents.js"
 
 function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGroup {
@@ -84,6 +85,7 @@ export const MenuPage = GObject.registerClass({
 			title: _('Menu'),
 			iconName: 'user-available-symbolic',
 		})
+		fixPageScrollIssue(this)
 
 		// Overlay
 		Group({

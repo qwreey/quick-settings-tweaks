@@ -13,18 +13,23 @@ import {
 	ToggleButtonRow,
 	UpDownButton,
 	DialogRow,
+	setScrollToFocus,
+	delayedSetScrollToFocus,
+	fixPageScrollIssue,
 } from "../libs/prefComponents.js"
 
 function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Adw.PreferencesGroup {
 	let items = new Map<string, Adw.ActionRow>()
 	let group: Adw.PreferencesGroup
 	const reorder = ()=>{
+		setScrollToFocus(page, false)
 		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-order"))
 		for (const name of order) {
 			const target = items.get(name)
 			group.remove(target)
 			group.add(target)
 		}
+		delayedSetScrollToFocus(page, true)
 	}
 	const move = (direction: UpDownButton.Direction, name: string)=>{
 		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-order"))
@@ -142,13 +147,13 @@ namespace SystemItemOrderGroup {
 export const OtherPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'OtherPage',
 }, class OtherPage extends Adw.PreferencesPage {
-	window: Adw.PreferencesWindow
 	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
 			name: "Other",
 			title: _("Other"),
 			iconName: "preferences-system-symbolic",
 		})
+		fixPageScrollIssue(this)
 
 		// System Items
 		Group({

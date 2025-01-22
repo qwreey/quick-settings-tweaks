@@ -3,6 +3,7 @@ import Adw from "gi://Adw"
 import Gio from "gi://Gio"
 import Gtk from "gi://Gtk"
 import Gdk from "gi://Gdk"
+import GLib from "gi://GLib"
 import GObject from "gi://GObject"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 
@@ -16,6 +17,28 @@ function addChildren(target: any, funcName: string, children?: any[]) {
 
 function setLinkCursor(target: any) {
 	target.cursor = Gdk.Cursor.new_from_name("pointer", null)
+}
+
+export function setScrollToFocus(target: Adw.PreferencesPage, value: boolean) {
+	const viewport: Gtk.Viewport = target
+		.get_first_child() // GtkScrolledWindow
+		.get_first_child() as any // GtkViewport
+	viewport.scrollToFocus = value
+}
+export function delayedSetScrollToFocus(target: Adw.PreferencesPage, value: boolean) {
+	GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, ()=>{
+		setScrollToFocus(target, value)
+		return GLib.SOURCE_REMOVE
+	})
+}
+// Fix adwaita scroll flicking issue
+export function fixPageScrollIssue(page: Adw.PreferencesPage) {
+	page.connect("unmap", ()=>{
+		setScrollToFocus(page, false)
+	})
+	page.connect("map", ()=>{
+		setScrollToFocus(page, true)
+	})
 }
 
 // #region Dialog

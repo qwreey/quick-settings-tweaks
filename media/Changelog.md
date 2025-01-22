@@ -3,6 +3,14 @@
 <!-- @Includes: [] -->
 <!-- @Date: "2025-1-22 13:16:00 KST" -->
 
+## New Features
+
+- Quick toggle ordering and hiding
+
+## Fix
+
+- Fix pref page scroll flickering issue
+
 # 2.1-pre1
 <!-- @BuildNumber: 1 -->
 <!-- @Includes: [] -->

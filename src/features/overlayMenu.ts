@@ -56,6 +56,7 @@ export class OverlayMenu extends FeatureBase {
 			offsetX,
 		}
 	}
+
 	onOpen(_maid: Maid, menu: QuickSettingsMenu, isOpen: boolean) {
 		if (!isOpen || !this.duration) menu.actor.set_easing_duration(0)
 		else menu.actor.remove_all_transitions()
@@ -149,13 +150,14 @@ export class OverlayMenu extends FeatureBase {
 		this.tracker.load()
 	}
 	override onUnload(): void {
-		if (!this.tracker) return
-		for (const menu of this.tracker.menus) {
+		const tracker = this.tracker
+		if (!tracker) return
+		this.tracker = null
+		for (const menu of tracker.items) {
 			menu.actor.x_expand = true
 			menu.actor.get_constraints()[0].enabled = true
 		}
-		this.tracker.unload()
-		this.tracker = null
+		tracker.unload()
 		// @ts-expect-error
 		Global.QuickSettingsMenu._overlay.get_constraints()[0].enabled = true
 		// @ts-expect-error

@@ -12,6 +12,7 @@ import {
 	LogoGroup,
 	DialogRow,
 	ChangelogDialog,
+	fixPageScrollIssue,
 } from "../libs/prefComponents.js"
 
 export const AboutPage = GObject.registerClass({
@@ -23,6 +24,7 @@ export const AboutPage = GObject.registerClass({
 			title: _('About'),
 			iconName: 'dialog-information-symbolic'
 		})
+		fixPageScrollIssue(this)
 
 		// Logo
 		LogoGroup({

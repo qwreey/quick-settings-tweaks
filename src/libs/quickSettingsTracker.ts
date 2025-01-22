@@ -1,13 +1,44 @@
-import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import {
+    type QuickSettingsMenu,
+    QuickToggle,
+} from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
 import Maid from "./maid.js"
 
-export class QuickSettingsMenuTracker {
+export abstract class QuickSettingsTrackerBase<T> {
+    appliedChild: Map<T, Maid>
+    gridConnection: number
+    load(): void {
+        this.appliedChild = new Map()
+        this.gridConnection = Global.QuickSettingsGrid.connect("child-added", (_: any, child: any)=>{
+            this.catchChild(child)
+            if (this.onUpdate) this.onUpdate()
+        })
+        for (const child of Global.QuickSettingsGrid.get_children()) {
+            this.catchChild(child)
+        }
+        if (this.onUpdate) this.onUpdate()
+    }
+    unload(): void {
+        for (const maid of this.appliedChild.values()) {
+            maid.destroy()
+        }
+        Global.QuickSettingsGrid.disconnect(this.gridConnection)
+        this.gridConnection = null
+        this.appliedChild = null
+    }
+    get items(): T[] {
+        if (!this.appliedChild) return []
+        return [...this.appliedChild.keys()]
+    }
+    protected abstract catchChild(child: any): void
+    onUpdate: ()=>void
+}
+
+export class QuickSettingsMenuTracker extends QuickSettingsTrackerBase<QuickSettingsMenu> {
     onOpen: (maid: Maid, menu: QuickSettingsMenu, isOpen: boolean)=>void
     onMenuCreated: (maid: Maid, menu: QuickSettingsMenu)=>void
-    appliedChild: Map<QuickSettingsMenu, Maid>
-    gridConnection: number
-    catchChild(_: any, child: any): void {
+    protected override catchChild(child: any): void {
         const menu = child.menu
         if (!menu) return
         if (this.appliedChild.has(menu)) return
@@ -29,19 +60,22 @@ export class QuickSettingsMenuTracker {
         if (!this.appliedChild) return []
         return [...this.appliedChild.keys()]
     }
-    load(): void {
-        this.appliedChild = new Map()
-        this.gridConnection = Global.QuickSettingsGrid.connect("child-added", this.catchChild.bind(this))
-        for (const child of Global.QuickSettingsGrid.get_children()) {
-            this.catchChild(null, child)
-        }
-    }
-    unload(): void {
-        for (const maid of this.appliedChild.values()) {
-            maid.destroy()
-        }
-        Global.QuickSettingsGrid.disconnect(this.gridConnection)
-        this.gridConnection = null
-        this.appliedChild = null
+}
+
+export class QuickSettingsToggleTracker extends QuickSettingsTrackerBase<QuickToggle> {
+    onToggleCreated: (maid: Maid, toggle: QuickToggle)=>void
+    protected override catchChild(child: any): void {
+        if (!(child instanceof QuickToggle)) return
+        if (this.appliedChild.has(child)) return
+
+        const toggleMaid = new Maid()
+        toggleMaid.functionJob(()=>{
+            this.appliedChild.delete(child)
+        })
+        toggleMaid.connectJob(child, 'destroy', ()=>{
+            toggleMaid.destroy()
+        })
+        if (this.onToggleCreated) this.onToggleCreated(toggleMaid, child)
+        this.appliedChild.set(child, toggleMaid)
     }
 }
