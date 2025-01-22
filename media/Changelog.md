@@ -2,7 +2,7 @@
 # 2.1-pre2
 <!-- @BuildNumber: 2 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-1-22 13:16:00 KST" -->
+<!-- @Date: "2025-1-23 00:40:00 KST" -->
 
 ## New Features
 
@@ -16,6 +16,10 @@
 - Fix changelog text align
 - Fix pref page scroll flickering issue
 - Fix weather widget empty when no location selected issue
+
+## Prefs QOL patch
+
+- Move contributor rows to dialog
 
 # 2.1-pre1
 <!-- @BuildNumber: 1 -->

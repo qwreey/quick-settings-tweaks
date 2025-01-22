@@ -72,6 +72,26 @@ export const AboutPage = GObject.registerClass({
 					}, prefs.getLicenses().map(LicenseRow)),
 				],
 			}),
+			DialogRow({
+				window,
+				title: _('Contributors'),
+				subtitle: _("The creators of this extension"),
+				dialogTitle: _('Contributors'),
+				icon: "emblem-favorite-symbolic",
+				childrenRequest: _page=>[
+					Group({
+						title: _('Contributors'),
+						description: _("The creators of this extension"),
+					}, [
+						...prefs.getContributorRows().map(ContributorsRow),
+						Row({
+							title: _("More contributors"),
+							subtitle: _("See more contributors on github"),
+							uri: "https://github.com/qwreey/quick-settings-tweaks/graphs/contributors"
+						}),
+					])
+				]
+			})
 		])
 
 		// Links
@@ -103,20 +123,6 @@ export const AboutPage = GObject.registerClass({
 				title: "Webslate",
 				subtitle: _("Add translation to this extension!"),
 				icon: "qst-weblate-logo-symbolic",
-			}),
-		])
-
-		// Contributors
-		Group({
-			parent: this,
-			title: _('Contributor'),
-			description: _("The creators of this extension"),
-		}, [
-			...prefs.getContributorRows().map(ContributorsRow),
-			Row({
-				title: _("More contributors"),
-				subtitle: _("See more contributors on github"),
-				uri: "https://github.com/qwreey/quick-settings-tweaks/graphs/contributors"
 			}),
 		])
 	}
