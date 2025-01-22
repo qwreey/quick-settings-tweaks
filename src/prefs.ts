@@ -47,7 +47,7 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
 		}, rows[0])
 		return rows
 	}
-	
+
 	getLicenses(): LicenseRow.License[] {
 		const licenses = JSON.parse(
 			this.readExtensionFile("media/licenses.json")
@@ -59,7 +59,7 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
 		}
 		return licenses
 	}
-	
+
 	getVersionString(): string {
 		let version = Config.version.toUpperCase().replace(/-.*?$/, "")
 		if (this.metadata.version) {
@@ -79,6 +79,10 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
 			version += "  " + _("(Built from source)")
 		}
 		return version
+	}
+
+	getChangelog(): string {
+		return this.readExtensionFile("media/Changelog.md")
 	}
 
 	async fillPreferencesWindow(window: Adw.PreferencesWindow) {

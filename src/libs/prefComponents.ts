@@ -56,6 +56,21 @@ export namespace Dialog {
 			this.add(new PrefDialogPage(childrenRequest))
 		}
 	})
+	export function StackedPage({ title, dialog, childrenRequest }: {
+		title: string,
+		dialog: Adw.PreferencesDialog,
+		childrenRequest: (page: Adw.PreferencesPage)=>any,
+	}): Adw.NavigationPage {
+		const page = new Adw.NavigationPage({
+			title: title,
+			can_pop: true,
+		})
+		const view = page.child = new Adw.ToolbarView()
+		view.add_top_bar(new Adw.HeaderBar())
+		view.content = new Dialog.PrefDialogPage(childrenRequest)
+		dialog.push_subpage(page)
+		return page
+	}
 }
 // #endregion Dialog
 
@@ -1044,26 +1059,109 @@ export namespace LogoGroup {
 }
 // #endregion LogoGroup
 
-const LITEM = (t: string)=>`<span alpha="70%"> • </span>${t}`
-const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${'#'.repeat(lv)}</span><span weight="bold">${t}</span></span>`
-const QUOTE = (t: string)=>` <span size="90%" alpha="70%">&gt;</span><span size="90%" alpha="85%" weight="light">${t}</span>`
-export const SimpleMarked =
-(mdlike: string): string => mdlike.split("\n").map(
-	line => line
-	.replaceAll(
-		/^ *\-  *(.*)/g,
-		(_, t: string)=>LITEM(t)
-	)
-	.replaceAll(
-		/^ *\>  *(.*)/g,
-		(_, t: string)=>QUOTE(t)
-	)
-	.replaceAll(
-		/^ *(\#*)  *(.*)/g,
-		(_, h: string, t: string)=>TITLE(t, h.length)
-	)
-	.replaceAll(
-		/\<\!\-\-.*?\-\-\>/,
-		""
-	)
-).join("\n")
+// #region ChangelogDialog
+export function ChangelogDialog({
+	content,
+	window,
+}: ChangelogDialog.Options): Adw.PreferencesDialog {
+	const dialog = Dialog({
+		window,
+		title: _("Changelog"),
+		childrenRequest: ()=>[Group({
+			onCreated: (group: Adw.PreferencesGroup) => {
+				content()
+					.then(ChangelogDialog.getReleases)
+					.then(releases => releases.map(release => Row({
+						title: release.version,
+						subtitle: release.Date ?? "",
+						action: ()=>ChangelogDialog.ChangelogPage(dialog, release),
+					})))
+					.then(rows => rows.forEach(row => group.add(row)))
+			},
+		})]
+	})
+	dialog.height_request = 520
+	return dialog
+}
+export namespace ChangelogDialog {
+	export interface Options {
+		window: Adw.PreferencesWindow
+		content: ()=>Promise<string>
+	}
+	const LITEM = (t: string,lv: number)=>`${"　 ".repeat(lv)}<span alpha="70%">　•　</span>${t}`
+	const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${'#'.repeat(lv)} </span><span weight="bold">${t}</span></span>`
+	const QUOTE = (t: string)=>`<span size="90%" alpha="70%">&gt;</span><span size="90%" alpha="85%" weight="light">${t}</span>`
+	export function simpleMarked(mdlike: string): string {
+		return mdlike.split("\n").map(
+			line => line
+			.replaceAll(
+				/^( *)\-  *(.*)/g,
+				(_, indent, t: string)=>LITEM(t, Math.floor(indent.length/2))
+			)
+			.replaceAll(
+				/^ *\>  *(.*)/g,
+				(_, t: string)=>QUOTE(t)
+			)
+			.replaceAll(
+				/^ *(\#*)  *(.*)/g,
+				(_, head: string, t: string)=>TITLE(t, head.length)
+			)
+			.replaceAll(
+				/\<\!\-\-.*?\-\-\>/g,
+				""
+			)
+		).join("\n")
+	}
+	export interface Release {
+		version: string
+		content: string
+		Includes: string[]
+		BuildNumber: number
+		Date: string
+	}
+	export function getReleases(content: string): Release[] {
+		type Item = Partial<Release & { buffer: string[] }>
+		const releases: Item[] = []
+		let last: Item
+		for (const line of content.split("\n")) {
+			const version = line.match(/^#  *(.*) *$/)
+			if (version) {
+				releases.push(last = {
+					version: version[1],
+					buffer: [line],
+				})
+				continue
+			}
+			const meta = line.match("\<\!\-\-  *\@([^ ]*) *: *(.*?) *\-\-\>")
+			if (meta) {
+				last[meta[1]] = JSON.parse(meta[2])
+				continue
+			}
+			last.buffer.push(line)
+		}
+		for (const item of releases) {
+			item.content = item.buffer.join("\n")
+			delete item.buffer
+		}
+		return releases as Release[]
+	}
+	export function ChangelogPage(
+		dialog: Adw.PreferencesDialog,
+		release: Release,
+	): Adw.NavigationPage {
+		return Dialog.StackedPage({
+			dialog,
+			title: release.version,
+			childrenRequest: ()=>[
+				Group({},[
+					new Gtk.Label({
+						use_markup: true,
+						label: ChangelogDialog.simpleMarked(release.content),
+						halign: Gtk.Align.CENTER,
+					})
+				])
+			]
+		})
+	}
+}
+// #endregion ChangelogDialog

@@ -10,12 +10,13 @@ import {
 	ContributorsRow,
 	LicenseRow,
 	LogoGroup,
+	ChangelogDialog,
 } from "../libs/prefComponents.js"
 
 export const AboutPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+'AboutPage',
 }, class AboutPage extends Adw.PreferencesPage {
-	constructor(_settings: Gio.Settings, prefs: QstExtensionPreferences, _window: Adw.PreferencesWindow) {
+	constructor(_settings: Gio.Settings, prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
 			name: 'about',
 			title: _('About'),
@@ -35,6 +36,12 @@ export const AboutPage = GObject.registerClass({
 			parent: this,
 			// title: _('Links'),
 		},[
+			Row({
+				title: _("Changelog"),
+				subtitle: _("Support development!"),
+				action: ()=>ChangelogDialog({ window, content: async () => prefs.getChangelog() }),
+				icon: "qst-patreon-logo-symbolic",
+			}),
 			Row({
 				uri: "https://patreon.com/user?u=44216831",
 				title: _("Donate via patreon"),
