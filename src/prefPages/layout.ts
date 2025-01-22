@@ -120,7 +120,7 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 		orderChildren(list)
 		delayedSetScrollToFocus(page, true)
 	}
-	const settingsConnection = settings.connect("changed::toggle-order", update.bind(null))
+	const settingsConnection = settings.connect("changed::toggles-layout-order", update.bind(null))
 	update()
 	page.connect("destroy", ()=>settings.disconnect(settingsConnection))
 
@@ -232,7 +232,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 			order[index] = order[index + 1]
 			order[index + 1] = name
 		}
-		settings.set_strv("system-items-order", order)
+		settings.set_strv("system-items-layout-order", order)
 	}
 
 	const orderConnection = settings.connect("changed::system-items-layout-order", reorder)
