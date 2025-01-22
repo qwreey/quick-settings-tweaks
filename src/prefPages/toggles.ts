@@ -21,19 +21,24 @@ import {
 } from "../libs/prefComponents.js"
 
 // #region ToggleOrderGroup
-function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Adw.PreferencesGroup {
+function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dialog: Adw.PreferencesDialog): Adw.PreferencesGroup {
 	const systemToggleNames = ToggleOrderGroup.getSystemToggleNames()
+	const systemToggleIcons = ToggleOrderGroup.getSystemToggleIcons()
 	const itemRows = new Map<QuickToggleOrderItem, Adw.ActionRow>()
 
 	const group = Group({
 		title: _("Ordering and Hiding"),
-		headerSuffix: ResetButton({ settings, bind: "toggle-order", marginBottom: 0, marginTop: 0 }),
+		headerSuffix: ResetButton({ settings, bind: "toggle-layout-order", marginBottom: 0, marginTop: 0 }),
 	})
 
 	const setHide = (item: QuickToggleOrderItem, hide: boolean)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
 		list.find(targetItem => QuickToggleOrderItem.match(targetItem, item)).hide = hide
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
+		dialog.add_toast(new Adw.Toast({
+			title: _("This option requires full gnome-shell reloading"),
+			timeout: 12,
+		}))
 	}
 	const move = (item: QuickToggleOrderItem, direction: UpDownButton.Direction)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
@@ -60,12 +65,22 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Ad
 				settings,
 				title: ToggleOrderGroup.getDisplayName(newItem, systemToggleNames),
 				subtitle: ToggleOrderGroup.getSubtitle(newItem),
-				sensitiveBind: "toggle-order-enabled"
+				sensitiveBind: "toggle-layout-enabled"
 			})
+
+			if (newItem.isSystem && systemToggleIcons.has(newItem.constructorName)) {
+				const icon = new Gtk.Image({
+					icon_name: systemToggleIcons.get(newItem.constructorName),
+					pixel_size: 18,
+					margin_start: 8,
+					margin_end: 2,
+				})
+				row.add_prefix(icon)
+			}
 
 			const updown = UpDownButton({
 				settings,
-				sensitiveBind: "toggle-order-enabled",
+				sensitiveBind: "toggle-layout-enabled",
 				action: (direction)=>move(newItem, direction)
 			})
 			row.add_prefix(updown)
@@ -124,15 +139,33 @@ namespace ToggleOrderGroup {
 			[ "PowerProfilesToggle", IGNORE_XGETTEXT("Power Mode") ],
 			[ "NightLightToggle", IGNORE_XGETTEXT("Night Light") ],
 			[ "DarkModeToggle", IGNORE_XGETTEXT("Dark Style") ],
-			[ "KeyboardBrightnessToggle", IGNORE_XGETTEXT("Keyboard") ],
+			[ "KeyboardBrightnessToggle", _("Keyboard Backlight") ],
 			[ "RfkillToggle", IGNORE_XGETTEXT("Airplane Mode") ],
 			[ "RotationToggle", IGNORE_XGETTEXT("Auto Rotate") ],
 			[ "DndQuickToggle", _("Do Not Disturb") ],
 			[ "UnsafeQuickToggle", _("Unsafe Mode") ],
 		])
 	}
+	export function getSystemToggleIcons(): Map<string, string> {
+		return new Map<string, string>([
+			[ "NMWiredToggle", "network-wired-symbolic" ],
+			[ "NMWirelessToggle", "network-wireless-signal-excellent-symbolic" ],
+			[ "NMModemToggle", "network-cellular-symbolic" ],
+			[ "NMBluetoothToggle", "network-cellular-symbolic" ],
+			[ "NMVpnToggle", "network-vpn-symbolic" ],
+			[ "BluetoothToggle", "bluetooth-active-symbolic" ],
+			[ "PowerProfilesToggle", "power-profile-balanced-symbolic" ],
+			[ "NightLightToggle", "night-light-symbolic" ],
+			[ "DarkModeToggle", "weather-clear-night" ],
+			[ "KeyboardBrightnessToggle", "preferences-desktop-keyboard" ],
+			[ "RfkillToggle", "airplane-mode-symbolic" ],
+			[ "RotationToggle", "object-rotate-right" ],
+			[ "DndQuickToggle", "notifications-disabled-symbolic" ],
+			[ "UnsafeQuickToggle", "channel-secure-symbolic" ],
+		])
+	}
 	export function getOrderListFromSettings(settings: Gio.Settings): QuickToggleOrderItem[] {
-		return settings.get_value("toggle-order").recursiveUnpack() as QuickToggleOrderItem[]
+		return settings.get_value("toggle-layout-order").recursiveUnpack() as QuickToggleOrderItem[]
 	}
 	export function setOrderListToSettings(settings: Gio.Settings, list: QuickToggleOrderItem[]): void {
 		const mappedList = list.map(item => {
@@ -152,7 +185,7 @@ namespace ToggleOrderGroup {
 			}
 			return out
 		})
-		settings.set_value("toggle-order", new GLib.Variant("aa{sv}", mappedList))
+		settings.set_value("toggle-layout-order", new GLib.Variant("aa{sv}", mappedList))
 	}
 	export function getDisplayName(
 		item: QuickToggleOrderItem,
@@ -179,7 +212,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 	let group: Adw.PreferencesGroup
 	const reorder = ()=>{
 		setScrollToFocus(page, false)
-		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-order"))
+		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-layout-order"))
 		for (const name of order) {
 			const target = items.get(name)
 			group.remove(target)
@@ -188,7 +221,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 		delayedSetScrollToFocus(page, true)
 	}
 	const move = (direction: UpDownButton.Direction, name: string)=>{
-		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-order"))
+		const order = SystemItemOrderGroup.copyOrder(settings.get_strv("system-items-layout-order"))
 		const index = order.indexOf(name)
 		if (direction == UpDownButton.Direction.Up) {
 			if (index == 0) return
@@ -202,12 +235,12 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 		settings.set_strv("system-items-order", order)
 	}
 
-	const orderConnection = settings.connect("changed::system-items-order", reorder)
+	const orderConnection = settings.connect("changed::system-items-layout-order", reorder)
 	page.connect("destroy", ()=>settings.disconnect(orderConnection))
 
 	return Group({
 		title: _("Ordering and Hiding"),
-		headerSuffix: ResetButton({ settings, bind: "system-items-order", marginBottom: 0, marginTop: 0 }),
+		headerSuffix: ResetButton({ settings, bind: "system-items-layout-order", marginBottom: 0, marginTop: 0 }),
 		onCreated(row: Adw.PreferencesGroup) {
 			group = row
 			reorder()
@@ -217,7 +250,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 			title: _("Desktop Spacer"),
 			prefix: UpDownButton({
 				settings,
-				sensitiveBind: "system-items-enabled",
+				sensitiveBind: "system-items-layout-enabled",
 				action: (direction) => move(direction, "desktopSpacer"),
 			}),
 			onCreated(row) {
@@ -228,7 +261,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 			title: _("Laptop Spacer"),
 			prefix: UpDownButton({
 				settings,
-				sensitiveBind: "system-items-enabled",
+				sensitiveBind: "system-items-layout-enabled",
 				action: (direction) => move(direction, "laptopSpacer"),
 			}),
 			onCreated(row) {
@@ -238,38 +271,38 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 		...[
 			{
 				title: _("Capture button"),
-				bind: "system-items-hide-screenshot",
+				bind: "system-items-layout-hide-screenshot",
 				icon: "camera-photo",
 				targetName: "screenshot",
 			},
 			{
 				title: _("Settings button"),
-				bind: "system-items-hide-settings",
+				bind: "system-items-layout-hide-settings",
 				icon: "preferences-system-symbolic",
 				targetName: "settings",
 			},
 			{
 				title: _("Lock button"),
-				bind: "system-items-hide-lock",
+				bind: "system-items-layout-hide-lock",
 				icon: "system-lock-screen-symbolic",
 				targetName: "lock",
 			},
 			{
 				title: _("Shutdown button"),
-				bind: "system-items-hide-shutdown",
+				bind: "system-items-layout-hide-shutdown",
 				icon: "system-shutdown-symbolic",
 				targetName: "shutdown",
 			},
 			{
 				title: _("Battery button"),
-				bind: "system-items-hide-battery",
+				bind: "system-items-layout-hide-battery",
 				icon: "battery-symbolic",
 				targetName: "battery",
 			},
 		].map(item => ToggleButtonRow({
 			settings,
 			text: _("Hide"),
-			sensitiveBind: "system-items-enabled",
+			sensitiveBind: "system-items-layout-enabled",
 			...item,
 			onCreated(row: Adw.ActionRow) {
 				items.set(item.targetName, row)
@@ -280,7 +313,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 				}))
 				row.add_prefix(UpDownButton({
 					settings,
-					sensitiveBind: "system-items-enabled",
+					sensitiveBind: "system-items-layout-enabled",
 					action: (direction) => move(direction, item.targetName),
 				}))
 			},
@@ -339,18 +372,18 @@ export const TogglesPage = GObject.registerClass({
 			description: _("Adjust quick toggles layout"),
 			headerSuffix: SwitchRow({
 				settings,
-				bind: "toggle-order-enabled",
+				bind: "toggle-layout-enabled",
 			}),
 		},[
 			DialogRow({
 				settings,
 				window,
-				sensitiveBind: "toggle-order-enabled",
+				sensitiveBind: "toggle-layout-enabled",
 				title: _("Ordering and Hiding"),
 				subtitle: _("Reorder and hide quick toggles"),
 				dialogTitle: _("Adjust system items layout"),
 				experimental: true,
-				childrenRequest: page => [ToggleOrderGroup(settings, page)],
+				childrenRequest: (page, dialog) => [ToggleOrderGroup(settings, page, dialog)],
 			}),
 		])
 
@@ -360,7 +393,7 @@ export const TogglesPage = GObject.registerClass({
 			title: _("System Items Layout"),
 			headerSuffix: SwitchRow({
 				settings,
-				bind: "system-items-enabled",
+				bind: "system-items-layout-enabled",
 			}),
 			description: _("Adjust system items layout"),
 		},[
@@ -368,13 +401,13 @@ export const TogglesPage = GObject.registerClass({
 				settings,
 				title: _("Hide layout"),
 				subtitle: _("Hide all buttons and layout box"),
-				bind: "system-items-hide",
-				sensitiveBind: "system-items-enabled",
+				bind: "system-items-layout-hide",
+				sensitiveBind: "system-items-layout-enabled",
 			}),
 			DialogRow({
 				settings,
 				window,
-				sensitiveBind: "system-items-enabled",
+				sensitiveBind: "system-items-layout-enabled",
 				title: _("Ordering and Hiding"),
 				subtitle: _("Hide all buttons and layout box"),
 				dialogTitle: _("Adjust system items layout"),

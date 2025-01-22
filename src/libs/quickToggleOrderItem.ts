@@ -14,6 +14,7 @@ export namespace QuickToggleOrderItem {
         if (
             a.isSystem != b.isSystem
             || a.nonOrdered != b.nonOrdered
+            || a.hide != b.hide
         ) return false
         if (a.nonOrdered) return true
         if (a.isSystem) return a.constructorName == b.constructorName

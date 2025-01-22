@@ -1,18 +1,17 @@
-import { type QuickToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import { QuickToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { QuickSettingsToggleTracker } from "../../libs/quickSettingsTracker.js"
 import Maid from "../../libs/maid.js"
 import { Global } from "../../global.js"
 import { QuickToggleOrderItem } from "../../libs/quickToggleOrderItem.js"
 
-
 export class TogglesOrderFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	order: QuickToggleOrderItem[]
 	loadSettings(loader: SettingLoader): void {
-		this.enabled = loader.loadBoolean("toggle-order-enabled")
-		this.order = loader.loadValue("toggle-order")
+		this.enabled = loader.loadBoolean("toggle-layout-enabled")
+		this.order = loader.loadValue("toggle-layout-order")
 	}
 	// #endregion settings
 
@@ -21,7 +20,31 @@ export class TogglesOrderFeature extends FeatureBase {
 		if (!rule) return
 		if (rule.hide) maid.hideJob(toggle)
 	}
-	onUpdate(): void {}
+	onUpdate(): void {
+		const children = Global.QuickSettingsGrid.get_children()
+		const head: QuickToggle[] = []
+		const middle: QuickToggle[] = children.filter(child =>
+			child instanceof QuickToggle && child.constructor.name != "BackgroundAppsToggle"
+		) as any
+		const tail: QuickToggle[] = []
+		let overNonOrdered: boolean = false
+		for (const item of this.order) {
+			if (item.nonOrdered) {
+				overNonOrdered = true
+				continue
+			}
+			const middleIndex = middle.findIndex(toggle => QuickToggleOrderItem.toggleMatch(item, toggle))
+			if (middleIndex == -1) continue
+			const toggle = middle[middleIndex]
+			middle.splice(middleIndex, 1);
+			(overNonOrdered ? tail : head).push(toggle)
+		}
+		let last: QuickToggle|null = null
+		for (const item of [head, middle, tail].flat()) {
+			if (last) Global.QuickSettingsGrid.set_child_above_sibling(item, last)
+			last = item
+		}
+	}
 
 	tracker: QuickSettingsToggleTracker
 	onLoad(): void {

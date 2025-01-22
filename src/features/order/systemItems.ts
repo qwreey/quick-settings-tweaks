@@ -19,14 +19,14 @@ export class SystemItemsOrderFeature extends FeatureBase {
 	enabled: boolean
 	order: string[]
 	loadSettings(loader: SettingLoader): void {
-		this.hideScreenshot = loader.loadBoolean("system-items-hide-screenshot")
-		this.hideSettings = loader.loadBoolean("system-items-hide-settings")
-		this.hideLock = loader.loadBoolean("system-items-hide-lock")
-		this.hideShutdown = loader.loadBoolean("system-items-hide-shutdown")
-		this.hideBattery = loader.loadBoolean("system-items-hide-battery")
-		this.hideLayout = loader.loadBoolean("system-items-hide")
-		this.enabled = loader.loadBoolean("system-items-enabled")
-		this.order = loader.loadStrv("system-items-order")
+		this.hideScreenshot = loader.loadBoolean("system-items-layout-hide-screenshot")
+		this.hideSettings = loader.loadBoolean("system-items-layout-hide-settings")
+		this.hideLock = loader.loadBoolean("system-items-layout-hide-lock")
+		this.hideShutdown = loader.loadBoolean("system-items-layout-hide-shutdown")
+		this.hideBattery = loader.loadBoolean("system-items-layout-hide-battery")
+		this.hideLayout = loader.loadBoolean("system-items-layout-hide")
+		this.enabled = loader.loadBoolean("system-items-layout-enabled")
+		this.order = loader.loadStrv("system-items-layout-order")
 	}
 	// #endregion settings
 

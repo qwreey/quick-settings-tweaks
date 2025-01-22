@@ -65,28 +65,28 @@
     <!-- #endregion Date Menu -->
 
     <!-- #region System Items -->
-    <key name="system-items-enabled" type="b">
+    <key name="system-items-layout-enabled" type="b">
       <default>false</default>
     </key>
-    <key name="system-items-hide" type="b">
+    <key name="system-items-layout-hide" type="b">
       <default>false</default>
     </key>
-    <key name="system-items-hide-screenshot" type="b">
+    <key name="system-items-layout-hide-screenshot" type="b">
       <default>false</default>
     </key>
-    <key name="system-items-hide-settings" type="b">
+    <key name="system-items-layout-hide-settings" type="b">
       <default>false</default>
     </key>
-    <key name="system-items-hide-lock" type="b">
+    <key name="system-items-layout-hide-lock" type="b">
       <default>false</default>
     </key>
-    <key name="system-items-hide-shutdown" type="b">
+    <key name="system-items-layout-hide-shutdown" type="b">
       <default>false</default>
     </key>
-    <key name="system-items-hide-battery" type="b">
+    <key name="system-items-layout-hide-battery" type="b">
       <default>false</default>
     </key>
-    <key name="system-items-order" type="as">
+    <key name="system-items-layout-order" type="as">
       <default>['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']</default>
     </key>
     <!-- #endregion System Items -->
@@ -135,11 +135,11 @@
     </key>
     <!-- #endregion Input Output -->
 
-    <!-- #region Quick Toggle Order -->
-    <key name="toggle-order-enabled" type="b">
+    <!-- #region Quick Toggle Layout -->
+    <key name="toggle-layout-enabled" type="b">
       <default>false</default>
     </key>
-    <key name="toggle-order" type="aa{sv}">
+    <key name="toggle-layout-order" type="aa{sv}">
       <default><![CDATA[
         [
           { 'hide': <false>, 'isSystem': <true>, 'constructorName': <'NMWiredToggle'> },

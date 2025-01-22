@@ -54,38 +54,39 @@ export function Dialog({
 	return dialog
 }
 export namespace Dialog {
+	export type ChildrenRequest = (page: Adw.PreferencesPage, dialog: Adw.PreferencesDialog)=>any
 	export interface Options {
 		title?: string
 		minHeight?: number
-		childrenRequest: (page: Adw.PreferencesPage)=>any
+		childrenRequest: ChildrenRequest
 		window: Adw.PreferencesWindow
 	}
 	export const PrefDialogPage = GObject.registerClass({
 		GTypeName: "qwreey-pref-components-PrefDialogPage",
 	}, class PrefDialogPage extends Adw.PreferencesPage {
-		constructor(childrenRequest: (page: Adw.PreferencesPage)=>any) {
+		constructor(childrenRequest: ChildrenRequest, dialog: Adw.PreferencesDialog) {
 			super({
 				name: "SystemItemOrderPage",
 			})
-			addChildren(this, "add", childrenRequest(this))
+			addChildren(this, "add", childrenRequest(this, dialog))
 		}
 	})
 	export const PrefDialog = GObject.registerClass({
 		GTypeName: "qwreey-pref-components-PrefDialog",
 	}, class PrefDialog extends Adw.PreferencesDialog {
-		constructor(title: string, childrenRequest: (page: Adw.PreferencesPage)=>any) {
+		constructor(title: string, childrenRequest: ChildrenRequest) {
 			super({
 				title: title ?? "",
 				search_enabled: true,
 				presentation_mode: Adw.DialogPresentationMode.BOTTOM_SHEET,
 			})
-			this.add(new PrefDialogPage(childrenRequest))
+			this.add(new PrefDialogPage(childrenRequest, this))
 		}
 	})
 	export function StackedPage({ title, dialog, childrenRequest }: {
 		title: string,
 		dialog: Adw.PreferencesDialog,
-		childrenRequest: (page: Adw.PreferencesPage)=>any,
+		childrenRequest: ChildrenRequest,
 	}): Adw.NavigationPage {
 		const page = new Adw.NavigationPage({
 			title: title,
@@ -93,7 +94,7 @@ export namespace Dialog {
 		})
 		const view = page.child = new Adw.ToolbarView()
 		view.add_top_bar(new Adw.HeaderBar())
-		view.content = new Dialog.PrefDialogPage(childrenRequest)
+		view.content = new Dialog.PrefDialogPage(childrenRequest, dialog)
 		dialog.push_subpage(page)
 		return page
 	}
