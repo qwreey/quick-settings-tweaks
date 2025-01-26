@@ -3,7 +3,7 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import GLib from "gi://GLib"
 import Gtk from "gi://Gtk"
-import { gettext as _, ngettext } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
+import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
 import { QuickToggleOrderItem } from "../libs/quickToggleOrderItem.js"
@@ -40,7 +40,7 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 		let nth = 1
 		let name: string
 		while (true) {
-			name = ngettext("My toggle #%d", "My toggle #%d", nth)
+			name = _("My toggle #%d").format(nth)
 			if (list.findIndex(item => item.friendlyName == name) == -1) break
 			nth += 1
 		}
@@ -53,14 +53,81 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 		title: _("Ordering and Hiding"),
 		headerSuffix: header
 	})
-	const editItem = (item: QuickToggleOrderItem)=>{
+	const saveEditItem = (item: QuickToggleOrderItem, edited: QuickToggleOrderItem)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
 		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
-		new Dialog.PrefDialogPage((_page, dialog)=>{[
-			Group({
-				title: _("Toggle editor"),
-			})
-		]}, dialog, item.friendlyName)
+		if (index == -1) {
+			dialog.add_toast(new Adw.Toast({
+				title: _("The toggle item not found"),
+				timeout: 8,
+			}))
+			return
+		}
+		if (QuickToggleOrderItem.match(item, edited)) {
+			dialog.add_toast(new Adw.Toast({
+				title: _("No changes"),
+				timeout: 8,
+			}))
+			return
+		}
+		if (list.some(listItem => QuickToggleOrderItem.match(listItem, edited))) {
+			dialog.add_toast(new Adw.Toast({
+				title: _("The same item already exists"),
+			}))
+			return
+		}
+		dialog.add_toast(new Adw.Toast({
+			title: _("Saved"),
+			timeout: 8,
+		}))
+		list[index] = edited
+		ToggleOrderGroup.setOrderListToSettings(settings, list)
+	}
+	const editItem = (item: QuickToggleOrderItem)=>{
+		const stack = Dialog.StackedPage({
+			dialog,
+			title: _("Properties of %s").format(item.friendlyName),
+			childrenRequest: (page, _dialog)=>{
+				const friendlyName = new Adw.EntryRow({
+					// editable
+					text: item.friendlyName,
+					max_length: 2048,
+					title: _("Friendly Name"),
+				})
+				const hideRow = new Adw.SwitchRow({
+					active: item.hide,
+					title: _("Hide"),
+				})
+				const titleRegex = new Adw.EntryRow({
+					text: item.titleRegex,
+					max_length: 2048,
+					title: _("Title Regex (Javascript Regex)")
+				})
+				const constructorName = new Adw.EntryRow({
+					text: item.constructorName,
+					max_length: 2028,
+					title: _("Constructor Name")
+				})
+				page.connect("unmap", ()=>{
+					saveEditItem(item, {
+						friendlyName: friendlyName.text,
+						constructorName: constructorName.text,
+						titleRegex: titleRegex.text,
+						hide: hideRow.active
+					})
+				})
+				return [
+					Group({
+						title: _("Toggle editor"),
+					},[
+						friendlyName,
+						constructorName,
+						titleRegex,
+						hideRow,
+					])
+				]
+			}
+		})
 	}
 	const deleteItem = (item: QuickToggleOrderItem)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
@@ -136,7 +203,7 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 			}
 
 			// Edit button
-			// if (!newItem.isSystem && !newItem.nonOrdered) {
+			if (!newItem.isSystem && !newItem.nonOrdered) {
 				const deleteButton = new Gtk.Button({
 					icon_name: "edit-clear-symbolic",
 					margin_bottom: 8,
@@ -151,7 +218,7 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 				editButton.connect("clicked", editItem.bind(null, newItem))
 				row.add_suffix(deleteButton)
 				row.add_suffix(editButton)
-			// }
+			}
 
 			itemRows.set(newItem, row)
 			group.add(row)
