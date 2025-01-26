@@ -84,37 +84,33 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
 	}
 	const editItem = (item: QuickToggleOrderItem)=>{
+		let friendlyName: Adw.EntryRow
+		let hideRow: Adw.SwitchRow
+		let titleRegex: Adw.EntryRow
+		let constructorName: Adw.EntryRow
 		const stack = Dialog.StackedPage({
 			dialog,
 			title: _("Properties of %s").format(item.friendlyName),
 			childrenRequest: (page, _dialog)=>{
-				const friendlyName = new Adw.EntryRow({
+				friendlyName = new Adw.EntryRow({
 					// editable
 					text: item.friendlyName,
 					max_length: 2048,
 					title: _("Friendly Name"),
 				})
-				const hideRow = new Adw.SwitchRow({
+				hideRow = new Adw.SwitchRow({
 					active: item.hide,
 					title: _("Hide"),
 				})
-				const titleRegex = new Adw.EntryRow({
+				titleRegex = new Adw.EntryRow({
 					text: item.titleRegex,
 					max_length: 2048,
 					title: _("Title Regex (Javascript Regex)")
 				})
-				const constructorName = new Adw.EntryRow({
+				constructorName = new Adw.EntryRow({
 					text: item.constructorName,
 					max_length: 2028,
 					title: _("Constructor Name")
-				})
-				page.connect("unmap", ()=>{
-					saveEditItem(item, {
-						friendlyName: friendlyName.text,
-						constructorName: constructorName.text,
-						titleRegex: titleRegex.text,
-						hide: hideRow.active
-					})
 				})
 				return [
 					Group({
@@ -127,6 +123,19 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 					])
 				]
 			}
+		})
+		const onClose = ()=>{
+			saveEditItem(item, {
+				friendlyName: friendlyName.text,
+				constructorName: constructorName.text,
+				titleRegex: titleRegex.text,
+				hide: hideRow.active
+			})
+		}
+		const dialogConnection = dialog.connect("close-attempt", onClose)
+		stack.connect("hiding", ()=>{
+			dialog.disconnect(dialogConnection)
+			onClose()
 		})
 	}
 	const deleteItem = (item: QuickToggleOrderItem)=>{
