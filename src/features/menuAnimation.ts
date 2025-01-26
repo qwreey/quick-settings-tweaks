@@ -80,7 +80,7 @@ export class MenuAnimation extends FeatureBase {
 				radius: this.backgroundBlurRadius,
 			})
 			// @ts-expect-error
-			Global.QuickSettingsMenu._boxPointer.add_effect_with_name('blur', this.blur)
+			Global.QuickSettingsMenu._boxPointer.add_effect_with_name("blur", this.blur)
 		}
 
 		this.tracker = new QuickSettingsMenuTracker()

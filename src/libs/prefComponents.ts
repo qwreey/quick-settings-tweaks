@@ -64,10 +64,13 @@ export namespace Dialog {
 	export const PrefDialogPage = GObject.registerClass({
 		GTypeName: "qwreey-pref-components-PrefDialogPage",
 	}, class PrefDialogPage extends Adw.PreferencesPage {
-		constructor(childrenRequest: ChildrenRequest, dialog: Adw.PreferencesDialog) {
+		constructor(childrenRequest: ChildrenRequest, dialog: Adw.PreferencesDialog, title?: string) {
 			super({
-				name: "SystemItemOrderPage",
+				name: "PrefDialogPage",
 			})
+			if (title) {
+				this.title = title
+			}
 			addChildren(this, "add", childrenRequest(this, dialog))
 		}
 	})
@@ -203,7 +206,7 @@ export function Row({
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			row, 'sensitive',
+			row, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
@@ -369,7 +372,7 @@ export function SwitchRow({
 	if (bind) {
 		settings.bind(
 			bind,
-			row, 'active',
+			row, "active",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
@@ -378,7 +381,7 @@ export function SwitchRow({
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			row, 'sensitive',
+			row, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
@@ -449,7 +452,7 @@ export function ToggleButtonRow({
 	if (bind) {
 		settings.bind(
 			bind,
-			toggle, 'active',
+			toggle, "active",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
@@ -458,13 +461,13 @@ export function ToggleButtonRow({
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			row, 'sensitive',
+			row, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
 		settings.bind(
 			sensitiveBind,
-			toggle, 'sensitive',
+			toggle, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		toggle.sensitive = settings.get_boolean(sensitiveBind)
@@ -529,7 +532,7 @@ export function Button({
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			button, 'sensitive',
+			button, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		button.sensitive = settings.get_boolean(sensitiveBind)
@@ -639,13 +642,13 @@ export function UpDownButton({
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			up, 'sensitive',
+			up, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		up.sensitive = settings.get_boolean(sensitiveBind)
 		settings.bind(
 			sensitiveBind,
-			down, 'sensitive',
+			down, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		down.sensitive = settings.get_boolean(sensitiveBind)
@@ -727,7 +730,7 @@ export function AdjustmentRow({
 	if (bind) {
 		settings.bind(
 			bind,
-			row, 'value',
+			row, "value",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
@@ -736,7 +739,7 @@ export function AdjustmentRow({
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			row, 'sensitive',
+			row, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
@@ -842,7 +845,7 @@ export function DropdownRow({
 		title: title ?? "",
 		subtitle: subtitle ?? null,
 		model: filterModeModel,
-		expression: new (Gtk.PropertyExpression as any)(DropdownRow.Items, null, 'name'),
+		expression: new (Gtk.PropertyExpression as any)(DropdownRow.Items, null, "name"),
 		selected: getIndex(value),
 	})
 	setLinkCursor(row)
@@ -862,7 +865,7 @@ export function DropdownRow({
 		})
 		row.connect("destroy", ()=>settings.disconnect(settingsConnection))
 	}
-	if (bind || action) row.connect('notify::selected', () => {
+	if (bind || action) row.connect("notify::selected", () => {
 		const selected = (row.selectedItem as any).value
 		if (bind && (selected != settings.get_string(bind))) {
 			settings.set_string(bind, selected)
@@ -875,7 +878,7 @@ export function DropdownRow({
 	if (sensitiveBind) {
 		settings.bind(
 			sensitiveBind,
-			row, 'sensitive',
+			row, "sensitive",
 			Gio.SettingsBindFlags.DEFAULT
 		)
 		row.sensitive = settings.get_boolean(sensitiveBind)
@@ -902,12 +905,12 @@ export namespace DropdownRow {
 	}
 	export const Items = GObject.registerClass({
 		Properties: {
-			'name': GObject.ParamSpec.string(
-				'name', 'name', 'name',
+			"name": GObject.ParamSpec.string(
+				"name", "name", "name",
 				GObject.ParamFlags.READWRITE,
 				null),
-			'value': GObject.ParamSpec.string(
-				'value', 'value', 'value',
+			"value": GObject.ParamSpec.string(
+				"value", "value", "value",
 				GObject.ParamFlags.READWRITE,
 				null),
 		},
@@ -949,7 +952,7 @@ export function ContributorsRow(row: ContributorsRow.Contributor[]): Adw.ActionR
 		})
 		itemBox.append(itemImage)
 		const nameText = new Gtk.Label({
-			label: '<span size="small">'+item.name+'</span>',
+			label: `<span size="small">${item.name}</span>`,
 			useMarkup: true,
 			hexpand: true,
 		})
@@ -964,7 +967,7 @@ export function ContributorsRow(row: ContributorsRow.Contributor[]): Adw.ActionR
 		})
 		for (const label of item.label.split("\n")) {
 			const labelText = new Gtk.Label({
-				label: '<span size="small">'+label+'</span>',
+				label: `<span size="small">${label}</span>`,
 				useMarkup: true,
 				hexpand: true,
 				opacity: 0.7,
@@ -1148,7 +1151,7 @@ export namespace ChangelogDialog {
 		subtitle?: string
 	}
 	const LITEM = (t: string,lv: number)=>`${"　 ".repeat(lv)}<span alpha="70%">　•　</span>${t}`
-	const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${'#'.repeat(lv)} </span><span weight="bold">${t}</span></span>`
+	const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${"#".repeat(lv)} </span><span weight="bold">${t}</span></span>`
 	const QUOTE = (t: string)=>`<span size="90%" alpha="70%">&gt;</span><span size="90%" alpha="85%" weight="light">${t}</span>`
 	export function simpleMarked(mdlike: string): string {
 		return mdlike.split("\n").map(

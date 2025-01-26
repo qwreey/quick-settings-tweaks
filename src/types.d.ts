@@ -1,5 +1,5 @@
-import '@girs/gnome-shell/ambient'
-import '@girs/gnome-shell/extensions/global'
-import '@girs/gjs/dom'
-import '@girs/gjs'
-import '@girs/gnome-shell/misc/signals'
+import "@girs/gnome-shell/ambient"
+import "@girs/gnome-shell/extensions/global"
+import "@girs/gjs/dom"
+import "@girs/gjs"
+import "@girs/gnome-shell/misc/signals"

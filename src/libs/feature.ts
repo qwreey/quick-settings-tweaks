@@ -6,7 +6,7 @@ export class SettingLoader {
 	listeners: number[]
 	onChange: (key: string)=>void
 	constructor(
-		onChange: SettingLoader['onChange']
+		onChange: SettingLoader["onChange"]
 	) {
 		this.records = new Set()
 		this.listeners = []

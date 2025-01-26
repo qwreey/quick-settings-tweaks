@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.quick-settings-tweaks" path="/org/gnome/shell/extensions/quick-settings-tweaks/">
+    <!-- #region Debug -->
+    <key name="debug-expose" type="b">
+      <default>false</default>
+    </key>
+    <key name="debug-show-layout-border" type="b">
+      <default>false</default>
+    </key>
+    <!-- #endregion Debug -->
+
     <!-- #region Notifications Widget -->
     <key name="notifications-enabled" type="b">
       <default>true</default>

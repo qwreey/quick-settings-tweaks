@@ -79,13 +79,13 @@ function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGro
 // #endregion AdvancedAnimationStyleGroup
 
 export const MenuPage = GObject.registerClass({
-	GTypeName: Config.baseGTypeName+'MenuPage',
+	GTypeName: Config.baseGTypeName+"MenuPage",
 }, class MenuPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
-			name: 'Menu',
-			title: _('Menu'),
-			iconName: 'user-available-symbolic',
+			name: "Menu",
+			title: _("Menu"),
+			iconName: "user-available-symbolic",
 		})
 		fixPageScrollIssue(this)
 

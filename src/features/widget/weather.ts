@@ -23,7 +23,7 @@ class Header extends St.BoxLayout {
 
 		// Label
 		this._headerLabel = new St.Label({
-			text: _('Weather'),
+			text: _("Weather"),
 			style_class: "QSTWEAKS-header-label",
 			y_align: Clutter.ActorAlign.CENTER,
 			x_align: Clutter.ActorAlign.START,
@@ -73,8 +73,8 @@ class WeatherWidget extends St.BoxLayout {
 		(this._item as any)._weatherClient.connect("changed", syncTitleVisible);
 
 		// Sync Location
-		(this._item as any)._titleLocation.bind_property('text',
-			this._header._locationLabel, 'text',
+		(this._item as any)._titleLocation.bind_property("text",
+			this._header._locationLabel, "text",
 			GObject.BindingFlags.DEFAULT)
 		this._header._locationLabel.text = (this._item as any)._titleLocation.text
 	}
@@ -123,7 +123,7 @@ export class WeatherWidgetFeature extends FeatureBase {
 
 		Global.QuickSettingsGrid.add_child(this.weatherWidget)
 		Global.QuickSettingsGrid.layout_manager.child_set_property(
-			Global.QuickSettingsGrid, this.weatherWidget, 'column-span', 2
+			Global.QuickSettingsGrid, this.weatherWidget, "column-span", 2
 		)
 	}
 	override onUnload(): void {

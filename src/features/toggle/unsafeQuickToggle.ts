@@ -7,7 +7,7 @@ import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 // #region UnsafeQuickToggle
 class UnsafeQuickToggle extends QuickToggle {
 	_onUpdate: (value: boolean)=>void
-	constructor(onUpdate: UnsafeQuickToggle['_onUpdate']) { super(onUpdate as any) }
+	constructor(onUpdate: UnsafeQuickToggle["_onUpdate"]) { super(onUpdate as any) }
 	_init(onUpdate: any) {
 		super._init({
 			title: _("Unsafe Mode"),
@@ -45,7 +45,7 @@ GObject.registerClass(UnsafeQuickToggle)
 
 // #region UnsafeIndicator
 class UnsafeIndicator extends SystemIndicator {
-	constructor(onUpdate: UnsafeQuickToggle['_onUpdate']) { super(onUpdate as any) }
+	constructor(onUpdate: UnsafeQuickToggle["_onUpdate"]) { super(onUpdate as any) }
 	// @ts-expect-error
 	_init(onUpdate: any) {
 		super._init()

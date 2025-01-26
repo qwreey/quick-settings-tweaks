@@ -36,7 +36,7 @@ class Maid {
 		this.records = null
 	}
 
-	getRecords(): Maid['records'] {
+	getRecords(): Maid["records"] {
 		if (!this.records) Error("Maid object already destroyed")
 		return this.records
 	}

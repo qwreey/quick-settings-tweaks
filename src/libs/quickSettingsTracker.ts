@@ -47,10 +47,10 @@ export class QuickSettingsMenuTracker extends QuickSettingsTrackerBase<QuickSett
         menuMaid.functionJob(()=>{
             this.appliedChild.delete(menu)
         })
-        menuMaid.connectJob(menu, 'open-state-changed', (_: any, isOpen: boolean) => {
+        menuMaid.connectJob(menu, "open-state-changed", (_: any, isOpen: boolean) => {
             if (this.onOpen) this.onOpen(menuMaid, menu, isOpen)
         })
-        menuMaid.connectJob(menu, 'destroy', ()=>{
+        menuMaid.connectJob(menu, "destroy", ()=>{
             menuMaid.destroy()
         })
         if (this.onMenuCreated) this.onMenuCreated(menuMaid, menu)
@@ -73,7 +73,7 @@ export class QuickSettingsToggleTracker extends QuickSettingsTrackerBase<QuickTo
         toggleMaid.functionJob(()=>{
             this.appliedChild.delete(child)
         })
-        toggleMaid.connectJob(child, 'destroy', ()=>{
+        toggleMaid.connectJob(child, "destroy", ()=>{
             toggleMaid.destroy()
         })
         if (this.onToggleCreated) this.onToggleCreated(toggleMaid, child)

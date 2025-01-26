@@ -1,4 +1,18 @@
 <!-- markdownlint-disable-file MD025, MD024 -->
+# 2.1-pre3
+<!-- @BuildNumber: 3 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-1-23 00:40:00 KST" -->
+
+## Fix
+
+- Fix 'PageIndicators has been already disposed' issue
+- Fix 
+
+## Known issues
+
+- Cannot hide Keyboard quick toggle
+
 # 2.1-pre2
 <!-- @BuildNumber: 2 -->
 <!-- @Includes: [] -->

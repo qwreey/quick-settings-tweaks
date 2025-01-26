@@ -84,7 +84,7 @@ class ProgressControl extends St.BoxLayout {
 	// Show / Hide by playing status
 	_updateStatus(noAnimate?: boolean) {
 		if (!this.mapped) return
-		this._shown = this._player.status === 'Playing'
+		this._shown = this._player.status === "Playing"
 		if (this._shown) this._trackPosition()
 		const previousHeight = this.height
 		this.height = -1
@@ -193,7 +193,7 @@ class Player extends Mpris.MprisPlayer {
 			Gio.DBusProxyFlags.NONE,
 			propertiesIface,
 			busName,
-			'/org/mpris/MediaPlayer2',
+			"/org/mpris/MediaPlayer2",
 			propertiesIface.name,
 			null,
 		// @ts-expect-error
@@ -206,7 +206,7 @@ class Player extends Mpris.MprisPlayer {
 			Gio.DBusProxyFlags.NONE,
 			seekIface,
 			busName,
-			'/org/mpris/MediaPlayer2',
+			"/org/mpris/MediaPlayer2",
 			seekIface.name,
 			null,
 		// @ts-expect-error
@@ -319,11 +319,11 @@ class MediaList extends Mpris.MediaSection {
 
 		let player = new Player(busName)
 		let message = null
-		player.connect('closed',() => {
+		player.connect("closed",() => {
 			this._players.delete(busName)
 			return false
 		})
-		player.connect('show', () => {
+		player.connect("show", () => {
 			message = new MediaItem({
 				player,
 				showProgress: this._options.showProgress,
@@ -331,7 +331,7 @@ class MediaList extends Mpris.MediaSection {
 			this.addMessage(message, true)
 			return false
 		})
-		player.connect('hide', () => {
+		player.connect("hide", () => {
 			this.removeMessage(message, true)
 			message = null
 			return false
@@ -344,7 +344,7 @@ class MediaList extends Mpris.MediaSection {
 	_showFirstPlaying() {
 		const messages = this._messages
 		this._setPage(
-			messages.find(message => message?._player.status === 'Playing')
+			messages.find(message => message?._player.status === "Playing")
 			?? messages[0]
 		)
 	}
@@ -439,8 +439,8 @@ class MediaList extends Mpris.MediaSection {
 }
 GObject.registerClass({
 	Signals: {
-		'page-updated': {param_types: [GObject.TYPE_INT]},
-		'max-page-updated': {param_types: [GObject.TYPE_INT]},
+		"page-updated": {param_types: [GObject.TYPE_INT]},
+		"max-page-updated": {param_types: [GObject.TYPE_INT]},
 	}
 }, MediaList)
 // #endregion MediaList
@@ -464,7 +464,7 @@ class Header extends St.BoxLayout {
 
 		// Label
 		this._headerLabel = new St.Label({
-			text: _('Media'),
+			text: _("Media"),
 			style_class: "QSTWEAKS-header-label",
 			y_align: Clutter.ActorAlign.CENTER,
 			x_align: Clutter.ActorAlign.START,
@@ -494,7 +494,7 @@ class Header extends St.BoxLayout {
 }
 GObject.registerClass({
 	Signals: {
-		'page-activated': {param_types: [GObject.TYPE_INT]},
+		"page-activated": {param_types: [GObject.TYPE_INT]},
 	}
 }, Header)
 // #endregion Header
@@ -531,7 +531,7 @@ class MediaWidget extends St.BoxLayout {
 		// Create list
 		this._list = new MediaList({ showProgress: options.showProgress })
 		this.add_child(this._list)
-		this._list.connect('notify::empty', this._syncEmpty.bind(this))
+		this._list.connect("notify::empty", this._syncEmpty.bind(this))
 		this._syncEmpty()
 
 		// Page navigation
@@ -559,13 +559,17 @@ class MediaWidget extends St.BoxLayout {
 		// Sync page update & page indicator
 		this._header.page = this._list.page
 		this._header.maxPage = this._list.maxPage
-		this._list.connect("page-updated", (_, page: number): void => {
+		const pageConnection = this._list.connect("page-updated", (_, page: number): void => {
 			if (this._header.page == page) return
 			this._header.page = page
 		})
-		this._list.connect("max-page-updated", (_, maxPage: number): void => {
+		const maxPageConnection = this._list.connect("max-page-updated", (_, maxPage: number): void => {
 			if (this._header.maxPage == maxPage) return
 			this._header.maxPage = maxPage
+		})
+		this.connect("destroy", ()=>{
+			this._list.disconnect(pageConnection)
+			this._list.disconnect(maxPageConnection)
 		})
 	}
 
@@ -621,7 +625,7 @@ export class MediaWidgetFeature extends FeatureBase {
 
 		Global.QuickSettingsGrid.add_child(this.mediaWidget)
 		Global.QuickSettingsGrid.layout_manager.child_set_property(
-			Global.QuickSettingsGrid, this.mediaWidget, 'column-span', 2
+			Global.QuickSettingsGrid, this.mediaWidget, "column-span", 2
 		)
 
 		this.updateStyleClass()

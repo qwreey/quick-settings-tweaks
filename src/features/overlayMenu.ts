@@ -72,7 +72,7 @@ export class OverlayMenu extends FeatureBase {
 				opacity: 255,
 				duration: Math.floor(this.duration / 3),
 			})
-			if (this.animationStyle == 'flyout') {
+			if (this.animationStyle == "flyout") {
 				menu.box.translationX = Math.floor(coords.sourceX - coords.offsetX + menu.box.marginLeft)
 				menu.box.translationY = Math.floor(coords.sourceY - coords.offsetY + menu.box.marginTop)
 				menu.box.scaleX = coords.sourceWidth / coords.targetWidth

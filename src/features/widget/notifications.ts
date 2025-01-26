@@ -15,7 +15,7 @@ class Placeholder extends St.BoxLayout {
 
 	_init() {
 		super._init({
-			style_class: 'QSTWEAKS-placeholder',
+			style_class: "QSTWEAKS-placeholder",
 			x_align: Clutter.ActorAlign.CENTER,
 			vertical: true,
 			opacity: 60,
@@ -23,13 +23,13 @@ class Placeholder extends St.BoxLayout {
 
 		// Symbolic Icon
 		this._icon = new St.Icon({
-			style_class: 'QSTWEAKS-icon',
-			icon_name: 'no-notifications-symbolic'
+			style_class: "QSTWEAKS-icon",
+			icon_name: "no-notifications-symbolic"
 		})
 		this.add_child(this._icon)
 
-		// 'No Notifications' Text
-		this._label = new St.Label({ text: _('No Notifications') })
+		// No Notifications Label
+		this._label = new St.Label({ text: _("No Notifications") })
 		this.add_child(this._label)
 	}
 }
@@ -51,7 +51,7 @@ class ClearButton extends St.Button {
 
 		// Button
 		super._init({
-			style_class: 'QSTWEAKS-clear-button',
+			style_class: "QSTWEAKS-clear-button",
 			button_mask: St.ButtonMask.ONE,
 			child: this._container,
 			reactive: true,
@@ -61,15 +61,15 @@ class ClearButton extends St.Button {
 
 		// Icon
 		this._icon = new St.Icon({
-			style_class: 'QSTWEAKS-icon',
-			icon_name: 'user-trash-symbolic',
+			style_class: "QSTWEAKS-icon",
+			icon_name: "user-trash-symbolic",
 			icon_size: 12
 		})
 		this._container.add_child(this._icon)
 
 		// Label
 		this._label = new St.Label({
-			text: _('Clear')
+			text: _("Clear")
 		})
 		this._container.add_child(this._label)
 	}
@@ -97,7 +97,7 @@ class Header extends St.BoxLayout {
 
 		// Label
 		this._headerLabel = new St.Label({
-			text: _('Notifications'),
+			text: _("Notifications"),
 			style_class: "QSTWEAKS-header-label",
 			y_align: Clutter.ActorAlign.CENTER,
 			x_align: Clutter.ActorAlign.START,
@@ -125,7 +125,7 @@ class NativeControl extends St.BoxLayout {
 	_init() {
 		// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L979
 		super._init({
-			style_class: 'QSTWEAKS-native-controls',
+			style_class: "QSTWEAKS-native-controls",
 		} as Partial<St.BoxLayout.ConstructorProps>)
 
 		// DND Switch
@@ -134,32 +134,32 @@ class NativeControl extends St.BoxLayout {
 		
 		// DND Label
 		this._dndLabel = new St.Label({
-			style_class: 'QSTWEAKS-native-dnd-text',
-			text: _('Do Not Disturb'),
+			style_class: "QSTWEAKS-native-dnd-text",
+			text: _("Do Not Disturb"),
 			y_align: Clutter.ActorAlign.CENTER,
 		})
 		this.add_child(this._dndLabel)
 		this._dndButton = new St.Button({
-			style_class: 'dnd-button',
+			style_class: "dnd-button",
 			can_focus: true,
 			toggle_mode: true,
 			child: this._dndSwitch,
 			label_actor: this._dndLabel,
 			y_align: Clutter.ActorAlign.CENTER,
 		})
-		this._dndSwitch.bind_property('state',
-			this._dndButton, 'checked',
+		this._dndSwitch.bind_property("state",
+			this._dndButton, "checked",
 			GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
 		this.add_child(this._dndButton)
 
 		// Clear Button
 		this._clearButton = new St.Button({
-			style_class: 'message-list-clear-button button QSTWEAKS-native-clear-button',
-			label: _('Clear'),
+			style_class: "message-list-clear-button button QSTWEAKS-native-clear-button",
+			label: _("Clear"),
 			can_focus: true,
 			x_expand: true,
 			x_align: Clutter.ActorAlign.END,
-			accessible_name: C_('action', 'Clear all notifications'),
+			accessible_name: C_("action", "Clear all notifications"),
 		})
 		this.add_child(this._clearButton)
 	}
@@ -177,7 +177,7 @@ class NotificationList extends MessageList.MessageListSection {
 		this._nUrgent = 0
 
 		// @ts-expect-error missing connectObject type support
-		Global.MessageTray.connectObject('source-added', this._sourceAdded.bind(this), this)
+		Global.MessageTray.connectObject("source-added", this._sourceAdded.bind(this), this)
 		Global.MessageTray.getSources().forEach(source => {
 			this._sourceAdded(Global.MessageTray, source)
 		})
@@ -245,8 +245,8 @@ class NotificationWidget extends St.BoxLayout {
 		if (this._placeholder) this.add_child(this._placeholder)
 		if (this._nativeControl) this.add_child(this._nativeControl)
 
-		this._list.connect('notify::empty', this._syncEmpty.bind(this))
-		this._list.connect('notify::can-clear', this._syncClear.bind(this))
+		this._list.connect("notify::empty", this._syncEmpty.bind(this))
+		this._list.connect("notify::can-clear", this._syncClear.bind(this))
 		this._syncEmpty()
 		this._syncClear()
 	}
@@ -258,7 +258,7 @@ class NotificationWidget extends St.BoxLayout {
 			y_expand: true,
 		})
 		this._scroll = new St.ScrollView({
-			style_class: 'vfade',
+			style_class: "vfade",
 			overlay_scrollbars: true,
 			x_expand: true,
 			y_expand: true,
@@ -404,7 +404,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 		// }
 		Global.QuickSettingsGrid.add_child(this.notificationWidget)
 		Global.QuickSettingsGrid.layout_manager.child_set_property(
-			Global.QuickSettingsGrid, this.notificationWidget, 'column-span', 2
+			Global.QuickSettingsGrid, this.notificationWidget, "column-span", 2
 		)
 	}
 	override onUnload(): void {

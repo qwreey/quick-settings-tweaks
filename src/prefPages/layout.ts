@@ -3,7 +3,7 @@ import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import GLib from "gi://GLib"
 import Gtk from "gi://Gtk"
-import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
+import { gettext as _, ngettext } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
 import { QuickToggleOrderItem } from "../libs/quickToggleOrderItem.js"
@@ -18,6 +18,7 @@ import {
 	setScrollToFocus,
 	delayedSetScrollToFocus,
 	fixPageScrollIssue,
+	Dialog,
 } from "../libs/prefComponents.js"
 
 // #region ToggleOrderGroup
@@ -26,12 +27,49 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 	const systemToggleIcons = ToggleOrderGroup.getSystemToggleIcons()
 	const itemRows = new Map<QuickToggleOrderItem, Adw.ActionRow>()
 
+	const header = new Gtk.Box({})
+	const resetButton = ResetButton({ settings, bind: "toggles-layout-order", marginBottom: 0, marginTop: 0 })
+	resetButton.insert_after(header, null)
+	const addButton = new Gtk.Button({
+		icon_name: "list-add",
+	});
+	(addButton.get_first_child() as Gtk.Image).pixel_size = 12
+	addButton.insert_after(header, resetButton)
+	addButton.connect("clicked", ()=>{
+		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
+		let nth = 1
+		let name: string
+		while (true) {
+			name = ngettext("My toggle #%d", "My toggle #%d", nth)
+			if (list.findIndex(item => item.friendlyName == name) == -1) break
+			nth += 1
+		}
+		const item = QuickToggleOrderItem.create(name)
+		list.push(item)
+		ToggleOrderGroup.setOrderListToSettings(settings, list)
+		editItem(item)
+	})
 	const group = Group({
 		title: _("Ordering and Hiding"),
-		headerSuffix: ResetButton({ settings, bind: "toggles-layout-order", marginBottom: 0, marginTop: 0 }),
+		headerSuffix: header
 	})
-
-	const setHide = (item: QuickToggleOrderItem, hide: boolean)=>{
+	const editItem = (item: QuickToggleOrderItem)=>{
+		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
+		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
+		new Dialog.PrefDialogPage((_page, dialog)=>{[
+			Group({
+				title: _("Toggle editor"),
+			})
+		]}, dialog, item.friendlyName)
+	}
+	const deleteItem = (item: QuickToggleOrderItem)=>{
+		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
+		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
+		if (index == -1) return
+		list.splice(index, 1)
+		ToggleOrderGroup.setOrderListToSettings(settings, list)
+	}
+	const setItemHide = (item: QuickToggleOrderItem, hide: boolean)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
 		list.find(targetItem => QuickToggleOrderItem.match(targetItem, item)).hide = hide
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
@@ -40,7 +78,7 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 			timeout: 12,
 		}))
 	}
-	const move = (item: QuickToggleOrderItem, direction: UpDownButton.Direction)=>{
+	const moveItem = (item: QuickToggleOrderItem, direction: UpDownButton.Direction)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
 		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
 		const targetIndex = index + (direction == UpDownButton.Direction.Up ? -1 : 1)
@@ -50,14 +88,14 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 		list[targetIndex] = row
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
 	}
-	const removeOrphans = (list: QuickToggleOrderItem[])=>{
+	const removeOrphanItems = (list: QuickToggleOrderItem[])=>{
 		for (const [targetItem, row] of itemRows.entries()) {
 			if (list.some(item => QuickToggleOrderItem.match(item, targetItem))) continue
 			itemRows.delete(targetItem)
 			group.remove(row)
 		}
 	}
-	const pushChildren = (list: QuickToggleOrderItem[])=>{
+	const pushItems = (list: QuickToggleOrderItem[])=>{
 		for (const newItem of list) {
 			if ([...itemRows.entries()].find(([item]) => QuickToggleOrderItem.match(item, newItem)))
 				continue
@@ -81,18 +119,39 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 			const updown = UpDownButton({
 				settings,
 				sensitiveBind: "toggles-layout-enabled",
-				action: (direction)=>move(newItem, direction)
+				action: (direction)=>moveItem(newItem, direction)
 			})
 			row.add_prefix(updown)
 
-			const toggle = new Gtk.ToggleButton({
-				margin_bottom: 8,
-				margin_top: 8,
-				label: _("Hide"),
-				active: newItem.hide ?? false,
-			})
-			toggle.connect("notify::active", () => setHide(newItem, toggle.get_active()))
-			row.add_suffix(toggle)
+			// Hide button
+			if (!ToggleOrderGroup.noHideOption(newItem)) {
+				const toggle = new Gtk.ToggleButton({
+					margin_bottom: 8,
+					margin_top: 8,
+					label: _("Hide"),
+					active: newItem.hide ?? false,
+				})
+				toggle.connect("notify::active", () => setItemHide(newItem, toggle.get_active()))
+				row.add_suffix(toggle)
+			}
+
+			// Edit button
+			// if (!newItem.isSystem && !newItem.nonOrdered) {
+				const deleteButton = new Gtk.Button({
+					icon_name: "edit-clear-symbolic",
+					margin_bottom: 8,
+					margin_top: 8,
+				})
+				const editButton = new Gtk.Button({
+					icon_name: "document-edit-symbolic",
+					margin_bottom: 8,
+					margin_top: 8,
+				})
+				deleteButton.connect("clicked", deleteItem.bind(null, newItem))
+				editButton.connect("clicked", editItem.bind(null, newItem))
+				row.add_suffix(deleteButton)
+				row.add_suffix(editButton)
+			// }
 
 			itemRows.set(newItem, row)
 			group.add(row)
@@ -115,8 +174,8 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 	const update = ()=>{
 		setScrollToFocus(page, false)
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		pushChildren(list)
-		removeOrphans(list)
+		pushItems(list)
+		removeOrphanItems(list)
 		orderChildren(list)
 		delayedSetScrollToFocus(page, true)
 	}
@@ -202,6 +261,12 @@ namespace ToggleOrderGroup {
 		if (item.isSystem) return item.constructorName
 		if (item.friendlyName) return item.constructorName || item.titleRegex || "Unknown"
 		return ""
+	}
+	export function noHideOption(item: QuickToggleOrderItem): boolean {
+		if (!item.isSystem) return false
+		if (item.constructorName == "DndQuickToggle" || item.constructorName == "UnsafeQuickToggle")
+			return true
+		return false
 	}
 }
 // #endregion ToggleOrderGroup
@@ -321,7 +386,7 @@ function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage)
 	])
 }
 namespace SystemItemOrderGroup {
-	export const DefaultOrder = ['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']
+	export const DefaultOrder = ["battery", "laptopSpacer", "screenshot", "settings", "desktopSpacer", "lock", "shutdown"]
 	export function copyOrder(order: string[]): string[] {
 		return DefaultOrder
 		.map(item => ({
@@ -335,13 +400,13 @@ namespace SystemItemOrderGroup {
 // #endregion SystemItemOrderGroup
 
 export const LayoutPage = GObject.registerClass({
-	GTypeName: Config.baseGTypeName+'LayoutPage',
+	GTypeName: Config.baseGTypeName+"LayoutPage",
 }, class LayoutPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
-			name: 'Layout',
-			title: _('Layout'),
-			iconName: 'view-sort-descending-symbolic',
+			name: "Layout",
+			title: _("Layout"),
+			iconName: "view-sort-descending-symbolic",
 		})
 		fixPageScrollIssue(this)
 

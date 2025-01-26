@@ -31,4 +31,16 @@ export namespace QuickToggleOrderItem {
             return false
         return true
     }
+    export const Default: QuickToggleOrderItem = {
+        hide: false,
+        titleRegex: "",
+        constructorName: "",
+        friendlyName: ""
+    }
+    export function create(friendlyName: string): QuickToggleOrderItem {
+        return {
+            ...Default,
+            friendlyName,
+        }
+    }
 }

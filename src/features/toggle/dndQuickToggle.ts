@@ -11,7 +11,7 @@ class DndQuickToggle extends QuickToggle {
 	_settings: Gio.Settings
 	_init() {
 		super._init({
-			title: _('Do Not Disturb'),
+			title: _("Do Not Disturb"),
 			iconName: "notifications-disabled-symbolic",
 		} as Partial<QuickToggle.ConstructorProps>)
 

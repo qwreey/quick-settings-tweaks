@@ -19,7 +19,7 @@ import {
 } from "../libs/prefComponents.js"
 
 export const OtherPage = GObject.registerClass({
-	GTypeName: Config.baseGTypeName+'OtherPage',
+	GTypeName: Config.baseGTypeName+"OtherPage",
 }, class OtherPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({

@@ -16,13 +16,13 @@ import {
 } from "../libs/prefComponents.js"
 
 export const AboutPage = GObject.registerClass({
-	GTypeName: Config.baseGTypeName+'AboutPage',
+	GTypeName: Config.baseGTypeName+"AboutPage",
 }, class AboutPage extends Adw.PreferencesPage {
 	constructor(_settings: Gio.Settings, prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
-			name: 'about',
-			title: _('About'),
-			iconName: 'dialog-information-symbolic'
+			name: "about",
+			title: _("About"),
+			iconName: "dialog-information-symbolic"
 		})
 		fixPageScrollIssue(this)
 
@@ -60,27 +60,27 @@ export const AboutPage = GObject.registerClass({
 			}),
 			DialogRow({
 				window,
-				title: _('License'),
-				subtitle: _('License of codes'),
+				title: _("License"),
+				subtitle: _("License of codes"),
 				dialogTitle: _("License"),
 				minHeight: 520,
 				icon: "emblem-documents-symbolic",
 				childrenRequest: _page=>[
 					Group({
-						title: _('License'),
-						description: _('License of codes')
+						title: _("License"),
+						description: _("License of codes")
 					}, prefs.getLicenses().map(LicenseRow)),
 				],
 			}),
 			DialogRow({
 				window,
-				title: _('Contributors'),
+				title: _("Contributors"),
 				subtitle: _("The creators of this extension"),
-				dialogTitle: _('Contributors'),
+				dialogTitle: _("Contributors"),
 				icon: "emblem-favorite-symbolic",
 				childrenRequest: _page=>[
 					Group({
-						title: _('Contributors'),
+						title: _("Contributors"),
 						description: _("The creators of this extension"),
 					}, [
 						...prefs.getContributorRows().map(ContributorsRow),

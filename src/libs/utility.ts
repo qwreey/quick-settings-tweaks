@@ -7,5 +7,5 @@ export function fixStScrollViewScrollbarOverflow(stScrollView) {
 }
 
 export function logger(str) {
-	console.log("[EXTENSION QSTweaks] " + str)
+	console.log("[EXTENSION QST] " + str)
 }

@@ -12,13 +12,13 @@ import {
 } from "../libs/prefComponents.js"
 
 export const WidgetsPage = GObject.registerClass({
-	GTypeName: Config.baseGTypeName+'WidgetsPage',
+	GTypeName: Config.baseGTypeName+"WidgetsPage",
 }, class WidgetsPage extends Adw.PreferencesPage {
 	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, _window: Adw.PreferencesWindow) {
 		super({
-			name: 'Widgets',
-			title: _('Widgets'),
-			iconName: 'window-new-symbolic',
+			name: "Widgets",
+			title: _("Widgets"),
+			iconName: "window-new-symbolic",
 		})
 		fixPageScrollIssue(this)
 
