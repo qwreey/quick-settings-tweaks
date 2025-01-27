@@ -26,7 +26,7 @@ function update-po() {
 }
 
 function fetch-contributors() {
-	LABELS=$(cat contributor-labels.json)
+	LABELS=$(cat scripts/contributor-labels.json)
 	echo "["
 	FIRST="1"
 	curl -Ls "https://api.github.com/repos/qwreey/quick-settings-tweaks/contributors?per_page=16&page=1" | while read line; do

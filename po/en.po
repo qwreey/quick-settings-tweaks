@@ -791,9 +791,6 @@ msgstr ""
 #~ msgid "Don't remove the shadow of messages and media controls."
 #~ msgstr "Don't remove the shadow of messages and media controls."
 
-#~ msgid "Noti&Media"
-#~ msgstr "Noti&Media"
-
 #~ msgid "Set Notifications widget position"
 #~ msgstr "Set Notifications widget position"
 

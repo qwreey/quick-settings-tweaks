@@ -1,5 +1,10 @@
+/**
+ * Viewer Note:
+ * stylesheet and javascript files are compiled from scss and typescript. 
+ * To modify this extension, please check original source-codes from repository
+ * https://github.com/qwreey/quick-settings-tweaks
+*/
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
-
 import { logger } from "./libs/utility.js"
 import { Global } from "./global.js"
 import { type FeatureBase } from "./libs/feature.js"
