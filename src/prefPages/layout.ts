@@ -22,7 +22,12 @@ import {
 } from "../libs/prefComponents.js"
 
 // #region ToggleOrderGroup
-function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dialog: Adw.PreferencesDialog): Adw.PreferencesGroup {
+function ToggleOrderGroup(
+	settings: Gio.Settings,
+	page: Adw.PreferencesPage,
+	dialog: Adw.PreferencesDialog,
+	window: Adw.PreferencesWindow
+): Adw.PreferencesGroup {
 	const systemToggleNames = ToggleOrderGroup.getSystemToggleNames()
 	const systemToggleIcons = ToggleOrderGroup.getSystemToggleIcons()
 	const itemRows = new Map<QuickToggleOrderItem, Adw.ActionRow>()
@@ -53,35 +58,21 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 		title: _("Ordering and Hiding"),
 		headerSuffix: header
 	})
-	const saveEditItem = (item: QuickToggleOrderItem, edited: QuickToggleOrderItem)=>{
+	const saveEditItem = (item: QuickToggleOrderItem, edited: QuickToggleOrderItem): string => {
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
 		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
 		if (index == -1) {
-			dialog.add_toast(new Adw.Toast({
-				title: _("The toggle item not found"),
-				timeout: 8,
-			}))
-			return
+			return _("The toggle item not found")
 		}
 		if (QuickToggleOrderItem.match(item, edited)) {
-			dialog.add_toast(new Adw.Toast({
-				title: _("No changes"),
-				timeout: 8,
-			}))
-			return
+			return _("No changes")
 		}
 		if (list.some(listItem => QuickToggleOrderItem.match(listItem, edited))) {
-			dialog.add_toast(new Adw.Toast({
-				title: _("The same item already exists"),
-			}))
-			return
+			return _("The same item already exists")
 		}
-		dialog.add_toast(new Adw.Toast({
-			title: _("Saved"),
-			timeout: 8,
-		}))
 		list[index] = edited
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
+		return _("Saved")
 	}
 	const editItem = (item: QuickToggleOrderItem)=>{
 		let friendlyName: Adw.EntryRow
@@ -124,18 +115,26 @@ function ToggleOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage, dia
 				]
 			}
 		})
-		const onClose = ()=>{
-			saveEditItem(item, {
+		const onClose = (): string => {
+			return saveEditItem(item, {
 				friendlyName: friendlyName.text,
 				constructorName: constructorName.text,
 				titleRegex: titleRegex.text,
 				hide: hideRow.active
 			})
 		}
-		const dialogConnection = dialog.connect("close-attempt", onClose)
+		const dialogConnection = dialog.connect("close-attempt", ()=>{
+			window.add_toast(new Adw.Toast({
+				title: onClose(),
+				timeout: 8,
+			}))
+		})
 		stack.connect("hiding", ()=>{
 			dialog.disconnect(dialogConnection)
-			onClose()
+			dialog.add_toast(new Adw.Toast({
+				title: onClose(),
+				timeout: 8,
+			}))
 		})
 	}
 	const deleteItem = (item: QuickToggleOrderItem)=>{
@@ -504,7 +503,7 @@ export const LayoutPage = GObject.registerClass({
 				subtitle: _("Reorder and hide quick toggles"),
 				dialogTitle: _("Adjust system items layout"),
 				experimental: true,
-				childrenRequest: (page, dialog) => [ToggleOrderGroup(settings, page, dialog)],
+				childrenRequest: (page, dialog) => [ToggleOrderGroup(settings, page, dialog, window)],
 			}),
 		])
 

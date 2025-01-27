@@ -29,6 +29,9 @@
     <key name="notifications-remove-shadow" type="b">
       <default>true</default>
     </key>
+    <key name="notifications-show-scrollbar" type="b">
+      <default>true</default>
+    </key>
     <!-- #endregion Notifications Widget -->
 
     <!-- #region Media Widget -->

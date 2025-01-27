@@ -215,6 +215,7 @@ namespace NotificationWidget {
 	export type Options = Partial<{
 		useNativeControls: boolean
 		autoHide: boolean
+		scrollbar: boolean
 	} & St.BoxLayout.ConstructorProps>
 }
 class NotificationWidget extends St.BoxLayout {
@@ -263,13 +264,14 @@ class NotificationWidget extends St.BoxLayout {
 			x_expand: true,
 			y_expand: true,
 			child: this._sections,
+			vscrollbar_visible: this._options.scrollbar ?? false
 		})
 		this._scroll.connect(
 			"notify::vscrollbar-visible",
 			this._syncScrollbarPadding.bind(this)
 		)
 		this._syncScrollbarPadding()
-		fixStScrollViewScrollbarOverflow(this._scroll)
+		if (this._options.scrollbar) fixStScrollViewScrollbarOverflow(this._scroll)
 		this._list = new NotificationList()
 		this._sections.add_child(this._list)
 	}
@@ -338,6 +340,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 	maxHeight: number
 	compact: boolean
 	removeShadow: boolean
+	scrollbar: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("notifications-enabled")
 		this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
@@ -345,6 +348,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 		this.maxHeight = loader.loadInt("notifications-max-height")
 		this.compact = loader.loadBoolean("notifications-compact")
 		this.removeShadow = loader.loadBoolean("notifications-remove-shadow")
+		this.scrollbar = loader.loadBoolean("notifications-show-scrollbar")
 	}
 	// #endregion settings
 
@@ -381,7 +385,8 @@ export class NotificationsWidgetFeature extends FeatureBase {
 		this.maid.destroyJob(
 			this.notificationWidget = new NotificationWidget({
 				autoHide: this.autoHide,
-				useNativeControls: this.useNativeControls
+				useNativeControls: this.useNativeControls,
+				scrollbar: this.scrollbar,
 			})
 		)
 

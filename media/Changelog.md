@@ -4,6 +4,8 @@
 <!-- @Includes: [] -->
 <!-- @Date: "2025-1-23 00:40:00 KST" -->
 
+- Add scrollbal visibility option on notifications widget
+
 ## Fix
 
 - Fix 'PageIndicators has been already disposed' issue

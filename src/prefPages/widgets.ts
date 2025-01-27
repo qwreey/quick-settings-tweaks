@@ -59,12 +59,12 @@ export const WidgetsPage = GObject.registerClass({
 		// notification
 		Group({
 			parent: this,
-			title: _("Notification Widget"),
+			title: _("Notifications Widget"),
 			headerSuffix: SwitchRow({
 				settings,
 				bind: "notifications-enabled"
 			}),
-			description: _("Turn on to make the notification widget visible on the Quick Settings panel"),
+			description: _("Turn on to make the notifications widget visible on the Quick Settings panel"),
 		},[
 			SwitchRow({
 				settings,
@@ -100,6 +100,13 @@ export const WidgetsPage = GObject.registerClass({
 				title: _("Remove shadow"),
 				subtitle: _("Remove shadow from notification message\nUse if your theme creates unnecessary shadows"),
 				bind: "notifications-remove-shadow",
+				sensitiveBind: "notifications-enabled",
+			}),
+			SwitchRow({
+				settings,
+				title: _("Show scrollbar"),
+				subtitle: _("Show scrollbar on message list"),
+				bind: "notifications-show-scrollbar",
 				sensitiveBind: "notifications-enabled",
 			}),
 		])
