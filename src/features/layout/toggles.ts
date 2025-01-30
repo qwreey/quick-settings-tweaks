@@ -12,6 +12,11 @@ export class TogglesOrderFeature extends FeatureBase {
 	loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("toggles-layout-enabled")
 		this.order = loader.loadValue("toggles-layout-order")
+		for (const orderItem of this.order) {
+			if (orderItem.titleRegex) {
+				orderItem.cachedTitleRegex = new RegExp(orderItem.titleRegex)
+			}
+		}
 	}
 	// #endregion settings
 

@@ -25,8 +25,7 @@ import {
 function ToggleOrderGroup(
 	settings: Gio.Settings,
 	page: Adw.PreferencesPage,
-	dialog: Adw.PreferencesDialog,
-	window: Adw.PreferencesWindow
+	dialog: Adw.PreferencesDialog
 ): Adw.PreferencesGroup {
 	const systemToggleNames = ToggleOrderGroup.getSystemToggleNames()
 	const systemToggleIcons = ToggleOrderGroup.getSystemToggleIcons()
@@ -58,7 +57,7 @@ function ToggleOrderGroup(
 		title: _("Ordering and Hiding"),
 		headerSuffix: header
 	})
-	const saveEditItem = (item: QuickToggleOrderItem, edited: QuickToggleOrderItem): string => {
+	const saveEditItem = (item: QuickToggleOrderItem, edited: QuickToggleOrderItem): string|null => {
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
 		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
 		if (index == -1) {
@@ -72,40 +71,60 @@ function ToggleOrderGroup(
 		}
 		list[index] = edited
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
-		return _("Saved")
+		return null
 	}
 	const editItem = (item: QuickToggleOrderItem)=>{
-		let friendlyName: Adw.EntryRow
-		let hideRow: Adw.SwitchRow
-		let titleRegex: Adw.EntryRow
-		let constructorName: Adw.EntryRow
-		const stack = Dialog.StackedPage({
+		Dialog.StackedPage({
 			dialog,
 			title: _("Properties of %s").format(item.friendlyName),
-			childrenRequest: (page, _dialog)=>{
-				friendlyName = new Adw.EntryRow({
+			childrenRequest: (_page, _dialog)=>{
+				const friendlyName = new Adw.EntryRow({
 					// editable
 					text: item.friendlyName,
 					max_length: 2048,
 					title: _("Friendly Name"),
 				})
-				hideRow = new Adw.SwitchRow({
+				const hideRow = new Adw.SwitchRow({
 					active: item.hide,
 					title: _("Hide"),
 				})
-				titleRegex = new Adw.EntryRow({
+				const titleRegex = new Adw.EntryRow({
 					text: item.titleRegex,
 					max_length: 2048,
 					title: _("Title Regex (Javascript Regex)")
 				})
-				constructorName = new Adw.EntryRow({
+				const constructorName = new Adw.EntryRow({
 					text: item.constructorName,
 					max_length: 2028,
 					title: _("Constructor Name")
 				})
+				const saveButton = new Gtk.Button({
+					label: _("Save"),
+					icon_name: "document-save-symbolic",
+					css_classes: []
+				})
+				saveButton.connect("clicked", ()=>{
+					const edited = {
+						...item,
+						friendlyName: friendlyName.text,
+						constructorName: constructorName.text,
+						titleRegex: titleRegex.text,
+						hide: hideRow.active,
+					}
+					const saved = saveEditItem(item, edited)
+					if (saved == null) {
+						item = edited
+					} else {
+						dialog.add_toast(new Adw.Toast({
+							timeout: 6,
+							title: saved
+						}))
+					}
+				})
 				return [
 					Group({
 						title: _("Toggle editor"),
+						header_suffix: saveButton,
 					},[
 						friendlyName,
 						constructorName,
@@ -114,27 +133,6 @@ function ToggleOrderGroup(
 					])
 				]
 			}
-		})
-		const onClose = (): string => {
-			return saveEditItem(item, {
-				friendlyName: friendlyName.text,
-				constructorName: constructorName.text,
-				titleRegex: titleRegex.text,
-				hide: hideRow.active
-			})
-		}
-		const dialogConnection = dialog.connect("close-attempt", ()=>{
-			window.add_toast(new Adw.Toast({
-				title: onClose(),
-				timeout: 8,
-			}))
-		})
-		stack.connect("hiding", ()=>{
-			dialog.disconnect(dialogConnection)
-			dialog.add_toast(new Adw.Toast({
-				title: onClose(),
-				timeout: 8,
-			}))
 		})
 	}
 	const deleteItem = (item: QuickToggleOrderItem)=>{
@@ -503,7 +501,7 @@ export const LayoutPage = GObject.registerClass({
 				subtitle: _("Reorder and hide quick toggles"),
 				dialogTitle: _("Adjust system items layout"),
 				experimental: true,
-				childrenRequest: (page, dialog) => [ToggleOrderGroup(settings, page, dialog, window)],
+				childrenRequest: (page, dialog) => [ToggleOrderGroup(settings, page, dialog)],
 			}),
 		])
 

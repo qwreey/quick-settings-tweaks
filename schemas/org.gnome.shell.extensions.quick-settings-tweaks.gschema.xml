@@ -47,6 +47,7 @@
     <key name="media-remove-shadow" type="b">
       <default>true</default>
     </key>
+    <!-- use paged layout type=b -->
     <!-- #endregion Media Widget -->
 
     <!-- #region Weather Widget -->
@@ -107,6 +108,20 @@
     <key name="volume-mixer-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="volume-mixer-show-scrollbar" type="b">
+      <default>true</default>
+    </key>
+    <key name="volume-mixer-max-height" type="i">
+      <default>0</default>
+    </key>
+    <key name="volume-mixer-ignore" type="aa{sv}">
+      <!-- { 'name': <string>, 'nameRegex': <string> } -->
+      <default><![CDATA[
+        [
+        ]
+      ]]></default>
+    </key>
+
     <key name="volume-mixer-use-regex" type="b">
       <default>false</default>
     </key>
@@ -195,6 +210,7 @@
       <choices>
         <choice value='system-tray'/>
         <choice value='date-menu'/>
+        <choice value='hide'/>
       </choices>
     </key>
     <!-- #endregion DND Quick Toggle -->

@@ -2,9 +2,11 @@
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-1-23 00:40:00 KST" -->
+<!-- @Date: "2025-1-28 01:00:00 KST" -->
 
 - Add scrollbal visibility option on notifications widget
+- Update repo url in metadata
+- Option to hide dnd indicator completely
 
 ## Fix
 

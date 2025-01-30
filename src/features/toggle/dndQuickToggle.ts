@@ -106,7 +106,7 @@ export { DndIndicator }
 export class DndQuickToggleFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
-	indicatorPosition: "system-tray" | "date-menu"
+	indicatorPosition: "system-tray" | "date-menu" | "hide"
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("dnd-quick-toggle-enabled")
 		this.indicatorPosition = loader.loadString("dnd-quick-toggle-indicator-position") as any
@@ -116,15 +116,14 @@ export class DndQuickToggleFeature extends FeatureBase {
 	indicator: DndIndicator
 	override onLoad(): void {
 		if (!this.enabled) return
-		const indicatorSystemTray = this.indicatorPosition == "system-tray"
 
 		// Create Indicator
 		this.maid.destroyJob(
-			this.indicator = new DndIndicator(indicatorSystemTray)
+			this.indicator = new DndIndicator(this.indicatorPosition == "system-tray")
 		)
 
 		// Hide DateMenu DND State Icon
-		if (indicatorSystemTray) {
+		if (this.indicatorPosition != "date-menu") {
 			this.maid.hideJob(Global.DateMenuIndicator, ()=>
 				!(new Gio.Settings({
 					schema_id: "org.gnome.desktop.notifications",
@@ -135,7 +134,6 @@ export class DndQuickToggleFeature extends FeatureBase {
 		// Add to QS
 		// @ts-ignore
 		Global.QuickSettings.addExternalIndicator(this.indicator)
-
 	}
 	override onUnload(): void {
 		this.indicator = null
