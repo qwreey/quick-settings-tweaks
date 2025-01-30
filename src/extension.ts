@@ -47,17 +47,17 @@ export default class QstExtension extends Extension {
 	}
 
 	enable() {
-		logger("Loading ...")
-		let start = +Date.now()
-
 		// Load global context
 		Global.load(this)
 
 		// Load debug feature
 		this.debug = new DebugFeature()
 		this.debug.load()
+		logger.debug("Global context loaded")
 
 		// Load features
+		logger.debug("Initializing features ...")
+		let start = +Date.now()
 		for (const feature of this.features = [
 			new DndQuickToggleFeature(),
 			new UnsafeQuickToggleFeature(),
@@ -74,10 +74,9 @@ export default class QstExtension extends Extension {
 			new SystemItemsOrderFeature(),
 			new TogglesOrderFeature(),
 		]) {
-			logger(`Loading feature '${feature.constructor.name}'`)
+			logger.debug(()=>`Loading feature '${feature.constructor.name}'`)
 			feature.load()
 		}
-
-		logger("Loaded. " + (+Date.now() - start) + "ms taken")
+		logger.debug(() => `Loaded, ${+Date.now() - start}ms taken`)
 	}
 }

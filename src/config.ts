@@ -5,4 +5,5 @@ export default {
     version: "unknown",
     buildNumber: 0,
     baseGTypeName: "quick-settings-tweaks_",
+    loggerPrefix: "[quick-settings-tweaks]",
 }

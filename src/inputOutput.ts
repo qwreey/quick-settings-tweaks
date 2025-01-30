@@ -1,18 +1,32 @@
-import { featureReloader } from "../libs/utility.js"
-import { Global } from "../global.js"
+import { Global } from "./global.js"
 import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
+import { FeatureBase, type SettingLoader } from "./libs/feature.js"
 
-export class InputOutputFeature {
+export class SoundWidgetTweakFeature extends FeatureBase {
+	// #region settings
+	outputShowSelected: boolean
+	inputShowSelected: boolean
+	inputAlwaysShow: boolean
+	outputHide: {name: string}[]
+	inputHide: {name: string}[]
+	loadSettings(loader: SettingLoader): void {
+		this.outputShowSelected = loader.loadBoolean("sound-output-show-selected")
+		this.inputShowSelected = loader.loadBoolean("sound-input-show-selected")
+		this.inputAlwaysShow = loader.loadBoolean("sound-input-always-show")
+		this.outputHide = loader.loadValue("sound-output-hide")
+		this.inputHide = loader.loadValue("sound-input-hide")
+	}
+	// #endregion settings
+
+	onLoad() {
+	}
+	onUnload(): void {}
+}
+
+export class  extends FeatureBase {
 	load() {
-		// setup reloader
-		featureReloader.enableWithSettingKeys(this, [
-			"output-show-selected",
-			"input-show-selected",
-			"input-always-show"
-		])
-
 		this._outputListener = null
 		this._inputListener = null
 		this._inputVisibilityListener = null

@@ -11,8 +11,10 @@ class Maid {
 		signalName: string,
 		handleFunc: (...args: any)=>any,
 		priority: number = 0
-	) {
-		this.getRecords().push([Maid.TaskType.Connect, priority, signalObject, signalObject.connect(signalName, handleFunc)])
+	): number {
+		const id = signalObject.connect(signalName, handleFunc)
+		this.getRecords().push([Maid.TaskType.Connect, priority, signalObject, id])
+		return id
 	}
 
 	functionJob(func: (...args: any)=>any, priority: number = 0) {

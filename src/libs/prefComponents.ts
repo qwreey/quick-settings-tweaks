@@ -26,10 +26,11 @@ export function setScrollToFocus(target: Adw.PreferencesPage, value: boolean) {
 	viewport.scrollToFocus = value
 }
 export function delayedSetScrollToFocus(target: Adw.PreferencesPage, value: boolean) {
-	GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, ()=>{
+	const id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 10, ()=>{
 		setScrollToFocus(target, value)
 		return GLib.SOURCE_REMOVE
 	})
+	GLib.source_set_name_by_id(id, "[quick-settings-tweaks] delayedSetScrollToFocus")
 }
 // Fix adwaita scroll flicking issue
 export function fixPageScrollIssue(page: Adw.PreferencesPage) {
