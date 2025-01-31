@@ -15,6 +15,7 @@
 
 - Fix 'PageIndicators has been already disposed' issue
 - Add more promise catch handlers and source naming for debugging
+- Removed fixStScrollViewScrollbarOverflow, use vscrollbar_policy instead
 
 ## Known issues
 

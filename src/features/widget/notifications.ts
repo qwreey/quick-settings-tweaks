@@ -6,7 +6,6 @@ import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.j
 import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { Global } from "../../global.js"
-import { fixStScrollViewScrollbarOverflow } from "../../libs/utility.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {
