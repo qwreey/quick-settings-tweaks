@@ -6,14 +6,8 @@ import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
 import {
 	Group,
-	Row,
 	SwitchRow,
-	ResetButton,
-	ToggleButtonRow,
-	UpDownButton,
-	DialogRow,
-	setScrollToFocus,
-	delayedSetScrollToFocus,
+	DropdownRow,
 	fixPageScrollIssue,
 } from "../libs/prefComponents.js"
 
@@ -45,6 +39,36 @@ export const OtherPage = GObject.registerClass({
 				title: _("Hide Media Control"),
 				subtitle: _("Hide media control on date menu."),
 				bind: "datemenu-remove-media-control",
+			}),
+		])
+
+		Group({
+			parent: this,
+			title: _("Debug"),
+			description: _("Extension debugging options"),
+		}, [
+			SwitchRow({
+				settings,
+				title: _("Expose environment"),
+				subtitle: _("Expose extension environment to globalThis.qst"),
+				bind: "debug-expose"
+			}),
+			SwitchRow({
+				settings,
+				title: _("Show layout border"),
+				subtitle: _("Show layout borders on Quick Settings"),
+				bind: "debug-show-layout-border"
+			}),
+			DropdownRow({
+				settings,
+				title: _("Log level"),
+				bind: "debug-log-level",
+				items: [
+					{ name: "none", value: -1 },
+					{ name: "error", value: 0 },
+					{ name: "info", value: 1 },
+					{ name: "debug", value: 2 },
+				],
 			}),
 		])
 	}

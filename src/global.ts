@@ -12,7 +12,7 @@ import {
 	type CalendarMessageList
 } from "resource:///org/gnome/shell/ui/calendar.js";
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
-import { logger } from "./libs/logger"
+import { logger } from "./libs/logger.js"
 import { type SystemItem, type Indicator as SystemIndicator } from "resource:///org/gnome/shell/ui/status/system.js"
 
 type StreamSlider = {

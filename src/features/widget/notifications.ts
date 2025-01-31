@@ -216,6 +216,7 @@ namespace NotificationWidget {
 		useNativeControls: boolean
 		autoHide: boolean
 		scrollbar: boolean
+		fadeOffset: number
 	} & St.BoxLayout.ConstructorProps>
 }
 class NotificationWidget extends St.BoxLayout {
@@ -259,19 +260,23 @@ class NotificationWidget extends St.BoxLayout {
 			y_expand: true,
 		})
 		this._scroll = new St.ScrollView({
-			style_class: "vfade",
-			overlay_scrollbars: true,
+			style_class: this._options.fadeOffset ? "vfade" : "",
 			x_expand: true,
 			y_expand: true,
 			child: this._sections,
-			vscrollbar_visible: this._options.scrollbar ?? false
+			vscrollbar_policy:
+				this._options.scrollbar
+				? St.PolicyType.AUTOMATIC
+				: St.PolicyType.NEVER
 		})
+		if (this._options.fadeOffset) {
+			this._scroll.style = `-st-vfade-offset: ${this._options.fadeOffset}px;`
+		}
 		this._scroll.connect(
 			"notify::vscrollbar-visible",
 			this._syncScrollbarPadding.bind(this)
 		)
 		this._syncScrollbarPadding()
-		if (this._options.scrollbar) fixStScrollViewScrollbarOverflow(this._scroll)
 		this._list = new NotificationList()
 		this._sections.add_child(this._list)
 	}
@@ -341,6 +346,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 	compact: boolean
 	removeShadow: boolean
 	scrollbar: boolean
+	fadeOffset: number
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("notifications-enabled")
 		this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
@@ -349,6 +355,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 		this.compact = loader.loadBoolean("notifications-compact")
 		this.removeShadow = loader.loadBoolean("notifications-remove-shadow")
 		this.scrollbar = loader.loadBoolean("notifications-show-scrollbar")
+		this.fadeOffset = loader.loadInt("notifications-fade-offset")
 	}
 	// #endregion settings
 
@@ -387,6 +394,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 				autoHide: this.autoHide,
 				useNativeControls: this.useNativeControls,
 				scrollbar: this.scrollbar,
+				fadeOffset: this.fadeOffset,
 			})
 		)
 

@@ -7,15 +7,18 @@
 - Add scrollbal visibility option on notifications widget
 - Update repo url in metadata
 - Option to hide dnd indicator completely
+- Use better logging format
+- Add logging level and debug expose option
+- Add vfade offset option on notifications widget
 
 ## Fix
 
 - Fix 'PageIndicators has been already disposed' issue
-- Fix 
+- Add more promise catch handlers and source naming for debugging
 
 ## Known issues
 
-- Cannot hide Keyboard quick toggle
+- Cannot hide keyboard quick toggle
 
 # 2.1-pre2
 <!-- @BuildNumber: 2 -->

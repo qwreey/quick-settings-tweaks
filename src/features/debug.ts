@@ -4,6 +4,8 @@ import { logger } from "../libs/logger.js"
 import Config from "../config.js"
 
 export class DebugFeature extends FeatureBase {
+    disableDebugMessage = true
+
     // #region settings
     expose: boolean
     showLayoutBorder: boolean
@@ -18,9 +20,11 @@ export class DebugFeature extends FeatureBase {
     onLoad() {
         logger.setHeader(Config.loggerPrefix)
         logger.setLogLevel(this.logLevel)
+        logger.debug(()=>`Logger initialized, LogLevel: ${this.logLevel}`)
         if (this.expose) {
             globalThis.qst = Global
             this.maid.functionJob(()=>{ delete globalThis.qst })
+            logger.debug("Extension environment expose enabled")
         }
         if (this.showLayoutBorder) {
             // @ts-ignore
@@ -31,6 +35,7 @@ export class DebugFeature extends FeatureBase {
                 // @ts-ignore
                 Global.QuickSettingsMenu._boxPointer.styleClass.replace(/ QSTWEAKS-debug-show-layout/, "")
             })
+            logger.debug("Show layout border enabled")
         }
     }
     onUnload(): void {}

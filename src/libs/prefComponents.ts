@@ -30,7 +30,7 @@ export function delayedSetScrollToFocus(target: Adw.PreferencesPage, value: bool
 		setScrollToFocus(target, value)
 		return GLib.SOURCE_REMOVE
 	})
-	GLib.source_set_name_by_id(id, "[quick-settings-tweaks] delayedSetScrollToFocus")
+	GLib.source_set_name_by_id(id, "[quick-settings-tweaks] delayedSetScrollToFocus: id")
 }
 // Fix adwaita scroll flicking issue
 export function fixPageScrollIssue(page: Adw.PreferencesPage) {
@@ -812,7 +812,7 @@ export namespace ExpanderRow {
 // #endregion ExpanderRow
 
 // #region DropdownRow
-export function DropdownRow({
+export function DropdownRow<T>({
 	settings,
 	items,
 	bind,
@@ -825,11 +825,11 @@ export function DropdownRow({
 	experimental,
 	noResetButton,
 	onCreated,
-}: DropdownRow.Options) {
-	if (bind) value ??= settings.get_string(bind)
-
+}: DropdownRow.Options<T>) {
 	let filterModeModel = new Gio.ListStore({ item_type: DropdownRow.Items as any })
+	let type: "number"|"string"
 	for (const item of items) {
+		type ??= (typeof item.value) as typeof type
 		filterModeModel.append(new (DropdownRow.Items as any)(item.name, item.value))
 	}
 
@@ -841,6 +841,25 @@ export function DropdownRow({
 		}
 		return -1
 	}
+	const getValueFromBind = (): any => {
+		if (type == "string") {
+			return settings.get_string(bind)
+		}
+		if (type == "number") {
+			return settings.get_int(bind)
+		}
+	}
+	const setValueFromBind = (value: any) => {
+		if (type == "string") {
+			settings.set_string(bind, value)
+			return
+		}
+		if (type == "number") {
+			settings.set_int(bind, value)
+			return
+		}
+	}
+	if (bind) value ??= getValueFromBind()
 	
 	let row = new Adw.ComboRow({
 		title: title ?? "",
@@ -859,7 +878,7 @@ export function DropdownRow({
 		if (!noResetButton) ResetButton.pushResetButton(row, { settings, bind })
 		const settingsConnection = settings.connect(`changed::${bind}`, ()=>{
 			const selected = (row.selectedItem as any).value
-			const changedTo = settings.get_string(bind)
+			const changedTo = getValueFromBind()
 			if (selected != changedTo) {
 				row.selected = getIndex(changedTo)
 			}
@@ -868,8 +887,8 @@ export function DropdownRow({
 	}
 	if (bind || action) row.connect("notify::selected", () => {
 		const selected = (row.selectedItem as any).value
-		if (bind && (selected != settings.get_string(bind))) {
-			settings.set_string(bind, selected)
+		if (bind && (selected != getValueFromBind())) {
+			setValueFromBind(selected)
 		}
 		if (action) {
 			action(selected)
@@ -890,9 +909,9 @@ export function DropdownRow({
 	return row
 }
 export namespace DropdownRow {
-	export interface Options {
+	export interface Options<T> {
 		settings?: Gio.Settings
-		items: { name: string, value: string }[]
+		items: { name: string, value: T }[]
 		bind?: string
 		parent?: any
 		value?: string
@@ -910,14 +929,12 @@ export namespace DropdownRow {
 				"name", "name", "name",
 				GObject.ParamFlags.READWRITE,
 				null),
-			"value": GObject.ParamSpec.string(
-				"value", "value", "value",
-				GObject.ParamFlags.READWRITE,
-				null),
 		},
-	}, class DropdownItems extends GObject.Object {
-		_init(name: string, value: string) {
-			super._init({ name, value })
+	}, class DropdownItems<T> extends GObject.Object {
+		value: T
+		_init(name: string, value: T) {
+			super._init({ name })
+			this.value = value
 		}
 	})
 }

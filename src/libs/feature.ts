@@ -1,13 +1,17 @@
 import Maid from "./maid.js";
 import { Global } from "../global.js";
+import { logger } from "./logger.js";
 
 export class SettingLoader {
 	records: Set<string>
 	listeners: number[]
 	onChange: (key: string)=>void
+	parent: FeatureBase
 	constructor(
-		onChange: SettingLoader["onChange"]
+		onChange: SettingLoader["onChange"],
+		parent: FeatureBase,
 	) {
+		this.parent = parent
 		this.records = new Set()
 		this.listeners = []
 		this.onChange = onChange
@@ -22,6 +26,8 @@ export class SettingLoader {
 				() => this.onChange(key)
 			)
 		)
+		if (!this.parent.disableDebugMessage)
+			logger.debug(()=>`Setting listener for key '${key}' added for feature ${this.parent.constructor.name}`)
 	}
 	clear() {
 		for (const source of this.listeners) {
@@ -29,6 +35,9 @@ export class SettingLoader {
 		}
 		this.listeners = []
 		this.records.clear()
+		if (!this.parent.disableDebugMessage) {
+			logger.debug(()=>`Disconnected setting listeners for feature ${this.parent.constructor.name	}`)
+		}
 	}
 
 	loadBoolean(key: string): boolean {
@@ -54,6 +63,7 @@ export class SettingLoader {
 }
 
 export abstract class FeatureBase {
+	disableDebugMessage: boolean = false
 	loader: SettingLoader
 	maid: Maid
 
@@ -63,7 +73,7 @@ export abstract class FeatureBase {
 			this.loader.clear()
 			this.loadSettings(this.loader)
 			this.reload(key)
-		})
+		}, this)
 	}
 
 	load(noSettingsLoad?: boolean): void {

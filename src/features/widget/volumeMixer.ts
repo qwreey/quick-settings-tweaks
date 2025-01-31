@@ -167,7 +167,7 @@ class StreamSlider extends QuickSlider {
 			})
 			GLib.Source.set_name_by_id(
 				this._notifyVolumeChangeId,
-				'[gnome-shell] this._notifyVolumeChangeId'
+				'[quick-settings-tweaks] StreamSlider._sliderChanged: this._notifyVolumeChangeId'
 			)
 		}
 	}

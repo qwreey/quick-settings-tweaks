@@ -8,6 +8,9 @@
     <key name="debug-show-layout-border" type="b">
       <default>false</default>
     </key>
+    <key name="debug-log-level" type="i">
+      <default>0</default>
+    </key>
     <!-- #endregion Debug -->
 
     <!-- #region Notifications Widget -->
@@ -25,6 +28,9 @@
     </key>
     <key name="notifications-max-height" type="i">
       <default>292</default>
+    </key>
+    <key name="notifications-fade-offset" type="i">
+      <default>46</default>
     </key>
     <key name="notifications-remove-shadow" type="b">
       <default>true</default>

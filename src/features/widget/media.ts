@@ -153,6 +153,10 @@ class ProgressControl extends St.BoxLayout {
 	}
 	_createTracker() {
 		this._positionTracker = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, this._trackPosition.bind(this))
+		GLib.source_set_name_by_id(
+			this._positionTracker,
+			"[quick-settings-tweaks] ProgressControl._createTracker: this._positionTracker"
+		)
 	}
 	_updateTracker() {
 		if (this.mapped) this._createTracker()

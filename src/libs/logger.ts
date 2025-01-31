@@ -34,6 +34,7 @@ namespace logger {
 		console.log(`${LOG_ERROR_HEADER}${str}\n${new Error().stack}`)
 	}
 
+	export let currentLevel: number
 	export function setLogLevel(level: number) {
 		debug = level >= LogLevel.debug
 			? debug_internal
@@ -42,6 +43,7 @@ namespace logger {
 			? error_internal
 			: void_function
 		show_info = level >= LogLevel.info
+		currentLevel = level
 	}
 }
 export { logger }

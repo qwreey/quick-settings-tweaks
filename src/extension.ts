@@ -7,6 +7,7 @@
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
 import { logger } from "./libs/logger.js"
 import { Global } from "./global.js"
+import Config from "./config.js"
 import { type FeatureBase } from "./libs/feature.js"
 import { DndQuickToggleFeature } from "./features/toggle/dndQuickToggle.js"
 import { UnsafeQuickToggleFeature } from "./features/toggle/unsafeQuickToggle.js"
@@ -26,7 +27,7 @@ export default class QstExtension extends Extension {
 	private debug: DebugFeature
 
 	disable() {
-		logger("Unloading ...")
+		logger(`Extension ${this.metadata.name} deactivation started`)
 		let start = +Date.now()
 
 		// Unload features
@@ -53,7 +54,7 @@ export default class QstExtension extends Extension {
 		// Load debug feature
 		this.debug = new DebugFeature()
 		this.debug.load()
-		logger.debug("Global context loaded")
+		logger(`Extension activation started, version: ${Config.version}`)
 
 		// Load features
 		logger.debug("Initializing features ...")
@@ -77,6 +78,6 @@ export default class QstExtension extends Extension {
 			logger.debug(()=>`Loading feature '${feature.constructor.name}'`)
 			feature.load()
 		}
-		logger.debug(() => `Loaded, ${+Date.now() - start}ms taken`)
+		logger(`Extension Loaded, ${+Date.now() - start}ms taken`)
 	}
 }

@@ -81,6 +81,14 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "notifications-max-height",
 				sensitiveBind: "notifications-enabled",
 			}),
+			AdjustmentRow({
+				settings,
+				title: _("Fade out offset"),
+				subtitle: _("Set position of the fade out effect begins. Set this to 0 to disable fade out effect. default is 46"),
+				max: 2048,
+				bind: "notifications-fade-offset",
+				sensitiveBind: "notifications-enabled",
+			}),
 			SwitchRow({
 				settings,
 				title: _("Auto hide"),
