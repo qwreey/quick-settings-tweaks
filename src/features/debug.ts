@@ -1,6 +1,6 @@
 import { Global } from "../global.js"
 import { FeatureBase, type SettingLoader } from "../libs/feature.js"
-import { logger } from "../libs/utility.js"
+import { logger } from "../libs/logger.js"
 import Config from "../config.js"
 
 export class DebugFeature extends FeatureBase {

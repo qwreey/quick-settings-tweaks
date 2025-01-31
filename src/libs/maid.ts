@@ -21,16 +21,19 @@ class Maid {
 		this.getRecords().push([Maid.TaskType.Function, priority, func])
 	}
 
-	disposeJob(object: any, priority: number = 0) {
+	disposeJob<T extends { dispose: ()=>void }>(object: T, priority: number = 0): T {
 		this.getRecords().push([Maid.TaskType.Dispose, priority, object])
+		return object
 	}
 
-	runDisposeJob(object: any, priority: number = 0) {
+	runDisposeJob<T extends { run_dispose: ()=>void }>(object: any, priority: number = 0): T {
 		this.getRecords().push([Maid.TaskType.RunDispose, priority, object])
+		return object
 	}
 
-	destroyJob(object: any, priority: number = 0) {
+	destroyJob<T extends { destroy: ()=>void }>(object: T, priority: number = 0): T {
 		this.getRecords().push([Maid.TaskType.Destroy, priority, object])
+		return object
 	}
 
 	destroy() {

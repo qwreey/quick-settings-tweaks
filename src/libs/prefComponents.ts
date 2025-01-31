@@ -1004,7 +1004,10 @@ export function LicenseRow(item: LicenseRow.License): Adw.ExpanderRow {
 			if (item.content) item.content().then(
 				subtitle => contentRow.subtitle = subtitle
 			).catch(
-				error => contentRow.subtitle = `ERROR: ${error}`
+				error => {
+					contentRow.subtitle = `ERROR: ${error}`
+					log(error)
+				}
 			)
 		}
 	},[
@@ -1136,6 +1139,7 @@ export function ChangelogDialog({
 						group.add(row)
 					}
 				})))
+				.catch(log)
 			},
 		})]
 	})

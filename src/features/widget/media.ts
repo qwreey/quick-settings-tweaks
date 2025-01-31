@@ -9,7 +9,7 @@ import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
 import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
 import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
-import { logger } from "../../libs/utility.js"
+import { logger } from "../../libs/logger.js"
 
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
@@ -140,7 +140,9 @@ class ProgressControl extends St.BoxLayout {
 	_trackPosition() {
 		this._slider.reactive = this._player.canSeek
 		if (this._shown && !this._dragging) {
-			this._player.position.then(this._updatePosition.bind(this))
+			this._player.position
+				.then(this._updatePosition.bind(this))
+				.catch(logger.error)
 		}
 		return GLib.SOURCE_CONTINUE;
 	}
@@ -196,8 +198,10 @@ class Player extends Mpris.MprisPlayer {
 			"/org/mpris/MediaPlayer2",
 			propertiesIface.name,
 			null,
+		)
 		// @ts-expect-error
-		).then((proxy: Gio.DbusProxy) => this._propertiesProxy = proxy)
+		.then((proxy: Gio.DbusProxy) => this._propertiesProxy = proxy)
+		.catch(logger.error)
 
 		// Create proxy for seeking
 		const seekIface = Global.GetDbusInterface("media/dbus.xml","org.mpris.MediaPlayer2.Player")
@@ -209,8 +213,10 @@ class Player extends Mpris.MprisPlayer {
 			"/org/mpris/MediaPlayer2",
 			seekIface.name,
 			null,
+		)
 		// @ts-expect-error
-		).then((proxy: Gio.DbusProxy) => this._seekProxy = proxy)
+		.then((proxy: Gio.DbusProxy) => this._seekProxy = proxy)
+		.catch(logger.error)
 	}
 
 	get position(): Promise<number|null> {
@@ -219,13 +225,13 @@ class Player extends Mpris.MprisPlayer {
 			"Position"
 		).then((result: any) => {
 			return result[0].get_int64()
-		}).catch( ()=> null)
+		}).catch(()=> null)
 	}
 	set position(value: number) {
 		this._seekProxy.SetPositionAsync(
 			this.trackId,
 			Math.min(this.length, Math.max(1, value))
-		).catch(logger)
+		).catch(logger.error)
 	}
 	get trackId(): string {
 		return this._trackid

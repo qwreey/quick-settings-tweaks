@@ -3,8 +3,8 @@ import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 import { FeatureBase, type SettingLoader } from "./libs/feature.js"
-
-export class SoundWidgetTweakFeature extends FeatureBase {
+import { logger } from "./libs/logger.js"
+export class SoundTweakFeature extends FeatureBase {
 	// #region settings
 	outputShowSelected: boolean
 	inputShowSelected: boolean
@@ -21,26 +21,19 @@ export class SoundWidgetTweakFeature extends FeatureBase {
 	// #endregion settings
 
 	onLoad() {
+		if (this.outputShowSelected) {
+			const label = this.maid.destroyJob(new St.Label({
+				style_class: "QSTWEAKS-volume-mixer-label"
+			}))
+			// @ts-expect-error
+			Global.QuickSettingsMenu.addItem(label, 2)
+			Global.GetStreamSlider().then(({ OutputStreamSlider }) => {
+				Global.QuickSettingsGrid.set_child_below_sibling(label, OutputStreamSlider)
+			}).catch(logger.error)
+		}
 	}
 	onUnload(): void {}
 }
-
-export class  extends FeatureBase {
-	load() {
-		this._outputListener = null
-		this._inputListener = null
-		this._inputVisibilityListener = null
-
-		if (Global.Settings.get_boolean("input-show-selected")) {
-			this._setupInputChangedListener()
-		}
-		if (Global.Settings.get_boolean("input-always-show")) {
-			this._setupInputVisibilityObserver()
-		}
-		if (Global.Settings.get_boolean("output-show-selected")) {
-			this._setupOutputChangedListener()
-		}
-	}
 
 	unload() {
 		// disable feature reloader

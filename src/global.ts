@@ -12,9 +12,14 @@ import {
 	type CalendarMessageList
 } from "resource:///org/gnome/shell/ui/calendar.js";
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
-import { QuickSettingsItem } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import { logger } from "./libs/logger"
 import { type SystemItem, type Indicator as SystemIndicator } from "resource:///org/gnome/shell/ui/status/system.js"
 
+type StreamSlider = {
+	VolumeInput: any,
+	InputStreamSlider: any,
+	OutputStreamSlider: any,
+}
 export const Global = new (class Global {
 	QuickSettings: Clutter.Actor
 	QuickSettingsMenu: St.Widget
@@ -37,7 +42,9 @@ export const Global = new (class Global {
 		})
 	}
 	get QuickSettingsSystemItem(): Promise<SystemItem> {
-		return this.QuickSettingsSystemIndicator.then(system=>(system as any)._systemItem)
+		return this.QuickSettingsSystemIndicator
+			.then(system=>(system as any)._systemItem)
+			.catch(logger.error)
 	}
 
 	DateMenu: DateMenuButton
@@ -74,7 +81,7 @@ export const Global = new (class Global {
 		})
 	}
 
-	private StreamSliderGetter() {
+	private StreamSliderGetter(): StreamSlider|null {
 		if (!(this.QuickSettings as any)._volumeInput)
 			return null
 		return {
@@ -83,7 +90,7 @@ export const Global = new (class Global {
 			OutputStreamSlider: (this.QuickSettings as any)._volumeOutput._output,
 		}
 	}
-	GetStreamSlider(): Promise<any> {
+	GetStreamSlider(): Promise<StreamSlider> {
 		return new Promise(resolve => {
 			let streamSlider = this.StreamSliderGetter()
 			if (streamSlider) {

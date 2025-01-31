@@ -5,7 +5,7 @@
  * https://github.com/qwreey/quick-settings-tweaks
 */
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
-import { logger } from "./libs/utility.js"
+import { logger } from "./libs/logger.js"
 import { Global } from "./global.js"
 import { type FeatureBase } from "./libs/feature.js"
 import { DndQuickToggleFeature } from "./features/toggle/dndQuickToggle.js"

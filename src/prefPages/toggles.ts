@@ -1,12 +1,9 @@
 import Adw from "gi://Adw"
 import GObject from "gi://GObject"
 import Gio from "gi://Gio"
-import GLib from "gi://GLib"
-import Gtk from "gi://Gtk"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
-import { QuickToggleOrderItem } from "../libs/quickToggleOrderItem.js"
 import {
 	SwitchRow,
 	Group,

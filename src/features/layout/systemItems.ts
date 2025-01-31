@@ -6,7 +6,7 @@ import {
 } from "resource:///org/gnome/shell/ui/status/system.js"
 import { type QuickSettingsItem } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { type SystemItem } from "resource:///org/gnome/shell/ui/status/system.js"
-import { logger } from "../../libs/utility.js"
+import { logger } from "../../libs/logger.js"
 
 export class SystemItemsOrderFeature extends FeatureBase {
 	// #region settings
@@ -105,7 +105,7 @@ export class SystemItemsOrderFeature extends FeatureBase {
 				if (index) items.box.child.set_child_above_sibling(current, last)
 				last = current
 			}
-		}).catch(logger)
+		}).catch(logger.error)
 	}
 	onUnload(): void {}
 }

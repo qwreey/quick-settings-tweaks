@@ -1,7 +1,6 @@
 import Clutter from "gi://Clutter"
 import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
-import St from "gi://St"
 import { FeatureBase, type SettingLoader } from "../libs/feature.js"
 import { QuickSettingsMenuTracker } from "../libs/quickSettingsTracker.js"
 import Maid from "../libs/maid.js"

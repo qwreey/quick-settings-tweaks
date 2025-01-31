@@ -1,7 +1,6 @@
 import St from "gi://St"
 import { Global } from "../global.js"
 import { FeatureBase, type SettingLoader } from "../libs/feature.js"
-import { logger } from "../libs/utility.js"
 import { QuickMenuToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
 export class LayoutCustomize extends FeatureBase {
