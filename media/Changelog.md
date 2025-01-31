@@ -2,14 +2,17 @@
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-1-28 01:00:00 KST" -->
+<!-- @Date: "2025-1-31 20:39:00 KST" -->
 
-- Add scrollbal visibility option on notifications widget
 - Update repo url in metadata
 - Option to hide dnd indicator completely
-- Use better logging format
-- Add logging level and debug expose option
-- Add vfade offset option on notifications widget
+- Debugging
+  - Use better logging format
+  - Add logging level option
+  - Add extension environment expose option
+- Notifications widget
+  - Add vfade offset option
+  - Add scrollbar visibility option 
 
 ## Fix
 

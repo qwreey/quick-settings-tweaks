@@ -3,6 +3,8 @@ Touch enchantments:
     Notifications: slide to discard
     Media: slide to change page
 
+Readme file
+
 widgets:
     sound output:
         device to hide
@@ -35,6 +37,8 @@ show full title
 어나더: 자동으로 지우는 알림 리스트 (타이틀 regex)
 datemenu 왼쪽 레이아웃 오른쪽레이아웃, 메뉴 열지 않기
 more dimmer
+
+option to hide widget header?
 
 done;
 ~~dnd-quick-toggle-indicator-position: hide 구현하기 (전부 가림)~~
