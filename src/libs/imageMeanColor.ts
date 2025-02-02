@@ -14,8 +14,8 @@ export function getImageMeanColor(
     image: GdkPixbuf.Pixbuf
 ): Promise<null|[number,number,number]> {
 return new Promise(resolve=>{
-    const id = Math.floor(Math.random()*1000)
-    console.time("getImageMeanColor_"+id)
+    // const id = Math.floor(Math.random()*1000)
+    // console.time("getImageMeanColor_"+id)
     const baseImage = image.scale_simple(BASE_SIZE, BASE_SIZE, GdkPixbuf.InterpType.NEAREST)
     const channels = baseImage.n_channels
     if (channels < 3) return null
@@ -30,7 +30,7 @@ return new Promise(resolve=>{
         curX += SKIP_RATE
         if (curX >= BASE_SIZE) { curX = 0; curY += SKIP_RATE }
         if (curY >= BASE_SIZE) {
-            console.timeEnd("getImageMeanColor_"+id)
+            // console.timeEnd("getImageMeanColor_"+id)
             resolve([colorR, colorG, colorB])
             return GLib.SOURCE_REMOVE
         }

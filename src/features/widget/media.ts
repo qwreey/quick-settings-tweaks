@@ -105,7 +105,6 @@ class ProgressControl extends St.BoxLayout {
 			`-barlevel-background-color:${Rgba.formatCss(progressBackgroundColor)}`
 		)
 		const result = styleList.join(";")
-		logger.debug(result)
 		return result
 	}
 	_createSlider() {
@@ -327,7 +326,7 @@ class Player extends Mpris.MprisPlayer {
 		}).catch(()=>{
 			this._canSeek = false
 		}).finally(()=>{
-			super._updateState()
+			if (this._propertiesProxy) super._updateState()
 		})
 	}
 
@@ -441,6 +440,9 @@ class MediaList extends Mpris.MediaSection {
 
 	get page(): number {
 		return this._currentPage
+	}
+	set page(page: number) {
+		this._setPage(this._messages[page])
 	}
 	get maxPage(): number {
 		return this._currentMaxPage
@@ -622,7 +624,7 @@ class Header extends St.BoxLayout {
 
 		this._pageIndicator = new PageIndicators(Clutter.Orientation.HORIZONTAL)
 		this._pageIndicator.x_align = Clutter.ActorAlign.END
-		this._pageIndicator.connect("page-activated", this.emit.bind(this, "page-activated"))
+		this._pageIndicator.connect("page-activated", (_, page) => this.emit("page-activated", page))
 		this._pageIndicator.y_align = Clutter.ActorAlign.CENTER
 		this.add_child(this._pageIndicator)
 	}
@@ -715,6 +717,9 @@ class MediaWidget extends St.BoxLayout {
 		const maxPageConnection = this._list.connect("max-page-updated", (_, maxPage: number): void => {
 			if (this._header.maxPage == maxPage) return
 			this._header.maxPage = maxPage
+		})
+		this._header.connect("page-activated", (_, page: number) => {
+			this._list.page = page
 		})
 		this.connect("destroy", ()=>{
 			this._list.disconnect(pageConnection)

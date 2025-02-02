@@ -4,6 +4,8 @@
 <!-- @Includes: [] -->
 <!-- @Date: "2025-1-31 20:39:00 KST" -->
 
+## New Features
+
 - Media widget
   - Add gradient background option
   - Add progress bar style option
@@ -13,12 +15,20 @@
 - Debugging
   - Expose features
 
+## Fix
+
+- Media widget
+  - Fix page indicator click action
+
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->
 <!-- @Includes: [] -->
 <!-- @Date: "2025-1-31 20:39:00 KST" -->
 
 - Update repo url in metadata
+
+## New Features
+
 - Option to hide dnd indicator completely
 - Debugging
   - Use better logging format
