@@ -37,7 +37,7 @@ function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGro
 		AdjustmentRow({
 			settings,
 			title: _("Grid Content Opacity"),
-			subtitle: _("Adjust grid content opacity.\nSet this to 255 to opaque, and 0 to transparent"),
+			subtitle: _("Adjust grid content opacity.\nSet this to 255 to make opaque, and 0 to make transparent"),
 			sensitiveBind: "menu-animation-enabled",
 			bind: "menu-animation-grid-content-opacity",
 			max: 255,
@@ -53,7 +53,7 @@ function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGro
 		AdjustmentRow({
 			settings,
 			title: _("Background Opacity"),
-			subtitle: _("Adjust background opacity.\nSet this to 255 to opaque, and 0 to transparent"),
+			subtitle: _("Adjust background opacity.\nSet this to 255 to make opaque, and 0 to make transparent"),
 			sensitiveBind: "menu-animation-enabled",
 			bind: "menu-animation-background-opacity",
 			max: 255,

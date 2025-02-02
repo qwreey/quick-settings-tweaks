@@ -4,6 +4,7 @@
 <!-- @Includes: [] -->
 <!-- @Date: "2025-1-31 20:39:00 KST" -->
 
+- Gradient option for media widget
 
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->

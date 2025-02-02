@@ -12,6 +12,7 @@ import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { logger } from "../../libs/logger.js"
 import { getImageMeanColor } from "../../libs/imageMeanColor.js"
+import { lerp } from "../../libs/utility.js"
 
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
@@ -283,29 +284,53 @@ class Player extends Mpris.MprisPlayer {
 class MediaItem extends Mpris.MediaMessage {
 	_player: Player
 	_cachedColors: Map<string, Promise<void | [number, number, number]>>
+	_options: MediaItem.Options
 
-	constructor({ player, showProgress }: { player: Player, showProgress: boolean }) {
-		super(player)
-		if (showProgress) this.child.add_child(new ProgressControl(player))
+	constructor(options: MediaItem.Options) {
+		super(options.player)
+		this._options = options
+		if (options.showProgress) {
+			this.child.add_child(new ProgressControl(this._player))
+		}
+		this._updateColor()
 	}
 	_updateColor(): void {
+		if (!this._options?.gradientEnabled) return
 		this._cachedColors ??= new Map()
 		const coverUrl = this._player.trackCoverUrl
 		if (!coverUrl) return
 		const coverPath = coverUrl.replace(/^file:\/\//,"")
-		let color = this._cachedColors.get(coverPath)
-		if (!color) {
+		let colorTask = this._cachedColors.get(coverPath)
+		if (!colorTask) {
 			const pixbuf = GdkPixbuf.Pixbuf.new_from_file(coverPath)
 			if (!pixbuf) return
-			color = getImageMeanColor(pixbuf)
-			this._cachedColors.set(coverPath, color)
+			colorTask = getImageMeanColor(pixbuf)
+			this._cachedColors.set(coverPath, colorTask)
 		}
-
-		const id = Math.floor(Math.random()*1000)
-		console.time("test"+id)
-		color.then(i=>{
-			console.log(i)
-			console.timeEnd("test"+id)
+		colorTask.then(color=>{
+			if (!color) return
+			const mixStart = this._options.gradientStartMix / 1000
+			const mixEnd = this._options.gradientEndMix / 1000
+			const [bgr, bgg, bgb] = this._options.gradientBackground
+			const [r,g,b] = color
+			this.style =
+				`background-gradient-direction:horizontal;background-gradient-start:rgba(${
+					lerp(bgr, r, mixStart)
+				},${
+					lerp(bgg, g, mixStart)
+				},${
+					lerp(bgb, b, mixStart)
+				},${
+					this._options.gradientStartOpaque/1000
+				});background-gradient-end:rgba(${
+					lerp(bgr, r, mixEnd)
+				},${
+					lerp(bgg, g, mixEnd)
+				},${
+					lerp(bgb, b, mixEnd)
+				},${
+					this._options.gradientEndOpaque/1000
+				});`
 		})
 	}
 	protected _update(): void {
@@ -314,13 +339,26 @@ class MediaItem extends Mpris.MediaMessage {
 	}
 }
 GObject.registerClass(MediaItem)
+namespace MediaItem {
+	export interface OptionsBase {
+		showProgress: boolean
+		gradientBackground: [number, number, number]
+		gradientStartOpaque: number
+		gradientStartMix: number
+		gradientEndOpaque: number
+		gradientEndMix: number
+		gradientEnabled: boolean
+	}
+	export type Options = {
+		player: Player
+	} & OptionsBase
+}
 // #endregion MediaItem
 
 // #region MediaList
 namespace MediaList {
 	export type Options = Partial<{
-		showProgress: boolean
-	} & St.BoxLayout.ConstructorProps>
+	} & St.BoxLayout.ConstructorProps> & MediaItem.OptionsBase
 }
 class MediaList extends Mpris.MediaSection {
 	_options: MediaList.Options
@@ -340,10 +378,11 @@ class MediaList extends Mpris.MediaSection {
 		// @ts-ignore
 		super(options)
 	}
-	_init(options?: MediaList.Options): void {
+	// @ts-ignore
+	_init(options: MediaList.Options): void {
 		super._init()
 		this._current = null
-		this._options = options ?? {}
+		this._options = options
 		this._currentMaxPage = 0
 		this._currentPage = 0
 	}
@@ -362,9 +401,9 @@ class MediaList extends Mpris.MediaSection {
 		})
 		player.connect("show", () => {
 			message = new MediaItem({
+				...this._options,
 				player,
-				showProgress: this._options.showProgress,
-			}) // modified
+			})
 			this.addMessage(message, true)
 			return false
 		})
@@ -539,8 +578,7 @@ GObject.registerClass({
 // #region MediaWidget
 namespace MediaWidget {
 	export type Options = Partial<{
-		showProgress: boolean
-	} & St.BoxLayout.ConstructorProps>
+	} & St.BoxLayout.ConstructorProps> & MediaItem.OptionsBase
 }
 class MediaWidget extends St.BoxLayout {
 	_options: MediaWidget.Options
@@ -566,7 +604,7 @@ class MediaWidget extends St.BoxLayout {
 		this.add_child(this._header)
 
 		// Create list
-		this._list = new MediaList({ showProgress: options.showProgress })
+		this._list = new MediaList(options)
 		this.add_child(this._list)
 		this._list.connect("notify::empty", this._syncEmpty.bind(this))
 		this._syncEmpty()
@@ -625,11 +663,23 @@ export class MediaWidgetFeature extends FeatureBase {
 	compact: boolean
 	showProgress: boolean
 	removeShadow: boolean
+	gradientBackground: [number, number, number]
+	gradientStartOpaque: number
+	gradientStartMix: number
+	gradientEndOpaque: number
+	gradientEndMix: number
+	gradientEnabled: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
 		this.compact = loader.loadBoolean("media-compact")
 		this.showProgress = loader.loadBoolean("media-show-progress")
 		this.removeShadow = loader.loadBoolean("media-remove-shadow")
+		this.gradientBackground = loader.loadValue("media-gradient-background-color")
+		this.gradientEnabled = loader.loadBoolean("media-gradient-enabled")
+		this.gradientStartOpaque = loader.loadInt("media-gradient-start-opaque")
+		this.gradientStartMix = loader.loadInt("media-gradient-start-mix")
+		this.gradientEndOpaque = loader.loadInt("media-gradient-end-opaque")
+		this.gradientEndMix = loader.loadInt("media-gradient-end-mix")
 	}
 	// #endregion settings
 
@@ -656,7 +706,13 @@ export class MediaWidgetFeature extends FeatureBase {
 		if (!this.enabled) return
 		this.maid.destroyJob(
 			this.mediaWidget = new MediaWidget({
-				showProgress: this.showProgress
+				showProgress: this.showProgress,
+				gradientBackground: this.gradientBackground,
+				gradientStartOpaque: this.gradientStartOpaque,
+				gradientStartMix: this.gradientStartMix,
+				gradientEndOpaque: this.gradientEndOpaque,
+				gradientEndMix: this.gradientEndMix,
+				gradientEnabled: this.gradientEnabled,
 			})
 		)
 

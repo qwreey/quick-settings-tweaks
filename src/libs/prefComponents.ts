@@ -676,6 +676,118 @@ export namespace UpDownButton {
 }
 // #endregion UpDownButton
 
+// #region RgbColorRow
+export function RgbColorRow({
+	title,
+	subtitle,
+	action,
+	sensitiveBind,
+	settings,
+	bind,
+	experimental,
+	noResetButton,
+	onCreated,
+	parent,
+	value,
+	useAlpha,
+}: RgbColorRow.Options): Adw.ActionRow {
+	if (bind) value ??= settings.get_value(bind).recursiveUnpack()
+
+	const row = new Adw.ActionRow({
+		title: title ?? "",
+		subtitle: subtitle ?? null,
+		activatable: true,
+	})
+	const button = new Gtk.ColorButton({
+		margin_start: 6,
+		margin_top: 6,
+		margin_bottom: 6,
+		use_alpha: useAlpha ?? false,
+	})
+	row.connect("activated", ()=>button.activate())
+	setLinkCursor(row)
+	const updateColor = ()=>{
+		const color = button.get_color().copy()
+		color.red = value[0] / 255
+		color.green = value[1] / 255
+		color.blue = value[2] / 255
+		if (useAlpha) color.alpha = value[3]
+		button.set_rgba(color)
+	}
+	updateColor()
+	row.add_suffix(button)
+
+	if (parent) {
+		parent.add(row)
+	}
+
+	if (action || bind) button.connect("color-set", ()=>{
+		const color = button.get_rgba()
+		const arr = [
+			Math.floor(color.red * 255 + .5),
+			Math.floor(color.green * 255 + .5),
+			Math.floor(color.blue * 255 + .5)
+		] as RgbColorRow.Color
+		if (useAlpha) arr.push(color.alpha)
+		if (bind) settings.set_value(bind, new GLib.Variant("ai", arr))
+		if (action) action(arr)
+		log("w")
+	})
+	if (bind) settings.connect(`changed::${bind}`, ()=>{
+		const newValue = settings.get_value(bind).recursiveUnpack()
+		if (
+			newValue[0] != value[0]
+			|| newValue[1] != value[1]
+			|| newValue[2] != value[2]
+			|| newValue[3] != value[3]
+		) {
+			value = newValue
+			updateColor()
+		}
+	})
+
+	if (sensitiveBind) {
+		settings.bind(
+			sensitiveBind,
+			row, "sensitive",
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		settings.bind(
+			sensitiveBind,
+			button, "sensitive",
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		button.sensitive = row.sensitive = settings.get_boolean(sensitiveBind)
+	}
+
+	if (bind && !noResetButton) {
+		ResetButton.pushResetButton(row, { settings, bind })
+	}
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
+
+	if (onCreated) onCreated(row)
+
+	return row
+}
+export namespace RgbColorRow {
+	export type Color = [number, number, number, number?]
+	export interface Options {
+		title?: string
+		subtitle?: string
+		action?: (color: Color)=>void
+		sensitiveBind?: string
+		settings?: Gio.Settings
+		bind?: string
+		experimental?: boolean
+		noResetButton?: boolean
+		onCreated?: (row: Adw.ActionRow)=>void
+		parent?: any
+		value?: Color
+		useAlpha?: boolean
+	}
+}
+// #endregion RgbColorRow
+
 // #region AdjustmentRow
 export function AdjustmentRow({
 	max,

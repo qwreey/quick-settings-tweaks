@@ -53,6 +53,24 @@
     <key name="media-remove-shadow" type="b">
       <default>true</default>
     </key>
+    <key name="media-gradient-enabled" type="b">
+      <default>true</default>
+    </key>
+    <key name="media-gradient-background-color" type="ai">
+      <default>[127,127,127]</default>
+    </key>
+    <key name="media-gradient-start-opaque" type="i">
+      <default>340</default>
+    </key>
+    <key name="media-gradient-start-mix" type="i">
+      <default>820</default>
+    </key>
+    <key name="media-gradient-end-opaque" type="i">
+      <default>160</default>
+    </key>
+    <key name="media-gradient-end-mix" type="i">
+      <default>180</default>
+    </key>
     <!-- use paged layout type=b -->
     <!-- #endregion Media Widget -->
 

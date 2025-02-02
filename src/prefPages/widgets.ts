@@ -9,12 +9,15 @@ import {
 	AdjustmentRow,
 	Group,
 	fixPageScrollIssue,
+	DialogRow,
+	RgbColorRow,
+	ExpanderRow,
 } from "../libs/prefComponents.js"
 
 export const WidgetsPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+"WidgetsPage",
 }, class WidgetsPage extends Adw.PreferencesPage {
-	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, _window: Adw.PreferencesWindow) {
+	constructor(settings: Gio.Settings, _prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
 			name: "Widgets",
 			title: _("Widgets"),
@@ -54,6 +57,62 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "media-remove-shadow",
 				sensitiveBind: "media-enabled",
 			}),
+			DialogRow({
+				window,
+				settings,
+				title: _("Gradient background"),
+				subtitle: _("Use gradient background extracted from cover image\nMay affect performance"),
+				dialogTitle: _("Media Widget"),
+				sensitiveBind: "media-enabled",
+				experimental: true,
+				childrenRequest: ()=>[Group({
+					title: _("Gradient background"),
+					header_suffix: SwitchRow({
+						settings,
+						bind: "media-gradient-enabled",
+					}),
+					description: _("Use gradient background extracted from cover image\nMay affect performance"),
+				},[
+					RgbColorRow({
+						settings,
+						title: _("Background color"),
+						subtitle: _("Base background color"),
+						bind: "media-gradient-background-color",
+					}),
+					AdjustmentRow({
+						settings,
+						max: 1000,
+						sensitiveBind: "media-gradient-enabled",
+						title: _("Start opaque"),
+						subtitle: _("Adjust left side transparency, Set this to 1000 to make opaque"),
+						bind: "media-gradient-start-opaque",
+					}),
+					AdjustmentRow({
+						settings,
+						max: 1000,
+						sensitiveBind: "media-gradient-enabled",
+						title: _("Start opaque"),
+						subtitle: _("Adjust right side background color mixing, Set this to 1000 to show extracted color"),
+						bind: "media-gradient-start-mix",
+					}),
+					AdjustmentRow({
+						settings,
+						max: 1000,
+						sensitiveBind: "media-gradient-enabled",
+						title: _("Start opaque"),
+						subtitle: _("Adjust right side transparency, Set this to 1000 to make opaque"),
+						bind: "media-gradient-end-opaque",
+					}),
+					AdjustmentRow({
+						settings,
+						max: 1000,
+						sensitiveBind: "media-gradient-enabled",
+						title: _("Start opaque"),
+						subtitle: _("Adjust right side background color mixing, Set this to 1000 to show extracted color"),
+						bind: "media-gradient-end-mix",
+					}),
+				])],
+			})
 		])
 
 		// notification
