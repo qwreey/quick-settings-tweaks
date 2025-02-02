@@ -2,7 +2,6 @@ import Clutter from "gi://Clutter"
 import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import St from "gi://St"
-import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { Global } from "../../global.js"
 

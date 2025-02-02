@@ -10,6 +10,7 @@
   - Add gradient background option
   - Add progress bar style option
   - Add contorl button opacity option
+  - Implement swipe to switch page
 - Weather widget
   - Add click command option
 - Debugging

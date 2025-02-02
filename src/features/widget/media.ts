@@ -13,6 +13,8 @@ import { FeatureBase, type SettingLoader, Rgba, type Rgb } from "../../libs/feat
 import { logger } from "../../libs/logger.js"
 import { getImageMeanColor } from "../../libs/imageMeanColor.js"
 import { lerp } from "../../libs/utility.js"
+import { Drag } from "../../libs/drag.js"
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
 
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
@@ -403,6 +405,19 @@ class MediaItem extends Mpris.MediaMessage {
 		super._update()
 		this._updateGradient()
 	}
+
+	vfunc_button_press_event(_event: Clutter.Event): boolean {
+		return Clutter.EVENT_PROPAGATE
+	}
+	vfunc_button_release_event(_event: Clutter.Event): boolean {
+		return Clutter.EVENT_PROPAGATE
+	}
+	vfunc_motion_event(_event: Clutter.Event): boolean {
+		return Clutter.EVENT_PROPAGATE
+	}
+	vfunc_touch_event(_event: Clutter.Event): boolean {
+		return Clutter.EVENT_PROPAGATE
+	}
 }
 GObject.registerClass(MediaItem)
 namespace MediaItem {
@@ -459,6 +474,9 @@ class MediaList extends Mpris.MediaSection {
 		this._options = options
 		this._currentMaxPage = 0
 		this._currentPage = 0
+		this.can_focus = true
+		this.reactive = true
+		this.track_hover = true
 	}
 
 	// Override for custom message and player
@@ -672,6 +690,9 @@ class MediaWidget extends St.BoxLayout {
 			x_expand: true,
 			y_expand: true,
 			reactive: true,
+			track_hover: true,
+			hover: false,
+			can_focus: true,
 		} as Partial<St.BoxLayout.ConstructorProps>)
 		this._options = options
 
@@ -685,9 +706,10 @@ class MediaWidget extends St.BoxLayout {
 		this._list.connect("notify::empty", this._syncEmpty.bind(this))
 		this._syncEmpty()
 
-		// Page navigation
+		// Page navigation by scroll
 		this.connect("scroll-event", (_: Clutter.Actor, event: Clutter.Event) => {
-			const direction = event.get_scroll_direction();
+			if (this._drag) return
+			const direction = event.get_scroll_direction()
 			if (direction === Clutter.ScrollDirection.UP) {
 				this._list._seekPage(-1)
 			}
@@ -695,17 +717,6 @@ class MediaWidget extends St.BoxLayout {
 				this._list._seekPage(1)
 			}
 		})
-		const swipeAction = new Clutter.SwipeAction()
-		swipeAction.connect("swipe", (_, __, direction) => {
-			if (direction === Clutter.SwipeDirection.RIGHT) {
-				this._list._seekPage(-1)
-			}
-
-			if (direction === Clutter.SwipeDirection.LEFT) {
-				this._list._seekPage(1)
-			}
-		})
-		this.add_action(swipeAction)
 
 		// Sync page update & page indicator
 		this._header.page = this._list.page
@@ -727,10 +738,57 @@ class MediaWidget extends St.BoxLayout {
 		})
 	}
 
+	_drag: boolean
+	dfunc_drag_end(event: Drag.Event): void {
+		this._drag = false
+		const current = this._list._current
+		if (!current) return
+		if (event.isClick) {
+			Main.overview.hide()
+			Main.panel.closeQuickSettings()
+			current._player?.raise()
+		}
+
+		const offset = event.coords[0] - event.startCoords[0]
+		const width = current.allocation.get_width()
+		const direction = -Math.sign(offset)
+		
+		if (
+			(this._list._currentPage == this._list._currentMaxPage - 1 && direction == 1)
+			|| (this._list._currentPage == 0 && direction == -1)
+			|| (width/4 > Math.abs(offset))
+		) {
+			// @ts-expect-error
+			current.ease({
+				mode: Clutter.AnimationMode.EASE_OUT_QUART,
+				translationX: 0,
+				duration: 220,
+				opacity: 255,
+			})
+			return
+		}
+		this._list._seekPage(direction)
+	}
+	dfunc_drag_start(_event: Drag.Event): void {
+		this._drag = true
+	}
+	dfunc_drag_motion(event: Drag.Event): void {
+		const current = this._list._current
+		if (event.isClick || !current) return
+		const offset = event.coords[0] - event.startCoords[0]
+		const width = current.allocation.get_width()
+		const ratio = Math.max(Math.min(offset / width, 1), -1)
+		const halfRatio = Math.max(Math.min(offset * 0.5 / width, 1), -1)
+		const expoRatio = (1 - Math.pow(1 - Math.abs(halfRatio), 3)) * Math.sign(halfRatio)
+		current.translationX = expoRatio * (width * 0.8)
+		current.opacity = Math.floor(lerp(255, 80, Math.abs(ratio)))
+	}
+
 	_syncEmpty() {
 		this.visible = !this._list.empty
 	}
 }
+Drag.applyTo(MediaWidget)
 GObject.registerClass(MediaWidget)
 export { MediaWidget }
 // #endregion MediaWidget
