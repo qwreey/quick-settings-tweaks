@@ -8,6 +8,10 @@
   - Add gradient background option
   - Add progress bar style option
   - Add contorl button opacity option
+- Weather widget
+  - Add click command option
+- Debugging
+  - Expose features
 
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->

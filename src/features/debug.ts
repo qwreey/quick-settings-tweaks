@@ -23,7 +23,15 @@ export class DebugFeature extends FeatureBase {
         logger.debug(()=>`Logger initialized, LogLevel: ${this.logLevel}`)
         if (this.expose) {
             globalThis.qst = Global
-            this.maid.functionJob(()=>{ delete globalThis.qst })
+            for (const feature of (Global.Extension as any).features) {
+                Global[feature.constructor.name] = feature
+            }
+            this.maid.functionJob(()=>{
+                for (const feature of (Global.Extension as any).features) {
+                    delete Global[feature.constructor.name]
+                }
+                delete globalThis.qst
+            })
             logger.debug("Extension environment expose enabled")
         }
         if (this.showLayoutBorder) {

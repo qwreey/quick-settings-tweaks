@@ -12,6 +12,7 @@ import {
 	DialogRow,
 	RgbColorRow,
 	DropdownRow,
+	EntryRow,
 } from "../libs/prefComponents.js"
 
 function SliderCustomizes(settings: Gio.Settings, baseName: string, sensitiveBind: string|undefined): any[] {
@@ -288,6 +289,12 @@ export const WidgetsPage = GObject.registerClass({
 				title: _("Remove shadow"),
 				subtitle: _("Remove shadow from weather widget\nUse if your theme creates unnecessary shadows"),
 				bind: "weather-remove-shadow",
+				sensitiveBind: "weather-enabled",
+			}),
+			EntryRow({
+				settings,
+				title: _("Click command"),
+				bind: "weather-click-command",
 				sensitiveBind: "weather-enabled",
 			}),
 		])

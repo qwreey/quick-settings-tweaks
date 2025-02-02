@@ -1,6 +1,8 @@
 import Clutter from "gi://Clutter"
 import GObject from "gi://GObject"
+import GLib from "gi://GLib"
 import St from "gi://St"
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { Global } from "../../global.js"
 
@@ -45,7 +47,12 @@ GObject.registerClass(Header)
 class WeatherWidget extends St.BoxLayout {
 	_item: St.Button
 	_header: Header
-	_init() {
+	_options: WeatherWidget.Options
+	constructor(options: WeatherWidget.Options) {
+		super(options as any)
+	}
+	_init(options: WeatherWidget.Options) {
+		this._options = options
 		super._init({
 			vertical: true,
 		})
@@ -56,6 +63,11 @@ class WeatherWidget extends St.BoxLayout {
 		this.add_child(
 			this._item = new (Global.DateMenu as any)._weatherItem.constructor()
 		)
+		const defaultClicked = (this._item as any)._weatherClient.activateApp.bind(this._item);
+		(this._item as any)._weatherClient.activateApp = ()=>{
+			if (!options.clickCommand) return defaultClicked()
+			GLib.spawn_async(null, ['sh', '-c', options.clickCommand], null, GLib.SpawnFlags.SEARCH_PATH, null)
+		}
 		this._item.connect("clicked", ()=>(Global.QuickSettingsMenu as any).close())
 		this._item.styleClass += " message";
 
@@ -80,6 +92,11 @@ class WeatherWidget extends St.BoxLayout {
 	}
 }
 GObject.registerClass(WeatherWidget)
+namespace WeatherWidget {
+	export interface Options {
+		clickCommand: string
+	}
+}
 export { WeatherWidget }
 // #endregion WeatherWidget
 
@@ -89,10 +106,12 @@ export class WeatherWidgetFeature extends FeatureBase {
 	enabled: boolean
 	compact: boolean
 	removeShadow: boolean
+	clickCommand: string
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("weather-enabled")
 		this.removeShadow = loader.loadBoolean("weather-remove-shadow")
 		this.compact = loader.loadBoolean("weather-compact")
+		this.clickCommand = loader.loadString("weather-click-command")
 	}
 	// #endregion settings
 
@@ -117,7 +136,9 @@ export class WeatherWidgetFeature extends FeatureBase {
 	override onLoad(): void {
 		if (!this.enabled) return
 		this.maid.destroyJob(
-			this.weatherWidget = new WeatherWidget()
+			this.weatherWidget = new WeatherWidget({
+				clickCommand: this.clickCommand,
+			})
 		)
 		this.updateStyleClass()
 

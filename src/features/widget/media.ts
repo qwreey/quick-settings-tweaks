@@ -354,17 +354,17 @@ class MediaItem extends Mpris.MediaMessage {
 		this._nextButton.opacity =
 		this._prevButton.opacity =
 		this._playPauseButton.opacity = this._options.contorlOpacity
-		this._updateColor()
+		this._updateGradient()
 	}
 	protected _onDestroy(): void {
 		this._cachedColors = null
 		super._onDestroy()
 	}
-	_updateColor(): void {
+	_updateGradient(): void {
 		if (!this._options?.gradientEnabled) return
 		this._cachedColors ??= new Map()
 		const coverUrl = this._player.trackCoverUrl
-		if (!coverUrl) return
+		if (!coverUrl || coverUrl.endsWith(".svg")) return
 		const coverPath = coverUrl.replace(/^file:\/\//,"")
 		let colorTask = this._cachedColors.get(coverPath)
 		if (!colorTask) {
@@ -402,7 +402,7 @@ class MediaItem extends Mpris.MediaMessage {
 	}
 	protected _update(): void {
 		super._update()
-		this._updateColor()
+		this._updateGradient()
 	}
 }
 GObject.registerClass(MediaItem)

@@ -109,6 +109,9 @@
     <key name="weather-compact" type="b">
       <default>true</default>
     </key>
+    <key name="weather-click-command" type="s">
+      <default>''</default>
+    </key>
     <!-- #endregion Weather Widget -->
 
     <!-- #region Date Menu -->

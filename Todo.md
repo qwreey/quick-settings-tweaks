@@ -20,9 +20,9 @@ widgets:
         as system item (like background apps,
                         should able to adjust order in systemitem order option)
 
+습도계
 시스템 메뉴에 시간 표시
 datemenu format
-슬라이더 스타일
 백그라운드 앱스 스타일: 일반, 퀵토글, 시스템레이아웃
 열리는 애니메이션
 미디어 타이틀 움직이도록

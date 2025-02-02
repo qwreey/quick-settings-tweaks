@@ -801,6 +801,73 @@ export namespace RgbColorRow {
 }
 // #endregion RgbColorRow
 
+// #region EntryRow
+export function EntryRow({
+	bind,
+	parent,
+	value,
+	title,
+	action,
+	sensitiveBind,
+	settings,
+	experimental,
+	noResetButton,
+	onCreated,
+}: EntryRow.Options): Adw.EntryRow {
+	if (bind) value ??= settings.get_string(bind)
+
+	const row = new Adw.EntryRow({
+		title: title ?? "",
+	})
+
+	if (action) {
+		row.connect("notify::text", () => {
+			action(row.text)
+		})
+	}
+
+	if (parent) {
+		parent.add(row)
+	}
+
+	if (bind) {
+		settings.bind(
+			bind,
+			row, "text",
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		if (!noResetButton) row.add_suffix(ResetButton({ settings, bind }))
+	}
+
+	if (sensitiveBind) {
+		settings.bind(
+			sensitiveBind,
+			row, "sensitive",
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		row.sensitive = settings.get_boolean(sensitiveBind)
+	}
+	if (experimental) ExperimentalIcon.prependExperimentalIcon(row.child)
+	if (onCreated) onCreated(row)
+
+	return row
+}
+export namespace EntryRow {
+	export interface Options {
+		settings?: Gio.Settings
+		bind?: string
+		parent?: any
+		value?: string
+		title?: string
+		action?: (value: string)=>void
+		sensitiveBind?: string
+		experimental?: boolean
+		noResetButton?: boolean
+		onCreated?: (row: Adw.EntryRow)=>void
+	}
+}
+// #endregion EntryRow
+
 // #region AdjustmentRow
 export function AdjustmentRow({
 	max,

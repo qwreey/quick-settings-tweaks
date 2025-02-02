@@ -51,19 +51,11 @@ export default class QstExtension extends Extension {
 		// Load global context
 		Global.load(this)
 
-		// Load debug feature
-		this.debug = new DebugFeature()
-		this.debug.load()
-		logger(`Extension activation started, version: ${Config.version}`)
-
-		// Load features
-		logger.debug("Initializing features ...")
-		let start = +Date.now()
-		for (const feature of this.features = [
+		// Create features
+		this.features = [
 			new DndQuickToggleFeature(),
 			new UnsafeQuickToggleFeature(),
 			// new VolumeMixerFeature(),
-			// new ButtonRemoverFeature(),
 			// new InputOutputFeature(),
 			new LayoutCustomize(),
 			new NotificationsWidgetFeature(),
@@ -74,7 +66,17 @@ export default class QstExtension extends Extension {
 			new MenuAnimation(),
 			new SystemItemsOrderFeature(),
 			new TogglesOrderFeature(),
-		]) {
+		]
+
+		// Load debug feature
+		this.debug = new DebugFeature()
+		this.debug.load()
+		logger(`Extension activation started, version: ${Config.version}`)
+
+		// Load features
+		logger.debug("Initializing features ...")
+		let start = +Date.now()
+		for (const feature of this.features) {
 			logger.debug(()=>`Loading feature '${feature.constructor.name}'`)
 			feature.load()
 		}
