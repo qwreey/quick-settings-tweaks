@@ -47,8 +47,33 @@
     <key name="media-compact" type="b">
       <default>true</default>
     </key>
-    <key name="media-show-progress" type="b">
+    <key name="media-contorl-opacity" type="i">
+      <default>230</default>
+    </key>
+    <key name="media-progress-enabled" type="b">
       <default>true</default>
+    </key>
+    <key name="media-progress-style" type="s">
+      <default>'slim'</default>
+      <choices>
+        <choice value='default'/>
+        <choice value='slim'/>
+      </choices>
+    </key>
+    <key name="media-progress-handle-color" type="ai">
+      <default>[]</default>
+    </key>
+    <key name="media-progress-handle-radius" type="i">
+      <default>0</default>
+    </key>
+    <key name="media-progress-background-color" type="ai">
+      <default>[]</default>
+    </key>
+    <key name="media-progress-active-background-color" type="ai">
+      <default>[]</default>
+    </key>
+    <key name="media-progress-height" type="i">
+      <default>0</default>
     </key>
     <key name="media-remove-shadow" type="b">
       <default>true</default>

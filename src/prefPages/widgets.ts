@@ -11,8 +11,78 @@ import {
 	fixPageScrollIssue,
 	DialogRow,
 	RgbColorRow,
-	ExpanderRow,
+	DropdownRow,
 } from "../libs/prefComponents.js"
+
+function SliderCustomizes(settings: Gio.Settings, baseName: string, sensitiveBind: string|undefined): any[] {
+	// Handle color & radius
+	const handleRadius = AdjustmentRow({
+		settings,
+		max: 1000,
+		title: _("Handle radius"),
+		subtitle: _("Set this to 0 to use default radius"),
+		bind: baseName+"-handle-radius",
+		sensitiveBind,
+	})
+	const handleColor = RgbColorRow({
+		settings,
+		title: _("Handle color"),
+		bind: baseName+"-handle-color",
+		sensitiveBind,
+		useAlpha: true,
+	})
+	const updateHandleOptionVisible = ()=>{
+		const value = settings.get_string(baseName+"-style")
+		handleRadius.visible =
+		handleColor.visible = value != "slim"
+	}
+	const updateHandleOptionVisibleConnection =
+		settings.connect(
+			`changed::${baseName}-style`,
+			updateHandleOptionVisible
+		)
+	updateHandleOptionVisible()
+	handleColor.child.connect("destroy", ()=>{
+		settings.disconnect(updateHandleOptionVisibleConnection)
+	})
+
+	return [
+		DropdownRow({
+			settings,
+			title: _("Slider style"),
+			bind: baseName+"-style",
+			items: [
+				{ name: _("Slim"), value: "slim" },
+				{ name: _("Default"), value: "default" },
+			],
+			sensitiveBind,
+		}),
+		handleRadius,
+		handleColor,
+		RgbColorRow({
+			settings,
+			title: _("Background color"),
+			bind: baseName+"-background-color",
+			sensitiveBind,
+			useAlpha: true,
+		}),
+		RgbColorRow({
+			settings,
+			title: _("Active Background color"),
+			bind: baseName+"-active-background-color",
+			sensitiveBind,
+			useAlpha: true,
+		}),
+		AdjustmentRow({
+			settings,
+			title: _("Height"),
+			max: 1000,
+			bind: baseName+"-height",
+			sensitiveBind,
+			subtitle: _("Set this to 0 to use default height"),
+		})
+	]
+}
 
 export const WidgetsPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+"WidgetsPage",
@@ -42,20 +112,30 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "media-compact",
 				sensitiveBind: "media-enabled",
 			}),
-			SwitchRow({
+			AdjustmentRow({
+				settings,
+				title: _("Control buttons opacity"),
+				subtitle: _("Set this to 255 to make opaque, and 0 to make transparent"),
+				max: 255,
+				bind: "media-contorl-opacity",
+				sensitiveBind: "media-enabled",
+			}),
+			DialogRow({
+				window,
 				settings,
 				title: _("Show progress bar"),
 				subtitle: _("Add progress bar under description"),
-				bind: "media-show-progress",
-				sensitiveBind: "media-enabled",
+				dialogTitle: _("Media Widget"),
 				experimental: true,
-			}),
-			SwitchRow({
-				settings,
-				title: _("Remove shadow"),
-				subtitle: _("Remove shadow from media message\nUse if your theme creates unnecessary shadows"),
-				bind: "media-remove-shadow",
 				sensitiveBind: "media-enabled",
+				childrenRequest: ()=>[Group({
+					title: _("Show progress bar"),
+					description: _("Add progress bar under description"),
+					header_suffix: SwitchRow({
+						settings,
+						bind: "media-progress-enabled",
+					}),
+				}, SliderCustomizes(settings, "media-progress", "media-progress-enabled"))],
 			}),
 			DialogRow({
 				window,
@@ -112,7 +192,14 @@ export const WidgetsPage = GObject.registerClass({
 						bind: "media-gradient-end-mix",
 					}),
 				])],
-			})
+			}),
+			SwitchRow({
+				settings,
+				title: _("Remove shadow"),
+				subtitle: _("Remove shadow from media message\nUse if your theme creates unnecessary shadows"),
+				bind: "media-remove-shadow",
+				sensitiveBind: "media-enabled",
+			}),
 		])
 
 		// notification

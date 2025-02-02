@@ -4,7 +4,10 @@
 <!-- @Includes: [] -->
 <!-- @Date: "2025-1-31 20:39:00 KST" -->
 
-- Gradient option for media widget
+- Media widget
+  - Add gradient background option
+  - Add progress bar style option
+  - Add contorl button opacity option
 
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->

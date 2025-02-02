@@ -9,7 +9,7 @@ import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
 // @ts-expect-error
 import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
 import { Global } from "../../global.js"
-import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader, Rgba, type Rgb } from "../../libs/feature.js"
 import { logger } from "../../libs/logger.js"
 import { getImageMeanColor } from "../../libs/imageMeanColor.js"
 import { lerp } from "../../libs/utility.js"
@@ -23,15 +23,17 @@ class ProgressControl extends St.BoxLayout {
 	_positionTracker: number|null
 	_dragging: boolean
 	_shown: boolean
+	_options: ProgressControl.Options
 
-	constructor(player: Player) {
-		super(player as any)
+	constructor(options: ProgressControl.Options) {
+		super(options as any)
 	}
-	_init(player: Player): void {
-		this._player = player
+	_init(options: ProgressControl.Options): void {
+		this._player = options.player
 		this._positionTracker = null
 		this._dragging = false
 		this._shown = false
+		this._options = options
 
 		super._init({
 			vertical: false,
@@ -51,6 +53,7 @@ class ProgressControl extends St.BoxLayout {
 		this._player.connectObject("changed", () => this._updateStatus(), this)
 	}
 
+	// Create position, length label
 	_createLabels() {
 		this._positionLabel = new St.Label({
 			y_expand: true,
@@ -63,8 +66,51 @@ class ProgressControl extends St.BoxLayout {
 			style_class: "QSTWEAKS-length-label",
 		})
 	}
+
+	// Create slider and connect drag event
+	_getSliderStyle(): string {
+		const {
+			progressStyle,
+			progressActiveBackgroundColor,
+			progressHandleRadius,
+			progressHandleColor,
+			progressBackgroundColor,
+			progressHeight
+		} = this._options
+		const styleList = []
+		switch (progressStyle) {
+			case "slim":
+				styleList.push("-slider-handle-radius:0px")
+				if (progressActiveBackgroundColor) {
+					styleList.push("color:"+Rgba.formatCss(progressActiveBackgroundColor))
+				} else {
+					styleList.push("color:-st-accent-color")
+				}
+				break
+			case "default":
+			default:
+				if (progressHandleRadius) {
+					styleList.push(`-slider-handle-radius:${progressHandleRadius}px`)
+				}
+				if (progressHandleColor) {
+					styleList.push(`color:${Rgba.formatCss(progressHandleColor)}`)
+				}
+				break
+		}
+		if (progressHeight) styleList.push(`-barlevel-height:${progressHeight}px`)
+		if (progressActiveBackgroundColor) styleList.push(
+			`-barlevel-active-background-color:${Rgba.formatCss(progressActiveBackgroundColor)}`
+		)
+		if (progressBackgroundColor) styleList.push(
+			`-barlevel-background-color:${Rgba.formatCss(progressBackgroundColor)}`
+		)
+		const result = styleList.join(";")
+		logger.debug(result)
+		return result
+	}
 	_createSlider() {
 		this._slider = new Slider(0)
+		this._slider.style = this._getSliderStyle()
 
 		// Process Dragging
 		this._slider.connect("drag-begin", () => {
@@ -181,6 +227,19 @@ class ProgressControl extends St.BoxLayout {
 	}
 }
 GObject.registerClass(ProgressControl)
+namespace ProgressControl {
+	export interface OptionsBase {
+		progressStyle: "default" | "slim"
+		progressHandleColor: null|Rgba
+		progressBackgroundColor: null|Rgba
+		progressHeight: null|number
+		progressActiveBackgroundColor: null|Rgba
+		progressHandleRadius: number
+	}
+	export type Options = {
+		player: Player,
+	} & OptionsBase
+}
 // #endregion ProgressControl
 
 // #region Player
@@ -289,10 +348,17 @@ class MediaItem extends Mpris.MediaMessage {
 	constructor(options: MediaItem.Options) {
 		super(options.player)
 		this._options = options
-		if (options.showProgress) {
-			this.child.add_child(new ProgressControl(this._player))
+		if (options.progressEnabled) {
+			this.child.add_child(new ProgressControl(options))
 		}
+		this._nextButton.opacity =
+		this._prevButton.opacity =
+		this._playPauseButton.opacity = this._options.contorlOpacity
 		this._updateColor()
+	}
+	protected _onDestroy(): void {
+		this._cachedColors = null
+		super._onDestroy()
 	}
 	_updateColor(): void {
 		if (!this._options?.gradientEnabled) return
@@ -309,6 +375,7 @@ class MediaItem extends Mpris.MediaMessage {
 		}
 		colorTask.then(color=>{
 			if (!color) return
+			if (!this._cachedColors) return
 			const mixStart = this._options.gradientStartMix / 1000
 			const mixEnd = this._options.gradientEndMix / 1000
 			const [bgr, bgg, bgb] = this._options.gradientBackground
@@ -341,24 +408,29 @@ class MediaItem extends Mpris.MediaMessage {
 GObject.registerClass(MediaItem)
 namespace MediaItem {
 	export interface OptionsBase {
-		showProgress: boolean
-		gradientBackground: [number, number, number]
+		progressEnabled: boolean
+		gradientBackground: Rgb
 		gradientStartOpaque: number
 		gradientStartMix: number
 		gradientEndOpaque: number
 		gradientEndMix: number
 		gradientEnabled: boolean
+		contorlOpacity: number
 	}
 	export type Options = {
-		player: Player
-	} & OptionsBase
+		player: Player,
+	}
+		& OptionsBase
+		& ProgressControl.OptionsBase
 }
 // #endregion MediaItem
 
 // #region MediaList
 namespace MediaList {
 	export type Options = Partial<{
-	} & St.BoxLayout.ConstructorProps> & MediaItem.OptionsBase
+	} & St.BoxLayout.ConstructorProps>
+		& MediaItem.OptionsBase
+		& ProgressControl.OptionsBase
 }
 class MediaList extends Mpris.MediaSection {
 	_options: MediaList.Options
@@ -578,7 +650,9 @@ GObject.registerClass({
 // #region MediaWidget
 namespace MediaWidget {
 	export type Options = Partial<{
-	} & St.BoxLayout.ConstructorProps> & MediaItem.OptionsBase
+	} & St.BoxLayout.ConstructorProps>
+		& MediaItem.OptionsBase
+		& ProgressControl.OptionsBase
 }
 class MediaWidget extends St.BoxLayout {
 	_options: MediaWidget.Options
@@ -661,25 +735,43 @@ export class MediaWidgetFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	compact: boolean
-	showProgress: boolean
 	removeShadow: boolean
-	gradientBackground: [number, number, number]
+	progressEnabled: boolean
+	progressStyle: "default" | "slim"
+	progressHandleColor: null|Rgba
+	progressHandleRadius: number
+	progressBackgroundColor: null|Rgba
+	progressHeight: null|number
+	progressActiveBackgroundColor: null|Rgba
+	gradientBackground: Rgb
 	gradientStartOpaque: number
 	gradientStartMix: number
 	gradientEndOpaque: number
 	gradientEndMix: number
 	gradientEnabled: boolean
+	contorlOpacity: number
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
 		this.compact = loader.loadBoolean("media-compact")
-		this.showProgress = loader.loadBoolean("media-show-progress")
 		this.removeShadow = loader.loadBoolean("media-remove-shadow")
-		this.gradientBackground = loader.loadValue("media-gradient-background-color")
+		this.contorlOpacity = loader.loadInt("media-contorl-opacity")
+
+		// Gradient
+		this.gradientBackground = loader.loadRgb("media-gradient-background-color")!
 		this.gradientEnabled = loader.loadBoolean("media-gradient-enabled")
 		this.gradientStartOpaque = loader.loadInt("media-gradient-start-opaque")
 		this.gradientStartMix = loader.loadInt("media-gradient-start-mix")
 		this.gradientEndOpaque = loader.loadInt("media-gradient-end-opaque")
 		this.gradientEndMix = loader.loadInt("media-gradient-end-mix")
+		
+		// Progress
+		this.progressEnabled = loader.loadBoolean("media-progress-enabled")
+		this.progressStyle = loader.loadString("media-progress-style") as MediaWidgetFeature["progressStyle"]
+		this.progressHandleColor = loader.loadRgba("media-progress-handle-color")
+		this.progressHandleRadius = loader.loadInt("media-progress-handle-radius")
+		this.progressBackgroundColor = loader.loadRgba("media-progress-background-color")
+		this.progressHeight = loader.loadInt("media-progress-height")
+		this.progressActiveBackgroundColor = loader.loadRgba("media-progress-active-background-color")
 	}
 	// #endregion settings
 
@@ -705,15 +797,7 @@ export class MediaWidgetFeature extends FeatureBase {
 	override onLoad(): void {
 		if (!this.enabled) return
 		this.maid.destroyJob(
-			this.mediaWidget = new MediaWidget({
-				showProgress: this.showProgress,
-				gradientBackground: this.gradientBackground,
-				gradientStartOpaque: this.gradientStartOpaque,
-				gradientStartMix: this.gradientStartMix,
-				gradientEndOpaque: this.gradientEndOpaque,
-				gradientEndMix: this.gradientEndMix,
-				gradientEnabled: this.gradientEnabled,
-			})
+			this.mediaWidget = new MediaWidget(this)
 		)
 
 		Global.QuickSettingsGrid.add_child(this.mediaWidget)

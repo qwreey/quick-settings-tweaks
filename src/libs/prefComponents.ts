@@ -704,18 +704,31 @@ export function RgbColorRow({
 		margin_bottom: 6,
 		use_alpha: useAlpha ?? false,
 	})
+	row.add_suffix(button)
+	const themeDefaultLabel = new Gtk.Label({
+		label: _("Theme default"),
+		margin_start: 12,
+		margin_end: 12,
+		visible: false,
+	})
+	const themeDefaultOverlay = new Gtk.Overlay()
+	themeDefaultOverlay.child = themeDefaultLabel
+	themeDefaultOverlay.insert_before(
+		button,
+		null
+	)
 	row.connect("activated", ()=>button.activate())
 	setLinkCursor(row)
 	const updateColor = ()=>{
+		themeDefaultLabel.visible = value.length == 0
 		const color = button.get_color().copy()
-		color.red = value[0] / 255
-		color.green = value[1] / 255
-		color.blue = value[2] / 255
-		if (useAlpha) color.alpha = value[3]
+		color.red = (value[0] ?? 0) / 255
+		color.green = (value[1] ?? 0) / 255
+		color.blue = (value[2] ?? 0) / 255
+		if (useAlpha) color.alpha = (value[3] ?? 1000) / 1000
 		button.set_rgba(color)
 	}
 	updateColor()
-	row.add_suffix(button)
 
 	if (parent) {
 		parent.add(row)
@@ -728,10 +741,9 @@ export function RgbColorRow({
 			Math.floor(color.green * 255 + .5),
 			Math.floor(color.blue * 255 + .5)
 		] as RgbColorRow.Color
-		if (useAlpha) arr.push(color.alpha)
+		if (useAlpha) arr.push(Math.floor(color.alpha * 1000 + .5))
 		if (bind) settings.set_value(bind, new GLib.Variant("ai", arr))
 		if (action) action(arr)
-		log("w")
 	})
 	if (bind) settings.connect(`changed::${bind}`, ()=>{
 		const newValue = settings.get_value(bind).recursiveUnpack()
@@ -770,7 +782,7 @@ export function RgbColorRow({
 	return row
 }
 export namespace RgbColorRow {
-	export type Color = [number, number, number, number?]
+	export type Color = number[]
 	export interface Options {
 		title?: string
 		subtitle?: string
@@ -784,6 +796,7 @@ export namespace RgbColorRow {
 		parent?: any
 		value?: Color
 		useAlpha?: boolean
+		enableThemeDefault?: boolean
 	}
 }
 // #endregion RgbColorRow

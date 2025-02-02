@@ -2,6 +2,16 @@ import Maid from "./maid.js";
 import { Global } from "../global.js";
 import { logger } from "./logger.js";
 
+type Rgba = [number, number, number, number]
+namespace Rgba {
+	export function formatCss(color: Rgba): string {
+		const [r,g,b,a] = color
+		return `rgba(${r},${g},${b},${a/1000})`
+	}
+}
+export { Rgba }
+export type Rgb = [number, number, number]
+
 export class SettingLoader {
 	records: Set<string>
 	listeners: number[]
@@ -59,6 +69,18 @@ export class SettingLoader {
 	loadValue<T>(key: string): T {
 		this.push(key)
 		return Global.Settings.get_value(key).recursiveUnpack()
+	}
+	loadRgb(key: string): Rgb|null {
+		this.push(key)
+		const color = Global.Settings.get_value(key).recursiveUnpack()
+		if (!color.length) return null
+		return color
+	}
+	loadRgba(key: string): Rgba|null {
+		this.push(key)
+		const color = Global.Settings.get_value(key).recursiveUnpack()
+		if (!color.length) return null
+		return color
 	}
 }
 
