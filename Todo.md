@@ -39,6 +39,8 @@ datemenu 왼쪽 레이아웃 오른쪽레이아웃, 메뉴 열지 않기
 more dimmer
 
 option to hide widget header?
+믹서 디바이스 변경 구현하기
+page indicator 왜 클릭 안먹냐
 
 done;
 ~~dnd-quick-toggle-indicator-position: hide 구현하기 (전부 가림)~~

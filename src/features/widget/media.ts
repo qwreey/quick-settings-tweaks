@@ -3,6 +3,7 @@ import Clutter from "gi://Clutter"
 import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import Gio from "gi://Gio"
+import GdkPixbuf from "gi://GdkPixbuf"
 import * as Mpris from "resource:///org/gnome/shell/ui/mpris.js"
 import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
 // @ts-expect-error
@@ -10,6 +11,7 @@ import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js
 import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { logger } from "../../libs/logger.js"
+import { getImageMeanColor } from "../../libs/imageMeanColor.js"
 
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
@@ -280,10 +282,35 @@ class Player extends Mpris.MprisPlayer {
 // #region MediaItem
 class MediaItem extends Mpris.MediaMessage {
 	_player: Player
+	_cachedColors: Map<string, Promise<void | [number, number, number]>>
 
 	constructor({ player, showProgress }: { player: Player, showProgress: boolean }) {
 		super(player)
 		if (showProgress) this.child.add_child(new ProgressControl(player))
+	}
+	_updateColor(): void {
+		this._cachedColors ??= new Map()
+		const coverUrl = this._player.trackCoverUrl
+		if (!coverUrl) return
+		const coverPath = coverUrl.replace(/^file:\/\//,"")
+		let color = this._cachedColors.get(coverPath)
+		if (!color) {
+			const pixbuf = GdkPixbuf.Pixbuf.new_from_file(coverPath)
+			if (!pixbuf) return
+			color = getImageMeanColor(pixbuf)
+			this._cachedColors.set(coverPath, color)
+		}
+
+		const id = Math.floor(Math.random()*1000)
+		console.time("test"+id)
+		color.then(i=>{
+			console.log(i)
+			console.timeEnd("test"+id)
+		})
+	}
+	protected _update(): void {
+		super._update()
+		this._updateColor()
 	}
 }
 GObject.registerClass(MediaItem)

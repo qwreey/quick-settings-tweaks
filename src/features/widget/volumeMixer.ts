@@ -19,8 +19,6 @@ import Maid from "../../libs/maid.js"
 const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
 
 // #region StreamSlider
-// 디바이스 변경 구현하기
-// 루프는 오직 컨테이너가 보이는 상태에서만 작동해야함
 class StreamSlider extends QuickSlider {
 	_maid: Maid
 	_control: Gvc.MixerControl

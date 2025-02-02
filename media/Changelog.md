@@ -1,4 +1,10 @@
 <!-- markdownlint-disable-file MD025, MD024 -->
+# 2.1-pre4
+<!-- @BuildNumber: 4 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-1-31 20:39:00 KST" -->
+
+
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->
 <!-- @Includes: [] -->
@@ -12,7 +18,7 @@
   - Add extension environment expose option
 - Notifications widget
   - Add vfade offset option
-  - Add scrollbar visibility option 
+  - Add scrollbar visibility option
 
 ## Fix
 
