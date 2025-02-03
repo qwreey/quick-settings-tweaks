@@ -1221,20 +1221,25 @@ export function LicenseRow(item: LicenseRow.License): Adw.ExpanderRow {
 		}
 	},[
 		Row({
-			title: "Homepage",
+			title: _("Homepage"),
 			subtitle: item.url,
 			uri: item.url,
 			icon: "go-home",
 		}),
 		item.content ? (contentRow = Row({
-			title: "License",
-			subtitle: "Loading . . .",
+			title: _("License"),
+			subtitle: _("Loading ..."),
 		})) : null,
 		item.licenseUri ? Row({
-			title: "License",
+			title: _("License"),
 			subtitle: item.licenseUri,
 			icon: "emblem-documents-symbolic",
 			uri: item.licenseUri
+		}) : null,
+		item.affectedFiles ? Row({
+			title: _("Affected Files"),
+			subtitle: item.affectedFiles.join("\n"),
+			icon: "text-x-generic-symbolic",
 		}) : null,
 	])
 }
@@ -1246,6 +1251,7 @@ export namespace LicenseRow {
 		file?: string
 		content?: ()=>Promise<string>
 		licenseUri?: string
+		affectedFiles?: string[]
 	}
 }
 // #endregion LicenseRow
@@ -1364,9 +1370,10 @@ export namespace ChangelogDialog {
 		title?: string
 		subtitle?: string
 	}
-	const LITEM = (t: string,lv: number)=>`${"　 ".repeat(lv)}<span alpha="70%">　•　</span>${t}`
+	const BOLD = (t: string)=>`<span weight="bold">${t}</span>`
+	const LITEM = (t: string,lv: number)=>`${"　 ".repeat(lv)}<span alpha="70%">  •　</span>${t}`
 	const TITLE = (t: string,lv: number)=>`<span size="${100+((8-lv)*2.5)}%"><span alpha="50%">${"#".repeat(lv)} </span><span weight="bold">${t}</span></span>`
-	const QUOTE = (t: string)=>`<span size="90%" alpha="70%">&gt;</span><span size="90%" alpha="85%" weight="light">${t}</span>`
+	const QUOTE = (t: string)=>`<span size="90%" alpha="70%">&gt;　</span><span size="90%" alpha="75%">${t}</span>`
 	export function simpleMarked(mdlike: string): string {
 		return mdlike.split("\n").map(
 			line => line
@@ -1383,6 +1390,10 @@ export namespace ChangelogDialog {
 				(_, head: string, t: string)=>TITLE(t, head.length)
 			)
 			.replaceAll(
+				/\*\*(.*?)\*\*/g,
+				(_, t: string)=>BOLD(t)
+			)
+			.replaceAll(
 				/\<\!\-\-.*?\-\-\>/g,
 				""
 			)
@@ -1394,6 +1405,14 @@ export namespace ChangelogDialog {
 		Includes: string[]
 		BuildNumber: number
 		Date: string
+		Git: string
+	}
+	export function createHeader(release: Partial<Release>): string {
+		return [
+			_("> **Date:** %s").format(release.Date ?? ""),
+			_("> **Git Hash:** %s").format(release.Git ?? ""),
+			_("> **Build Number:** %d").format(release.BuildNumber ?? 0),
+		].join("\n")
 	}
 	export function getReleases(content: string): Release[] {
 		type Item = Partial<Release & { buffer: string[] }>
@@ -1414,7 +1433,7 @@ export namespace ChangelogDialog {
 				continue
 			}
 			if (!last) continue
-			last.buffer.push(line)
+			last.buffer.push(line.replaceAll(/\{\{HEADER\}\}/g, ()=>createHeader(last)))
 		}
 		for (const item of releases) {
 			item.content = item.buffer.join("\n")

@@ -2,7 +2,13 @@
 # 2.1-pre4
 <!-- @BuildNumber: 4 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-1-31 20:39:00 KST" -->
+<!-- @Date: "2025-02-03 09:31:00 KST" -->
+<!-- @Git: "0f05873" -->
+
+{{HEADER}}
+
+- License viewer enchantments
+  - Show build number, git hash, and date in detailed view
 
 ## New Features
 
@@ -23,10 +29,19 @@
 - Media widget
   - Fix page indicator click action
 
+## New Licenses
+
+- rounded-window-corners
+  - Auther: yilozt
+  - URL: https://github.com/yilozt/rounded-window-corners
+
 # 2.1-pre3
 <!-- @BuildNumber: 3 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-1-31 20:39:00 KST" -->
+<!-- @Date: "2025-01-31 20:39:00 KST" -->
+<!-- @Git: "0f05873" -->
+
+{{HEADER}}
 
 - Update repo url in metadata
 
@@ -54,7 +69,10 @@
 # 2.1-pre2
 <!-- @BuildNumber: 2 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-1-23 00:40:00 KST" -->
+<!-- @Date: "2025-01-23 00:40:00 KST" -->
+<!-- @Git: "1ef912f" -->
+
+{{HEADER}}
 
 ## New Features
 
@@ -76,7 +94,10 @@
 # 2.1-pre1
 <!-- @BuildNumber: 1 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-1-22 13:16:00 KST" -->
+<!-- @Date: "2025-01-22 13:16:00 KST" -->
+<!-- @Git: "724eedd" -->
+
+{{HEADER}}
 
 - Using major.middle.minor version system
 - Using girs and typescript, for better development

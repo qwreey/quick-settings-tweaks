@@ -9,6 +9,19 @@
 		"file": "LICENSE-gnome-volume-mixer",
 		"name": "gnome-volume-mixer",
 		"author": "mymindstorm",
-		"url": "https://github.com/mymindstorm/gnome-volume-mixer"
+		"url": "https://github.com/mymindstorm/gnome-volume-mixer",
+		"affectedFiles": [
+			"features/widget/volumeMixer.ts"
+		]
+	},
+	{
+		"licenseUri": "https://github.com/yilozt/rounded-window-corners/blob/main/LICENSE",
+		"name": "rounded-window-corners",
+		"author": "yilozt",
+		"url": "https://github.com/yilozt/rounded-window-corners",
+		"affectedFiles": [
+			"media/rounded_corners.frag",
+			"libs/roundClip.ts"
+		]
 	}
 ]
