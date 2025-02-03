@@ -50,6 +50,9 @@
     <key name="media-contorl-opacity" type="i">
       <default>230</default>
     </key>
+    <key name="media-round-clip-enabled" type="b">
+      <default>true</default>
+    </key>
     <key name="media-progress-enabled" type="b">
       <default>true</default>
     </key>

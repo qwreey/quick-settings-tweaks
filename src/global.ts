@@ -118,6 +118,23 @@ export const Global = new (class Global {
 		return cachedInfo.lookup_interface(interfaceName)
 	}
 
+	private Shaders: Map<string, [string, string]>
+	GetShader(path: string): [string, string] {
+		let cachedInfo = this.Shaders.get(path)
+		if (!cachedInfo) {
+			const shaderFile = Gio.File.new_for_path(`${this.Extension.path}/${path}`)
+			const [declarations, main] = this.Decoder.decode(shaderFile.load_contents(null)[1]).split(
+				/^.*?main\(\s?\)\s?/m
+			) as [string, string]
+			cachedInfo = [
+				declarations.trim(),
+				main.trim().replace(/^[{}]/gm, '').trim()
+			]
+			this.Shaders.set(path, cachedInfo)
+		}
+		return cachedInfo
+	}
+
 	unload() {
 		this.QuickSettings = null
 		this.QuickSettingsMenu = null
@@ -131,12 +148,14 @@ export const Global = new (class Global {
 		this.Extension = null
 		this.Settings = null
 		this.DBusFiles = null
+		this.Shaders = null
 	}
 	load(extension: Extension) {
 		this.Extension = extension
 		this.Settings = extension.getSettings()
+		this.Shaders = new Map()
 		this.DBusFiles = new Map()
-		this.Decoder = new TextDecoder()
+		this.Decoder = new TextDecoder("utf-8")
 
 		// Quick Settings Items
 		const QuickSettings = this.QuickSettings = Main.panel.statusArea.quickSettings

@@ -5,6 +5,7 @@ export class Drag extends St.Bin {
 	_dragging: boolean
 	_dragIsClick: boolean
 	_dragStartCoords: Drag.Coords
+	_dragMoveStartCoords: Drag.Coords
 	_grab: Clutter.Grab
 	_grabbedDevice: Clutter.InputDevice
 	_grabbedSequence: Clutter.EventSequence
@@ -27,6 +28,7 @@ export class Drag extends St.Bin {
 		dragEvent.isClick = true
 		dragEvent.startCoords = this._dragStartCoords
 		dragEvent.coords = this._dragStartCoords
+		dragEvent.moveStartCoords = this._dragMoveStartCoords
 		if (this.dfunc_drag_start) this.dfunc_drag_start(dragEvent)
 
 		return Clutter.EVENT_STOP
@@ -52,6 +54,11 @@ export class Drag extends St.Bin {
 		dragEvent.isClick = this._dragIsClick
 		dragEvent.startCoords = this._dragStartCoords
 		dragEvent.coords = coords
+		dragEvent.moveStartCoords = this._dragMoveStartCoords
+
+		this._dragStartCoords =
+		this._dragMoveStartCoords = null
+
 		if (this.dfunc_drag_end) this.dfunc_drag_end(dragEvent)
 		return Clutter.EVENT_STOP
 	}
@@ -63,6 +70,7 @@ export class Drag extends St.Bin {
 		dragEvent.isClick = this._dragIsClick
 		dragEvent.startCoords = this._dragStartCoords
 		dragEvent.coords = coords
+		dragEvent.moveStartCoords = this._dragMoveStartCoords
 		if (this.dfunc_drag_motion) this.dfunc_drag_motion(dragEvent)
 		return Clutter.EVENT_STOP
 	}
@@ -71,8 +79,9 @@ export class Drag extends St.Bin {
 		if (
 			Drag.getCoordsDistanceSquare(
 				coords, this._dragStartCoords
-			) > Drag.DragMinPixel
+			) > Drag.DragMinPixelSquare
 		) {
+			this._dragMoveStartCoords = coords
 			this._dragIsClick = false
 		}
 	}
@@ -130,10 +139,12 @@ export class Drag extends St.Bin {
 	}
 }
 export namespace Drag {
-	export const DragMinPixel = 6*6
+	export const DragMinPixel = 6
+	export const DragMinPixelSquare = DragMinPixel*DragMinPixel
 	export type Coords = [number, number]
 	export type Event = Clutter.Event & {
 		isClick: boolean,
+		moveStartCoords: Coords,
 		startCoords: Coords,
 		coords: Coords,
 	}

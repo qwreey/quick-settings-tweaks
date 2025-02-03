@@ -14,6 +14,7 @@ import { logger } from "../../libs/logger.js"
 import { getImageMeanColor } from "../../libs/imageMeanColor.js"
 import { lerp } from "../../libs/utility.js"
 import { Drag } from "../../libs/drag.js"
+import { RoundClipEffect } from "../../libs/roundClip.js"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 
 // #region ProgressControl
@@ -442,6 +443,7 @@ namespace MediaItem {
 // #region MediaList
 namespace MediaList {
 	export type Options = Partial<{
+		roundClipEnabled: boolean
 	} & St.BoxLayout.ConstructorProps>
 		& MediaItem.OptionsBase
 		& ProgressControl.OptionsBase
@@ -452,6 +454,9 @@ class MediaList extends Mpris.MediaSection {
 	_current: MediaItem
 	_currentMaxPage: number
 	_currentPage: number
+	_effect?: RoundClipEffect
+	_drag: boolean
+	_dragTranslation?: number
 
 	get page(): number {
 		return this._currentPage
@@ -474,9 +479,107 @@ class MediaList extends Mpris.MediaSection {
 		this._options = options
 		this._currentMaxPage = 0
 		this._currentPage = 0
+		this._drag = false
+
+		// St props
 		this.can_focus = true
 		this.reactive = true
 		this.track_hover = true
+		this.hover = false
+
+		// Round clip effect
+		if (options.roundClipEnabled) {
+			this._effect = new RoundClipEffect()
+			this._effect.enabled = false
+			this.add_effect_with_name("round-clip", this._effect)
+			this.connect("notify::height", this._updateEffect.bind(this))
+			this.connect("notify::width", this._updateEffect.bind(this))
+			this._effect.connect("notify::enabled", ()=>{
+				if (this._effect.enabled) this._updateEffect()
+			})
+			this._updateEffect()
+		}
+
+		// Scroll Event
+		this.connect("scroll-event", (_: Clutter.Actor, event: Clutter.Event) => {
+			if (this._drag) return
+			const direction = event.get_scroll_direction()
+			if (direction === Clutter.ScrollDirection.UP) {
+				this._seekPage(-1)
+			}
+			if (direction === Clutter.ScrollDirection.DOWN) {
+				this._seekPage(1)
+			}
+		})
+	}
+
+	// Update round clip effect
+	_updateEffect() {
+		const themeNode = this._current?.realized ? this._current?.get_theme_node() : null
+		this._effect.update_uniforms(1, {
+			border_radius: themeNode?.get_border_radius(null) ?? 16,
+			smoothing: 0,
+		},{
+			x1: 2, y1: 3, x2: this.width-2, y2: this.height-2
+		})
+	}
+
+	// Handle dragging
+	dfunc_drag_end(event: Drag.Event): void {
+		this._drag = false
+		const current = this._current
+		if (!current) {
+			this._dragTranslation = null
+			return
+		}
+		if (event.isClick) {
+			Main.overview.hide()
+			Main.panel.closeQuickSettings()
+			current._player?.raise()
+		}
+
+		const offset = event.coords[0] - event.moveStartCoords[0]
+		const width = current.allocation.get_width()
+		const direction = -Math.sign(offset)
+
+		if (
+			(this._currentPage == this._currentMaxPage - 1 && direction == 1)
+			|| (this._currentPage == 0 && direction == -1)
+			|| (width/4 > Math.abs(offset))
+		) {
+			// @ts-expect-error
+			current.ease({
+				mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+				translationX: 0,
+				duration: 360,
+				opacity: 255,
+				onComplete: ()=>{
+					if (this._effect) this._effect.enabled = false
+				}
+			})
+			this._dragTranslation = null
+			return
+		}
+		this._seekPage(direction)
+		this._dragTranslation = null
+	}
+	dfunc_drag_start(_event: Drag.Event): void {
+		this._drag = true
+		this._dragTranslation = 0
+		if (this._effect) this._effect.enabled = true
+	}
+	dfunc_drag_motion(event: Drag.Event): void {
+		const current = this._current
+		if (event.isClick || !current) return
+		const offset = event.coords[0] - event.moveStartCoords[0]
+		const sign = Math.sign(offset)
+		const width = current.allocation.get_width()
+		const ratio = Math.max(Math.min(offset / width, 1), -1)
+		const halfRatio = Math.max(Math.min(offset * 0.5 / width, 1), -1)
+		const expoRatio = (1 - Math.pow(1 - Math.abs(halfRatio), 4)) * sign
+		current.remove_all_transitions()
+		this._dragTranslation = current.translationX = expoRatio * (width * 0.6)
+		current.opacity = Math.floor(lerp(255, 80, Math.abs(ratio)))
 	}
 
 	// Override for custom message and player
@@ -537,11 +640,13 @@ class MediaList extends Mpris.MediaSection {
 		}
 		const currentIndex = messages.findIndex(message => message == current)
 
+		if (this._effect) this._effect.enabled = true
 		// @ts-expect-error
 		current.ease({
 			opacity: 0,
-			translationX: toIndex > currentIndex ? -120 : 120,
-			duration: 120,
+			translationX: (toIndex > currentIndex ? -120 : 120) + (this._dragTranslation ?? 0),
+			duration: 100,
+			mode: Clutter.AnimationMode.EASE_OUT_QUAD,
 			onComplete: ()=>{
 				current.hide()
 				to.opacity = 0
@@ -549,10 +654,12 @@ class MediaList extends Mpris.MediaSection {
 				to.show()
 				// @ts-expect-error
 				to.ease({
-					duration: 120,
+					mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+					duration: 280,
 					translationX: 0,
 					opacity: 255,
 					onStopped: ()=>{
+						if (this._effect) this._effect.enabled = false
 						if (!this._messages.includes(to)) return
 						to.opacity = 255
 						to.translationX = 0
@@ -605,6 +712,7 @@ class MediaList extends Mpris.MediaSection {
 		}
 	}
 }
+Drag.applyTo(MediaList)
 GObject.registerClass({
 	Signals: {
 		"page-updated": {param_types: [GObject.TYPE_INT]},
@@ -690,9 +798,6 @@ class MediaWidget extends St.BoxLayout {
 			x_expand: true,
 			y_expand: true,
 			reactive: true,
-			track_hover: true,
-			hover: false,
-			can_focus: true,
 		} as Partial<St.BoxLayout.ConstructorProps>)
 		this._options = options
 
@@ -705,18 +810,6 @@ class MediaWidget extends St.BoxLayout {
 		this.add_child(this._list)
 		this._list.connect("notify::empty", this._syncEmpty.bind(this))
 		this._syncEmpty()
-
-		// Page navigation by scroll
-		this.connect("scroll-event", (_: Clutter.Actor, event: Clutter.Event) => {
-			if (this._drag) return
-			const direction = event.get_scroll_direction()
-			if (direction === Clutter.ScrollDirection.UP) {
-				this._list._seekPage(-1)
-			}
-			if (direction === Clutter.ScrollDirection.DOWN) {
-				this._list._seekPage(1)
-			}
-		})
 
 		// Sync page update & page indicator
 		this._header.page = this._list.page
@@ -738,57 +831,10 @@ class MediaWidget extends St.BoxLayout {
 		})
 	}
 
-	_drag: boolean
-	dfunc_drag_end(event: Drag.Event): void {
-		this._drag = false
-		const current = this._list._current
-		if (!current) return
-		if (event.isClick) {
-			Main.overview.hide()
-			Main.panel.closeQuickSettings()
-			current._player?.raise()
-		}
-
-		const offset = event.coords[0] - event.startCoords[0]
-		const width = current.allocation.get_width()
-		const direction = -Math.sign(offset)
-		
-		if (
-			(this._list._currentPage == this._list._currentMaxPage - 1 && direction == 1)
-			|| (this._list._currentPage == 0 && direction == -1)
-			|| (width/4 > Math.abs(offset))
-		) {
-			// @ts-expect-error
-			current.ease({
-				mode: Clutter.AnimationMode.EASE_OUT_QUART,
-				translationX: 0,
-				duration: 220,
-				opacity: 255,
-			})
-			return
-		}
-		this._list._seekPage(direction)
-	}
-	dfunc_drag_start(_event: Drag.Event): void {
-		this._drag = true
-	}
-	dfunc_drag_motion(event: Drag.Event): void {
-		const current = this._list._current
-		if (event.isClick || !current) return
-		const offset = event.coords[0] - event.startCoords[0]
-		const width = current.allocation.get_width()
-		const ratio = Math.max(Math.min(offset / width, 1), -1)
-		const halfRatio = Math.max(Math.min(offset * 0.5 / width, 1), -1)
-		const expoRatio = (1 - Math.pow(1 - Math.abs(halfRatio), 3)) * Math.sign(halfRatio)
-		current.translationX = expoRatio * (width * 0.8)
-		current.opacity = Math.floor(lerp(255, 80, Math.abs(ratio)))
-	}
-
 	_syncEmpty() {
 		this.visible = !this._list.empty
 	}
 }
-Drag.applyTo(MediaWidget)
 GObject.registerClass(MediaWidget)
 export { MediaWidget }
 // #endregion MediaWidget
@@ -813,11 +859,13 @@ export class MediaWidgetFeature extends FeatureBase {
 	gradientEndMix: number
 	gradientEnabled: boolean
 	contorlOpacity: number
+	roundClipEnabled: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
 		this.compact = loader.loadBoolean("media-compact")
 		this.removeShadow = loader.loadBoolean("media-remove-shadow")
 		this.contorlOpacity = loader.loadInt("media-contorl-opacity")
+		this.roundClipEnabled = loader.loadBoolean("media-round-clip-enabled")
 
 		// Gradient
 		this.gradientBackground = loader.loadRgb("media-gradient-background-color")!

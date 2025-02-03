@@ -11,6 +11,7 @@
   - Add progress bar style option
   - Add contorl button opacity option
   - Implement swipe to switch page
+  - Implement round clip effect to make transition better
 - Weather widget
   - Add click command option
 - Debugging
@@ -18,6 +19,7 @@
 
 ## Fix
 
+- Fix gnome-shell segfault on dragging media widget
 - Media widget
   - Fix page indicator click action
 

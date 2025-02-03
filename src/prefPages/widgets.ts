@@ -201,6 +201,13 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "media-remove-shadow",
 				sensitiveBind: "media-enabled",
 			}),
+			SwitchRow({
+				settings,
+				title: _("Round clip effect"),
+				subtitle: _("Use round clip effect to make transition more natural"),
+				bind: "media-round-clip-enabled",
+				sensitiveBind: "media-enabled",
+			}),
 		])
 
 		// notification
