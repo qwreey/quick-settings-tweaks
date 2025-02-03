@@ -1,9 +1,12 @@
 {
-  "description": "Let's tweak gnome's quick settings! You can add Media Controls, Notifications, Volume Mixer on quick settings and remove useless buttons!",
   "name": "Quick Setting Tweaker",
-  "url": "https://github.com/qwreey/quick-settings-tweaks",
-  "shell-version": ["45", "46", "47", "48"],
   "uuid": "quick-settings-tweaks@qwreey",
+  "description": "Let's tweak gnome's quick settings! You can add Media Controls, Notifications, Volume Mixer on quick settings and remove useless buttons!",
+  "shell-version": ["45", "46", "47", "48"],
+  "url": "https://github.com/qwreey/quick-settings-tweaks",
   "settings-schema": "org.gnome.shell.extensions.quick-settings-tweaks",
-  "gettext-domain": "quick-settings-tweaks"
+  "gettext-domain": "quick-settings-tweaks",
+  "donations": {
+    "github": "qwreey"
+  }
 }
