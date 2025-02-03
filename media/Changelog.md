@@ -99,6 +99,7 @@
 
 {{HEADER}}
 
+- **Droped gnome-shell 43 and 44 support COMPLETELY** due to ESM incompatible
 - Using major.middle.minor version system
 - Using girs and typescript, for better development
 - New stable, github-stable, github-preview release channel
