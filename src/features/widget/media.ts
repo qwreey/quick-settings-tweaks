@@ -515,7 +515,8 @@ class MediaList extends Mpris.MediaSection {
 
 	// Update round clip effect
 	_updateEffect() {
-		const themeNode = this._current?.realized ? this._current?.get_theme_node() : null
+		if (!this.get_stage()) return
+		const themeNode = this.mapped ? this._current?.get_theme_node() : null
 		this._effect.update_uniforms(1, {
 			border_radius: themeNode?.get_border_radius(null) ?? 16,
 			smoothing: 0,

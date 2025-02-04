@@ -13,12 +13,14 @@ import {
 	DialogRow,
 	ChangelogDialog,
 	fixPageScrollIssue,
+	SwitchRow,
+	DropdownRow,
 } from "../libs/prefComponents.js"
 
 export const AboutPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+"AboutPage",
 }, class AboutPage extends Adw.PreferencesPage {
-	constructor(_settings: Gio.Settings, prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
+	constructor(settings: Gio.Settings, prefs: QstExtensionPreferences, window: Adw.PreferencesWindow) {
 		super({
 			name: "about",
 			title: _("About"),
@@ -123,6 +125,36 @@ export const AboutPage = GObject.registerClass({
 				title: "Webslate",
 				subtitle: _("Add translation to this extension!"),
 				icon: "qst-weblate-logo-symbolic",
+			}),
+		])
+
+		Group({
+			parent: this,
+			title: _("Debug"),
+			description: _("Extension debugging options"),
+		}, [
+			SwitchRow({
+				settings,
+				title: _("Expose environment"),
+				subtitle: _("Expose extension environment to globalThis.qst"),
+				bind: "debug-expose"
+			}),
+			SwitchRow({
+				settings,
+				title: _("Show layout border"),
+				subtitle: _("Show layout borders on Quick Settings"),
+				bind: "debug-show-layout-border"
+			}),
+			DropdownRow({
+				settings,
+				title: _("Log level"),
+				bind: "debug-log-level",
+				items: [
+					{ name: "none", value: -1 },
+					{ name: "error", value: 0 },
+					{ name: "info", value: 1 },
+					{ name: "debug", value: 2 },
+				],
 			}),
 		])
 	}

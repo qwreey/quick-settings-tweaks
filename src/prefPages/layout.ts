@@ -533,5 +533,25 @@ export const LayoutPage = GObject.registerClass({
 				childrenRequest: page => [SystemItemOrderGroup(settings, page)],
 			}),
 		])
+
+		// DateMenu
+		Group({
+			parent: this,
+			title: _("Date Menu"),
+			description: _("Adjust Date Menu layout"),
+		},[
+			SwitchRow({
+				settings,
+				title: _("Hide Notifications"),
+				subtitle: _("Hide notifications on date menu.\n*this option removes media control on date menu too*"),
+				bind: "datemenu-remove-notifications",
+			}),
+			SwitchRow({
+				settings,
+				title: _("Hide Media Control"),
+				subtitle: _("Hide media control on date menu."),
+				bind: "datemenu-remove-media-control",
+			}),
+		])
 	}
 })

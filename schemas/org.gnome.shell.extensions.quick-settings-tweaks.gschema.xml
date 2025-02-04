@@ -119,9 +119,19 @@
 
     <!-- #region Date Menu -->
     <key name="datemenu-hide-left-box" type="b">
+      <!-- Not implemented -->
       <default>true</default>
     </key>
     <key name="datemenu-hide-right-box" type="b">
+      <!-- Not implemented -->
+      <default>false</default>
+    </key>
+    <key name="datemenu-hide-menu-button" type="b">
+      <!-- Not implemented -->
+      <default>false</default>
+    </key>
+    <key name="datemenu-disable-menu" type="b">
+      <!-- Not implemented -->
       <default>false</default>
     </key>
     <key name="datemenu-remove-notifications" type="b">

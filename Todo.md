@@ -44,7 +44,7 @@ smooth 스크롤로 미디어 넘기기
 
 option to hide widget header?
 믹서 디바이스 변경 구현하기
-page indicator 왜 클릭 안먹냐
 
 done;
 ~~dnd-quick-toggle-indicator-position: hide 구현하기 (전부 가림)~~
+~~page indicator 왜 클릭 안먹냐~~

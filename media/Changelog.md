@@ -1,4 +1,7 @@
 <!-- markdownlint-disable-file MD025 MD024 MD034 -->
+<!-- Note: -->
+<!-- This file is visible in prefs so if -->
+<!-- it is erased it may cause an error -->
 # 2.1-pre5
 <!-- @BuildNumber: 5 -->
 <!-- @Includes: [] -->
@@ -6,6 +9,25 @@
 <!-- @Git: "0f05873" -->
 
 - List the license in more detail
+
+## New Features
+
+- Media widget
+  - Add cover image round clip effect option
+  - Add round clip effect detailed option
+- Date menu
+  - Add hide left box option
+  - Add hide right box option
+  - Add menu disable option
+  - Add menu button hide option
+
+## Fix
+
+- Fix 'st_widget_get_theme_node called on the widget which is not in the stage' issue
+
+## Prefs QOL patch
+
+- Add detailed button on some options
 
 # 2.1-pre4
 <!-- @BuildNumber: 4 -->

@@ -41,6 +41,38 @@ export function fixPageScrollIssue(page: Adw.PreferencesPage) {
 		delayedSetScrollToFocus(page, true)
 	})
 }
+export function pushButton(row_with_suffix: Adw.ActionRow, button: any): any {
+	const suffixes = row_with_suffix
+	.get_first_child() // GtkBox header
+	.get_last_child() // GtkBox suffixes
+	const first_suffix = suffixes.get_first_child()
+	button
+	.insert_before(
+		suffixes, first_suffix
+	)
+	return first_suffix
+}
+export function pushDetailedButton(
+	row_with_suffix: Adw.ActionRow,
+	onDetailed: ()=>void
+): Gtk.Button {
+	const buttonBox = Button({
+		action: onDetailed,
+		iconName: "preferences-system-symbolic",
+		hasFrame: false,
+		tooltip: _("Details"),
+	})
+	buttonBox.marginEnd = 2
+	const button: Gtk.Button = buttonBox.get_first_child() as any
+	const image: Gtk.Image = button.get_first_child() as any
+	image.pixel_size = 12
+	image.opacity = 0.75
+	row_with_suffix.activatable_widget = null
+	row_with_suffix.connect("activated", ()=>onDetailed())
+	const switchWidget: Gtk.Switch|null = pushButton(row_with_suffix, buttonBox)
+	if (switchWidget) switchWidget.canFocus = true
+	return button
+}
 
 // #region Dialog
 export function Dialog({
@@ -327,14 +359,7 @@ export namespace ResetButton {
 		}
 	}
 	export function pushResetButton(row_with_suffix: Adw.ActionRow, options: ResetButton.Options) {
-		const suffixes = row_with_suffix
-		.get_first_child() // GtkBox header
-		.get_last_child() // GtkBox suffixes
-
-		ResetButton(options)
-		.insert_before(
-			suffixes, suffixes.get_first_child()
-		)
+		pushButton(row_with_suffix, ResetButton(options))
 	}
 }
 // #endregion ResetButton
@@ -352,6 +377,7 @@ export function SwitchRow({
 	experimental,
 	noResetButton,
 	onCreated,
+	onDetailed,
 }: SwitchRow.Options): Adw.SwitchRow {
 	if (bind) value ??= settings.get_boolean(bind)
 
@@ -369,6 +395,8 @@ export function SwitchRow({
 	if (parent) {
 		parent.add(row)
 	}
+
+	if (onDetailed) pushDetailedButton(row, onDetailed)
 
 	if (bind) {
 		settings.bind(
@@ -405,6 +433,7 @@ export namespace SwitchRow {
 		experimental?: boolean
 		noResetButton?: boolean
 		onCreated?: (row: Adw.SwitchRow)=>void
+		onDetailed?: ()=>void
 	}
 }
 // #endregion SwitchRow
@@ -506,13 +535,17 @@ export function Button({
 	marginTop,
 	marginBottom,
 	iconName,
+	hasFrame,
+	tooltip,
 	onCreated,
 }: Button.Options): Gtk.Box {
 	const box = new Gtk.Box({
 		margin_bottom: marginBottom ?? 8,
 		margin_top: marginTop ?? 8,
 	})
-	const button = new Gtk.Button()
+	const button = new Gtk.Button({
+		has_frame: hasFrame ?? true,
+	})
 	box.insert_child_after(button, null)
 	setLinkCursor(button)
 	if (iconName) {
@@ -521,9 +554,13 @@ export function Button({
 	if (text) {
 		button.label = text
 	}
+	if (tooltip) {
+		button.tooltip_text = tooltip
+		button.has_tooltip = true
+	}
 
 	if (action) {
-		button.connect("activate", () => action())
+		button.connect("clicked", () => action())
 	}
 
 	if (parent) {
@@ -555,6 +592,8 @@ export namespace Button {
 		marginTop?: number
 		marginBottom?: number
 		iconName?: string
+		hasFrame?: boolean
+		tooltip?: string
 	}
 }
 // #endregion Button

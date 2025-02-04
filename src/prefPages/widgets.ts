@@ -9,10 +9,10 @@ import {
 	AdjustmentRow,
 	Group,
 	fixPageScrollIssue,
-	DialogRow,
 	RgbColorRow,
 	DropdownRow,
 	EntryRow,
+	Dialog,
 } from "../libs/prefComponents.js"
 
 function SliderCustomizes(settings: Gio.Settings, baseName: string, sensitiveBind: string|undefined): any[] {
@@ -121,78 +121,84 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "media-contorl-opacity",
 				sensitiveBind: "media-enabled",
 			}),
-			DialogRow({
-				window,
+			SwitchRow({
 				settings,
+				bind: "media-progress-enabled",
 				title: _("Show progress bar"),
 				subtitle: _("Add progress bar under description"),
-				dialogTitle: _("Media Widget"),
 				experimental: true,
 				sensitiveBind: "media-enabled",
-				childrenRequest: ()=>[Group({
-					title: _("Show progress bar"),
-					description: _("Add progress bar under description"),
-					header_suffix: SwitchRow({
-						settings,
-						bind: "media-progress-enabled",
-					}),
-				}, SliderCustomizes(settings, "media-progress", "media-progress-enabled"))],
+				onDetailed: ()=>{Dialog({
+					window,
+					title: _("Media Widget"),
+					childrenRequest: ()=>[Group({
+						title: _("Show progress bar"),
+						description: _("Add progress bar under description"),
+						header_suffix: SwitchRow({
+							settings,
+							bind: "media-progress-enabled",
+						}),
+					}, SliderCustomizes(settings, "media-progress", "media-progress-enabled"))],
+				})}
 			}),
-			DialogRow({
-				window,
+			SwitchRow({
 				settings,
+				bind: "media-gradient-enabled",
 				title: _("Gradient background"),
 				subtitle: _("Use gradient background extracted from cover image\nMay affect performance"),
-				dialogTitle: _("Media Widget"),
 				sensitiveBind: "media-enabled",
 				experimental: true,
-				childrenRequest: ()=>[Group({
-					title: _("Gradient background"),
-					header_suffix: SwitchRow({
-						settings,
-						bind: "media-gradient-enabled",
-					}),
-					description: _("Use gradient background extracted from cover image\nMay affect performance"),
-				},[
-					RgbColorRow({
-						settings,
-						title: _("Background color"),
-						subtitle: _("Base background color"),
-						bind: "media-gradient-background-color",
-					}),
-					AdjustmentRow({
-						settings,
-						max: 1000,
-						sensitiveBind: "media-gradient-enabled",
-						title: _("Start opaque"),
-						subtitle: _("Adjust left side transparency, Set this to 1000 to make opaque"),
-						bind: "media-gradient-start-opaque",
-					}),
-					AdjustmentRow({
-						settings,
-						max: 1000,
-						sensitiveBind: "media-gradient-enabled",
-						title: _("Start opaque"),
-						subtitle: _("Adjust right side background color mixing, Set this to 1000 to show extracted color"),
-						bind: "media-gradient-start-mix",
-					}),
-					AdjustmentRow({
-						settings,
-						max: 1000,
-						sensitiveBind: "media-gradient-enabled",
-						title: _("Start opaque"),
-						subtitle: _("Adjust right side transparency, Set this to 1000 to make opaque"),
-						bind: "media-gradient-end-opaque",
-					}),
-					AdjustmentRow({
-						settings,
-						max: 1000,
-						sensitiveBind: "media-gradient-enabled",
-						title: _("Start opaque"),
-						subtitle: _("Adjust right side background color mixing, Set this to 1000 to show extracted color"),
-						bind: "media-gradient-end-mix",
-					}),
-				])],
+				onDetailed: ()=>{Dialog({
+					window,
+					title: _("Media Widget"),
+					childrenRequest: ()=>[Group({
+						title: _("Gradient background"),
+						header_suffix: SwitchRow({
+							settings,
+							bind: "media-gradient-enabled",
+						}),
+						description: _("Use gradient background extracted from cover image\nMay affect performance"),
+					},[
+						RgbColorRow({
+							settings,
+							title: _("Background color"),
+							subtitle: _("Base background color"),
+							bind: "media-gradient-background-color",
+						}),
+						AdjustmentRow({
+							settings,
+							max: 1000,
+							sensitiveBind: "media-gradient-enabled",
+							title: _("Start opaque"),
+							subtitle: _("Adjust left side transparency, Set this to 1000 to make opaque"),
+							bind: "media-gradient-start-opaque",
+						}),
+						AdjustmentRow({
+							settings,
+							max: 1000,
+							sensitiveBind: "media-gradient-enabled",
+							title: _("Start opaque"),
+							subtitle: _("Adjust right side background color mixing, Set this to 1000 to show extracted color"),
+							bind: "media-gradient-start-mix",
+						}),
+						AdjustmentRow({
+							settings,
+							max: 1000,
+							sensitiveBind: "media-gradient-enabled",
+							title: _("Start opaque"),
+							subtitle: _("Adjust right side transparency, Set this to 1000 to make opaque"),
+							bind: "media-gradient-end-opaque",
+						}),
+						AdjustmentRow({
+							settings,
+							max: 1000,
+							sensitiveBind: "media-gradient-enabled",
+							title: _("Start opaque"),
+							subtitle: _("Adjust right side background color mixing, Set this to 1000 to show extracted color"),
+							bind: "media-gradient-end-mix",
+						}),
+					])],
+				})}
 			}),
 			SwitchRow({
 				settings,
