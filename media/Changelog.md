@@ -1,4 +1,12 @@
 <!-- markdownlint-disable-file MD025 MD024 MD034 -->
+# 2.1-pre5
+<!-- @BuildNumber: 5 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-02-03 09:31:00 KST" -->
+<!-- @Git: "0f05873" -->
+
+- List the license in more detail
+
 # 2.1-pre4
 <!-- @BuildNumber: 4 -->
 <!-- @Includes: [] -->
