@@ -543,14 +543,32 @@ export const LayoutPage = GObject.registerClass({
 			SwitchRow({
 				settings,
 				title: _("Hide Notifications"),
-				subtitle: _("Hide notifications on date menu.\n*this option removes media control on date menu too*"),
-				bind: "datemenu-remove-notifications",
+				subtitle: _("Hide notifications on the date menu"),
+				bind: "datemenu-hide-notifications",
 			}),
 			SwitchRow({
 				settings,
 				title: _("Hide Media Control"),
-				subtitle: _("Hide media control on date menu."),
-				bind: "datemenu-remove-media-control",
+				subtitle: _("Hide media control on the date menu"),
+				bind: "datemenu-hide-media-control",
+			}),
+			SwitchRow({
+				settings,
+				title: _("Hide left box"),
+				subtitle: _("Hide the left box of the date menu, which contains notifications and media control"),
+				bind: "datemenu-hide-left-box",
+			}),
+			SwitchRow({
+				settings,
+				title: _("Hide right box"),
+				subtitle: _("Hide the right box of the date menu, which contains calendar, world clock and weather"),
+				bind: "datemenu-hide-right-box",
+			}),
+			SwitchRow({
+				settings,
+				title: _("Disable menu"),
+				subtitle: _("Do not open date menu when the date menu button clicked"),
+				bind: "datemenu-disable-menu",
 			}),
 		])
 	}

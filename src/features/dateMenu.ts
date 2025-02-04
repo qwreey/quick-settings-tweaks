@@ -10,8 +10,8 @@ export class DateMenuFeature extends FeatureBase {
 	hideRightBox: boolean
 	disableMenu: boolean
 	loadSettings(loader: SettingLoader): void {
-		this.hideMediaControl = loader.loadBoolean("datemenu-remove-media-control")
-		this.hideNotifications = loader.loadBoolean("datemenu-remove-notifications")
+		this.hideMediaControl = loader.loadBoolean("datemenu-hide-media-control")
+		this.hideNotifications = loader.loadBoolean("datemenu-hide-notifications")
 		this.hideLeftBox = loader.loadBoolean("datemenu-hide-left-box")
 		this.hideRightBox = loader.loadBoolean("datemenu-hide-right-box")
 		this.disableMenu = loader.loadBoolean("datemenu-disable-menu")

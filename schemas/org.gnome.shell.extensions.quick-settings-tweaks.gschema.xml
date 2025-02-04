@@ -134,10 +134,10 @@
       <!-- Not implemented -->
       <default>false</default>
     </key>
-    <key name="datemenu-remove-notifications" type="b">
+    <key name="datemenu-hide-notifications" type="b">
       <default>true</default>
     </key>
-    <key name="datemenu-remove-media-control" type="b">
+    <key name="datemenu-hide-media-control" type="b">
       <default>true</default>
     </key>
     <!-- #endregion Date Menu -->
