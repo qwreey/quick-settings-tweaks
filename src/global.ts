@@ -3,7 +3,6 @@ import St from "gi://St"
 import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
-
 import { type Extension } from "resource:///org/gnome/shell/extensions/extension.js"
 import { type MessageTray } from "resource:///org/gnome/shell/ui/messageTray.js"
 import { type DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js"
@@ -14,6 +13,7 @@ import {
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
 import { logger } from "./libs/logger.js"
 import { type SystemItem, type Indicator as SystemIndicator } from "resource:///org/gnome/shell/ui/status/system.js"
+import { type PopupMenu } from "resource:///org/gnome/shell/ui/popupMenu.js"
 
 type StreamSlider = {
 	VolumeInput: any,
@@ -48,6 +48,7 @@ export const Global = new (class Global {
 	}
 
 	DateMenu: DateMenuButton
+	DateMenuMenu: PopupMenu
 	DateMenuBox: Clutter.Actor
 	DateMenuHolder: Clutter.Actor
 
@@ -142,6 +143,7 @@ export const Global = new (class Global {
 		this.QuickSettingsBox = null
 		this.QuickSettingsActor = null
 		this.DateMenu = null
+		this.DateMenuMenu = null
 		this.DateMenuBox = null
 		this.DateMenuHolder = null
 		this.MessageTray = null
@@ -149,6 +151,7 @@ export const Global = new (class Global {
 		this.Settings = null
 		this.DBusFiles = null
 		this.Shaders = null
+		this.Decoder = null
 	}
 	load(extension: Extension) {
 		this.Extension = extension
@@ -166,8 +169,9 @@ export const Global = new (class Global {
 
 		// Date Menu
 		const DateMenu = this.DateMenu = Main.panel.statusArea.dateMenu
-		this.DateMenuBox = (DateMenu.menu as any).box
-		this.DateMenuHolder = (DateMenu.menu as any).box.first_child.first_child
+		const DateMenuMenu = this.DateMenuMenu = DateMenu.menu as any
+		this.DateMenuBox = DateMenuMenu.box
+		this.DateMenuHolder = DateMenuMenu.box.first_child.first_child
 
 		// Message
 		this.MessageTray = Main.messageTray
