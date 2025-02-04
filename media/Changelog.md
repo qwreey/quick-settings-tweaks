@@ -7,7 +7,7 @@
 
 {{HEADER}}
 
-- License viewer enchantments
+- Changelog viewer enchantments
   - Show build number, git hash, and date in detailed view
 
 ## New Features

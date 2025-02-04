@@ -1,7 +1,7 @@
 import St from "gi://St"
 import Clutter from "gi://Clutter"
 
-export class Drag extends St.Bin {
+export abstract class Drag extends St.Bin {
 	_dragging: boolean
 	_dragIsClick: boolean
 	_dragStartCoords: Drag.Coords
@@ -147,5 +147,80 @@ export namespace Drag {
 		moveStartCoords: Coords,
 		startCoords: Coords,
 		coords: Coords,
+	}
+}
+
+export abstract class Scroll extends St.Bin {
+	_scrollSumY: number
+	_scrollSumX: number
+	_scrolling: boolean
+	dfunc_scroll_start: (event: Scroll.Event)=>void
+	dfunc_scroll_motion: (event: Scroll.Event)=>void
+	dfunc_scroll_end: (event: Scroll.Event)=>void
+
+	vfunc_scroll_event(event: Clutter.Event): boolean {
+		if (
+			event.get_scroll_direction() != Clutter.ScrollDirection.SMOOTH
+			|| event.get_scroll_source() != Clutter.ScrollSource.WHEEL
+		) return Clutter.EVENT_PROPAGATE
+		const finish = event.get_scroll_finish_flags()
+		const [dx, dy] = event.get_scroll_delta()
+		if (!this._scrolling) {
+			this._scrolling = true
+			this._scrollSumX = dx
+			this._scrollSumY = dy
+			if (this.dfunc_scroll_start) {
+				const scrollEvent: Scroll.Event = event as Scroll.Event
+				scrollEvent.scrollSumX = dx
+				scrollEvent.scrollSumY = dy
+				scrollEvent.dx = dx
+				scrollEvent.dy = dy
+				this.dfunc_scroll_start(scrollEvent)
+			}
+		} else {
+			this._scrollSumX += dx
+			this._scrollSumY += dy
+			if (this.dfunc_scroll_motion) {
+				const scrollEvent: Scroll.Event = event as Scroll.Event
+				scrollEvent.scrollSumX = this._scrollSumX
+				scrollEvent.scrollSumY = this._scrollSumY
+				scrollEvent.dx = dx
+				scrollEvent.dy = dy
+				this.dfunc_scroll_motion(scrollEvent)
+			}
+		}
+		if (finish != Clutter.ScrollFinishFlags.NONE) {
+			this._scrolling = false
+			if (this.dfunc_scroll_end) {
+				const scrollEvent: Scroll.Event = event as Scroll.Event
+				scrollEvent.scrollSumX = this._scrollSumX
+				scrollEvent.scrollSumY = this._scrollSumY
+				scrollEvent.dx = dx
+				scrollEvent.dy = dy
+				scrollEvent.finish = finish
+				this.dfunc_scroll_end(scrollEvent)
+			}
+		}
+	}
+
+	static applyTo(widgetClass: any) {
+		const widgetProto = widgetClass.prototype
+		const dragProto = Drag.prototype
+		for (const methodName of Object.getOwnPropertyNames(dragProto)) {
+			Object.defineProperty(widgetProto, methodName, {
+				value: dragProto[methodName],
+				configurable: true,
+				writable: true,
+			})
+		}
+	}
+}
+export namespace Scroll {
+	export type Event = Clutter.Event & {
+		scrollSumX: number
+		scrollSumY: number
+		dx: number
+		dy: number
+		finish?: Clutter.ScrollFinishFlags
 	}
 }

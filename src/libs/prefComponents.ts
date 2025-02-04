@@ -970,12 +970,14 @@ export function ExpanderRow({
 	subtitle,
 	expanded,
 	experimental,
+	useMarkup,
 	action,
 	onCreated,
 }: ExpanderRow.Options, children?: any[]): Adw.ExpanderRow {
 	const row = new Adw.ExpanderRow({
 		title: title ?? null,
 		subtitle: subtitle ?? null,
+		use_markup: useMarkup ?? false,
 	})
 	setLinkCursor(row)
 	if (parent) {
@@ -997,6 +999,7 @@ export namespace ExpanderRow {
 		subtitle?: string
 		expanded?: boolean
 		experimental?: boolean
+		useMarkup?: boolean
 		action?: (expanded: boolean)=>void
 		onCreated?: (row: Adw.ExpanderRow)=>void
 	}
@@ -1204,9 +1207,10 @@ export function LicenseRow(item: LicenseRow.License): Adw.ExpanderRow {
 	let contentRow: Adw.ActionRow
 	let loaded = false
 	return ExpanderRow({
-		title: item.name,
-		subtitle: `by ${item.author}`,
+		title: item.name + (item.author ? ` <span alpha="70%"><small>by ${item.author}</small></span>` : ""),
+		subtitle: item.description ?? "",
 		expanded: false,
+		useMarkup: true,
 		action: (expanded)=>{
 			if (!expanded) return
 			if (loaded) return
@@ -1252,6 +1256,7 @@ export namespace LicenseRow {
 		content?: ()=>Promise<string>
 		licenseUri?: string
 		affectedFiles?: string[]
+		description?: string
 	}
 }
 // #endregion LicenseRow

@@ -38,6 +38,10 @@ show full title
 datemenu 왼쪽 레이아웃 오른쪽레이아웃, 메뉴 열지 않기
 more dimmer
 
+스와이프 스크롤 구현
+smooth 스크롤로 미디어 넘기기 
+인풋 아웃풋 스크롤 좌우로 해도 되도록? 구성가능하게 만들기 (트랙패드에)
+
 option to hide widget header?
 믹서 디바이스 변경 구현하기
 page indicator 왜 클릭 안먹냐

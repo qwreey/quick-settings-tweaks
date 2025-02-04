@@ -29,6 +29,6 @@ Quick Settings Tweaker is a Gnome 43+ extension which allows you to customize th
 
 ![alt text](.github/images/dev-preview.png)
 
-You can test extension with command `./install.sh dev`. You need tigervnc client and docker in host. Tested in arch linux but it should working on any systemd based platform
+You can test extension with command `./install.sh dev`. You will need tigervnc client and docker in host. Tested in arch linux but it should working on any systemd based platform
 
-Log out to re-build extension, close vnc window or SIGINT on shell to exit dev docker.
+You can re-build extension by log out and close vnc window or send SIGINT to exit dev docker.

@@ -13,7 +13,7 @@ import { FeatureBase, type SettingLoader, Rgba, type Rgb } from "../../libs/feat
 import { logger } from "../../libs/logger.js"
 import { getImageMeanColor } from "../../libs/imageMeanColor.js"
 import { lerp } from "../../libs/utility.js"
-import { Drag } from "../../libs/drag.js"
+import { Drag, Scroll } from "../../libs/drag.js"
 import { RoundClipEffect } from "../../libs/roundClip.js"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 
@@ -713,6 +713,7 @@ class MediaList extends Mpris.MediaSection {
 	}
 }
 Drag.applyTo(MediaList)
+Scroll.applyTo(MediaList)
 GObject.registerClass({
 	Signals: {
 		"page-updated": {param_types: [GObject.TYPE_INT]},
