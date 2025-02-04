@@ -6,6 +6,7 @@ import Gdk from "gi://Gdk"
 import GLib from "gi://GLib"
 import GObject from "gi://GObject"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
+import { deepEqual } from "./deepEqual.js"
 
 function addChildren(target: any, funcName: string, children?: any[]) {
 	if (!children) return
@@ -79,9 +80,10 @@ export function Dialog({
 	window,
 	title,
 	minHeight,
+	usePopup,
 	childrenRequest,
 }: Dialog.Options): Adw.PreferencesDialog {
-	const dialog = new Dialog.PrefDialog(title, childrenRequest)
+	const dialog = new Dialog.PrefDialog(title, childrenRequest, usePopup ?? false)
 	if (minHeight) dialog.height_request = minHeight
 	dialog.present(window)
 	return dialog
@@ -93,6 +95,7 @@ export namespace Dialog {
 		minHeight?: number
 		childrenRequest: ChildrenRequest
 		window: Adw.PreferencesWindow
+		usePopup?: boolean
 	}
 	export const PrefDialogPage = GObject.registerClass({
 		GTypeName: "qwreey-pref-components-PrefDialogPage",
@@ -110,11 +113,13 @@ export namespace Dialog {
 	export const PrefDialog = GObject.registerClass({
 		GTypeName: "qwreey-pref-components-PrefDialog",
 	}, class PrefDialog extends Adw.PreferencesDialog {
-		constructor(title: string, childrenRequest: ChildrenRequest) {
+		constructor(title: string, childrenRequest: ChildrenRequest, usePopup: boolean) {
 			super({
 				title: title ?? "",
 				search_enabled: true,
-				presentation_mode: Adw.DialogPresentationMode.BOTTOM_SHEET,
+				presentation_mode: usePopup
+					? Adw.DialogPresentationMode.FLOATING
+					: Adw.DialogPresentationMode.BOTTOM_SHEET,
 			})
 			this.add(new PrefDialogPage(childrenRequest, this))
 		}
@@ -1506,3 +1511,92 @@ export namespace ChangelogDialog {
 	}
 }
 // #endregion ChangelogDialog
+
+// #region PaddingDialog
+export function PaddingDialog({
+	settings,
+	sensitiveBind,
+	bind,
+	window,
+}: PaddingDialog.Options) {
+	const getValue = ()=>
+		settings.get_value(bind).recursiveUnpack() as [number, number, number, number]
+	let current = getValue()
+
+	let top: Adw.SpinRow, right: Adw.SpinRow, bottom: Adw.SpinRow, left: Adw.SpinRow
+	const save = ()=>{
+		if (deepEqual(current, getValue())) return
+		settings.set_value(bind, new GLib.Variant("ai", current))
+	}
+	const dialog = Dialog({
+		window,
+		title: _("Padding"),
+		usePopup: true,
+		childrenRequest: ()=>[Group({
+		},[
+			top = AdjustmentRow({
+				title: _("Top"),
+				max: 2048,
+				value: current[0],
+				action: (value: number)=>{
+					current[0] = value
+					save()
+				},
+				settings,
+				sensitiveBind,
+			}),
+			bottom = AdjustmentRow({
+				title: _("Bottom"),
+				max: 2048,
+				value: current[2],
+				action: (value: number)=>{
+					current[2] = value
+					save()
+				},
+				settings,
+				sensitiveBind,
+			}),
+			left = AdjustmentRow({
+				title: _("Left"),
+				max: 2048,
+				value: current[3],
+				action: (value: number)=>{
+					current[3] = value
+					save()
+				},
+				settings,
+				sensitiveBind,
+			}),
+			right = AdjustmentRow({
+				title: _("Right"),
+				max: 2048,
+				value: current[1],
+				action: (value: number)=>{
+					current[1] = value
+					save()
+				},
+				settings,
+				sensitiveBind,
+			}),
+		])],
+	})
+	const settingsConnection = settings.connect(`changed::${bind}`, ()=>{
+		current = getValue()
+		top.value = current[0]
+		right.value = current[1]
+		bottom.value = current[2]
+		left.value = current[3]
+	})
+	dialog.connect("destroy", ()=>{
+		settings.disconnect(settingsConnection)
+	})
+}
+export namespace PaddingDialog {
+	export interface Options {
+		settings: Gio.Settings
+		window: Adw.PreferencesWindow
+		sensitiveBind?: string
+		bind: string
+	}
+}
+// #endregion PaddingDialog

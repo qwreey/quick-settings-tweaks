@@ -16,6 +16,7 @@ import { lerp } from "../../libs/utility.js"
 import { Drag, Scroll } from "../../libs/drag.js"
 import { RoundClipEffect } from "../../libs/roundClip.js"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
+import { StyledSlider } from "../../libs/styledSlider.js"
 
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
@@ -71,48 +72,11 @@ class ProgressControl extends St.BoxLayout {
 	}
 
 	// Create slider and connect drag event
-	_getSliderStyle(): string {
-		const {
-			progressStyle,
-			progressActiveBackgroundColor,
-			progressHandleRadius,
-			progressHandleColor,
-			progressBackgroundColor,
-			progressHeight
-		} = this._options
-		const styleList = []
-		switch (progressStyle) {
-			case "slim":
-				styleList.push("-slider-handle-radius:0px")
-				if (progressActiveBackgroundColor) {
-					styleList.push("color:"+Rgba.formatCss(progressActiveBackgroundColor))
-				} else {
-					styleList.push("color:-st-accent-color")
-				}
-				break
-			case "default":
-			default:
-				if (progressHandleRadius) {
-					styleList.push(`-slider-handle-radius:${progressHandleRadius}px`)
-				}
-				if (progressHandleColor) {
-					styleList.push(`color:${Rgba.formatCss(progressHandleColor)}`)
-				}
-				break
-		}
-		if (progressHeight) styleList.push(`-barlevel-height:${progressHeight}px`)
-		if (progressActiveBackgroundColor) styleList.push(
-			`-barlevel-active-background-color:${Rgba.formatCss(progressActiveBackgroundColor)}`
-		)
-		if (progressBackgroundColor) styleList.push(
-			`-barlevel-background-color:${Rgba.formatCss(progressBackgroundColor)}`
-		)
-		const result = styleList.join(";")
-		return result
-	}
 	_createSlider() {
 		this._slider = new Slider(0)
-		this._slider.style = this._getSliderStyle()
+
+		// Update style
+		this._slider.style = StyledSlider.getStyle(this._options.sliderStyle)
 
 		// Process Dragging
 		this._slider.connect("drag-begin", () => {
@@ -231,12 +195,7 @@ class ProgressControl extends St.BoxLayout {
 GObject.registerClass(ProgressControl)
 namespace ProgressControl {
 	export interface OptionsBase {
-		progressStyle: "default" | "slim"
-		progressHandleColor: null|Rgba
-		progressBackgroundColor: null|Rgba
-		progressHeight: null|number
-		progressActiveBackgroundColor: null|Rgba
-		progressHandleRadius: number
+		sliderStyle: StyledSlider.Options
 	}
 	export type Options = {
 		player: Player,
@@ -444,6 +403,7 @@ namespace MediaItem {
 namespace MediaList {
 	export type Options = Partial<{
 		roundClipEnabled: boolean
+		roundClipPadding: null|[number, number, number, number]
 	} & St.BoxLayout.ConstructorProps>
 		& MediaItem.OptionsBase
 		& ProgressControl.OptionsBase
@@ -517,11 +477,15 @@ class MediaList extends Mpris.MediaSection {
 	_updateEffect() {
 		if (!this.get_stage()) return
 		const themeNode = this.mapped ? this._current?.get_theme_node() : null
+		const padding = this._options.roundClipPadding
 		this._effect.update_uniforms(1, {
 			border_radius: themeNode?.get_border_radius(null) ?? 16,
 			smoothing: 0,
 		},{
-			x1: 2, y1: 3, x2: this.width-2, y2: this.height-2
+			x1: padding?.[3] ?? 2,
+			y1: padding?.[0] ?? 3,
+			x2: this.width - (padding?.[1] ?? 2),
+			y2: this.height - (padding?.[2] ?? 2)
 		})
 	}
 
@@ -848,12 +812,7 @@ export class MediaWidgetFeature extends FeatureBase {
 	compact: boolean
 	removeShadow: boolean
 	progressEnabled: boolean
-	progressStyle: "default" | "slim"
-	progressHandleColor: null|Rgba
-	progressHandleRadius: number
-	progressBackgroundColor: null|Rgba
-	progressHeight: null|number
-	progressActiveBackgroundColor: null|Rgba
+	sliderStyle: StyledSlider.Options
 	gradientBackground: Rgb
 	gradientStartOpaque: number
 	gradientStartMix: number
@@ -862,12 +821,12 @@ export class MediaWidgetFeature extends FeatureBase {
 	gradientEnabled: boolean
 	contorlOpacity: number
 	roundClipEnabled: boolean
+	roundClipPadding: null|[number, number, number, number]
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
 		this.compact = loader.loadBoolean("media-compact")
 		this.removeShadow = loader.loadBoolean("media-remove-shadow")
 		this.contorlOpacity = loader.loadInt("media-contorl-opacity")
-		this.roundClipEnabled = loader.loadBoolean("media-round-clip-enabled")
 
 		// Gradient
 		this.gradientBackground = loader.loadRgb("media-gradient-background-color")!
@@ -879,12 +838,13 @@ export class MediaWidgetFeature extends FeatureBase {
 		
 		// Progress
 		this.progressEnabled = loader.loadBoolean("media-progress-enabled")
-		this.progressStyle = loader.loadString("media-progress-style") as MediaWidgetFeature["progressStyle"]
-		this.progressHandleColor = loader.loadRgba("media-progress-handle-color")
-		this.progressHandleRadius = loader.loadInt("media-progress-handle-radius")
-		this.progressBackgroundColor = loader.loadRgba("media-progress-background-color")
-		this.progressHeight = loader.loadInt("media-progress-height")
-		this.progressActiveBackgroundColor = loader.loadRgba("media-progress-active-background-color")
+		this.sliderStyle = StyledSlider.Options.fromLoader(loader, "media-progress")
+
+		// Round clip
+		this.roundClipEnabled = loader.loadBoolean("media-round-clip-enabled")
+		const roundClipPaddingValue = loader.loadValue("media-round-clip-padding-adjustment-value")
+		const roundClipPaddingEnabled = loader.loadBoolean("media-round-clip-padding-adjustment-enabled")
+		this.roundClipPadding = (roundClipPaddingEnabled ? roundClipPaddingValue : null) as any
 	}
 	// #endregion settings
 

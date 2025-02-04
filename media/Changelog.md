@@ -5,7 +5,7 @@
 # 2.1-pre5
 <!-- @BuildNumber: 5 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-02-03 09:31:00 KST" -->
+<!-- @Date: "2025-02-04 09:31:00 KST" -->
 <!-- @Git: "0f05873" -->
 
 - List the license in more detail
@@ -13,7 +13,7 @@
 ## New Features
 
 - Media widget
-  - Add cover image round clip effect option
+  <!-- - Add cover image round clip effect option -->
   - Add round clip effect detailed option
 - Date menu
   - Add hide left box option

@@ -7,7 +7,6 @@ import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensio
 import { WidgetsPage } from "./prefPages/widgets.js"
 import { TogglesPage } from "./prefPages/toggles.js"
 import { LayoutPage } from "./prefPages/layout.js"
-// import { OtherPage } from "./prefPages/other.js"
 import { AboutPage } from "./prefPages/about.js"
 import { MenuPage } from "./prefPages/menu.js"
 import { ContributorsRow, LicenseRow } from "./libs/prefComponents.js"
@@ -18,7 +17,6 @@ var pageList = [
 	TogglesPage,
 	LayoutPage,
 	MenuPage,
-	// OtherPage,
 	AboutPage,
 ]
 

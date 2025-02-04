@@ -53,6 +53,12 @@
     <key name="media-round-clip-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="media-round-clip-padding-adjustment-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="media-round-clip-padding-adjustment-value" type="ai">
+      <default>[ 0, 0, 0, 0 ]</default>
+    </key>
     <key name="media-progress-enabled" type="b">
       <default>true</default>
     </key>

@@ -13,9 +13,18 @@ import {
 	DropdownRow,
 	EntryRow,
 	Dialog,
+	PaddingDialog,
 } from "../libs/prefComponents.js"
 
-function SliderCustomizes(settings: Gio.Settings, baseName: string, sensitiveBind: string|undefined): any[] {
+function SliderCustomizes({
+	settings,
+	baseName,
+	sensitiveBind,
+}: {
+	settings: Gio.Settings,
+	baseName: string,
+	sensitiveBind?: string
+}): any[] {
 	// Handle color & radius
 	const handleRadius = AdjustmentRow({
 		settings,
@@ -138,7 +147,11 @@ export const WidgetsPage = GObject.registerClass({
 							settings,
 							bind: "media-progress-enabled",
 						}),
-					}, SliderCustomizes(settings, "media-progress", "media-progress-enabled"))],
+					}, SliderCustomizes({
+						settings,
+						baseName: "media-progress",
+						sensitiveBind: "media-progress-enabled"
+					}))],
 				})}
 			}),
 			SwitchRow({
@@ -157,13 +170,14 @@ export const WidgetsPage = GObject.registerClass({
 							settings,
 							bind: "media-gradient-enabled",
 						}),
-						description: _("Use gradient background extracted from cover image\nMay affect performance"),
+						description: _("Use gradient background extracted from cover image\nMay affect performance slightly"),
 					},[
 						RgbColorRow({
 							settings,
 							title: _("Background color"),
 							subtitle: _("Base background color"),
 							bind: "media-gradient-background-color",
+							sensitiveBind: "media-gradient-enabled",
 						}),
 						AdjustmentRow({
 							settings,
@@ -213,6 +227,34 @@ export const WidgetsPage = GObject.registerClass({
 				subtitle: _("Use round clip effect to make transition more natural"),
 				bind: "media-round-clip-enabled",
 				sensitiveBind: "media-enabled",
+				experimental: true,
+				onDetailed: ()=>{Dialog({
+					window,
+					title: _("Media Widget"),
+					childrenRequest: ()=>[Group({
+						title: _("Round clip effect"),
+						header_suffix: SwitchRow({
+							settings,
+							bind: "media-round-clip-enabled",
+						}),
+						description: _("Use round clip effect to make transition more natural"),
+					},[
+						SwitchRow({
+							title: _("Padding adjustment"),
+							settings,
+							subtitle: _("Adjust clip effect padding, edit this if your theme has a different margin or padding"),
+							bind: "media-round-clip-padding-adjustment-enabled",
+							sensitiveBind: "media-round-clip-enabled",
+							onDetailed: ()=>{
+								PaddingDialog({
+									window,
+									settings,
+									bind: "media-round-clip-padding-adjustment-value",
+								})
+							}
+						})
+					])],
+				})}
 			}),
 		])
 

@@ -5,14 +5,14 @@ import { Global } from '../global.js'
 
 // Location of uniform variants of rounded corners effect
 class Uniforms {
-  bounds = 0
-  clip_radius = 0
-  exponent = 0
-  inner_bounds = 0
-  inner_clip_radius = 0
-  pixel_step = 0
-  border_width = 0
-  border_color = 0
+	bounds = 0
+	clip_radius = 0
+	exponent = 0
+	inner_bounds = 0
+	inner_clip_radius = 0
+	pixel_step = 0
+	border_width = 0
+	border_color = 0
 }
 
 export class RoundClipEffect extends Shell.GLSLEffect {
