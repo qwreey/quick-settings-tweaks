@@ -346,6 +346,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 	removeShadow: boolean
 	scrollbar: boolean
 	fadeOffset: number
+	header: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("notifications-enabled")
 		this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
@@ -355,6 +356,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 		this.removeShadow = loader.loadBoolean("notifications-remove-shadow")
 		this.scrollbar = loader.loadBoolean("notifications-show-scrollbar")
 		this.fadeOffset = loader.loadInt("notifications-fade-offset")
+		this.header = loader.loadBoolean("notifications-show-header")
 	}
 	// #endregion settings
 

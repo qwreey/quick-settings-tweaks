@@ -809,6 +809,7 @@ export { MediaWidget }
 export class MediaWidgetFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
+	header: boolean
 	compact: boolean
 	removeShadow: boolean
 	progressEnabled: boolean
@@ -824,6 +825,7 @@ export class MediaWidgetFeature extends FeatureBase {
 	roundClipPadding: null|[number, number, number, number]
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
+		this.header = loader.loadBoolean("media-show-header")
 		this.compact = loader.loadBoolean("media-compact")
 		this.removeShadow = loader.loadBoolean("media-remove-shadow")
 		this.contorlOpacity = loader.loadInt("media-contorl-opacity")

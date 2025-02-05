@@ -17,6 +17,9 @@
     <key name="notifications-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="notifications-show-header" type="b">
+      <default>true</default>
+    </key>
     <key name="notifications-use-native-controls" type="b">
       <default>false</default>
     </key>
@@ -42,6 +45,9 @@
 
     <!-- #region Media Widget -->
     <key name="media-enabled" type="b">
+      <default>true</default>
+    </key>
+    <key name="media-show-header" type="b">
       <default>true</default>
     </key>
     <key name="media-compact" type="b">
@@ -109,6 +115,9 @@
     <!-- #endregion Media Widget -->
 
     <!-- #region Weather Widget -->
+    <key name="weather-show-header" type="b">
+      <default>true</default>
+    </key>
     <key name="weather-enabled" type="b">
       <default>false</default>
     </key>
@@ -179,46 +188,85 @@
     <key name="volume-mixer-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="volume-mixer-label-text" type="s">
+      <default>"both"</default>
+      <choices>
+        <choice value='title'/>
+        <choice value='description'/>
+        <choice value='both'/>
+        <choice value='none'/>
+      </choices>
+    </key>
+    <key name="volume-mixer-label-opacity" type="i">
+      <default>220</default>
+    </key>
     <key name="volume-mixer-show-scrollbar" type="b">
+      <default>true</default>
+    </key>
+    <key name="volume-mixer-show-header" type="b">
       <default>true</default>
     </key>
     <key name="volume-mixer-max-height" type="i">
       <default>0</default>
     </key>
     <key name="volume-mixer-ignore" type="aa{sv}">
-      <!-- { 'name': <string>, 'nameRegex': <string> } -->
+      <default><![CDATA[
+        [
+        ]
+      ]]></default>
+      <description><![CDATA[
+[{
+  'name': <string>,
+  'nameRegex': <string>,
+  'description': <string>,
+  'descriptionRegex': <string>,
+  'applicationId': <string>,
+  'applicationIdRegex': <string>
+}]
+      ]]></description>
+    </key>
+    <key name="volume-mixer-order" type="aa{sv}">
+      <description><![CDATA[
+[{
+  'name': <string>,
+  'nameRegex': <string>,
+  'description': <string>,
+  'descriptionRegex': <string>,
+  'applicationId': <string>,
+  'applicationIdRegex': <string>
+}]
+      ]]></description>
       <default><![CDATA[
         [
         ]
       ]]></default>
     </key>
-
-    <key name="volume-mixer-use-regex" type="b">
-      <default>false</default>
-    </key>
-    <key name="volume-mixer-check-description" type="b">
-      <default>true</default>
-    </key>
-    <key name="volume-mixer-position" type="s">
-      <!-- "bottom" / "top" -->
-      <default>"top"</default>
-    </key>
-    <key name="volume-mixer-filtered-apps" type="as">
-      <default>[]</default>
-    </key>
-    <key name="volume-mixer-show-description" type="b">
-      <default>true</default>
-    </key>
-    <key name="volume-mixer-show-icon" type="b">
-      <default>true</default>
-    </key>
-    <key name="volume-mixer-filter-mode" type="s">
+    <key name="volume-mixer-ignore-mode" type="s">
       <choices>
         <choice value='block'/>
         <choice value='allow'/>
       </choices>
       <default>'block'</default>
     </key>
+    <!-- <key name="volume-mixer-check-description" type="b">
+      <default>true</default>
+    </key> -->
+    <!-- <key name="volume-mixer-filtered-apps" type="as">
+      <default>[]</default>
+    </key> -->
+    <!-- <key name="volume-mixer-show-description" type="b">
+      <default>true</default>
+    </key> -->
+    <key name="volume-mixer-show-icon" type="b">
+      <default>true</default>
+    </key>
+    <!-- <key name="volume-mixer-filter-mode" type="s">
+      <choices>
+        <choice value='block'/>
+        <choice value='allow'/>
+      </choices>
+      <default>'block'</default>
+    </key> -->
     <!-- #endregion Volume Mixer -->
 
     <!-- #region Input Output -->
@@ -257,6 +305,16 @@
           { 'nonOrdered': <true>, 'hide': <false> }
         ]
       ]]></default>
+      <description><![CDATA[
+[{
+  constructorName: <string>,
+  titleRegex: <string>,
+  friendlyName: <string>,
+  nonOrdered: <boolean>,
+  isSystem: <boolean>,
+  hide: <boolean>
+}]
+      ]]></description>
     </key>
     <!-- #endregion Quick Toggle Order -->
 

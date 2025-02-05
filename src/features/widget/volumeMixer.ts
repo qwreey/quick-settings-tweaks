@@ -13,6 +13,7 @@ import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import Maid from "../../libs/maid.js"
+import { Global } from "../../global.js"
 // import { Global } from "../../global.js"
 // import { fixStScrollViewScrollbarOverflow } from "../../libs/utility.js"
 
@@ -26,6 +27,7 @@ class StreamSlider extends QuickSlider {
 	_notifyVolumeChangeId: number
 	_deviceSection: PopupMenu.PopupMenuSection
 	_sliderChangedId: number
+	_options: StreamSlider.Options
 
 	constructor(
 		control: Gvc.MixerControl,
@@ -37,11 +39,12 @@ class StreamSlider extends QuickSlider {
 	}
 
 	// @ts-expect-error
-	_init(control: Gvc.MixerControl, stream: Gvc.MixerStream|undefined) {
-		super._init()
+	_init(control: Gvc.MixerControl, stream: Gvc.MixerStream|undefined, options: StreamSlider.Options) {
+		this._options = options
 		this._control = control
 		this._notifyVolumeChangeId = 0
 		this._maid = new Maid()
+		super._init()
 		this._maid.connectJob(this, "destroy", this._destroy.bind(this))
 		
 		// Update allow amplify
@@ -70,7 +73,6 @@ class StreamSlider extends QuickSlider {
 		} else {
 			this._stream = null
 		}
-		this._sync()
 	}
 
 	// Stream connection
@@ -96,6 +98,11 @@ class StreamSlider extends QuickSlider {
 			this._updateSlider()
 		} else {
 			this.emit('stream-updated')
+		}
+
+		// Show icon
+		if (this._options.showIcon) {
+			this.icon_name = stream.get_icon_name()
 		}
 
 		this._sync()
@@ -210,21 +217,103 @@ GObject.registerClass({
 		'stream-updated': {},
 	},
 }, StreamSlider)
-// #endregion StreamSlider
-
-// #region VolumeMixerWidget
-namespace VolumeMixerWidget {
+namespace StreamSlider {
 	export interface Options {
+		showIcon: boolean
 	}
 }
+// #endregion StreamSlider
+
+// #region VolumeMixerItem
+class VolumeMixerItem extends St.BoxLayout {
+	_control: Gvc.MixerControl
+	_stream: Gvc.MixerStream
+	_options: VolumeMixerItem.Options
+	_slider: StreamSlider
+	_label: St.Label
+	constructor(
+		control: Gvc.MixerControl,
+		stream: Gvc.MixerStream|undefined,
+		options: VolumeMixerItem.Options
+	) {
+		super(control, stream, options)
+	}
+	_init(
+		control: Gvc.MixerControl,
+		stream: Gvc.MixerStream|undefined,
+		options: VolumeMixerItem.Options
+	) {
+		super._init({
+			vertical: true,
+			style_class: "QSTWEAKS-volume-mixer"
+		})
+		this._control = control
+		this._stream = stream
+		this._options = options
+
+		// Create label
+		const label = this._label = new St.Label({
+			x_expand: true,
+			style_class: "QSTWEAKS-label",
+			opacity: this._options.labelOpacity,
+		})
+		this.updateLabel()
+		this.add_child(label)
+
+		// Create Slider
+		const slider = this._slider = new StreamSlider(control, stream, options)
+		this.add_child(slider)
+	}
+
+	updateLabel() {
+		const label = this._label
+		const name = this._stream.get_name()
+		const description = this._stream.get_description()
+		switch (this._options.labelText) {
+			case "title":
+				if (name) label.text = name
+				else if (description) label.text = description
+				if (description || name) label.show()
+				else label.hide()
+				break
+			case "description":
+				if (description) label.text = description
+				else if (name) label.text = name
+				if (description || name) label.show()
+				else label.hide()
+				break
+			case "both":
+				if (name && description) label.text = `${name} - ${description}`
+				else if (name) label.text = name
+				else if (description) label.text = description
+				if (name || description) label.show()
+				else label.hide()
+				break
+			case "none":
+				label.hide()
+				break
+		}
+	}
+}
+GObject.registerClass(VolumeMixerItem)
+namespace VolumeMixerItem {
+	export type Options = {
+		labelText: "title"|"description"|"both"|"none",
+		labelOpacity: number,
+	} & StreamSlider.Options
+}
+// #endregion VolumeMixerItem
+
+// #region VolumeMixerWidget
 class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 	_control: Gvc.MixerControl
 	_maid: Maid
 	_options: VolumeMixerWidget.Options
-	_sliders: Map<number, StreamSlider>
+	_sliders: Map<number, VolumeMixerItem>
 
 	constructor(options: VolumeMixerWidget.Options) {
 		super()
+		this.actor.hide()
 		this._options = options
 		this._maid = new Maid()
 		this._sliders = new Map()
@@ -263,9 +352,9 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 			return
 		}
 		
-		const applicationId =  stream.get_application_id()
-		const name = stream.get_name()
-		const description = stream.get_description()
+		// const applicationId =  stream.get_application_id()
+		// const name = stream.get_name()
+		// const description = stream.get_description()
 
 		// filter here
 		// let hasFiltered = false
@@ -281,38 +370,16 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 		// if (this._filterMode === "block" && hasFiltered) return
 		// if (this._filterMode === "allow" && !hasFiltered) return
 
-		const slider = new StreamSlider(
+		const slider = new VolumeMixerItem(
 			this._control,
 			stream,
 			this._options
 		)
-
-		// slider.style_class = slider.style_class + " QSTWEAKS-volume-mixer-slider"
-		// this._applicationStreams[id] = slider
-		// if (this._showStreamIcon) {
-			// slider._icon.icon_name = stream.get_icon_name()
-		// }
-
-		// if (name || description) {
-		// 	slider._vbox = new St.BoxLayout()
-		// 	slider._vbox.vertical = true
-
-		// 	let sliderBox = slider.first_child
-		// 	let lastObj = sliderBox.last_child // expend button. not needed
-		// 	let sliderObj = sliderBox.get_children()[1]
-		// 	sliderBox.remove_child(sliderObj)
-		// 	sliderBox.remove_child(lastObj)
-		// 	sliderBox.add_child(slider._vbox)
-
-		// 	slider._label = new St.Label({ x_expand: true })
-		// 	slider._label.style_class = "QSTWEAKS-volume-mixer-label"
-		// 	slider._label.text = name && this._showStreamDesc ? `${name} - ${description}` : (name || description)
-		// 	slider._vbox.add_child(slider._label)
-		// 	slider._vbox.add_child(sliderObj)
-		// }
+		this._sliders.set(id, slider)
 
 		this.actor.add_child(slider)
 		slider.visible = true
+		this.actor.show()
 	}
 
 	_streamRemoved(_control: Gvc.MixerControl, id: number) {
@@ -320,6 +387,7 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 		if (!slider) return
 		slider.destroy()
 		this._sliders.delete(id)
+		if (!this._sliders.size) this.actor.hide()
 	}
 
 	destroy() {
@@ -332,22 +400,48 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 		super.destroy()
 	}
 }
+namespace VolumeMixerWidget {
+	export type Options = {
+	} & VolumeMixerItem.Options
+}
 // #endregion VolumeMixerWidget
 
+// #region VolumeMixerWidgetFeature
 export class VolumeMixerWidgetFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	scroll: boolean
+	showIcon: boolean
 	maxHeight: number
+	labelText: VolumeMixerItem.Options["labelText"]
+	labelOpacity: number
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("volume-mixer-enabled")
 		this.scroll = loader.loadBoolean("volume-mixer-show-scrollbar")
+		this.showIcon = loader.loadBoolean("volume-mixer-show-icon")
 		this.maxHeight = loader.loadInt("volume-mixer-max-height")
+		this.labelText = loader.loadString("volume-mixer-label-text") as VolumeMixerItem.Options["labelText"]
+		this.labelOpacity = loader.loadInt("volume-mixer-label-opacity")
 	}
 	// #endregion settings
 
+	volumeMixerWidget: VolumeMixerWidget
 	onLoad(): void {
+		this.maid.destroyJob(
+			this.volumeMixerWidget = new VolumeMixerWidget(this)
+		)
+		Global.QuickSettingsMenu.addItem(this.volumeMixerWidget.actor, 2) //.actor, 2)
+		// if (Global.Settings.get_string("volume-mixer-position") === "top") {
+		Global.GetStreamSlider(({ InputStreamSlider }) => {
+			Global.QuickSettingsMenu._grid.set_child_above_sibling(
+				this.volumeMixerWidget.actor,
+				InputStreamSlider
+			)
+		})
+		// }
 	}
 	onUnload(): void {
+		this.volumeMixerWidget = null
 	}
 }
+// #endregion VolumeMixerWidgetFeature

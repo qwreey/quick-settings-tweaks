@@ -20,6 +20,15 @@ widgets:
         as system item (like background apps,
                         should able to adjust order in systemitem order option)
 
+
+Add cover image round clip effect option
+이미지 비율 설정 기능
+스크롤로 넘기기 방향 정할수있도록
+날씨 로딩중에 라벨 위치
+
+패널 전체 오더링 << 가능했으면 좋겠음.......... 왼쪽 오른쪽 중간 고르기 가능하고
+위젯 오더링
+
 습도계
 시스템 메뉴에 시간 표시
 datemenu format

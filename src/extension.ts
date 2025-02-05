@@ -21,6 +21,7 @@ import { OverlayMenu } from "./features/overlayMenu.js"
 import { LayoutCustomize } from "./features/layoutCustomize.js"
 import { MenuAnimation } from "./features/menuAnimation.js"
 import { DebugFeature } from "./features/debug.js"
+import { VolumeMixerWidgetFeature } from "./features/widget/volumeMixer.js"
 
 export default class QstExtension extends Extension {
 	private features: FeatureBase[]
@@ -66,6 +67,7 @@ export default class QstExtension extends Extension {
 			new MenuAnimation(),
 			new SystemItemsOrderFeature(),
 			new TogglesOrderFeature(),
+			new VolumeMixerWidgetFeature(),
 		]
 
 		// Load debug feature

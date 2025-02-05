@@ -1,4 +1,4 @@
-import { Rgba, type SettingLoader } from "./feature"
+import { Rgba, type SettingLoader } from "./feature.js"
 
 export namespace StyledSlider {
 	export interface Options {

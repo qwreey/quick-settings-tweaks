@@ -13,7 +13,6 @@
 ## New Features
 
 - Media widget
-  <!-- - Add cover image round clip effect option -->
   - Add round clip effect detailed option
 - Date menu
   - Add hide left box option

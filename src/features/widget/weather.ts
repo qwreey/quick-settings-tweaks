@@ -106,11 +106,13 @@ export class WeatherWidgetFeature extends FeatureBase {
 	compact: boolean
 	removeShadow: boolean
 	clickCommand: string
+	header: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("weather-enabled")
 		this.removeShadow = loader.loadBoolean("weather-remove-shadow")
 		this.compact = loader.loadBoolean("weather-compact")
 		this.clickCommand = loader.loadString("weather-click-command")
+		this.header = loader.loadBoolean("weather-show-header")
 	}
 	// #endregion settings
 
