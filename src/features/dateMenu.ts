@@ -19,6 +19,9 @@ export class DateMenuFeature extends FeatureBase {
 	// #endregion settings
 
 	onLoad() {
+		const originalStyle = (Global.DateMenuBox as any).style_class
+		const style = [originalStyle]
+
 		// remove media control from date menu
 		if (this.hideMediaControl) {
 			this.maid.hideJob(
@@ -45,6 +48,7 @@ export class DateMenuFeature extends FeatureBase {
 			} else {
 				logger.error("Failed to get date menu left box")
 			}
+			style.push("QSTWEAKS-hide-left-box")
 		}
 
 		if (this.hideRightBox) {
@@ -57,12 +61,20 @@ export class DateMenuFeature extends FeatureBase {
 			} else {
 				logger.error("Failed to get date menu right box")
 			}
+			style.push("QSTWEAKS-hide-right-box")
 		}
 
 		if (this.disableMenu) {
-			Global.DateMenuMenu.sensitive = false
+			Global.DateMenu.reactive = false
 			this.maid.functionJob(()=>{
-				Global.DateMenuMenu.sensitive = true
+			Global.DateMenu.reactive = true
+			})
+		}
+
+		if (style.length != 1) {
+			(Global.DateMenuBox as any).style_class = style.join(" ")
+			this.maid.functionJob(()=>{
+				(Global.DateMenuBox as any).style_class = originalStyle
 			})
 		}
 	}

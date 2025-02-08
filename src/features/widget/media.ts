@@ -416,6 +416,7 @@ class MediaList extends Mpris.MediaSection {
 	_currentPage: number
 	_effect?: RoundClipEffect
 	_drag: boolean
+	_scroll: boolean
 	_dragTranslation?: number
 
 	get page(): number {
@@ -490,20 +491,17 @@ class MediaList extends Mpris.MediaSection {
 	}
 
 	// Handle dragging
-	dfunc_drag_end(event: Drag.Event): void {
-		this._drag = false
-		const current = this._current
-		if (!current) {
-			this._dragTranslation = null
-			return
-		}
-		if (event.isClick) {
-			Main.overview.hide()
-			Main.panel.closeQuickSettings()
-			current._player?.raise()
-		}
-
-		const offset = event.coords[0] - event.moveStartCoords[0]
+	_updateDragOffset(current: MediaItem, offset: number) {
+		const sign = Math.sign(offset)
+		const width = current.allocation.get_width()
+		const ratio = Math.max(Math.min(offset / width, 1), -1)
+		const halfRatio = Math.max(Math.min(offset * 0.5 / width, 1), -1)
+		const expoRatio = (1 - Math.pow(1 - Math.abs(halfRatio), 4)) * sign
+		current.remove_all_transitions()
+		this._dragTranslation = current.translationX = expoRatio * (width * 0.6)
+		current.opacity = Math.floor(lerp(255, 80, Math.abs(ratio)))
+	}
+	_finalizeDragOffset(current: MediaItem, offset: number) {
 		const width = current.allocation.get_width()
 		const direction = -Math.sign(offset)
 
@@ -528,23 +526,57 @@ class MediaList extends Mpris.MediaSection {
 		this._seekPage(direction)
 		this._dragTranslation = null
 	}
+	dfunc_drag_end(event: Drag.Event): void {
+		this._drag = false
+		const current = this._current
+		if (!current || this._scroll) {
+			this._dragTranslation = null
+			return
+		}
+		if (event.isClick) {
+			Main.overview.hide()
+			Main.panel.closeQuickSettings()
+			current._player?.raise()
+		}
+
+		const offset = event.coords[0] - event.moveStartCoords[0]
+		this._finalizeDragOffset(current, offset)
+	}
 	dfunc_drag_start(_event: Drag.Event): void {
+		if (this._scroll) return
 		this._drag = true
 		this._dragTranslation = 0
 		if (this._effect) this._effect.enabled = true
 	}
 	dfunc_drag_motion(event: Drag.Event): void {
+		if (this._scroll) return
 		const current = this._current
 		if (event.isClick || !current) return
 		const offset = event.coords[0] - event.moveStartCoords[0]
-		const sign = Math.sign(offset)
-		const width = current.allocation.get_width()
-		const ratio = Math.max(Math.min(offset / width, 1), -1)
-		const halfRatio = Math.max(Math.min(offset * 0.5 / width, 1), -1)
-		const expoRatio = (1 - Math.pow(1 - Math.abs(halfRatio), 4)) * sign
-		current.remove_all_transitions()
-		this._dragTranslation = current.translationX = expoRatio * (width * 0.6)
-		current.opacity = Math.floor(lerp(255, 80, Math.abs(ratio)))
+		this._updateDragOffset(current, offset)
+	}
+
+	// Handle smooth scrolling
+	dfunc_scroll_start(_event: Scroll.Event): void {
+		if (this._drag) return
+		this._scroll = true
+		this._dragTranslation = 0
+		if (this._effect) this._effect.enabled = true
+	}
+	dfunc_scroll_motion(event: Scroll.Event): void {
+		if (this._drag) return
+		const current = this._current
+		if (!current) return
+		this._updateDragOffset(current, -event.scrollSumX * 16)
+	}
+	dfunc_scroll_end(event: Scroll.Event): void {
+		this._scroll = false
+		const current = this._current
+		if (!current || this._drag) {
+			this._dragTranslation = null
+			return
+		}
+		this._finalizeDragOffset(current, -event.scrollSumX * 16)
 	}
 
 	// Override for custom message and player

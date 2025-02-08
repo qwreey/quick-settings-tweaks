@@ -415,6 +415,7 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 	maxHeight: number
 	labelText: VolumeMixerItem.Options["labelText"]
 	labelOpacity: number
+	widgetStyle: "menu"|"widget"
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("volume-mixer-enabled")
 		this.scroll = loader.loadBoolean("volume-mixer-show-scrollbar")
@@ -422,6 +423,7 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 		this.maxHeight = loader.loadInt("volume-mixer-max-height")
 		this.labelText = loader.loadString("volume-mixer-label-text") as VolumeMixerItem.Options["labelText"]
 		this.labelOpacity = loader.loadInt("volume-mixer-label-opacity")
+		this.widgetStyle = loader.loadString("volume-mixer-widget-style") as VolumeMixerWidgetFeature["widgetStyle"]
 	}
 	// #endregion settings
 
@@ -429,16 +431,17 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 	onLoad(): void {
 		this.maid.destroyJob(
 			this.volumeMixerWidget = new VolumeMixerWidget(this)
-		)
-		Global.QuickSettingsMenu.addItem(this.volumeMixerWidget.actor, 2) //.actor, 2)
-		// if (Global.Settings.get_string("volume-mixer-position") === "top") {
-		Global.GetStreamSlider(({ InputStreamSlider }) => {
-			Global.QuickSettingsMenu._grid.set_child_above_sibling(
-				this.volumeMixerWidget.actor,
-				InputStreamSlider
-			)
-		})
-		// }
+		);
+
+		if (this.widgetStyle == "widget") {
+			(Global.QuickSettingsMenu as any).addItem(this.volumeMixerWidget.actor, 2) //.actor, 2)
+			Global.GetStreamSlider().then(({ InputStreamSlider }) => {
+				Global.QuickSettingsGrid.set_child_above_sibling(
+					this.volumeMixerWidget.actor,
+					InputStreamSlider
+				)
+			})
+		}
 	}
 	onUnload(): void {
 		this.volumeMixerWidget = null

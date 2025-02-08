@@ -1,0 +1,16 @@
+@use "../global.scss" as *;
+
+.datemenu-popover {
+    &#{$p}-hide-left-box {
+        .datemenu-calendar-column {
+            margin: 0px;
+        }
+    }
+    &#{$p}-hide-right-box {
+        .message-list {
+            margin: 0px;
+            border: none;
+            min-height: 340px;
+        }
+    }
+}

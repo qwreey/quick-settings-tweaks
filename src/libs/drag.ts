@@ -161,7 +161,7 @@ export abstract class Scroll extends St.Bin {
 	vfunc_scroll_event(event: Clutter.Event): boolean {
 		if (
 			event.get_scroll_direction() != Clutter.ScrollDirection.SMOOTH
-			|| event.get_scroll_source() != Clutter.ScrollSource.WHEEL
+			// || event.get_scroll_source() != Clutter.ScrollSource.WHEEL
 		) return Clutter.EVENT_PROPAGATE
 		const finish = event.get_scroll_finish_flags()
 		const [dx, dy] = event.get_scroll_delta()
@@ -205,10 +205,10 @@ export abstract class Scroll extends St.Bin {
 
 	static applyTo(widgetClass: any) {
 		const widgetProto = widgetClass.prototype
-		const dragProto = Drag.prototype
-		for (const methodName of Object.getOwnPropertyNames(dragProto)) {
+		const scrollProto = Scroll.prototype
+		for (const methodName of Object.getOwnPropertyNames(scrollProto)) {
 			Object.defineProperty(widgetProto, methodName, {
-				value: dragProto[methodName],
+				value: scrollProto[methodName],
 				configurable: true,
 				writable: true,
 			})

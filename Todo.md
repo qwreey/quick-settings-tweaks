@@ -20,6 +20,7 @@ widgets:
         as system item (like background apps,
                         should able to adjust order in systemitem order option)
 
+더보기 아이콘 sound card 로 바꾸고 싶은데 그런 옵션이 있으면 좋겠음
 
 Add cover image round clip effect option
 이미지 비율 설정 기능

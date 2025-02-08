@@ -14,11 +14,14 @@
 
 - Media widget
   - Add round clip effect detailed option
+  - Support trackpad and trackpoint smooth scroll
 - Date menu
   - Add hide left box option
   - Add hide right box option
   - Add menu disable option
   - Add menu button hide option
+- VolumeMixer widget
+  - Migrated from 1.18
 
 ## Fix
 

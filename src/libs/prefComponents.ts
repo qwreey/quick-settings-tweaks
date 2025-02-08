@@ -59,7 +59,7 @@ export function pushDetailedButton(
 ): Gtk.Button {
 	const buttonBox = Button({
 		action: onDetailed,
-		iconName: "preferences-system-symbolic",
+		iconName: "emblem-system-symbolic",
 		hasFrame: false,
 		tooltip: _("Details"),
 	})

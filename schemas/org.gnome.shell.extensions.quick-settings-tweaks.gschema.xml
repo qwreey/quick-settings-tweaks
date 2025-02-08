@@ -254,19 +254,19 @@
     <!-- <key name="volume-mixer-filtered-apps" type="as">
       <default>[]</default>
     </key> -->
-    <!-- <key name="volume-mixer-show-description" type="b">
-      <default>true</default>
-    </key> -->
     <key name="volume-mixer-show-icon" type="b">
       <default>true</default>
     </key>
-    <!-- <key name="volume-mixer-filter-mode" type="s">
+    <key name="volume-mixer-widget-style" type="s">
       <choices>
-        <choice value='block'/>
-        <choice value='allow'/>
+        <choice value='menu'/>
+        <choice value='widget'/>
       </choices>
-      <default>'block'</default>
-    </key> -->
+      <default>'menu'</default>
+    </key>
+    <key name="volume-mixer-menu-icon" type="s">
+      <default>'open-menu-symbolic'</default>
+    </key>
     <!-- #endregion Volume Mixer -->
 
     <!-- #region Input Output -->
@@ -278,6 +278,12 @@
     </key>
     <key name="input-always-show" type="b">
       <default>false</default>
+    </key>
+    <key name="input-menu-icon" type="s">
+      <default>'open-menu-symbolic'</default>
+    </key>
+    <key name="output-menu-icon" type="s">
+      <default>'open-menu-symbolic'</default>
     </key>
     <!-- #endregion Input Output -->
 
