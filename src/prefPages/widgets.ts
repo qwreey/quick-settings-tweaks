@@ -330,7 +330,6 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "weather-enabled"
 			}),
 			description: _("Turn on to make the weather widget visible on the Quick Settings panel"),
-			experimental: true,
 		},[
 			SwitchRow({
 				settings,
