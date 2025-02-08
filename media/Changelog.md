@@ -5,10 +5,11 @@
 # 2.1-pre5
 <!-- @BuildNumber: 5 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-02-04 09:31:00 KST" -->
-<!-- @Git: "0f05873" -->
+<!-- @Date: "2025-02-08 13:49:00 KST" -->
+<!-- @Git: "693b6f6" -->
 
 - List the license in more detail
+- Weather feature is now stable
 
 ## New Features
 
