@@ -13,7 +13,18 @@
 ## New Features
 
 - Media widget
-  - Option for adjust smooth scroll speed
+  - Add adjust smooth scroll speed option
+- Overlay menu
+  - Smoother animation
+  - Better animation start offset for flyout style
+- Volume mixer widget
+  - Add show stream icon option
+  - Add attach menu to output slider option
+
+## Fix
+
+- Media widget
+  - Fix 'event.moveStartCoords is undefined' error
 
 # 2.1-pre5
 <!-- @BuildNumber: 5 -->

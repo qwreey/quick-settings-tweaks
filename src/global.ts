@@ -12,17 +12,21 @@ import {
 } from "resource:///org/gnome/shell/ui/calendar.js";
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
 import { logger } from "./libs/logger.js"
-import { type SystemItem, type Indicator as SystemIndicator } from "resource:///org/gnome/shell/ui/status/system.js"
+import {
+	type SystemItem,
+	type Indicator as SystemIndicator
+} from "resource:///org/gnome/shell/ui/status/system.js"
 import { type PopupMenu } from "resource:///org/gnome/shell/ui/popupMenu.js"
+import { type QuickSlider, type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
 type StreamSlider = {
 	VolumeInput: any,
-	InputStreamSlider: any,
-	OutputStreamSlider: any,
+	InputStreamSlider: QuickSlider,
+	OutputStreamSlider: QuickSlider,
 }
 export const Global = new (class Global {
 	QuickSettings: Clutter.Actor
-	QuickSettingsMenu: St.Widget
+	QuickSettingsMenu: QuickSettingsMenu
 	QuickSettingsGrid: St.Widget
 	QuickSettingsBox: St.BoxLayout
 	QuickSettingsActor: St.Widget

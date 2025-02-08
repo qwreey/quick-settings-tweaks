@@ -2,18 +2,21 @@
  * This code is partially licensed under the gnome-volume-mixer license.
  * For more details, please check the license page in the about tab of the extension settings.
 */
-
 import St from "gi://St"
 import Gvc from "gi://Gvc"
 import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import GLib from "gi://GLib"
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { QuickSlider } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import Maid from "../../libs/maid.js"
 import { Global } from "../../global.js"
+import { StyledScroll } from "../../libs/styledScroll.js"
+import { logger } from "../../libs/logger.js"
+import { updateMenuSeparators } from "../../libs/utility.js"
 
 const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
 
@@ -30,7 +33,7 @@ class StreamSlider extends QuickSlider {
 	constructor(
 		control: Gvc.MixerControl,
 		stream: Gvc.MixerStream,
-		options: VolumeMixerWidget.Options
+		options: VolumeMixerList.Options
 	) {
 		// @ts-expect-error
 		super(control, stream, options)
@@ -55,7 +58,14 @@ class StreamSlider extends QuickSlider {
 			this._updateAllowAmplified.bind(this)
 		)
 		this._updateAllowAmplified()
-		
+
+		// Update icon
+		this.iconReactive = true
+		this.connect("icon-clicked", ()=>{
+			if (!this._stream) return
+			this._stream.set_is_muted(!this._stream.is_muted)
+		})
+
 		// Value change connection
 		this._inDrag = false
 		this._sliderChangedId = this._maid.connectJob(this.slider, "notify::value", this._sliderChanged.bind(this))
@@ -209,6 +219,11 @@ class StreamSlider extends QuickSlider {
 			this._volumeCancellable = null
 		}
 	}
+
+	// I have no idea why, slider has finite height, so we should floor it for scroll layout
+	vfunc_get_preferred_height(for_width: number): [number, number] {
+		return super.vfunc_get_preferred_height(for_width).map(Math.floor) as [number, number]
+	}
 }
 GObject.registerClass({
 	Signals: {
@@ -243,7 +258,7 @@ class VolumeMixerItem extends St.BoxLayout {
 	) {
 		super._init({
 			vertical: true,
-			style_class: "QSTWEAKS-volume-mixer"
+			style_class: "QSTWEAKS-item",
 		})
 		this._control = control
 		this._stream = stream
@@ -302,16 +317,21 @@ namespace VolumeMixerItem {
 }
 // #endregion VolumeMixerItem
 
-// #region VolumeMixerWidget
-class VolumeMixerWidget extends St.BoxLayout {
+// #region VolumeMixerList
+class VolumeMixerList extends St.BoxLayout {
 	_control: Gvc.MixerControl
 	_maid: Maid
-	_options: VolumeMixerWidget.Options
+	_options: VolumeMixerList.Options
 	_sliders: Map<number, VolumeMixerItem>
+	shouldShow: boolean
 
-	constructor(options: VolumeMixerWidget.Options) {
-		super()
-		this.hide()
+	constructor(options: VolumeMixerList.Options) {
+		super({
+			style_class: "QSTWEAKS-volume-mixer",
+			clip_to_allocation: true,
+			vertical: true,
+			x_expand: true,
+		})
 		this._options = options
 		this._maid = new Maid()
 		this._sliders = new Map()
@@ -325,6 +345,15 @@ class VolumeMixerWidget extends St.BoxLayout {
 			this._streamAdded(this._control, stream.get_id())
 		}
 
+		this.connect("destroy", ()=>{
+			this._maid.destroy()
+			this._maid = null
+			for (const slider of this._sliders.values()) {
+				slider.destroy()
+			}
+			this._sliders = null
+		})
+
 		// Group with application id << we need this
 		// description regex
 		// name regex
@@ -337,10 +366,9 @@ class VolumeMixerWidget extends St.BoxLayout {
 		// this._showStreamIcon = settings["volume-mixer-show-icon"]
 		// this._useRegex = settings["volume-mixer-use-regex"]
 		// this._checkDescription = settings["volume-mixer-check-description"]
-
 	}
 
-	_streamAdded(control:Gvc.MixerControl, id: number) {
+	_streamAdded(control: Gvc.MixerControl, id: number) {
 		if (this._sliders.has(id)) {
 			return
 		}
@@ -376,8 +404,7 @@ class VolumeMixerWidget extends St.BoxLayout {
 		this._sliders.set(id, slider)
 
 		this.add_child(slider)
-		slider.visible = true
-		this.show()
+		this._sync()
 	}
 
 	_streamRemoved(_control: Gvc.MixerControl, id: number) {
@@ -385,23 +412,128 @@ class VolumeMixerWidget extends St.BoxLayout {
 		if (!slider) return
 		slider.destroy()
 		this._sliders.delete(id)
-		if (!this._sliders.size) this.hide()
+		this._sync()
 	}
 
-	destroy() {
-		this._maid.destroy()
-		this._maid = null
-		for (const slider of this._sliders.values()) {
-			slider.destroy()
+	_sync() {
+		if (!this._sliders.size) {
+			this.shouldShow = false
+			return
 		}
-		this._sliders = null
-		super.destroy()
+		for (const slider of this._sliders.values()) {
+			if (slider.visible) {
+				this.shouldShow = true
+				return
+			}
+		}
+		this.shouldShow = false
+	}
+}
+GObject.registerClass({
+	Properties: {
+		'should-show': GObject.ParamSpec.boolean(
+			'should-show', null, null,
+			GObject.ParamFlags.READWRITE,
+			false),
+	},
+}, VolumeMixerList)
+namespace VolumeMixerList {
+	export type Options = {
+	} & VolumeMixerItem.Options
+}
+// #endregion VolumeMixerList
+
+// #region VolumeMixerWidget
+class VolumeMixerWidget extends St.BoxLayout {
+	_options: VolumeMixerWidget.Options
+	// _header: Header
+	_list: VolumeMixerList
+	_scroll: St.ScrollView
+	_sections: St.BoxLayout
+	constructor(options: VolumeMixerWidget.Options) {
+		super(options)
+	}
+	_init(options: VolumeMixerWidget.Options) {
+		super._init({
+			vertical: true,
+		} as Partial<St.BoxLayout.ConstructorProps>)
+
+		this._options = options
+
+		this._createScroll()
+		this.add_child(this._scroll)
+		this._updateMaxHeight()
+		this._updateStyleClass()
+		this._list.connect("notify::should-show", this._sync.bind(this))
+		this._sync()
+	}
+
+	// Box style
+	_updateMaxHeight() {
+		const maxHeight = this._options.maxHeight
+		this.style = maxHeight
+			? `max-height:${maxHeight}px;`
+			: ""
+	}
+	_updateStyleClass() {
+		const options = this._options
+		let style = "QSTWEAKS-volume-mixer"
+		this.style_class = style
+	}
+
+	// Scroll view
+	_createScroll() {
+		this._sections = new St.BoxLayout({
+			vertical: true,
+			x_expand: true,
+			y_expand: true,
+		})
+		this._scroll = new St.ScrollView({
+			x_expand: true,
+			y_expand: true,
+			child: this._sections,
+		})
+		this._updateScrollStyle()
+		this._scroll.connect(
+			"notify::vscrollbar-visible",
+			this._syncScrollbarPadding.bind(this)
+		)
+		this._syncScrollbarPadding()
+		this._list = new VolumeMixerList(this._options)
+		this._sections.add_child(this._list)
+	}
+	_updateScrollStyle() {
+		StyledScroll.updateStyle(this._scroll, this._options)
+	}
+	_syncScrollbarPadding() {
+		this._sections.style_class =
+			this._scroll.vscrollbar_visible
+			? "QSTWEAKS-has-scrollbar"
+			: ""
+	}
+
+	// Get height with avoiding unnecessary allocation
+	vfunc_get_preferred_height(for_width: number): [number, number] {
+		if (!this.get_stage()) return [0, 0]
+		const contentHeight = this._list.get_preferred_height(for_width)
+		const maxHeight = this._options.maxHeight
+		if (!maxHeight) return contentHeight
+		return [Math.min(maxHeight, contentHeight[0]), Math.min(maxHeight, contentHeight[1])]
+	}
+
+	_sync() {
+		this.visible = this._list.shouldShow
 	}
 }
 GObject.registerClass(VolumeMixerWidget)
 namespace VolumeMixerWidget {
 	export type Options = {
-	} & VolumeMixerItem.Options
+		maxHeight: number,
+		scrollbar: boolean,
+		fadeOffset: number,
+	}
+		& Partial<St.BoxLayout.ConstructorProps>
+		& VolumeMixerList.Options
 }
 // #endregion VolumeMixerWidget
 
@@ -409,41 +541,87 @@ namespace VolumeMixerWidget {
 export class VolumeMixerWidgetFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
-	scroll: boolean
+	scrollbar: boolean
+	fadeOffset: number
 	showIcon: boolean
 	maxHeight: number
 	labelText: VolumeMixerItem.Options["labelText"]
 	labelOpacity: number
-	widgetStyle: "menu"|"widget"
+	menuEnabled: boolean
+	menuIcon: string
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("volume-mixer-enabled")
-		this.scroll = loader.loadBoolean("volume-mixer-show-scrollbar")
+		this.scrollbar = loader.loadBoolean("volume-mixer-show-scrollbar")
+		this.fadeOffset = loader.loadInt("volume-mixer-fade-offset")
 		this.showIcon = loader.loadBoolean("volume-mixer-show-icon")
 		this.maxHeight = loader.loadInt("volume-mixer-max-height")
 		this.labelText = loader.loadString("volume-mixer-label-text") as VolumeMixerItem.Options["labelText"]
 		this.labelOpacity = loader.loadInt("volume-mixer-label-opacity")
-		this.widgetStyle = loader.loadString("volume-mixer-widget-style") as VolumeMixerWidgetFeature["widgetStyle"]
+		this.menuEnabled = loader.loadBoolean("volume-mixer-menu-enabled")
+		this.menuIcon = loader.loadString("volume-mixer-menu-icon")
 	}
 	// #endregion settings
 
 	volumeMixerWidget: VolumeMixerWidget
-	updateMaxHeight() {
-		this.volumeMixerWidget.style = 
-			this.maxHeight
-			? `max-height:${this.maxHeight}px;`
-			: ""
-	}
+	mixerMenuButton: St.Button
+	mixerMenuSection: PopupMenu.PopupMenuSection
+	createMenu(slider: QuickSlider) {
+		// Create section
+		this.mixerMenuSection = new PopupMenu.PopupMenuSection()
+		this.mixerMenuSection.box.add_child(this.volumeMixerWidget)
+		this.maid.destroyJob(this.mixerMenuSection)
 
+		// Create button
+		this.mixerMenuButton = new St.Button({
+			child: new St.Icon({icon_name: this.menuIcon}),
+			style_class: 'icon-button flat',
+			can_focus: true,
+			x_expand: false,
+			y_expand: true,
+			visible: this.volumeMixerWidget.visible,
+			accessible_name: _('Open volumx mixer'),
+		})
+		this.volumeMixerWidget.bind_property(
+			"visible",
+			this.mixerMenuButton,
+			"visible",
+			null
+		)
+		this.maid.destroyJob(this.mixerMenuButton)
+
+		// Push to output stream slider menu
+		slider.menu.addMenuItem(this.mixerMenuSection, 1)
+		slider.child.add_child(this.mixerMenuButton)
+		const revertChanges = ()=>{
+			slider.menu.setHeader('audio-headphones-symbolic', (_)('Sound Output'));
+			(slider.menu as any)._setSettingsVisibility(Main.sessionMode.allowSettings);
+			updateMenuSeparators(slider.menu);
+			(slider as any)._deviceSection.box.show()
+		}
+		this.mixerMenuButton.connect('clicked', () => {
+			this.mixerMenuSection.box.show();
+			(slider as any)._deviceSection.box.hide();
+			(slider.menu as any)._setSettingsVisibility(false);
+			updateMenuSeparators(slider.menu)
+			slider.menu.setHeader('audio-headphones-symbolic', _('Volume Mixer'))
+			slider.menu.open(true)
+		})
+		this.maid.connectJob(slider.menu, "menu-closed", ()=>{
+			this.mixerMenuSection.box.hide()
+			revertChanges()
+		})
+		this.maid.functionJob(revertChanges)
+	}
 	override reload(key: string): void {
 		switch (key) {
 			case "volume-mixer-max-height":
 				if (!this.enabled) return
-				this.updateMaxHeight()
+				this.volumeMixerWidget!._updateMaxHeight()
 				break
-			// case "notifications-fade-offset":
+			case "volume-mixer-fade-offset":
 			case "volume-mixer-show-scrollbar":
 				if (!this.enabled) return
-				// this.notificationWidget!._updateScrollStyle()
+				this.volumeMixerWidget!._updateScrollStyle()
 				break
 			default:
 				super.reload()
@@ -454,8 +632,12 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 		this.maid.destroyJob(
 			this.volumeMixerWidget = new VolumeMixerWidget(this)
 		)
-		if (this.widgetStyle == "widget") {
-			(Global.QuickSettingsMenu as any).addItem(this.volumeMixerWidget, 2) //.actor, 2)
+		if (this.menuEnabled) {
+			Global.GetStreamSlider().then(
+				({ OutputStreamSlider }) => this.createMenu(OutputStreamSlider)
+			).catch(logger.error)
+		} else {
+			(Global.QuickSettingsMenu as any).addItem(this.volumeMixerWidget, 2)
 			Global.GetStreamSlider().then(({ InputStreamSlider }) => {
 				Global.QuickSettingsGrid.set_child_above_sibling(
 					this.volumeMixerWidget,

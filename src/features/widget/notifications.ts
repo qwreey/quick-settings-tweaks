@@ -6,6 +6,7 @@ import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.j
 import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { Global } from "../../global.js"
+import { StyledScroll } from "../../libs/styledScroll.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {
@@ -284,18 +285,7 @@ class NotificationWidget extends St.BoxLayout {
 		this._sections.add_child(this._list)
 	}
 	_updateScrollStyle() {
-		this._scroll.style_class =
-			this._options.fadeOffset
-			? "vfade"
-			: ""
-		this._scroll.vscrollbar_policy =
-			this._options.scrollbar
-			? St.PolicyType.AUTOMATIC
-			: St.PolicyType.NEVER
-		this._scroll.style =
-			this._options.fadeOffset
-			? `-st-vfade-offset: ${this._options.fadeOffset}px;`
-			: ""
+		StyledScroll.updateStyle(this._scroll, this._options)
 	}
 	_syncScrollbarPadding() {
 		this._sections.style_class =
@@ -352,7 +342,7 @@ class NotificationWidget extends St.BoxLayout {
 }
 GObject.registerClass(NotificationWidget)
 namespace NotificationWidget {
-	export type Options = Partial<{
+	export type Options = {
 		useNativeControls: boolean
 		autoHide: boolean
 		scrollbar: boolean
@@ -360,7 +350,8 @@ namespace NotificationWidget {
 		maxHeight: number
 		compact: boolean
 		removeShadow: boolean
-	} & St.BoxLayout.ConstructorProps>
+	}
+		& Partial<St.BoxLayout.ConstructorProps>
 }
 // #endregion NotificationWidget
 

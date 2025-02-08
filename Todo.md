@@ -20,11 +20,13 @@ widgets:
         as system item (like background apps,
                         should able to adjust order in systemitem order option)
 
+키보드로 포커스 가능해야함
+
 더보기 아이콘 sound card 로 바꾸고 싶은데 그런 옵션이 있으면 좋겠음
 
 Add cover image round clip effect option
 이미지 비율 설정 기능
-스크롤로 넘기기 방향 정할수있도록
+
 날씨 로딩중에 라벨 위치
 
 패널 전체 오더링 << 가능했으면 좋겠음.......... 왼쪽 오른쪽 중간 고르기 가능하고
@@ -47,10 +49,6 @@ show full title
 어나더: 자동으로 지우는 알림 리스트 (타이틀 regex)
 datemenu 왼쪽 레이아웃 오른쪽레이아웃, 메뉴 열지 않기
 more dimmer
-
-스와이프 스크롤 구현
-smooth 스크롤로 미디어 넘기기 
-인풋 아웃풋 스크롤 좌우로 해도 되도록? 구성가능하게 만들기 (트랙패드에)
 
 option to hide widget header?
 믹서 디바이스 변경 구현하기

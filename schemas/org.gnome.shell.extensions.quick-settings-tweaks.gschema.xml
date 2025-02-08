@@ -187,6 +187,9 @@
     <key name="volume-mixer-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="volume-mixer-only-playing" type="b">
+      <default>true</default>
+    </key>
     <key name="volume-mixer-label-text" type="s">
       <default>"both"</default>
       <choices>
@@ -207,6 +210,9 @@
     </key>
     <key name="volume-mixer-max-height" type="i">
       <default>0</default>
+    </key>
+    <key name="volume-mixer-fade-offset" type="i">
+      <default>46</default>
     </key>
     <key name="volume-mixer-ignore" type="aa{sv}">
       <!-- Not implemented -->
@@ -275,15 +281,11 @@
     <key name="volume-mixer-show-icon" type="b">
       <default>true</default>
     </key>
-    <key name="volume-mixer-widget-style" type="s">
-      <choices>
-        <choice value='menu'/>
-        <choice value='widget'/>
-      </choices>
-      <default>'menu'</default>
-    </key>
     <key name="volume-mixer-menu-icon" type="s">
       <default>'open-menu-symbolic'</default>
+    </key>
+    <key name="volume-mixer-menu-enabled" type="b">
+      <default>true</default>
     </key>
     <!-- #endregion Volume Mixer -->
 

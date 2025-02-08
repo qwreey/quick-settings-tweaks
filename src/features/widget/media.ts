@@ -544,7 +544,7 @@ class MediaList extends Mpris.MediaSection {
 			current._player?.raise()
 		}
 
-		const offset = event.coords[0] - event.moveStartCoords[0]
+		const offset = event.coords[0] - (event.moveStartCoords || event.startCoords)[0]
 		this._finalizeDragOffset(current, offset)
 	}
 	dfunc_drag_start(_event: Drag.Event): void {

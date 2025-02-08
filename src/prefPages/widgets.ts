@@ -216,13 +216,6 @@ export const WidgetsPage = GObject.registerClass({
 			}),
 			SwitchRow({
 				settings,
-				title: _("Remove shadow"),
-				subtitle: _("Remove shadow from media message\nUse if your theme creates unnecessary shadows"),
-				bind: "media-remove-shadow",
-				sensitiveBind: "media-enabled",
-			}),
-			SwitchRow({
-				settings,
 				title: _("Round clip effect"),
 				subtitle: _("Use round clip effect to make transition more natural"),
 				bind: "media-round-clip-enabled",
@@ -255,6 +248,13 @@ export const WidgetsPage = GObject.registerClass({
 						})
 					])],
 				})}
+			}),
+			SwitchRow({
+				settings,
+				title: _("Remove shadow"),
+				subtitle: _("Remove shadow from media message\nUse if your theme creates unnecessary shadows"),
+				bind: "media-remove-shadow",
+				sensitiveBind: "media-enabled",
 			}),
 			AdjustmentRow({
 				settings,
@@ -384,6 +384,7 @@ export const WidgetsPage = GObject.registerClass({
 					{ name: _("None"), value: "none" },
 				],
 				bind: "volume-mixer-label-text",
+				sensitiveBind: "volume-mixer-enabled",
 			}),
 			AdjustmentRow({
 				settings,
@@ -391,6 +392,7 @@ export const WidgetsPage = GObject.registerClass({
 				title: _("Label opacity"),
 				subtitle: _("Adjust label opacity.\nSet this to 255 to make opaque, and 0 to make transparent"),
 				bind: "volume-mixer-label-opacity",
+				sensitiveBind: "volume-mixer-enabled",
 			}),
 			AdjustmentRow({
 				settings,
@@ -407,6 +409,47 @@ export const WidgetsPage = GObject.registerClass({
 				subtitle: _("Show scrollbar on mixer list"),
 				bind: "volume-mixer-show-scrollbar",
 				sensitiveBind: "volume-mixer-enabled",
+			}),
+			SwitchRow({
+				settings,
+				title: _("Show stream icon"),
+				subtitle: _("Show stream icon above mixer sliders"),
+				bind: "volume-mixer-show-icon",
+				sensitiveBind: "volume-mixer-enabled",
+			}),
+			AdjustmentRow({
+				settings,
+				title: _("Fade out offset"),
+				subtitle: _("Set position of the fade out effect begins. Set this to 0 to disable fade out effect. default is 46"),
+				max: 2048,
+				bind: "volume-mixer-fade-offset",
+				sensitiveBind: "volume-mixer-enabled",
+			}),
+			SwitchRow({
+				settings,
+				bind: "volume-mixer-menu-enabled",
+				title: _("Attach to output slider"),
+				subtitle: _("Attach volume mixer menu button to output slider. Use if you prefer compact layout"),
+				sensitiveBind: "volume-mixer-enabled",
+				onDetailed: ()=>{Dialog({
+					window,
+					title: _("Media Widget"),
+					childrenRequest: ()=>[Group({
+						title: _("Attach to output slider"),
+						description: _("Attach volume mixer menu button to output slider. Use if you prefer compact layout"),
+						header_suffix: SwitchRow({
+							settings,
+							bind: "volume-mixer-menu-enabled",
+						}),
+					},[
+						EntryRow({
+							settings,
+							bind: "volume-mixer-menu-icon",
+							title: _("Menu icon"),
+							sensitiveBind: "volume-mixer-menu-enabled",
+						})
+					])],
+				})}
 			}),
 		])
 	}

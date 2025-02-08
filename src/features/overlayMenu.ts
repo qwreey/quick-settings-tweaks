@@ -1,9 +1,10 @@
 import Clutter from "gi://Clutter"
-import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import { QuickSlider, type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
 import { FeatureBase, type SettingLoader } from "../libs/feature.js"
 import { QuickSettingsMenuTracker } from "../libs/quickSettingsTracker.js"
 import Maid from "../libs/maid.js"
+import { AdvAni } from "../libs/utility.js"
 
 export class OverlayMenu extends FeatureBase {
 	// #region settings
@@ -38,10 +39,13 @@ export class OverlayMenu extends FeatureBase {
 			Math.floor((Global.QuickSettingsBox.height - targetHeight) / 2),
 			0
 		)
-		const sourceX = Math.floor(Global.QuickSettingsGrid.x + menu.sourceActor.x + 0.5)
-		const sourceY = Math.floor(Global.QuickSettingsGrid.y + menu.sourceActor.y + 0.5)
+		const isSlider = menu.sourceActor instanceof QuickSlider
 		const sourceHeight = Math.floor(menu.sourceActor.height + 0.5)
-		const sourceWidth = Math.floor(menu.sourceActor.width + 0.5)
+		const sourceBaseWidth = Math.floor(menu.sourceActor.width + 0.5)
+		const sourceWidth = isSlider ? sourceHeight : sourceBaseWidth
+		const sourceBaseX = Math.floor(Global.QuickSettingsGrid.x + menu.sourceActor.x + 0.5)
+		const sourceY = Math.floor(Global.QuickSettingsGrid.y + menu.sourceActor.y + 0.5)
+		const sourceX = sourceBaseX + (isSlider ? (sourceBaseWidth - sourceWidth) : 0)
 		const offsetX = Math.floor((Global.QuickSettingsBox.width - targetWidth) / 2)
 		return {
 			outerHeight,
@@ -72,31 +76,31 @@ export class OverlayMenu extends FeatureBase {
 				duration: Math.floor(this.duration / 3),
 			})
 			if (this.animationStyle == "flyout") {
-				menu.box.translationX = Math.floor(coords.sourceX - coords.offsetX + menu.box.marginLeft)
-				menu.box.translationY = Math.floor(coords.sourceY - coords.offsetY + menu.box.marginTop)
-				menu.box.scaleX = coords.sourceWidth / coords.targetWidth
-				menu.box.scaleY = coords.sourceHeight / coords.targetHeight
-				// @ts-expect-error
-				menu.box.ease({
-					translationX: 0,
-					translationY: 0,
-					scaleX: 1,
-					scaleY: 1,
-					mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+				menu.box.translation_x = Math.floor(coords.sourceX - coords.offsetX + menu.box.marginLeft)
+				menu.box.translation_y = Math.floor(coords.sourceY - coords.offsetY + menu.box.marginTop)
+				menu.box.scale_x = coords.sourceWidth / coords.targetWidth
+				menu.box.scale_y = coords.sourceHeight / coords.targetHeight
+				AdvAni.ease(menu.box, {
+					translation_x: 0,
+					translation_y: 0,
+					scale_x: 1,
+					scale_y: 1,
+					mode: AdvAni.AdvAnimationMode.LowBackover,
+					// mode: Clutter.AnimationMode.EASE_OUT_EXPO,
 					duration: this.duration,
 				})
 			} else if (this.animationStyle == "dialog") {
-				menu.box.translationX = 0.2*coords.targetWidth*.5
-				menu.box.translationY = 0.2*coords.targetHeight*.5
-				menu.box.scaleX = 0.8
-				menu.box.scaleY = 0.8
-				// @ts-expect-error
-				menu.box.ease({
-					translationX: 0,
-					translationY: 0,
-					scaleX: 1,
-					scaleY: 1,
-					mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+				menu.box.translation_x = 0.2*coords.targetWidth*.5
+				menu.box.translation_y = 0.2*coords.targetHeight*.5
+				menu.box.scale_x = 0.8
+				menu.box.scale_y = 0.8
+				AdvAni.ease(menu.box, {
+					translation_x: 0,
+					translation_y: 0,
+					scale_x: 1,
+					scale_y: 1,
+					mode: AdvAni.AdvAnimationMode.MiddleBackover,
+					// mode: Clutter.AnimationMode.EASE_OUT_EXPO,
 					duration: this.duration,
 				})
 			}
