@@ -111,6 +111,9 @@
     <key name="media-gradient-end-mix" type="i">
       <default>180</default>
     </key>
+    <key name="media-smooth-scroll-speed" type="i">
+      <default>16</default>
+    </key>
     <!-- use paged layout type=b -->
     <!-- #endregion Media Widget -->
 
@@ -134,19 +137,15 @@
 
     <!-- #region Date Menu -->
     <key name="datemenu-hide-left-box" type="b">
-      <!-- Not implemented -->
       <default>true</default>
     </key>
     <key name="datemenu-hide-right-box" type="b">
-      <!-- Not implemented -->
       <default>false</default>
     </key>
     <key name="datemenu-hide-menu-button" type="b">
-      <!-- Not implemented -->
       <default>false</default>
     </key>
     <key name="datemenu-disable-menu" type="b">
-      <!-- Not implemented -->
       <default>false</default>
     </key>
     <key name="datemenu-hide-notifications" type="b">
@@ -210,6 +209,7 @@
       <default>0</default>
     </key>
     <key name="volume-mixer-ignore" type="aa{sv}">
+      <!-- Not implemented -->
       <default><![CDATA[
         [
         ]
@@ -226,6 +226,7 @@
       ]]></description>
     </key>
     <key name="volume-mixer-order" type="aa{sv}">
+      <!-- Not implemented -->
       <description><![CDATA[
 [{
   'name': <string>,
@@ -240,6 +241,23 @@
         [
         ]
       ]]></default>
+    </key>
+    <key name="volume-mixer-group-by" type="aa{sv}">
+      <!-- Not implemented -->
+      <default><![CDATA[
+        [
+        ]
+      ]]></default>
+      <description><![CDATA[
+[{
+  'name': <string>,
+  'nameRegex': <string>,
+  'description': <string>,
+  'descriptionRegex': <string>,
+  'applicationId': <string>,
+  'applicationIdRegex': <string>
+}]
+      ]]></description>
     </key>
     <key name="volume-mixer-ignore-mode" type="s">
       <choices>

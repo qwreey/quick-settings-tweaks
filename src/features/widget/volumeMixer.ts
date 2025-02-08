@@ -14,8 +14,6 @@ import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import Maid from "../../libs/maid.js"
 import { Global } from "../../global.js"
-// import { Global } from "../../global.js"
-// import { fixStScrollViewScrollbarOverflow } from "../../libs/utility.js"
 
 const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
 
@@ -305,7 +303,7 @@ namespace VolumeMixerItem {
 // #endregion VolumeMixerItem
 
 // #region VolumeMixerWidget
-class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
+class VolumeMixerWidget extends St.BoxLayout {
 	_control: Gvc.MixerControl
 	_maid: Maid
 	_options: VolumeMixerWidget.Options
@@ -313,7 +311,7 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 
 	constructor(options: VolumeMixerWidget.Options) {
 		super()
-		this.actor.hide()
+		this.hide()
 		this._options = options
 		this._maid = new Maid()
 		this._sliders = new Map()
@@ -377,9 +375,9 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 		)
 		this._sliders.set(id, slider)
 
-		this.actor.add_child(slider)
+		this.add_child(slider)
 		slider.visible = true
-		this.actor.show()
+		this.show()
 	}
 
 	_streamRemoved(_control: Gvc.MixerControl, id: number) {
@@ -387,7 +385,7 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 		if (!slider) return
 		slider.destroy()
 		this._sliders.delete(id)
-		if (!this._sliders.size) this.actor.hide()
+		if (!this._sliders.size) this.hide()
 	}
 
 	destroy() {
@@ -400,6 +398,7 @@ class VolumeMixerWidget extends PopupMenu.PopupMenuSection {
 		super.destroy()
 	}
 }
+GObject.registerClass(VolumeMixerWidget)
 namespace VolumeMixerWidget {
 	export type Options = {
 	} & VolumeMixerItem.Options
@@ -428,22 +427,44 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 	// #endregion settings
 
 	volumeMixerWidget: VolumeMixerWidget
-	onLoad(): void {
+	updateMaxHeight() {
+		this.volumeMixerWidget.style = 
+			this.maxHeight
+			? `max-height:${this.maxHeight}px;`
+			: ""
+	}
+
+	override reload(key: string): void {
+		switch (key) {
+			case "volume-mixer-max-height":
+				if (!this.enabled) return
+				this.updateMaxHeight()
+				break
+			// case "notifications-fade-offset":
+			case "volume-mixer-show-scrollbar":
+				if (!this.enabled) return
+				// this.notificationWidget!._updateScrollStyle()
+				break
+			default:
+				super.reload()
+				break
+		}
+	}
+	override onLoad(): void {
 		this.maid.destroyJob(
 			this.volumeMixerWidget = new VolumeMixerWidget(this)
-		);
-
+		)
 		if (this.widgetStyle == "widget") {
-			(Global.QuickSettingsMenu as any).addItem(this.volumeMixerWidget.actor, 2) //.actor, 2)
+			(Global.QuickSettingsMenu as any).addItem(this.volumeMixerWidget, 2) //.actor, 2)
 			Global.GetStreamSlider().then(({ InputStreamSlider }) => {
 				Global.QuickSettingsGrid.set_child_above_sibling(
-					this.volumeMixerWidget.actor,
+					this.volumeMixerWidget,
 					InputStreamSlider
 				)
 			})
 		}
 	}
-	onUnload(): void {
+	override onUnload(): void {
 		this.volumeMixerWidget = null
 	}
 }

@@ -9,7 +9,7 @@ import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
 // @ts-expect-error
 import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
 import { Global } from "../../global.js"
-import { FeatureBase, type SettingLoader, Rgba, type Rgb } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader, type Rgb } from "../../libs/feature.js"
 import { logger } from "../../libs/logger.js"
 import { getImageMeanColor } from "../../libs/imageMeanColor.js"
 import { lerp } from "../../libs/utility.js"
@@ -29,11 +29,11 @@ class ProgressControl extends St.BoxLayout {
 	_shown: boolean
 	_options: ProgressControl.Options
 
-	constructor(options: ProgressControl.Options) {
-		super(options as any)
+	constructor(player: Player, options: ProgressControl.Options) {
+		super(player as any, options as any)
 	}
-	_init(options: ProgressControl.Options): void {
-		this._player = options.player
+	_init(player: Player, options: ProgressControl.Options): void {
+		this._player = player
 		this._positionTracker = null
 		this._dragging = false
 		this._shown = false
@@ -73,26 +73,28 @@ class ProgressControl extends St.BoxLayout {
 
 	// Create slider and connect drag event
 	_createSlider() {
-		this._slider = new Slider(0)
+		const oldSlider = this._slider
+		const slider = this._slider ??= new Slider(0)
 
 		// Update style
-		this._slider.style = StyledSlider.getStyle(this._options.sliderStyle)
+		slider.style = StyledSlider.getStyle(this._options.sliderStyle)
+		if (oldSlider) return
 
 		// Process Dragging
-		this._slider.connect("drag-begin", () => {
+		slider.connect("drag-begin", () => {
 			this._dragging = true
 			return Clutter.EVENT_PROPAGATE
 		});
-		this._slider.connect("drag-end", () => {
-			this._player.position = (Math.floor(this._slider.value) * 1000000)
+		slider.connect("drag-end", () => {
+			this._player.position = (Math.floor(slider.value) * 1000000)
 			this._dragging = false
 			return Clutter.EVENT_PROPAGATE
 		})
-		this._slider.connect("scroll-event", () => {
+		slider.connect("scroll-event", () => {
 			return Clutter.EVENT_STOP
 		})
-		this._slider.connect("notify::value", () => {
-			if (this._dragging) this._updatePosition(Math.floor(this._slider.value) * 1000000)
+		slider.connect("notify::value", () => {
+			if (this._dragging) this._updatePosition(Math.floor(slider.value) * 1000000)
 		})
 	}
 
@@ -198,7 +200,6 @@ namespace ProgressControl {
 		sliderStyle: StyledSlider.Options
 	}
 	export type Options = {
-		player: Player,
 	} & OptionsBase
 }
 // #endregion ProgressControl
@@ -305,16 +306,17 @@ class MediaItem extends Mpris.MediaMessage {
 	_player: Player
 	_cachedColors: Map<string, Promise<void | [number, number, number]>>
 	_options: MediaItem.Options
+	_progressControl?: ProgressControl
 
-	constructor(options: MediaItem.Options) {
-		super(options.player)
+	constructor(player: Player, options: MediaItem.Options) {
+		super(player)
 		this._options = options
 		if (options.progressEnabled) {
-			this.child.add_child(new ProgressControl(options))
+			this.child.add_child(
+				this._progressControl = new ProgressControl(player, options)
+			)
 		}
-		this._nextButton.opacity =
-		this._prevButton.opacity =
-		this._playPauseButton.opacity = this._options.contorlOpacity
+		this._updateControlOpacity()
 		this._updateGradient()
 	}
 	protected _onDestroy(): void {
@@ -322,7 +324,10 @@ class MediaItem extends Mpris.MediaMessage {
 		super._onDestroy()
 	}
 	_updateGradient(): void {
-		if (!this._options?.gradientEnabled) return
+		if (!this._options?.gradientEnabled) {
+			this.style = ""
+			return
+		}
 		this._cachedColors ??= new Map()
 		const coverUrl = this._player.trackCoverUrl
 		if (!coverUrl || coverUrl.endsWith(".svg")) return
@@ -361,11 +366,17 @@ class MediaItem extends Mpris.MediaMessage {
 				});`
 		})
 	}
+	_updateControlOpacity() {
+		this._nextButton.opacity =
+		this._prevButton.opacity =
+		this._playPauseButton.opacity = this._options.contorlOpacity
+	}
 	protected _update(): void {
 		super._update()
 		this._updateGradient()
 	}
 
+	// Pass all gesture actions to the parent
 	vfunc_button_press_event(_event: Clutter.Event): boolean {
 		return Clutter.EVENT_PROPAGATE
 	}
@@ -392,7 +403,6 @@ namespace MediaItem {
 		contorlOpacity: number
 	}
 	export type Options = {
-		player: Player,
 	}
 		& OptionsBase
 		& ProgressControl.OptionsBase
@@ -400,34 +410,16 @@ namespace MediaItem {
 // #endregion MediaItem
 
 // #region MediaList
-namespace MediaList {
-	export type Options = Partial<{
-		roundClipEnabled: boolean
-		roundClipPadding: null|[number, number, number, number]
-	} & St.BoxLayout.ConstructorProps>
-		& MediaItem.OptionsBase
-		& ProgressControl.OptionsBase
-}
 class MediaList extends Mpris.MediaSection {
 	_options: MediaList.Options
 	_messages: MediaItem[]
-	_current: MediaItem
+	_current?: MediaItem
 	_currentMaxPage: number
 	_currentPage: number
 	_effect?: RoundClipEffect
 	_drag: boolean
 	_scroll: boolean
 	_dragTranslation?: number
-
-	get page(): number {
-		return this._currentPage
-	}
-	set page(page: number) {
-		this._setPage(this._messages[page])
-	}
-	get maxPage(): number {
-		return this._currentMaxPage
-	}
 
 	constructor(options: MediaList.Options) {
 		// @ts-ignore
@@ -449,17 +441,9 @@ class MediaList extends Mpris.MediaSection {
 		this.hover = false
 
 		// Round clip effect
-		if (options.roundClipEnabled) {
-			this._effect = new RoundClipEffect()
-			this._effect.enabled = false
-			this.add_effect_with_name("round-clip", this._effect)
-			this.connect("notify::height", this._updateEffect.bind(this))
-			this.connect("notify::width", this._updateEffect.bind(this))
-			this._effect.connect("notify::enabled", ()=>{
-				if (this._effect.enabled) this._updateEffect()
-			})
-			this._updateEffect()
-		}
+		this._initEffect()
+		this.connect("notify::height", this._updateEffect.bind(this))
+		this.connect("notify::width", this._updateEffect.bind(this))
 
 		// Scroll Event
 		this.connect("scroll-event", (_: Clutter.Actor, event: Clutter.Event) => {
@@ -474,8 +458,29 @@ class MediaList extends Mpris.MediaSection {
 		})
 	}
 
-	// Update round clip effect
+	// Round clip effect
+	_initEffect() {
+		// Disabled
+		if (!this._options.roundClipEnabled) {
+			if (this._effect) {
+				this.remove_effect_by_name("round-clip")
+			}
+			this._effect = null
+			return
+		}
+
+		// Enabled
+		const effect = this._effect = new RoundClipEffect()
+		effect.enabled = false
+		this.add_effect_with_name("round-clip", effect)
+		effect.connect("notify::enabled", ()=>{
+			if (effect !== this._effect) return
+			if (effect.enabled) this._updateEffect()
+		})
+		this._updateEffect()
+	}
 	_updateEffect() {
+		if (!this._effect) return
 		if (!this.get_stage()) return
 		const themeNode = this.mapped ? this._current?.get_theme_node() : null
 		const padding = this._options.roundClipPadding
@@ -567,7 +572,7 @@ class MediaList extends Mpris.MediaSection {
 		if (this._drag) return
 		const current = this._current
 		if (!current) return
-		this._updateDragOffset(current, -event.scrollSumX * 16)
+		this._updateDragOffset(current, -event.scrollSumX * this._options.smoothScrollSpeed)
 	}
 	dfunc_scroll_end(event: Scroll.Event): void {
 		this._scroll = false
@@ -576,48 +581,27 @@ class MediaList extends Mpris.MediaSection {
 			this._dragTranslation = null
 			return
 		}
-		this._finalizeDragOffset(current, -event.scrollSumX * 16)
+		this._finalizeDragOffset(current, -event.scrollSumX * this._options.smoothScrollSpeed)
 	}
 
-	// Override for custom message and player
-	// See: https://github.com/GNOME/gnome-shell/blob/c58b826788f99bc783c36fa44e0e669dee638f0e/js/ui/mpris.js#L264
-	_addPlayer(busName: string) {
-		if (this._players.get(busName))
-			return
-
-		let player = new Player(busName)
-		let message = null
-		player.connect("closed",() => {
-			this._players.delete(busName)
-			return false
-		})
-		player.connect("show", () => {
-			message = new MediaItem({
-				...this._options,
-				player,
-			})
-			this.addMessage(message, true)
-			return false
-		})
-		player.connect("hide", () => {
-			this.removeMessage(message, true)
-			message = null
-			return false
-		})
-
-		this._players.set(busName, player)
+	// Handle page action
+	get page(): number {
+		return this._currentPage
 	}
-
-	// Show first playing message
+	set page(page: number) {
+		this._setPage(this._messages[page])
+	}
+	get maxPage(): number {
+		return this._currentMaxPage
+	}
 	_showFirstPlaying() {
+		// Show first playing message
 		const messages = this._messages
 		this._setPage(
 			messages.find(message => message?._player.status === "Playing")
 			?? messages[0]
 		)
 	}
-
-	// Handle page action
 	_setPage(to: MediaItem) {
 		const current = this._current
 		const messages = this._messages
@@ -708,6 +692,32 @@ class MediaList extends Mpris.MediaSection {
 			this._showFirstPlaying()
 		}
 	}
+
+	// Override for custom message and player
+	// See: https://github.com/GNOME/gnome-shell/blob/c58b826788f99bc783c36fa44e0e669dee638f0e/js/ui/mpris.js#L264
+	_addPlayer(busName: string) {
+		if (this._players.get(busName))
+			return
+
+		let player = new Player(busName)
+		let message = null
+		player.connect("closed",() => {
+			this._players.delete(busName)
+			return false
+		})
+		player.connect("show", () => {
+			message = new MediaItem(player, this._options)
+			this.addMessage(message, true)
+			return false
+		})
+		player.connect("hide", () => {
+			this.removeMessage(message, true)
+			message = null
+			return false
+		})
+
+		this._players.set(busName, player)
+	}
 }
 Drag.applyTo(MediaList)
 Scroll.applyTo(MediaList)
@@ -717,13 +727,18 @@ GObject.registerClass({
 		"max-page-updated": {param_types: [GObject.TYPE_INT]},
 	}
 }, MediaList)
+namespace MediaList {
+	export type Options = Partial<{
+		roundClipEnabled: boolean,
+		roundClipPadding: null|[number, number, number, number],
+		smoothScrollSpeed: number,
+	} & St.BoxLayout.ConstructorProps>
+		& MediaItem.OptionsBase
+		& ProgressControl.OptionsBase
+}
 // #endregion MediaList
 
 // #region Header
-namespace Header {   
-	export type Options = Partial<{
-	} & St.BoxLayout.ConstructorProps>
-}
 class Header extends St.BoxLayout {
 	_headerLabel: St.Label
 	_pageIndicator: St.BoxLayout
@@ -771,15 +786,13 @@ GObject.registerClass({
 		"page-activated": {param_types: [GObject.TYPE_INT]},
 	}
 }, Header)
+namespace Header {   
+	export type Options = Partial<{
+	} & St.BoxLayout.ConstructorProps>
+}
 // #endregion Header
 
 // #region MediaWidget
-namespace MediaWidget {
-	export type Options = Partial<{
-	} & St.BoxLayout.ConstructorProps>
-		& MediaItem.OptionsBase
-		& ProgressControl.OptionsBase
-}
 class MediaWidget extends St.BoxLayout {
 	_options: MediaWidget.Options
 	_scroll: St.ScrollView
@@ -798,6 +811,7 @@ class MediaWidget extends St.BoxLayout {
 			reactive: true,
 		} as Partial<St.BoxLayout.ConstructorProps>)
 		this._options = options
+		this._updateStyleClass()
 
 		// Create header
 		this._header = new Header({})
@@ -832,9 +846,24 @@ class MediaWidget extends St.BoxLayout {
 	_syncEmpty() {
 		this.visible = !this._list.empty
 	}
+
+	_updateStyleClass() {
+		const options = this._options
+		let style = "QSTWEAKS-media"
+		if (options.compact) style += " QSTWEAKS-message-compact"
+		if (options.removeShadow) style += " QSTWEAKS-message-remove-shadow"
+		this.style_class = style
+	}
 }
 GObject.registerClass(MediaWidget)
-export { MediaWidget }
+namespace MediaWidget {
+	export type Options = Partial<{
+		compact: boolean
+		removeShadow: boolean
+	} & St.BoxLayout.ConstructorProps>
+		& MediaItem.OptionsBase
+		& ProgressControl.OptionsBase
+}
 // #endregion MediaWidget
 
 // #region MediaWidgetFeature
@@ -855,12 +884,14 @@ export class MediaWidgetFeature extends FeatureBase {
 	contorlOpacity: number
 	roundClipEnabled: boolean
 	roundClipPadding: null|[number, number, number, number]
+	smoothScrollSpeed: number
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
 		this.header = loader.loadBoolean("media-show-header")
 		this.compact = loader.loadBoolean("media-compact")
 		this.removeShadow = loader.loadBoolean("media-remove-shadow")
 		this.contorlOpacity = loader.loadInt("media-contorl-opacity")
+		this.smoothScrollSpeed = loader.loadInt("media-smooth-scroll-speed")
 
 		// Gradient
 		this.gradientBackground = loader.loadRgb("media-gradient-background-color")!
@@ -883,18 +914,53 @@ export class MediaWidgetFeature extends FeatureBase {
 	// #endregion settings
 
 	mediaWidget?: MediaWidget
-	updateStyleClass() {
-		let style = "QSTWEAKS-media"
-		if (this.compact) style += " QSTWEAKS-message-compact"
-		if (this.removeShadow) style += " QSTWEAKS-message-remove-shadow"
-		this.mediaWidget.style_class = style
-	}
-
 	override reload(key: string): void {
+		// Slider style
+		if (StyledSlider.Options.isStyleKey("media-progress", key)) {
+			if (!this.enabled) return
+			if (!this.progressEnabled) return
+			for (const message of this.mediaWidget!._list._messages) {
+				message._progressControl!._createSlider()
+			}
+			return
+		}
+
 		switch (key) {
 			case "media-compact":
 			case "media-remove-shadow":
-				this.updateStyleClass()
+				if (!this.enabled) return
+				this.mediaWidget!._updateStyleClass()
+				break
+			// Round clip
+			case "media-round-clip-enabled":
+				if (!this.enabled) return
+				this.mediaWidget!._list._initEffect()
+				break
+			// Scroll speed
+			case "media-smooth-scroll-speed":
+				break
+			// Round clip padding
+			case "media-round-clip-padding-adjustment-value":
+			case "media-round-clip-padding-adjustment-enabled":
+				break
+			// Control opacity
+			case "media-contorl-opacity":
+				if (!this.enabled) return
+				for (const message of this.mediaWidget!._list._messages) {
+					message._updateControlOpacity()
+				}
+				break
+			// Gradient
+			case "media-gradient-background-color":
+			case "media-gradient-enabled":
+			case "media-gradient-start-opaque":
+			case "media-gradient-start-mix":
+			case "media-gradient-end-opaque":
+			case "media-gradient-end-mix":
+				if (!this.enabled) return
+				for (const message of this.mediaWidget!._list._messages) {
+					message._updateGradient()
+				}
 				break
 			default:
 				super.reload()
@@ -911,8 +977,6 @@ export class MediaWidgetFeature extends FeatureBase {
 		Global.QuickSettingsGrid.layout_manager.child_set_property(
 			Global.QuickSettingsGrid, this.mediaWidget, "column-span", 2
 		)
-
-		this.updateStyleClass()
 	}
 	override onUnload(): void {
 		this.mediaWidget = null

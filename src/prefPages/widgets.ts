@@ -256,6 +256,15 @@ export const WidgetsPage = GObject.registerClass({
 					])],
 				})}
 			}),
+			AdjustmentRow({
+				settings,
+				title: _("Smooth scroll speed"),
+				subtitle: _("Adjust trackpad and trackpoint scroll speed, negative number for invert direction"),
+				max: 2048,
+				min: -2048,
+				bind: "media-smooth-scroll-speed",
+				sensitiveBind: "media-enabled",
+			}),
 		])
 
 		// notification
@@ -278,7 +287,8 @@ export const WidgetsPage = GObject.registerClass({
 			AdjustmentRow({
 				settings,
 				title: _("Max height"),
-				subtitle: _("Set maximum height of the Notifications widget. default is 292"),
+				subtitle: _("Set maximum height of the Notifications widget, default is %d. Set this to 0 to disable max height")
+					.format(settings.get_default_value("notifications-max-height").unpack()),
 				max: 2048,
 				bind: "notifications-max-height",
 				sensitiveBind: "notifications-enabled",
@@ -350,6 +360,53 @@ export const WidgetsPage = GObject.registerClass({
 				title: _("Click command"),
 				bind: "weather-click-command",
 				sensitiveBind: "weather-enabled",
+			}),
+		])
+
+		// volume mixer
+		Group({
+			parent: this,
+			title: _("Volume mixer Widget"),
+			headerSuffix: SwitchRow({
+				settings,
+				bind: "volume-mixer-enabled"
+			}),
+			description: _("Turn on to make the volume mixer widget visible on the Quick Settings panel"),
+		},[
+			DropdownRow({
+				settings,
+				title: _("Label text"),
+				subtitle: _("Choose label above slider text source"),
+				items: [
+					{ name: _("Both"), value: "both" },
+					{ name: _("Title"), value: "title" },
+					{ name: _("Description"), value: "description" },
+					{ name: _("None"), value: "none" },
+				],
+				bind: "volume-mixer-label-text",
+			}),
+			AdjustmentRow({
+				settings,
+				max: 255,
+				title: _("Label opacity"),
+				subtitle: _("Adjust label opacity.\nSet this to 255 to make opaque, and 0 to make transparent"),
+				bind: "volume-mixer-label-opacity",
+			}),
+			AdjustmentRow({
+				settings,
+				title: _("Max height"),
+				subtitle: _("Set maximum height of the Volume mixer widget, default is %d. Set this to 0 to disable max height")
+					.format(settings.get_default_value("volume-mixer-max-height").unpack()),
+				max: 2048,
+				bind: "volume-mixer-max-height",
+				sensitiveBind: "volume-mixer-enabled",
+			}),
+			SwitchRow({
+				settings,
+				title: _("Show scrollbar"),
+				subtitle: _("Show scrollbar on mixer list"),
+				bind: "volume-mixer-show-scrollbar",
+				sensitiveBind: "volume-mixer-enabled",
 			}),
 		])
 	}

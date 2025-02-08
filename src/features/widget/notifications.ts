@@ -77,11 +77,6 @@ GObject.registerClass(ClearButton)
 // #endregion ClearButton
 
 // #region Header
-namespace Header {   
-	export type Options = Partial<{
-		createClearButton: boolean
-	} & St.BoxLayout.ConstructorProps>
-}
 class Header extends St.BoxLayout {
 	_headerLabel: St.Label
 	_clearButton: ClearButton
@@ -112,6 +107,11 @@ class Header extends St.BoxLayout {
 	}
 }
 GObject.registerClass(Header)
+namespace Header {   
+	export type Options = Partial<{
+		createClearButton: boolean
+	} & St.BoxLayout.ConstructorProps>
+}
 // #endregion Header
 
 // #region NativeControl
@@ -210,14 +210,6 @@ GObject.registerClass(NotificationList)
 // #endregion NotificationList
 
 // #region NotificationWidget
-namespace NotificationWidget {
-	export type Options = Partial<{
-		useNativeControls: boolean
-		autoHide: boolean
-		scrollbar: boolean
-		fadeOffset: number
-	} & St.BoxLayout.ConstructorProps>
-}
 class NotificationWidget extends St.BoxLayout {
 	_options: NotificationWidget.Options
 	_header: Header
@@ -236,7 +228,7 @@ class NotificationWidget extends St.BoxLayout {
 
 		this._options = options
 
-		this._createNotificationScroll()
+		this._createScroll()
 		this._createHeaderArea()
 		this._createPlaceholder()
 		this._createNativeControl()
@@ -250,27 +242,39 @@ class NotificationWidget extends St.BoxLayout {
 		this._list.connect("notify::can-clear", this._syncClear.bind(this))
 		this._syncEmpty()
 		this._syncClear()
+		this._updateMaxHeight()
+		this._updateStyleClass()
 	}
 
-	_createNotificationScroll() {
+	// Box style
+	_updateMaxHeight() {
+		const maxHeight = this._options.maxHeight
+		this.style = maxHeight
+			? `max-height:${maxHeight}px;`
+			: ""
+	}
+	_updateStyleClass() {
+		const options = this._options
+		let style = "QSTWEAKS-notifications"
+		if (options.useNativeControls) style += " QSTWEAKS-use-native-controls"
+		if (options.compact) style += " QSTWEAKS-message-compact"
+		if (options.removeShadow) style += " QSTWEAKS-message-remove-shadow"
+		this.style_class = style
+	}
+
+	// Scroll view
+	_createScroll() {
 		this._sections = new St.BoxLayout({
 			vertical: true,
 			x_expand: true,
 			y_expand: true,
 		})
 		this._scroll = new St.ScrollView({
-			style_class: this._options.fadeOffset ? "vfade" : "",
 			x_expand: true,
 			y_expand: true,
 			child: this._sections,
-			vscrollbar_policy:
-				this._options.scrollbar
-				? St.PolicyType.AUTOMATIC
-				: St.PolicyType.NEVER
 		})
-		if (this._options.fadeOffset) {
-			this._scroll.style = `-st-vfade-offset: ${this._options.fadeOffset}px;`
-		}
+		this._updateScrollStyle()
 		this._scroll.connect(
 			"notify::vscrollbar-visible",
 			this._syncScrollbarPadding.bind(this)
@@ -279,6 +283,27 @@ class NotificationWidget extends St.BoxLayout {
 		this._list = new NotificationList()
 		this._sections.add_child(this._list)
 	}
+	_updateScrollStyle() {
+		this._scroll.style_class =
+			this._options.fadeOffset
+			? "vfade"
+			: ""
+		this._scroll.vscrollbar_policy =
+			this._options.scrollbar
+			? St.PolicyType.AUTOMATIC
+			: St.PolicyType.NEVER
+		this._scroll.style =
+			this._options.fadeOffset
+			? `-st-vfade-offset: ${this._options.fadeOffset}px;`
+			: ""
+	}
+	_syncScrollbarPadding() {
+		this._sections.style_class =
+			this._scroll.vscrollbar_visible
+			? "message-list-sections QSTWEAKS-has-scrollbar"
+			: "message-list-sections"
+	}
+
 	_createHeaderArea() {
 		const header = this._header = new Header({ createClearButton: !this._options.useNativeControls })
 
@@ -324,15 +349,19 @@ class NotificationWidget extends St.BoxLayout {
 			this._placeholder.visible = empty
 		}
 	}
-	_syncScrollbarPadding() {
-		this._sections.style_class =
-			this._scroll.vscrollbar_visible
-			? "message-list-sections QSTWEAKS-has-scrollbar"
-			: "message-list-sections"
-	}
 }
 GObject.registerClass(NotificationWidget)
-export { NotificationWidget }
+namespace NotificationWidget {
+	export type Options = Partial<{
+		useNativeControls: boolean
+		autoHide: boolean
+		scrollbar: boolean
+		fadeOffset: number
+		maxHeight: number
+		compact: boolean
+		removeShadow: boolean
+	} & St.BoxLayout.ConstructorProps>
+}
 // #endregion NotificationWidget
 
 // #region NotificationsWidgetFeature
@@ -361,25 +390,21 @@ export class NotificationsWidgetFeature extends FeatureBase {
 	// #endregion settings
 
 	notificationWidget: NotificationWidget
-	updateMaxHeight() {
-		this.notificationWidget.style = `max-height:${this.maxHeight}px;`
-	}
-	updateStyleClass() {
-		let style = "QSTWEAKS-notifications"
-		if (this.useNativeControls) style += " QSTWEAKS-use-native-controls"
-		if (this.compact) style += " QSTWEAKS-message-compact"
-		if (this.removeShadow) style += " QSTWEAKS-message-remove-shadow"
-		this.notificationWidget.style_class = style
-	}
-
 	override reload(key: string): void {
 		switch (key) {
 			case "notifications-max-height":
-				this.updateMaxHeight()
+				if (!this.enabled) return
+				this.notificationWidget!._updateMaxHeight()
 				break
 			case "notifications-compact":
 			case "notifications-remove-shadow":
-				this.updateStyleClass()
+				if (!this.enabled) return
+				this.notificationWidget!._updateStyleClass()
+				break
+			case "notifications-fade-offset":
+			case "notifications-show-scrollbar":
+				if (!this.enabled) return
+				this.notificationWidget!._updateScrollStyle()
 				break
 			default:
 				super.reload()
@@ -391,17 +416,8 @@ export class NotificationsWidgetFeature extends FeatureBase {
 
 		// Create Notification Box
 		this.maid.destroyJob(
-			this.notificationWidget = new NotificationWidget({
-				autoHide: this.autoHide,
-				useNativeControls: this.useNativeControls,
-				scrollbar: this.scrollbar,
-				fadeOffset: this.fadeOffset,
-			})
+			this.notificationWidget = new NotificationWidget(this)
 		)
-
-		// Update styles
-		this.updateStyleClass()
-		this.updateMaxHeight()
 
 		// add
 		// FIXME: with layout manager

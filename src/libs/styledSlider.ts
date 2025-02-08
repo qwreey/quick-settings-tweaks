@@ -59,5 +59,14 @@ export namespace StyledSlider {
 				activeBackgroundColor: loader.loadRgba(prefix+"-active-background-color"),
 			}
 		}
+		export function isStyleKey(prefix: string, key: string): boolean {
+			if (key == prefix + "-style") return true
+			if (key == prefix + "-handle-color") return true
+			if (key == prefix + "-handle-radius") return true
+			if (key == prefix + "-background-color") return true
+			if (key == prefix + "-height") return true
+			if (key == prefix + "-active-background-color") return true
+			return false
+		}
 	}
 }

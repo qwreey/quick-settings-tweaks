@@ -126,8 +126,12 @@ export class WeatherWidgetFeature extends FeatureBase {
 
 	override reload(key: string): void {
 		switch (key) {
+			case "weather-compact":
 			case "weather-remove-shadow":
+				if (!this.enabled) return
 				this.updateStyleClass()
+				break
+			case "weather-click-command":
 				break
 			default:
 				super.reload()
@@ -137,9 +141,7 @@ export class WeatherWidgetFeature extends FeatureBase {
 	override onLoad(): void {
 		if (!this.enabled) return
 		this.maid.destroyJob(
-			this.weatherWidget = new WeatherWidget({
-				clickCommand: this.clickCommand,
-			})
+			this.weatherWidget = new WeatherWidget(this)
 		)
 		this.updateStyleClass()
 

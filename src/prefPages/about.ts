@@ -150,10 +150,10 @@ export const AboutPage = GObject.registerClass({
 				title: _("Log level"),
 				bind: "debug-log-level",
 				items: [
-					{ name: "none", value: -1 },
-					{ name: "error", value: 0 },
-					{ name: "info", value: 1 },
-					{ name: "debug", value: 2 },
+					{ name: _("none"), value: -1 },
+					{ name: _("error"), value: 0 },
+					{ name: _("info"), value: 1 },
+					{ name: _("debug"), value: 2 },
 				],
 			}),
 		])

@@ -2,6 +2,19 @@
 <!-- Note: -->
 <!-- This file is visible in prefs so if -->
 <!-- it is erased it may cause an error -->
+# 2.1-pre6
+<!-- @BuildNumber: 6 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-02-08 13:49:00 KST" -->
+<!-- @Git: "7acb2a4" -->
+
+- Reduce reloading cost
+
+## New Features
+
+- Media widget
+  - Option for adjust smooth scroll speed
+
 # 2.1-pre5
 <!-- @BuildNumber: 5 -->
 <!-- @Includes: [] -->
