@@ -2,6 +2,17 @@
 <!-- Note: -->
 <!-- This file is visible in prefs so if -->
 <!-- it is erased it may cause an error -->
+# 2.1-pre7
+<!-- @BuildNumber: 7 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-02-09 03:57:00 KST" -->
+<!-- @Git: "30ad4df" -->
+
+## Fix
+
+- Fix broken scrollbar padding
+- Fix mixer description only shows 'Playback Stream'
+
 # 2.1-pre6
 <!-- @BuildNumber: 6 -->
 <!-- @Includes: [] -->

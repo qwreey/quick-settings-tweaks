@@ -108,18 +108,18 @@ class StreamSlider extends QuickSlider {
 			this.emit('stream-updated')
 		}
 
-		// Show icon
-		if (this._options.showIcon) {
-			this.icon_name = stream.get_icon_name()
-		}
-
 		this._sync()
 	}
-
-	// Sync visibility
 	_sync() {
+		// Sync visibility
 		this.visible = this._stream != null
 		this.menuEnabled = false // this._deviceItems.size > 1
+
+		// Show icon
+		if (this._options.showIcon) {
+			// this.icon_name = stream.get_icon_name()
+			this.gicon = this._stream.get_gicon()
+		}
 	}
 
 	// Volume feedback sfx
@@ -270,7 +270,7 @@ class VolumeMixerItem extends St.BoxLayout {
 			style_class: "QSTWEAKS-label",
 			opacity: this._options.labelOpacity,
 		})
-		this.updateLabel()
+		this._updateLabel()
 		this.add_child(label)
 
 		// Create Slider
@@ -278,7 +278,7 @@ class VolumeMixerItem extends St.BoxLayout {
 		this.add_child(slider)
 	}
 
-	updateLabel() {
+	_updateLabel() {
 		const label = this._label
 		const name = this._stream.get_name()
 		const description = this._stream.get_description()
@@ -306,6 +306,11 @@ class VolumeMixerItem extends St.BoxLayout {
 				label.hide()
 				break
 		}
+	}
+
+	_sync() {
+		this._updateLabel()
+		this._slider._sync()
 	}
 }
 GObject.registerClass(VolumeMixerItem)
@@ -341,6 +346,7 @@ class VolumeMixerList extends St.BoxLayout {
 		this._control = Volume.getMixerControl()
 		this._maid.connectJob(this._control, "stream-added", this._streamAdded.bind(this))
 		this._maid.connectJob(this._control, "stream-removed", this._streamRemoved.bind(this))
+		this._maid.connectJob(this._control, "stream-changed", this._streamChanged.bind(this))
 		for (const stream of this._control.get_streams()) {
 			this._streamAdded(this._control, stream.get_id())
 		}
@@ -405,6 +411,14 @@ class VolumeMixerList extends St.BoxLayout {
 
 		this.add_child(slider)
 		this._sync()
+	}
+
+	_streamChanged(control: Gvc.MixerControl, id: number) {
+		const slider = this._sliders.get(id)
+		const stream = control.lookup_stream_id(id)
+		if (!slider) return
+		// filter check here, or create new here
+		slider._sync()
 	}
 
 	_streamRemoved(_control: Gvc.MixerControl, id: number) {

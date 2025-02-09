@@ -161,7 +161,7 @@ export abstract class Scroll extends St.Bin {
 	vfunc_scroll_event(event: Clutter.Event): boolean {
 		if (
 			event.get_scroll_direction() != Clutter.ScrollDirection.SMOOTH
-			// || event.get_scroll_source() != Clutter.ScrollSource.WHEEL
+			|| event.get_scroll_source() == Clutter.ScrollSource.WHEEL
 		) return Clutter.EVENT_PROPAGATE
 		const finish = event.get_scroll_finish_flags()
 		const [dx, dy] = event.get_scroll_delta()

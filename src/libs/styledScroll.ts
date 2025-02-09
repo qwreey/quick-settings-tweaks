@@ -16,7 +16,7 @@ export namespace StyledScroll {
 			: St.PolicyType.EXTERNAL
 		scroll.style =
 			options.fadeOffset
-			? `-st-vfade-offset: ${options.fadeOffset}px;`
+			? `-st-vfade-offset:${options.fadeOffset}px;`
 			: ""
 	}
 }
