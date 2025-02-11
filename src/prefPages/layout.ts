@@ -106,7 +106,7 @@ function OrderGroup<T extends OrderInfo.Base>({
 					Group({
 						title: _("Toggle editor"),
 						header_suffix: saveButton,
-					}, )
+					}, editLayout.layout)
 				]
 			}
 		})
@@ -247,7 +247,7 @@ function OrderGroup<T extends OrderInfo.Base>({
 		orderItems(list)
 		delayedSetScrollToFocus(page, true)
 	}
-	const settingsConnection = settings.connect("changed::toggles-layout-order", update.bind(null))
+	const settingsConnection = settings.connect(`changed::${bind}`, update.bind(null))
 	update()
 	page.connect("destroy", ()=>settings.disconnect(settingsConnection))
 
