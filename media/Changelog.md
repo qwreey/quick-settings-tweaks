@@ -12,6 +12,8 @@
 
 - Fix broken scrollbar padding
 - Fix mixer description only shows 'Playback Stream'
+- Fix smooth scroll cause scrolling issue on media widget
+- Fix mixer widget menu section initial state
 
 # 2.1-pre6
 <!-- @BuildNumber: 6 -->

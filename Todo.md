@@ -1,7 +1,6 @@
 Scroll view layout for media widget
 Touch enchantments:
     Notifications: slide to discard
-    Media: slide to change page
 
 Readme file
 

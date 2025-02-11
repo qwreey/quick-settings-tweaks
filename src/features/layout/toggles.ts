@@ -1,4 +1,7 @@
-import { QuickToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import {
+	QuickToggle,
+	QuickMenuToggle,
+} from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
 import { QuickSettingsToggleTracker } from "../../libs/quickSettingsTracker.js"
 import Maid from "../../libs/maid.js"
@@ -20,8 +23,9 @@ export class TogglesOrderFeature extends FeatureBase {
 	}
 	// #endregion settings
 
-	onToggleCreated(maid: Maid, toggle: QuickToggle): void {
-		const rule: QuickToggleOrderItem|undefined = this.order.find(item => QuickToggleOrderItem.toggleMatch(item, toggle))
+	onToggleCreated(maid: Maid, toggle: QuickToggle|QuickMenuToggle): void {
+		const rule: QuickToggleOrderItem|undefined =
+			this.order.find(item => QuickToggleOrderItem.toggleMatch(item, toggle))
 		if (!rule) return
 		if (rule.hide) maid.hideJob(toggle)
 	}
@@ -29,7 +33,11 @@ export class TogglesOrderFeature extends FeatureBase {
 		const children = Global.QuickSettingsGrid.get_children()
 		const head: QuickToggle[] = []
 		const middle: QuickToggle[] = children.filter(child =>
-			child instanceof QuickToggle && child.constructor.name != "BackgroundAppsToggle"
+			(
+				(child instanceof QuickMenuToggle)
+				|| (child instanceof QuickToggle)
+			)
+			&& child.constructor.name != "BackgroundAppsToggle"
 		) as any
 		const tail: QuickToggle[] = []
 		let overNonOrdered: boolean = false

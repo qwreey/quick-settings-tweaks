@@ -583,6 +583,7 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 		// Create section
 		this.mixerMenuSection = new PopupMenu.PopupMenuSection()
 		this.mixerMenuSection.box.add_child(this.volumeMixerWidget)
+		this.mixerMenuSection.box.hide()
 		this.maid.destroyJob(this.mixerMenuSection)
 
 		// Create button

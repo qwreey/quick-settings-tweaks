@@ -1,4 +1,7 @@
-import { type QuickToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import {
+    type QuickToggle,
+    type QuickMenuToggle,
+} from "resource:///org/gnome/shell/ui/quickSettings.js"
 
 export interface QuickToggleOrderItem {
     constructorName?: string
@@ -24,7 +27,7 @@ export namespace QuickToggleOrderItem {
             && a.friendlyName == b.friendlyName
         )
     }
-    export function toggleMatch(item: QuickToggleOrderItem, toggle: QuickToggle): boolean {
+    export function toggleMatch(item: QuickToggleOrderItem, toggle: QuickToggle|QuickMenuToggle): boolean {
         if (item.constructorName && toggle.constructor.name != item.constructorName)
             return false
         if (item.cachedTitleRegex && toggle.title.match(item.cachedTitleRegex) == null)

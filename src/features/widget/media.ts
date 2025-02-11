@@ -5,6 +5,7 @@ import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import GdkPixbuf from "gi://GdkPixbuf"
 import * as Mpris from "resource:///org/gnome/shell/ui/mpris.js"
+import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
 // @ts-expect-error
 import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
@@ -17,7 +18,6 @@ import { Drag, Scroll } from "../../libs/drag.js"
 import { RoundClipEffect } from "../../libs/roundClip.js"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { StyledSlider } from "../../libs/styledSlider.js"
-
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
 	_positionLabel: St.Label
@@ -410,7 +410,7 @@ namespace MediaItem {
 // #endregion MediaItem
 
 // #region MediaList
-class MediaList extends Mpris.MediaSection {
+class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSection) as typeof Mpris.MediaSection) {
 	_options: MediaList.Options
 	_messages: MediaItem[]
 	_current?: MediaItem
