@@ -8,6 +8,13 @@
 <!-- @Date: "2025-02-09 03:57:00 KST" -->
 <!-- @Git: "30ad4df" -->
 
+## New Features
+
+- Quick toggle layout
+  - Add GType name filter option
+  - Now you can hide 'Unsorted items'
+  - Improve prefs dialog
+
 ## Fix
 
 - Default value optimization for menu animation
@@ -16,6 +23,8 @@
 - Fix smooth scroll cause scrolling issue on media widget
 - Fix mixer widget menu section initial state
 - Fix #170, some quick toggles are not hiding
+- Fix 'has been already disposed' error on weather widget
+- Fix '(intermediate value).Extension.features is null' error when extension unloading
 
 # 2.1-pre6
 <!-- @BuildNumber: 6 -->

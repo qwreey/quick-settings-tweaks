@@ -135,55 +135,7 @@
     </key>
     <!-- #endregion Weather Widget -->
 
-    <!-- #region Date Menu -->
-    <key name="datemenu-hide-left-box" type="b">
-      <default>true</default>
-    </key>
-    <key name="datemenu-hide-right-box" type="b">
-      <default>false</default>
-    </key>
-    <key name="datemenu-hide-menu-button" type="b">
-      <default>false</default>
-    </key>
-    <key name="datemenu-disable-menu" type="b">
-      <default>false</default>
-    </key>
-    <key name="datemenu-hide-notifications" type="b">
-      <default>true</default>
-    </key>
-    <key name="datemenu-hide-media-control" type="b">
-      <default>true</default>
-    </key>
-    <!-- #endregion Date Menu -->
-
-    <!-- #region System Items -->
-    <key name="system-items-layout-enabled" type="b">
-      <default>false</default>
-    </key>
-    <key name="system-items-layout-hide" type="b">
-      <default>false</default>
-    </key>
-    <key name="system-items-layout-hide-screenshot" type="b">
-      <default>false</default>
-    </key>
-    <key name="system-items-layout-hide-settings" type="b">
-      <default>false</default>
-    </key>
-    <key name="system-items-layout-hide-lock" type="b">
-      <default>false</default>
-    </key>
-    <key name="system-items-layout-hide-shutdown" type="b">
-      <default>false</default>
-    </key>
-    <key name="system-items-layout-hide-battery" type="b">
-      <default>false</default>
-    </key>
-    <key name="system-items-layout-order" type="as">
-      <default>['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']</default>
-    </key>
-    <!-- #endregion System Items -->
-
-    <!-- #region Volume Mixer -->
+    <!-- #region Volume Mixer Widget -->
     <key name="volume-mixer-enabled" type="b">
       <default>true</default>
     </key>
@@ -272,12 +224,6 @@
       </choices>
       <default>'block'</default>
     </key>
-    <!-- <key name="volume-mixer-check-description" type="b">
-      <default>true</default>
-    </key> -->
-    <!-- <key name="volume-mixer-filtered-apps" type="as">
-      <default>[]</default>
-    </key> -->
     <key name="volume-mixer-show-icon" type="b">
       <default>true</default>
     </key>
@@ -287,7 +233,52 @@
     <key name="volume-mixer-menu-enabled" type="b">
       <default>true</default>
     </key>
-    <!-- #endregion Volume Mixer -->
+    <!-- #endregion Volume Mixer Widget -->
+
+    <!-- #region Date Menu Layout -->
+    <key name="datemenu-hide-left-box" type="b">
+      <default>true</default>
+    </key>
+    <key name="datemenu-hide-right-box" type="b">
+      <default>false</default>
+    </key>
+    <key name="datemenu-disable-menu" type="b">
+      <default>false</default>
+    </key>
+    <key name="datemenu-hide-notifications" type="b">
+      <default>true</default>
+    </key>
+    <key name="datemenu-hide-media-control" type="b">
+      <default>true</default>
+    </key>
+    <!-- #endregion Date Menu Layout -->
+
+    <!-- #region System Items Layout -->
+    <key name="system-items-layout-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-layout-hide" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-layout-hide-screenshot" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-layout-hide-settings" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-layout-hide-lock" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-layout-hide-shutdown" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-layout-hide-battery" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-items-layout-order" type="as">
+      <default>['battery', 'laptopSpacer', 'screenshot', 'settings', 'desktopSpacer', 'lock', 'shutdown']</default>
+    </key>
+    <!-- #endregion System Items Layout -->
 
     <!-- #region Input Output -->
     <key name="output-show-selected" type="b">

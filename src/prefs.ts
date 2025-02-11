@@ -9,7 +9,7 @@ import { TogglesPage } from "./prefPages/toggles.js"
 import { LayoutPage } from "./prefPages/layout.js"
 import { AboutPage } from "./prefPages/about.js"
 import { MenuPage } from "./prefPages/menu.js"
-import { ContributorsRow, LicenseRow } from "./libs/prefComponents.js"
+import { ContributorsRow, LicenseRow } from "./libs/prefs/components.js"
 import Config from "./config.js"
 
 var pageList = [

@@ -3,8 +3,9 @@ import {
 	QuickToggle,
 	type QuickSettingsMenu,
 } from "resource:///org/gnome/shell/ui/quickSettings.js"
-import { Global } from "../global.js"
-import Maid from "./maid.js"
+import { type PopupMenuBase, PopupSeparatorMenuItem } from "resource:///org/gnome/shell/ui/popupMenu.js"
+import { Global } from "../../global.js"
+import Maid from "../shared/maid.js"
 
 export abstract class QuickSettingsTrackerBase<T> {
 	appliedChild: Map<T, Maid>
@@ -83,5 +84,14 @@ export class QuickSettingsToggleTracker extends QuickSettingsTrackerBase<QuickTo
 		if (this.onToggleCreated) this.onToggleCreated(toggleMaid, child)
 		this.appliedChild.set(child, toggleMaid)
 		return true
+	}
+}
+
+export function updateMenuSeparators(menu: PopupMenuBase) {
+	for (const item of (menu as any)._getMenuItems()) {
+		if (!(item instanceof PopupSeparatorMenuItem)) {
+			continue
+		}
+		(menu as any)._updateSeparatorVisibility(item)
 	}
 }

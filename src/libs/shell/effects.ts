@@ -1,22 +1,11 @@
 import GObject from 'gi://GObject'
 import Shell from 'gi://Shell'
 import Clutter from 'gi://Clutter'
-import { Global } from '../global.js'
+import { Global } from '../../global.js'
 
-// Location of uniform variants of rounded corners effect
-class Uniforms {
-	bounds = 0
-	clip_radius = 0
-	exponent = 0
-	inner_bounds = 0
-	inner_clip_radius = 0
-	pixel_step = 0
-	border_width = 0
-	border_color = 0
-}
-
+// #region RoundClipEffect
 export class RoundClipEffect extends Shell.GLSLEffect {
-	static uniforms: Uniforms|null = null
+	static uniforms: RoundClipEffect.Uniforms|null = null
 
 	vfunc_build_pipeline (): void {
 		const [declarations, code] = Global.GetShader("media/rounded_corners.frag")
@@ -36,7 +25,7 @@ export class RoundClipEffect extends Shell.GLSLEffect {
 		super.vfunc_paint_target(node, ctx)
 	}
 
-	update_uniforms (
+	updateUniforms (
 		scale_factor: number,
 		corners_cfg: {
 			padding?: { left: number, right: number, top: number, bottom: number },
@@ -90,14 +79,7 @@ export class RoundClipEffect extends Shell.GLSLEffect {
 		}
 		inner_radius *= radius / outer_radius
 
-		let location = RoundClipEffect.uniforms
-		if (!location) {
-			location = new Uniforms()
-			for (const key in location) {
-				location[key] = this.get_uniform_location(key)
-			}
-			RoundClipEffect.uniforms = location
-		}
+		const location = this.getLocation()
 		this.set_uniform_float(location.bounds, 4, bounds)
 		this.set_uniform_float(location.inner_bounds, 4, inner_bounds)
 		this.set_uniform_float(location.pixel_step, 2, pixel_step)
@@ -108,5 +90,31 @@ export class RoundClipEffect extends Shell.GLSLEffect {
 		this.set_uniform_float(location.inner_clip_radius, 1, [inner_radius])
 		this.queue_repaint()
 	}
+
+	getLocation(): RoundClipEffect.Uniforms {
+		let location = RoundClipEffect.uniforms
+		if (!location) {
+			location = new RoundClipEffect.Uniforms()
+			for (const key in location) {
+				location[key] = this.get_uniform_location(key)
+			}
+			RoundClipEffect.uniforms = location
+		}
+		return location
+	}
 }
 GObject.registerClass(RoundClipEffect)
+export namespace RoundClipEffect {
+	// Uniform location cache
+	export class Uniforms {
+		bounds = 0
+		clip_radius = 0
+		exponent = 0
+		inner_bounds = 0
+		inner_clip_radius = 0
+		pixel_step = 0
+		border_width = 0
+		border_color = 0
+	}
+}
+// #endregion RoundClipEffect

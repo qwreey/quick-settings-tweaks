@@ -1,6 +1,5 @@
 import St from "gi://St"
 import { Global } from "../global.js"
-import { QuickMenuToggle } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import Maid from "./maid.js"
 
 export class WidgetManager {

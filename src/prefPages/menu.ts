@@ -11,7 +11,7 @@ import {
 	Group,
 	DialogRow,
 	fixPageScrollIssue,
-} from "../libs/prefComponents.js"
+} from "../libs/prefs/components.js"
 
 // #region AdvancedAnimationStyleGroup
 function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGroup {

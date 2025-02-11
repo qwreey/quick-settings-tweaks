@@ -4,7 +4,7 @@ import {
     type QuickMenuToggle,
 } from "resource:///org/gnome/shell/ui/quickSettings.js"
 
-export interface QuickToggleOrderItem {
+export interface ToggleOrderItem {
     gtypeName?: string
     constructorName?: string
     titleRegex?: string
@@ -14,8 +14,8 @@ export interface QuickToggleOrderItem {
     cachedTitleRegex?: RegExp
     hide?: boolean
 }
-export namespace QuickToggleOrderItem {
-    export function match(a: QuickToggleOrderItem, b: QuickToggleOrderItem) {
+export namespace ToggleOrderItem {
+    export function match(a: ToggleOrderItem, b: ToggleOrderItem) {
         if (
             a.isSystem != b.isSystem
             || a.nonOrdered != b.nonOrdered
@@ -30,7 +30,7 @@ export namespace QuickToggleOrderItem {
             && a.gtypeName == b.gtypeName
         )
     }
-    export function toggleMatch(item: QuickToggleOrderItem, toggle: QuickToggle|QuickMenuToggle): boolean {
+    export function toggleMatch(item: ToggleOrderItem, toggle: QuickToggle|QuickMenuToggle): boolean {
         if (item.gtypeName && GObject.type_name_from_instance(toggle as any) != item.gtypeName)
             return false
         if (item.constructorName && toggle.constructor.name != item.constructorName)
@@ -40,14 +40,14 @@ export namespace QuickToggleOrderItem {
         if (!item.gtypeName && !item.constructorName && !item.cachedTitleRegex) return false
         return true
     }
-    export const Default: QuickToggleOrderItem = {
+    export const Default: ToggleOrderItem = {
         hide: false,
         titleRegex: "",
         constructorName: "",
         friendlyName: "",
         gtypeName: "",
     }
-    export function create(friendlyName: string): QuickToggleOrderItem {
+    export function create(friendlyName: string): ToggleOrderItem {
         return {
             ...Default,
             friendlyName,

@@ -2,7 +2,7 @@ import Clutter from "gi://Clutter"
 import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import St from "gi://St"
-import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { Global } from "../../global.js"
 
 // #region Header
@@ -81,8 +81,11 @@ class WeatherWidget extends St.BoxLayout {
 		const syncTitleVisible = ()=>{
 			(this._item as any)._titleLabel.visible = !(this._item as any)._weatherClient.hasLocation
 		}
-		syncTitleVisible();
-		(this._item as any)._weatherClient.connect("changed", syncTitleVisible);
+		syncTitleVisible()
+		const changedConnection = (this._item as any)._weatherClient.connect("changed", syncTitleVisible)
+		this.connect("destroy", ()=>{
+			(this._item as any)._weatherClient.disconnect(changedConnection)
+		});
 
 		// Sync Location
 		(this._item as any)._titleLocation.bind_property("text",

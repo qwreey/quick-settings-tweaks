@@ -1,8 +1,9 @@
-function logger(str: string|(()=>string)) {
+// Prefixed, leveled logger
+function Logger(str: string|(()=>string)) {
 	if (str instanceof Function) str = str()
-	if (logger.show_info) console.log(logger.LOG_INFO_HEADER + str)
+	if (Logger.show_info) console.log(Logger.LOG_INFO_HEADER + str)
 }
-namespace logger {
+namespace Logger {
 	export let LOG_HEADER_PREFIX: string = ""
 	export let LOG_INFO_HEADER: string = ""
 	export let LOG_DEBUG_HEADER: string = ""
@@ -46,4 +47,4 @@ namespace logger {
 		currentLevel = level
 	}
 }
-export { logger }
+export { Logger as logger }

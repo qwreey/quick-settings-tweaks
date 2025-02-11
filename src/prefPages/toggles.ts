@@ -9,7 +9,7 @@ import {
 	Group,
 	DropdownRow,
 	fixPageScrollIssue,
-} from "../libs/prefComponents.js"
+} from "../libs/prefs/components.js"
 
 export const TogglesPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+"TogglesPage",

@@ -4,20 +4,22 @@ import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import GdkPixbuf from "gi://GdkPixbuf"
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import * as Mpris from "resource:///org/gnome/shell/ui/mpris.js"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
 // @ts-expect-error
 import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
 import { Global } from "../../global.js"
-import { FeatureBase, type SettingLoader, type Rgb } from "../../libs/feature.js"
-import { logger } from "../../libs/logger.js"
-import { getImageMeanColor } from "../../libs/imageMeanColor.js"
-import { lerp } from "../../libs/utility.js"
-import { Drag, Scroll } from "../../libs/drag.js"
-import { RoundClipEffect } from "../../libs/roundClip.js"
-import * as Main from "resource:///org/gnome/shell/ui/main.js"
-import { StyledSlider } from "../../libs/styledSlider.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
+import { Rgb } from "../../libs/shared/colors.js"
+import { logger } from "../../libs/shared/logger.js"
+import { getImageMeanColor } from "../../libs/shared/imageUtils.js"
+import { lerp } from "../../libs/shared/jsUtils.js"
+import { Drag, Scroll } from "../../libs/shell/gesture.js"
+import { RoundClipEffect } from "../../libs/shell/effects.js"
+import { StyledSlider } from "../../libs/shell/styler.js"
+
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
 	_positionLabel: St.Label
@@ -484,7 +486,7 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 		if (!this.get_stage()) return
 		const themeNode = this.mapped ? this._current?.get_theme_node() : null
 		const padding = this._options.roundClipPadding
-		this._effect.update_uniforms(1, {
+		this._effect.updateUniforms(1, {
 			border_radius: themeNode?.get_border_radius(null) ?? 16,
 			smoothing: 0,
 		},{

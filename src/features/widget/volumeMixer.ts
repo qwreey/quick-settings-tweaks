@@ -11,12 +11,12 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { QuickSlider } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
-import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
-import Maid from "../../libs/maid.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
+import Maid from "../../libs/shared/maid.js"
 import { Global } from "../../global.js"
-import { StyledScroll } from "../../libs/styledScroll.js"
-import { logger } from "../../libs/logger.js"
-import { updateMenuSeparators } from "../../libs/utility.js"
+import { StyledScroll } from "../../libs/shell/styler.js"
+import { logger } from "../../libs/shared/logger.js"
+import { updateMenuSeparators } from "../../libs/shell/quickSettingsUtils.js"
 
 const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
 
@@ -517,7 +517,7 @@ class VolumeMixerWidget extends St.BoxLayout {
 		this._sections.add_child(this._list)
 	}
 	_updateScrollStyle() {
-		StyledScroll.updateStyle(this._scroll, this._options)
+		StyledScroll.updateStyle(this._scroll, this._options.scrollStyle)
 	}
 	_syncScrollbarPadding() {
 		this._sections.style_class =
@@ -543,8 +543,7 @@ GObject.registerClass(VolumeMixerWidget)
 namespace VolumeMixerWidget {
 	export type Options = {
 		maxHeight: number,
-		scrollbar: boolean,
-		fadeOffset: number,
+		scrollStyle: StyledScroll.Options
 	}
 		& Partial<St.BoxLayout.ConstructorProps>
 		& VolumeMixerList.Options
@@ -555,24 +554,22 @@ namespace VolumeMixerWidget {
 export class VolumeMixerWidgetFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
-	scrollbar: boolean
-	fadeOffset: number
 	showIcon: boolean
 	maxHeight: number
 	labelText: VolumeMixerItem.Options["labelText"]
 	labelOpacity: number
 	menuEnabled: boolean
 	menuIcon: string
+	scrollStyle: StyledScroll.Options
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("volume-mixer-enabled")
-		this.scrollbar = loader.loadBoolean("volume-mixer-show-scrollbar")
-		this.fadeOffset = loader.loadInt("volume-mixer-fade-offset")
 		this.showIcon = loader.loadBoolean("volume-mixer-show-icon")
 		this.maxHeight = loader.loadInt("volume-mixer-max-height")
 		this.labelText = loader.loadString("volume-mixer-label-text") as VolumeMixerItem.Options["labelText"]
 		this.labelOpacity = loader.loadInt("volume-mixer-label-opacity")
 		this.menuEnabled = loader.loadBoolean("volume-mixer-menu-enabled")
 		this.menuIcon = loader.loadString("volume-mixer-menu-icon")
+		this.scrollStyle = StyledScroll.Options.fromLoader(loader, "volume-mixer")
 	}
 	// #endregion settings
 

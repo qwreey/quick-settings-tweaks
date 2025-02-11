@@ -1,10 +1,10 @@
 import Clutter from "gi://Clutter"
 import { QuickSlider, type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { Global } from "../global.js"
-import { FeatureBase, type SettingLoader } from "../libs/feature.js"
-import { QuickSettingsMenuTracker } from "../libs/quickSettingsTracker.js"
-import Maid from "../libs/maid.js"
-import { AdvAni } from "../libs/utility.js"
+import { FeatureBase, type SettingLoader } from "../libs/shell/feature.js"
+import { QuickSettingsMenuTracker } from "../libs/shell/quickSettingsUtils.js"
+import Maid from "../libs/shared/maid.js"
+import * as AdvAni from "../libs/shell/advani.js"
 
 export class OverlayMenu extends FeatureBase {
 	// #region settings

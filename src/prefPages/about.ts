@@ -15,7 +15,7 @@ import {
 	fixPageScrollIssue,
 	SwitchRow,
 	DropdownRow,
-} from "../libs/prefComponents.js"
+} from "../libs/prefs/components.js"
 
 export const AboutPage = GObject.registerClass({
 	GTypeName: Config.baseGTypeName+"AboutPage",

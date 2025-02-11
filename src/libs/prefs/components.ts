@@ -6,7 +6,7 @@ import Gdk from "gi://Gdk"
 import GLib from "gi://GLib"
 import GObject from "gi://GObject"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
-import { deepEqual } from "./deepEqual.js"
+import { deepEqual } from "../shared/jsUtils.js"
 
 function addChildren(target: any, funcName: string, children?: any[]) {
 	if (!children) return

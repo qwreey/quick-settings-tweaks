@@ -1,16 +1,7 @@
-import Maid from "./maid.js";
-import { Global } from "../global.js";
-import { logger } from "./logger.js";
-
-type Rgba = [number, number, number, number]
-namespace Rgba {
-	export function formatCss(color: Rgba): string {
-		const [r,g,b,a] = color
-		return `rgba(${r},${g},${b},${a/1000})`
-	}
-}
-export { Rgba }
-export type Rgb = [number, number, number]
+import Maid from "../shared/maid.js";
+import { Global } from "../../global.js";
+import { logger } from "../shared/logger.js";
+import { type Rgb, type Rgba } from "../shared/colors.js"
 
 export class SettingLoader {
 	records: Set<string>

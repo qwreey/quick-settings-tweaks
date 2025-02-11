@@ -1,6 +1,7 @@
 import St from "gi://St"
 import Clutter from "gi://Clutter"
 
+// #region Drag
 export abstract class Drag extends St.Bin {
 	_dragging: boolean
 	_dragIsClick: boolean
@@ -149,7 +150,9 @@ export namespace Drag {
 		coords: Coords,
 	}
 }
+// #endregion Drag
 
+// #region Scroll
 export abstract class Scroll extends St.Bin {
 	_scrollSumY: number
 	_scrollSumX: number
@@ -224,3 +227,4 @@ export namespace Scroll {
 		finish?: Clutter.ScrollFinishFlags
 	}
 }
+// #endregion Scroll

@@ -1,4 +1,6 @@
-import { Rgba, type SettingLoader } from "./feature.js"
+import St from "gi://St"
+import { type SettingLoader } from "./feature.js"
+import { Rgba } from "../shared/colors.js"
 
 export namespace StyledSlider {
 	export interface Options {
@@ -67,6 +69,35 @@ export namespace StyledSlider {
 			if (key == prefix + "-height") return true
 			if (key == prefix + "-active-background-color") return true
 			return false
+		}
+	}
+}
+
+export namespace StyledScroll {
+	export interface Options {
+		showScrollbar: boolean
+		fadeOffset: number
+	}
+	export function updateStyle(scroll: St.ScrollView, options: Options) {
+		scroll.style_class =
+			options.fadeOffset
+			? "vfade"
+			: ""
+		scroll.vscrollbar_policy =
+			options.showScrollbar
+			? St.PolicyType.AUTOMATIC
+			: St.PolicyType.EXTERNAL
+		scroll.style =
+			options.fadeOffset
+			? `-st-vfade-offset:${options.fadeOffset}px;`
+			: ""
+	}
+	export namespace Options {
+		export function fromLoader(loader: SettingLoader, prefix: string): Options {
+			return {
+				showScrollbar: loader.loadBoolean(prefix+"-show-scrollbar"),
+				fadeOffset: loader.loadInt(prefix+"-fade-offset"),
+			}
 		}
 	}
 }

@@ -1,3 +1,9 @@
+// Lerp number
+export function lerp(init: number, target: number, ratio: number) {
+	return (target - init) * ratio + init
+}
+
+// Perform a deep equal operation between too any js value
 export function deepEqual(a: any, b: any): boolean {
     if (a == b) return true
     const typeA = typeof a

@@ -1,8 +1,8 @@
-import { Global } from "../global.js"
-import { FeatureBase, type SettingLoader } from "../libs/feature.js"
-import { logger } from "../libs/logger.js"
+import { Global } from "../../global.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
+import { logger } from "../../libs/shared/logger.js"
 
-export class DateMenuFeature extends FeatureBase {
+export class DateMenuLayoutFeature extends FeatureBase {
 	// #region settings
 	hideMediaControl: boolean
 	hideNotifications: boolean
@@ -22,7 +22,7 @@ export class DateMenuFeature extends FeatureBase {
 		const originalStyle = (Global.DateMenuBox as any).style_class
 		const style = [originalStyle]
 
-		// remove media control from date menu
+		// Hide media control from date menu
 		if (this.hideMediaControl) {
 			this.maid.hideJob(
 				Global.MediaSection,
@@ -30,7 +30,7 @@ export class DateMenuFeature extends FeatureBase {
 			)
 		}
 
-		// remove notifications from date menu
+		// Hide notifications from date menu
 		if (this.hideNotifications) {
 			this.maid.hideJob(
 				Global.NotificationSection,
@@ -38,6 +38,7 @@ export class DateMenuFeature extends FeatureBase {
 			)
 		}
 
+		// Hide left box from date menu
 		if (this.hideLeftBox) {
 			const leftBox = Global.DateMenuHolder.get_first_child()
 			if (leftBox) {
@@ -51,6 +52,7 @@ export class DateMenuFeature extends FeatureBase {
 			style.push("QSTWEAKS-hide-left-box")
 		}
 
+		// Hide right box from date menu
 		if (this.hideRightBox) {
 			const rightBox = Global.DateMenuHolder.get_last_child()
 			if (rightBox) {
@@ -64,13 +66,15 @@ export class DateMenuFeature extends FeatureBase {
 			style.push("QSTWEAKS-hide-right-box")
 		}
 
+		// Disable menu open action
 		if (this.disableMenu) {
 			Global.DateMenu.reactive = false
 			this.maid.functionJob(()=>{
-			Global.DateMenu.reactive = true
+				Global.DateMenu.reactive = true
 			})
 		}
 
+		// Modify style class
 		if (style.length != 1) {
 			(Global.DateMenuBox as any).style_class = style.join(" ")
 			this.maid.functionJob(()=>{

@@ -6,7 +6,7 @@ import Gtk from "gi://Gtk"
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js"
 import Config from "../config.js"
 import type QstExtensionPreferences from "../prefs.js"
-import { QuickToggleOrderItem } from "../libs/quickToggleOrderItem.js"
+import { ToggleOrderItem } from "../libs/types/toggleOrderItem.js"
 import {
 	SwitchRow,
 	UpDownButton,
@@ -20,7 +20,7 @@ import {
 	fixPageScrollIssue,
 	Dialog,
 	Button,
-} from "../libs/prefComponents.js"
+} from "../libs/prefs/components.js"
 
 // #region ToggleOrderGroup
 function ToggleOrderGroup(
@@ -30,11 +30,19 @@ function ToggleOrderGroup(
 ): Adw.PreferencesGroup {
 	const systemToggleNames = ToggleOrderGroup.getSystemToggleNames()
 	const systemToggleIcons = ToggleOrderGroup.getSystemToggleIcons()
-	const itemRows = new Map<QuickToggleOrderItem, Adw.ActionRow>()
+	const itemRows = new Map<ToggleOrderItem, Adw.ActionRow>()
 
 	const header = new Gtk.Box({})
+	const group = Group({
+		title: _("Ordering and Hiding"),
+		headerSuffix: header
+	})
+
+	// Reset button
 	const resetButton = ResetButton({ settings, bind: "toggles-layout-order", marginBottom: 0, marginTop: 0 })
 	resetButton.insert_after(header, null)
+
+	// Add button
 	const addButton = Button({
 		marginBottom: 0,
 		marginTop: 0,
@@ -49,34 +57,32 @@ function ToggleOrderGroup(
 				if (list.findIndex(item => item.friendlyName == name) == -1) break
 				nth += 1
 			}
-			const item = QuickToggleOrderItem.create(name)
+			const item = ToggleOrderItem.create(name)
 			list.push(item)
 			ToggleOrderGroup.setOrderListToSettings(settings, list)
 			editItem(item)
 		}
 	})
 	addButton.insert_after(header, resetButton)
-	const group = Group({
-		title: _("Ordering and Hiding"),
-		headerSuffix: header
-	})
-	const saveEditItem = (item: QuickToggleOrderItem, edited: QuickToggleOrderItem): string|null => {
+
+	// Edit functions
+	const saveEditItem = (item: ToggleOrderItem, edited: ToggleOrderItem): string|null => {
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
+		const index = list.findIndex(targetItem => ToggleOrderItem.match(targetItem, item))
 		if (index == -1) {
 			return _("The toggle item not found")
 		}
-		if (QuickToggleOrderItem.match(item, edited)) {
+		if (ToggleOrderItem.match(item, edited)) {
 			return _("No changes")
 		}
-		if (list.some(listItem => QuickToggleOrderItem.match(listItem, edited))) {
+		if (list.some(listItem => ToggleOrderItem.match(listItem, edited))) {
 			return _("The same item already exists")
 		}
 		list[index] = edited
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
 		return null
 	}
-	const editItem = (item: QuickToggleOrderItem)=>{
+	const editItem = (item: ToggleOrderItem)=>{
 		Dialog.StackedPage({
 			dialog,
 			title: _("Properties of %s").format(item.friendlyName),
@@ -146,42 +152,49 @@ function ToggleOrderGroup(
 			}
 		})
 	}
-	const deleteItem = (item: QuickToggleOrderItem)=>{
+	const deleteItem = (item: ToggleOrderItem)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
+		const index = list.findIndex(targetItem => ToggleOrderItem.match(targetItem, item))
 		if (index == -1) return
 		list.splice(index, 1)
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
 	}
-	const setItemHide = (item: QuickToggleOrderItem, hide: boolean)=>{
+	const setItemHide = (item: ToggleOrderItem, hide: boolean)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		list.find(targetItem => QuickToggleOrderItem.match(targetItem, item)).hide = hide
+		list.find(targetItem => ToggleOrderItem.match(targetItem, item)).hide = hide
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
 		dialog.add_toast(new Adw.Toast({
 			title: _("This option requires full gnome-shell reloading"),
 			timeout: 12,
 		}))
 	}
-	const moveItem = (item: QuickToggleOrderItem, direction: UpDownButton.Direction)=>{
+	const moveItem = (item: ToggleOrderItem, direction: number)=>{
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		const index = list.findIndex(targetItem => QuickToggleOrderItem.match(targetItem, item))
-		const targetIndex = index + (direction == UpDownButton.Direction.Up ? -1 : 1)
-		if (targetIndex < 0 || targetIndex >= list.length) return
-		const row = list[index]
-		list[index] = list[targetIndex]
-		list[targetIndex] = row
+		const index = list.findIndex(targetItem => ToggleOrderItem.match(targetItem, item))
+
+		if (!direction) return
+		const sign = Math.sign(direction)
+		let targetIndex = index
+		for (let count = Math.abs(direction); count > 0; count--) {
+			if (targetIndex <= 0 && sign == -1) break
+			if ((targetIndex >= (list.length - 1)) && sign == 1) break
+			targetIndex += sign
+		}
+		if (index == targetIndex) return
+		list.splice(index, 1)
+		list.splice(targetIndex, 0, item)
 		ToggleOrderGroup.setOrderListToSettings(settings, list)
 	}
-	const removeOrphanItems = (list: QuickToggleOrderItem[])=>{
+	const removeOrphanItems = (list: ToggleOrderItem[])=>{
 		for (const [targetItem, row] of itemRows.entries()) {
-			if (list.some(item => QuickToggleOrderItem.match(item, targetItem))) continue
+			if (list.some(item => ToggleOrderItem.match(item, targetItem))) continue
 			itemRows.delete(targetItem)
 			group.remove(row)
 		}
 	}
-	const pushItems = (list: QuickToggleOrderItem[])=>{
+	const pushItems = (list: ToggleOrderItem[])=>{
 		for (const newItem of list) {
-			if ([...itemRows.entries()].find(([item]) => QuickToggleOrderItem.match(item, newItem)))
+			if ([...itemRows.entries()].find(([item]) => ToggleOrderItem.match(item, newItem)))
 				continue
 			const row = Row({
 				settings,
@@ -203,7 +216,7 @@ function ToggleOrderGroup(
 			const updown = UpDownButton({
 				settings,
 				sensitiveBind: "toggles-layout-enabled",
-				action: (direction)=>moveItem(newItem, direction)
+				action: (direction)=>moveItem(newItem, direction == UpDownButton.Direction.Up ? -1 : 1)
 			})
 			row.add_prefix(updown)
 
@@ -241,12 +254,12 @@ function ToggleOrderGroup(
 			group.add(row)
 		}
 	}
-	const orderChildren = (list: QuickToggleOrderItem[])=>{
+	const orderChildren = (list: ToggleOrderItem[])=>{
 		const rows = [...itemRows.entries()]
 		const orderedRows = list
 			.map(
 				targetItem=>rows.find(
-					([item]) => QuickToggleOrderItem.match(targetItem, item)
+					([item]) => ToggleOrderItem.match(targetItem, item)
 				)[1]
 			)
 		for (const row of orderedRows) {
@@ -255,6 +268,7 @@ function ToggleOrderGroup(
 		}
 	}
 
+	// Sync to settings
 	const update = ()=>{
 		setScrollToFocus(page, false)
 		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
@@ -307,10 +321,10 @@ namespace ToggleOrderGroup {
 			[ "UnsafeQuickToggle", "channel-secure-symbolic" ],
 		])
 	}
-	export function getOrderListFromSettings(settings: Gio.Settings): QuickToggleOrderItem[] {
-		return settings.get_value("toggles-layout-order").recursiveUnpack() as QuickToggleOrderItem[]
+	export function getOrderListFromSettings(settings: Gio.Settings): ToggleOrderItem[] {
+		return settings.get_value("toggles-layout-order").recursiveUnpack() as ToggleOrderItem[]
 	}
-	export function setOrderListToSettings(settings: Gio.Settings, list: QuickToggleOrderItem[]): void {
+	export function setOrderListToSettings(settings: Gio.Settings, list: ToggleOrderItem[]): void {
 		const mappedList = list.map(item => {
 			const out = {}
 			for (const [key, value] of Object.entries(item)) {
@@ -331,7 +345,7 @@ namespace ToggleOrderGroup {
 		settings.set_value("toggles-layout-order", new GLib.Variant("aa{sv}", mappedList))
 	}
 	export function getDisplayName(
-		item: QuickToggleOrderItem,
+		item: ToggleOrderItem,
 		systemToggleNames: Map<string, string>
 	): string {
 		if (item.nonOrdered) return _("Unsorted items")
@@ -339,14 +353,14 @@ namespace ToggleOrderGroup {
 		return item.friendlyName || item.constructorName || item.titleRegex || "Unknown"
 	}
 	export function getSubtitle(
-		item: QuickToggleOrderItem,
+		item: ToggleOrderItem,
 	): string {
 		if (item.nonOrdered) return ""
 		if (item.isSystem) return item.constructorName
 		if (item.friendlyName) return item.constructorName || item.titleRegex || "Unknown"
 		return ""
 	}
-	export function noHideOption(item: QuickToggleOrderItem): boolean {
+	export function noHideOption(item: ToggleOrderItem): boolean {
 		if (!item.isSystem) return false
 		if (item.constructorName == "DndQuickToggle" || item.constructorName == "UnsafeQuickToggle")
 			return true

@@ -2,8 +2,8 @@ import { Global } from "./global.js"
 import St from "gi://St"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
-import { FeatureBase, type SettingLoader } from "./libs/feature.js"
-import { logger } from "./libs/logger.js"
+import { FeatureBase, type SettingLoader } from "./libs/shell/feature.js"
+import { logger } from "./libs/shared/logger.js"
 export class SoundTweakFeature extends FeatureBase {
 	// #region settings
 	outputShowSelected: boolean

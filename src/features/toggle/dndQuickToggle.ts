@@ -2,7 +2,7 @@ import St from "gi://St"
 import Gio from "gi://Gio"
 import GObject from "gi://GObject"
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
-import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { Global } from "../../global.js"
 
 // #region DndQuickToggle

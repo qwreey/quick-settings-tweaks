@@ -14,7 +14,7 @@ import {
 	EntryRow,
 	Dialog,
 	PaddingDialog,
-} from "../libs/prefComponents.js"
+} from "../libs/prefs/components.js"
 
 function SliderCustomizes({
 	settings,

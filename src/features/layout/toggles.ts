@@ -2,17 +2,17 @@ import {
 	QuickToggle,
 	QuickMenuToggle,
 } from "resource:///org/gnome/shell/ui/quickSettings.js"
-import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
-import { QuickSettingsToggleTracker } from "../../libs/quickSettingsTracker.js"
-import Maid from "../../libs/maid.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
+import { QuickSettingsToggleTracker } from "../../libs/shell/quickSettingsUtils.js"
+import Maid from "../../libs/shared/maid.js"
 import { Global } from "../../global.js"
-import { QuickToggleOrderItem } from "../../libs/quickToggleOrderItem.js"
+import { ToggleOrderItem } from "../../libs/types/toggleOrderItem.js"
 
-export class TogglesOrderFeature extends FeatureBase {
+export class TogglesLayoutFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
-	order: QuickToggleOrderItem[]
-	unordered: QuickToggleOrderItem
+	order: ToggleOrderItem[]
+	unordered: ToggleOrderItem
 	loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("toggles-layout-enabled")
 		this.order = loader.loadValue("toggles-layout-order")
@@ -28,8 +28,8 @@ export class TogglesOrderFeature extends FeatureBase {
 	// #endregion settings
 
 	onToggleCreated(maid: Maid, toggle: QuickToggle|QuickMenuToggle): void {
-		const rule: QuickToggleOrderItem =
-			this.order.find(item => QuickToggleOrderItem.toggleMatch(item, toggle))
+		const rule: ToggleOrderItem =
+			this.order.find(item => ToggleOrderItem.toggleMatch(item, toggle))
 			?? this.unordered
 		log(rule)
 		if (rule.hide) maid.hideJob(toggle)
@@ -51,7 +51,7 @@ export class TogglesOrderFeature extends FeatureBase {
 				overNonOrdered = true
 				continue
 			}
-			const middleIndex = middle.findIndex(toggle => QuickToggleOrderItem.toggleMatch(item, toggle))
+			const middleIndex = middle.findIndex(toggle => ToggleOrderItem.toggleMatch(item, toggle))
 			if (middleIndex == -1) continue
 			const toggle = middle[middleIndex]
 			middle.splice(middleIndex, 1);

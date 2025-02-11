@@ -1,14 +1,14 @@
 import Clutter from "gi://Clutter"
 import { Global } from "../../global.js"
-import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import {
 	type PowerToggle,
 } from "resource:///org/gnome/shell/ui/status/system.js"
 import { type QuickSettingsItem } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { type SystemItem } from "resource:///org/gnome/shell/ui/status/system.js"
-import { logger } from "../../libs/logger.js"
+import { logger } from "../../libs/shared/logger.js"
 
-export class SystemItemsOrderFeature extends FeatureBase {
+export class SystemItemsLayoutFeature extends FeatureBase {
 	// #region settings
 	hideScreenshot: boolean
 	hideSettings: boolean

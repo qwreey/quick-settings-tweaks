@@ -4,9 +4,9 @@ import Clutter from "gi://Clutter"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
 import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
-import { FeatureBase, type SettingLoader } from "../../libs/feature.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { Global } from "../../global.js"
-import { StyledScroll } from "../../libs/styledScroll.js"
+import { StyledScroll } from "../../libs/shell/styler.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {
@@ -285,7 +285,7 @@ class NotificationWidget extends St.BoxLayout {
 		this._sections.add_child(this._list)
 	}
 	_updateScrollStyle() {
-		StyledScroll.updateStyle(this._scroll, this._options)
+		StyledScroll.updateStyle(this._scroll, this._options.scrollStyle)
 	}
 	_syncScrollbarPadding() {
 		this._sections.style_class =
@@ -345,11 +345,10 @@ namespace NotificationWidget {
 	export type Options = {
 		useNativeControls: boolean
 		autoHide: boolean
-		scrollbar: boolean
-		fadeOffset: number
 		maxHeight: number
 		compact: boolean
 		removeShadow: boolean
+		scrollStyle: StyledScroll.Options
 	}
 		& Partial<St.BoxLayout.ConstructorProps>
 }
@@ -364,9 +363,8 @@ export class NotificationsWidgetFeature extends FeatureBase {
 	maxHeight: number
 	compact: boolean
 	removeShadow: boolean
-	scrollbar: boolean
-	fadeOffset: number
 	header: boolean
+	scrollStyle: StyledScroll.Options
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("notifications-enabled")
 		this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
@@ -374,9 +372,8 @@ export class NotificationsWidgetFeature extends FeatureBase {
 		this.maxHeight = loader.loadInt("notifications-max-height")
 		this.compact = loader.loadBoolean("notifications-compact")
 		this.removeShadow = loader.loadBoolean("notifications-remove-shadow")
-		this.scrollbar = loader.loadBoolean("notifications-show-scrollbar")
-		this.fadeOffset = loader.loadInt("notifications-fade-offset")
 		this.header = loader.loadBoolean("notifications-show-header")
+		this.scrollStyle = StyledScroll.Options.fromLoader(loader, "notifications")
 	}
 	// #endregion settings
 
