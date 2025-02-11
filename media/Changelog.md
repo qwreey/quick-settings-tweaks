@@ -5,21 +5,21 @@
 # 2.1-pre7
 <!-- @BuildNumber: 7 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-02-12 1:33:00 KST" -->
-<!-- @Git: "5a9764f" -->
+<!-- @Date: "2025-02-12 4:56:00 KST" -->
+<!-- @Git: "c78a876" -->
 
 {{HEADER}}
 
 - Improve ordering editors
 - Update locale files
-- Migration for gnome 48
+- Migration for gnome 48 (partially)
+  - Media widget: Lowered GNOME Shell API dependency for backwards compatibility
 
 ## New Features
 
 - Quick toggle layout
   - Add GType name filter option
   - Now you can hide 'Unsorted items'
-  - Improve prefs dialog
 - System indicators layout
   - Add ordering and hiding option
   - Add accent screen sharing &amp; recording indicators option
