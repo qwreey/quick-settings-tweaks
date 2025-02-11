@@ -25,6 +25,9 @@
     // Avoid Scrollbar
     .message-list-sections {
         margin: 0px;
+        &#{$p}-has-scrollbar {
+            padding: 0px 5px 0px 0px;
+        }
     }
 
     // Header
