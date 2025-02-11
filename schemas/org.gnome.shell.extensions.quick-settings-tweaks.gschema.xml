@@ -375,13 +375,13 @@
       <default>false</default>
     </key>
     <key name="menu-animation-background-blur-radius" type="i">
-      <default>8</default>
+      <default>4</default>
     </key>
     <key name="menu-animation-background-opacity" type="i">
       <default>220</default>
     </key>
     <key name="menu-animation-grid-content-opacity" type="i">
-      <default>190</default>
+      <default>100</default>
     </key>
     <key name="menu-animation-background-scale-x" type="i">
       <default>920</default>

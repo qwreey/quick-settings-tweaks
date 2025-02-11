@@ -10,10 +10,12 @@
 
 ## Fix
 
+- Default value optimization for menu animation
 - Fix broken scrollbar padding
 - Fix mixer description only shows 'Playback Stream'
 - Fix smooth scroll cause scrolling issue on media widget
 - Fix mixer widget menu section initial state
+- Fix #170, some quick toggles are not hiding
 
 # 2.1-pre6
 <!-- @BuildNumber: 6 -->
