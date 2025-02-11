@@ -127,7 +127,6 @@ function build() {
 		--extra-source=media\
 		--extra-source=global.js\
 		--extra-source=config.js\
-
 		--out-dir=target\
 		--force
 	[ "$?" != "0" ] && echo "Failed to pack extension" && return 1
