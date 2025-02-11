@@ -5,7 +5,7 @@ import {
 	type QuickSettingsMenu,
 } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { type PopupMenuBase, PopupSeparatorMenuItem } from "resource:///org/gnome/shell/ui/popupMenu.js"
-import { Global } from "../../global.js"
+import Global from "../../global.js"
 import Maid from "../shared/maid.js"
 
 export abstract class ChildrenTrackerBase<T> {

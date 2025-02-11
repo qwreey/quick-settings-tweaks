@@ -7,16 +7,16 @@ import Gvc from "gi://Gvc"
 import GObject from "gi://GObject"
 import Gio from "gi://Gio"
 import GLib from "gi://GLib"
-import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { QuickSlider } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js"
 import * as Volume from "resource:///org/gnome/shell/ui/status/volume.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
-import Maid from "../../libs/shared/maid.js"
-import { Global } from "../../global.js"
 import { StyledScroll } from "../../libs/shell/styler.js"
-import { logger } from "../../libs/shared/logger.js"
 import { updateMenuSeparators } from "../../libs/shell/quickSettingsUtils.js"
+import Maid from "../../libs/shared/maid.js"
+import Global from "../../global.js"
+import Logger from "../../libs/shared/logger.js"
 
 const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
 
@@ -647,7 +647,7 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 		if (this.menuEnabled) {
 			Global.GetStreamSlider().then(
 				({ OutputStreamSlider }) => this.createMenu(OutputStreamSlider)
-			).catch(logger.error)
+			).catch(Logger.error)
 		} else {
 			(Global.QuickSettingsMenu as any).addItem(this.volumeMixerWidget, 2)
 			Global.GetStreamSlider().then(({ InputStreamSlider }) => {

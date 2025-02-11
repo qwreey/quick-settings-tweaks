@@ -4,9 +4,9 @@ import {
 } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { QuickSettingsToggleTracker } from "../../libs/shell/quickSettingsUtils.js"
-import Maid from "../../libs/shared/maid.js"
-import { Global } from "../../global.js"
 import { ToggleOrderItem } from "../../libs/types/toggleOrderItem.js"
+import Maid from "../../libs/shared/maid.js"
+import Global from "../../global.js"
 
 export class TogglesLayoutFeature extends FeatureBase {
 	// #region settings

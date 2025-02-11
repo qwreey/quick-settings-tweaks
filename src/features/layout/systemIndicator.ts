@@ -2,10 +2,10 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { SystemIndicatorTracker } from "../../libs/shell/quickSettingsUtils.js"
-import Maid from "../../libs/shared/maid.js"
-import { Global } from "../../global.js"
 import { SystemIndicatorOrderItem } from "../../libs/types/systemIndicatorOrderItem.js"
 import { StyleClass } from "../../libs/shared/styleClass.js"
+import Maid from "../../libs/shared/maid.js"
+import Global from "../../global.js"
 
 export class SystemIndicatorLayoutFeature extends FeatureBase {
 	// #region settings

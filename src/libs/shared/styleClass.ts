@@ -1,3 +1,5 @@
+// Re-layout & painting only once
+// We use StyleClass instead of add_style_class_name in this extension
 export class StyleClass {
 	classArray: string[]
 	modified: boolean

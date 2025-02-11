@@ -1,8 +1,8 @@
 import GObject from "gi://GObject"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
-import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
+import Global from "../../global.js"
 
 // #region UnsafeQuickToggle
 class UnsafeQuickToggle extends QuickToggle {

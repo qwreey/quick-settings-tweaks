@@ -1,12 +1,10 @@
 import Clutter from "gi://Clutter"
-import { Global } from "../../global.js"
-import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
-import {
-	type PowerToggle,
-} from "resource:///org/gnome/shell/ui/status/system.js"
+import { type PowerToggle } from "resource:///org/gnome/shell/ui/status/system.js"
 import { type QuickSettingsItem } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { type SystemItem } from "resource:///org/gnome/shell/ui/status/system.js"
-import { logger } from "../../libs/shared/logger.js"
+import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
+import Logger from "../../libs/shared/logger.js"
+import Global from "../../global.js"
 
 export class SystemItemsLayoutFeature extends FeatureBase {
 	// #region settings
@@ -105,7 +103,7 @@ export class SystemItemsLayoutFeature extends FeatureBase {
 				if (index) items.box.child.set_child_above_sibling(current, last)
 				last = current
 			}
-		}).catch(logger.error)
+		}).catch(Logger.error)
 	}
 	onUnload(): void {}
 }

@@ -1,10 +1,10 @@
 import Clutter from "gi://Clutter"
 import Shell from "gi://Shell"
 import { type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
-import { Global } from "../global.js"
 import { FeatureBase, type SettingLoader } from "../libs/shell/feature.js"
-import Maid from "../libs/shared/maid.js"
 import { QuickSettingsMenuTracker } from "../libs/shell/quickSettingsUtils.js"
+import Global from "../global.js"
+import Maid from "../libs/shared/maid.js"
 
 export class MenuAnimation extends FeatureBase {
 	// #region settings

@@ -132,6 +132,30 @@ export const WidgetsPage = GObject.registerClass({
 			}),
 			SwitchRow({
 				settings,
+				bind: "media-contorl-show-next-button",
+				title: _("Show next button"),
+				subtitle: _("Add next contorl button next to description"),
+				experimental: true,
+				sensitiveBind: "media-enabled",
+			}),
+			SwitchRow({
+				settings,
+				bind: "media-contorl-show-prev-button",
+				title: _("Show previous button"),
+				subtitle: _("Add previous contorl button next to description"),
+				experimental: true,
+				sensitiveBind: "media-enabled",
+			}),
+			SwitchRow({
+				settings,
+				bind: "media-contorl-show-pause-button",
+				title: _("Show pause button"),
+				subtitle: _("Add pause contorl button next to description"),
+				experimental: true,
+				sensitiveBind: "media-enabled",
+			}),
+			SwitchRow({
+				settings,
 				bind: "media-progress-enabled",
 				title: _("Show progress bar"),
 				subtitle: _("Add progress bar under description"),
@@ -433,7 +457,7 @@ export const WidgetsPage = GObject.registerClass({
 				sensitiveBind: "volume-mixer-enabled",
 				onDetailed: ()=>{Dialog({
 					window,
-					title: _("Media Widget"),
+					title: _("Volume mixer Widget"),
 					childrenRequest: ()=>[Group({
 						title: _("Attach to output slider"),
 						description: _("Attach volume mixer menu button to output slider. Use if you prefer compact layout"),

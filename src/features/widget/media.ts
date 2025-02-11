@@ -4,21 +4,359 @@ import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import GdkPixbuf from "gi://GdkPixbuf"
+import Shell from "gi://Shell"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
-import * as Mpris from "resource:///org/gnome/shell/ui/mpris.js"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
+import { loadInterfaceXML } from "resource:///org/gnome/shell/misc/fileUtils.js"
 import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
 // @ts-expect-error
 import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
-import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { Rgb } from "../../libs/shared/colors.js"
-import { logger } from "../../libs/shared/logger.js"
 import { getImageMeanColor } from "../../libs/shared/imageUtils.js"
 import { lerp } from "../../libs/shared/jsUtils.js"
 import { Drag, Scroll } from "../../libs/shell/gesture.js"
 import { RoundClipEffect } from "../../libs/shell/effects.js"
 import { StyledSlider } from "../../libs/shell/styler.js"
+import Global from "../../global.js"
+import Logger from "../../libs/shared/logger.js"
+
+// #region Player
+class Player extends GObject.Object {
+	private _playerProxy: Gio.DBusProxy
+	private _propertiesProxy: Gio.DBusProxy
+	private _mprisProxy: Gio.DBusProxy
+
+	source: MessageList.Source
+	canPlay: boolean
+
+	constructor(busName: string) {
+		super()
+		this._busName = busName
+		this.source = new MessageList.Source()
+
+		// Create properties proxy for Position
+		const propertiesIface = Global.GetDbusInterface("media/dbus.xml","org.freedesktop.DBus.Properties")
+		const propertiesPromise = Gio.DBusProxy.new(
+			Gio.DBus.session,
+			Gio.DBusProxyFlags.NONE,
+			propertiesIface,
+			busName,
+			"/org/mpris/MediaPlayer2",
+			propertiesIface.name,
+			null,
+		)
+		// @ts-expect-error
+		.then((proxy: Gio.DbusProxy) => this._propertiesProxy = proxy)
+		.catch(Logger.error)
+
+		// Create proxy for seeking
+		const playerIface = Global.GetDbusInterface("media/dbus.xml","org.mpris.MediaPlayer2.Player")
+		const playerPromise = Gio.DBusProxy.new(
+			Gio.DBus.session,
+			Gio.DBusProxyFlags.NONE,
+			playerIface,
+			busName,
+			"/org/mpris/MediaPlayer2",
+			playerIface.name,
+			null,
+		)
+		// @ts-expect-error
+		.then((proxy: Gio.DbusProxy) => this._playerProxy = proxy)
+		.catch(Logger.error)
+
+		// Create proxy for mpris
+		const mprisIface = Global.GetDbusInterface("media/dbus.xml","org.mpris.MediaPlayer2")
+		const mprisPromise = Gio.DBusProxy.new(
+			Gio.DBus.session,
+			Gio.DBusProxyFlags.NONE,
+			mprisIface,
+			busName,
+			"/org/mpris/MediaPlayer2",
+			mprisIface.name,
+			null,
+		)
+		// @ts-expect-error
+		.then((proxy: Gio.DbusProxy) => this._mprisProxy = proxy)
+		.catch(Logger.error)
+
+		// Waitting for proxies
+		Promise.all([
+			playerPromise,
+			propertiesPromise,
+			mprisPromise
+		])
+		.then(this._ready.bind(this))
+		.catch(Logger.error)
+	}
+
+	// Position
+	get position(): Promise<number|null> {
+		return this._propertiesProxy.GetAsync(
+			"org.mpris.MediaPlayer2.Player",
+			"Position"
+		).then((result: any) => {
+			return result[0].get_int64()
+		}).catch(()=> null)
+	}
+	set position(value: number) {
+		this._playerProxy.SetPositionAsync(
+			this._trackId,
+			Math.min(this._length, Math.max(1, value))
+		).catch(Logger.error)
+	}
+
+	// States
+	private _busName: string
+	private _trackId: string
+	private _canSeek: boolean
+	private _length: number | null
+	private _trackArtists: string[] | null
+	private _trackTitle: string | null
+	private _trackCoverUrl: string | null
+	private _app: Shell.App | null
+	get busName(): string {
+		return this._busName
+	}
+	get trackId(): string {
+		return this._trackId
+	}
+	get canSeek(): boolean {
+		return this._canSeek
+	}
+	get length(): number|null {
+		return this._length
+	}
+	get trackArtists(): string[] | null {
+		return this._trackArtists
+	}
+	get trackTitle(): string | null {
+		return this._trackTitle
+	}
+	get trackCoverUrl(): string | null {
+		return this._trackCoverUrl
+	}
+	get app(): Shell.App | null {
+		return this._app
+	}
+	get canGoNext(): boolean | null {
+		return this._playerProxy.CanGoNext
+	}
+	get canGoPrevious(): boolean | null {
+		return this._playerProxy.CanGoPrevious
+	}
+	get status(): string | null {
+		return this._playerProxy.PlaybackStatus
+	}
+
+	// Update states
+	_parseMetadata(metadata: any) {
+		if (!metadata) {
+			this._trackId = null
+			this._length = null
+			this._trackArtists = null
+			this._trackCoverUrl = null
+			return
+		}
+
+		this._trackId = metadata["mpris:trackid"]?.get_string()[0] ?? null
+		this._length = metadata["mpris:length"]?.get_int64() ?? null
+
+		// Get trak artists
+		this._trackArtists = metadata['xesam:artist']?.deepUnpack()
+		if (typeof this._trackArtists === "string") {
+			this._trackArtists = [this._trackArtists]
+		} else if (
+			!Array.isArray(this._trackArtists)
+			|| !this._trackArtists.every(artist => typeof artist === 'string')
+		) {
+			this._trackArtists = [(_)('Unknown artist')]
+		}
+
+		// Get track title
+		this._trackTitle = metadata['xesam:title']?.deepUnpack()
+		if (typeof this._trackTitle !== 'string') {
+			this._trackTitle = _('Unknown title')
+		}
+
+		// Get track cover
+		this._trackCoverUrl = metadata['mpris:artUrl']?.deepUnpack()
+		if (typeof this._trackCoverUrl !== 'string') {
+			this._trackCoverUrl = null
+		}
+
+		// Update desktop entry
+		if (this._mprisProxy.DesktopEntry) {
+			this._app = Shell.AppSystem.get_default().lookup_app(
+				this._mprisProxy.DesktopEntry + ".desktop"
+			)
+		} else {
+			this._app = null
+		}
+
+		// Update source
+		this.source.set({
+			title: this._app?.get_name() ?? this._mprisProxy.Identity,
+			icon: this._app?.get_icon() ?? null,
+		})
+
+		// Update can play
+		this.canPlay = !!this._playerProxy.CanPlay
+	}
+	_update() {
+		try {
+			const metadata = (this as any)._playerProxy.Metadata
+			this._parseMetadata(metadata)
+		} catch {}
+		this.emit("changed")
+	}
+
+	// Methods
+	previous() {
+		this._playerProxy.PreviousAsync()
+			.catch(Logger.error)
+	}
+	next() {
+		this._playerProxy.NextAsync()
+			.catch(Logger.error)
+	}
+	playPause() {
+		this._playerProxy.PlayPauseAsync()
+			.catch(Logger.error)
+	}
+	raise() {
+		if (this._app) {
+			this._app.activate()
+		} else if (this._mprisProxy.CanRaise) {
+			this._mprisProxy.RaiseAsync().catch(logError)
+		}
+	}
+	isPlaying(): boolean {
+		return this.status === "Playing"
+	}
+
+	// Proxy handling
+	_ready() {
+		// Connect mpris proxy
+		this._mprisProxy.connectObject('notify::g-name-owner',
+			() => {
+				if (!this._mprisProxy.g_name_owner) this._close()
+			},
+			this
+		)
+		if (!this._mprisProxy.g_name_owner) this._close()
+
+		// Connect player proxy
+		this._playerProxy.connectObject(
+			'g-properties-changed',
+			this._update.bind(this),
+			this
+		)
+
+		this._update()
+	}
+	_close() {
+		this._mprisProxy.disconnectObject(this)
+		this._playerProxy.disconnectObject(this)
+		this._mprisProxy = null
+		this._playerProxy = null
+		this._propertiesProxy = null
+	}
+}
+GObject.registerClass({
+	Properties: {
+		"can-play": GObject.ParamSpec.boolean(
+			"can-play", null, null,
+			GObject.ParamFlags.READWRITE,
+			false
+		),
+	},
+	Signals: {
+		"changed": {},
+	},
+}, Player)
+// #endregion Player
+
+// #region Source
+// Copied from gnome source; for backward compatibility
+// https://github.com/GNOME/gnome-shell/blob/ef4af961bfb39911ae09cb95e1e57d374c70fe1d/js/ui/mpris.js#L189
+const DBusIface = loadInterfaceXML("org.freedesktop.DBus")
+const DBusProxy = Gio.DBusProxy.makeProxyWrapper(DBusIface)
+const MPRIS_PLAYER_PREFIX = "org.mpris.MediaPlayer2."
+class Source extends GObject.Object {
+	_players: Map<string, Player>
+	_proxy: Gio.DBusProxy
+
+	_init() {
+		super._init()
+		this._players = new Map()
+	}
+
+	start() {
+		// @ts-expect-error
+		this._proxy = new DBusProxy(Gio.DBus.session,
+			'org.freedesktop.DBus',
+			'/org/freedesktop/DBus',
+			this._onProxyReady.bind(this)
+		)
+	}
+
+	get players(): Player[] {
+		return [...this._players.values()]
+	}
+
+	private _addPlayer(busName: string) {
+		if (this._players.has(busName)) return
+		const player = new Player(busName)
+		this._players.set(busName, player)
+
+		// @ts-expect-error
+		player.connectObject("notify::can-play",
+			() => {
+				this.emit(
+					player.canPlay ? "player-added" : "player-removed",
+					player
+				)
+			},
+			this
+		)
+	}
+
+	private async _onProxyReady() {
+		const [names]: [string[]] = await this._proxy.ListNamesAsync()
+		for (const name of names) {
+			if (!name.startsWith(MPRIS_PLAYER_PREFIX)) continue
+			this._addPlayer(name)
+		}
+
+		// @ts-expect-error
+		this._proxy.connectSignal(
+			'NameOwnerChanged',
+			this._onNameOwnerChanged.bind(this)
+		)
+	}
+
+	private _onNameOwnerChanged(proxy: any, sender: any, [name, oldOwner, newOwner]: any[]) {
+		if (!name.startsWith(MPRIS_PLAYER_PREFIX)) return
+		if (oldOwner) {
+			const player = this._players.get(name)
+			if (player) {
+				this._players.delete(name)
+				// @ts-expect-error
+				player.disconnectObject(this)
+				this.emit('player-removed', player)
+			}
+		}
+		if (newOwner) this._addPlayer(name)
+	}
+}
+GObject.registerClass({
+	Signals: {
+		"player-added": {param_types: [Player as any]},
+		"player-removed": {param_types: [Player as any]},
+	},
+}, Source)
+// #endregion
 
 // #region ProgressControl
 class ProgressControl extends St.BoxLayout {
@@ -56,6 +394,7 @@ class ProgressControl extends St.BoxLayout {
 
 		this.connect("notify::mapped", this._updateTracker.bind(this))
 		this.connect("destroy", this._dropTracker.bind(this))
+		// @ts-expect-error
 		this._player.connectObject("changed", () => this._updateStatus(), this)
 	}
 
@@ -77,6 +416,7 @@ class ProgressControl extends St.BoxLayout {
 	_createSlider() {
 		const oldSlider = this._slider
 		const slider = this._slider ??= new Slider(0)
+		slider.reactive = true
 
 		// Update style
 		slider.style = StyledSlider.getStyle(this._options.sliderStyle)
@@ -103,7 +443,7 @@ class ProgressControl extends St.BoxLayout {
 	// Show / Hide by playing status
 	_updateStatus(noAnimate?: boolean) {
 		if (!this.mapped) return
-		this._shown = this._player.status === "Playing"
+		this._shown = this._player.isPlaying()
 		if (this._shown) this._trackPosition()
 		const previousHeight = this.height
 		this.height = -1
@@ -161,7 +501,7 @@ class ProgressControl extends St.BoxLayout {
 		if (this._shown && !this._dragging) {
 			this._player.position
 				.then(this._updatePosition.bind(this))
-				.catch(logger.error)
+				.catch(Logger.error)
 		}
 		return GLib.SOURCE_CONTINUE;
 	}
@@ -206,130 +546,110 @@ namespace ProgressControl {
 }
 // #endregion ProgressControl
 
-// #region Player
-class Player extends Mpris.MprisPlayer {
-	_length: number | null
-	_propertiesProxy: Gio.DBusProxy
-	_seekProxy: Gio.DBusProxy
-	_isPropertiesProxyReady: boolean
-	_canSeek: boolean
-	_trackid: string
-
-	constructor(busName: string) {
-		super(busName)
-
-		// Create properties proxy for Position & CanSeek
-		const propertiesIface = Global.GetDbusInterface("media/dbus.xml","org.freedesktop.DBus.Properties")
-		Gio.DBusProxy.new(
-			Gio.DBus.session,
-			Gio.DBusProxyFlags.NONE,
-			propertiesIface,
-			busName,
-			"/org/mpris/MediaPlayer2",
-			propertiesIface.name,
-			null,
-		)
-		// @ts-expect-error
-		.then((proxy: Gio.DbusProxy) => this._propertiesProxy = proxy)
-		.catch(logger.error)
-
-		// Create proxy for seeking
-		const seekIface = Global.GetDbusInterface("media/dbus.xml","org.mpris.MediaPlayer2.Player")
-		Gio.DBusProxy.new(
-			Gio.DBus.session,
-			Gio.DBusProxyFlags.NONE,
-			seekIface,
-			busName,
-			"/org/mpris/MediaPlayer2",
-			seekIface.name,
-			null,
-		)
-		// @ts-expect-error
-		.then((proxy: Gio.DbusProxy) => this._seekProxy = proxy)
-		.catch(logger.error)
-	}
-
-	get position(): Promise<number|null> {
-		return this._propertiesProxy.GetAsync(
-			"org.mpris.MediaPlayer2.Player",
-			"Position"
-		).then((result: any) => {
-			return result[0].get_int64()
-		}).catch(()=> null)
-	}
-	set position(value: number) {
-		this._seekProxy.SetPositionAsync(
-			this.trackId,
-			Math.min(this.length, Math.max(1, value))
-		).catch(logger.error)
-	}
-	get trackId(): string {
-		return this._trackid
-	}
-	get canSeek(): boolean {
-		return this._canSeek
-	}
-	get length(): number|null {
-		return this._length
-	}
-	_updateState() {
-		this._trackid = null
-		this._length = null
-		try {
-			const metadata = (this as any)._playerProxy.Metadata
-			this._trackid = metadata?.["mpris:trackid"]?.get_string()[0]
-			this._length = metadata?.["mpris:length"]?.get_int64() ?? null
-		} catch {}
-
-		this._propertiesProxy.GetAsync(
-			"org.mpris.MediaPlayer2.Player",
-			"CanSeek"
-		).catch(()=>{
-			this._canSeek = false
-		}).then((result: any) => {
-			this._canSeek = result[0].get_boolean()
-		}).catch(()=>{
-			this._canSeek = false
-		}).finally(()=>{
-			if (this._propertiesProxy) super._updateState()
-		})
-	}
-
-	_close() {
-		this._propertiesProxy = null
-		this._seekProxy = null
-		super._close()
-	}
-}
-// #endregion Player
-
 // #region MediaItem
-class MediaItem extends Mpris.MediaMessage {
+class MediaItem extends MessageList.Message {
+	// Gnome 48 doesn't exports MediaMessage, so we should implement it
+	// (i have no idea why, backward compatibility killer)
 	_player: Player
 	_cachedColors: Map<string, Promise<void | [number, number, number]>>
 	_options: MediaItem.Options
 	_progressControl?: ProgressControl
-
+	_prevButton: St.Button
+	_pauseButton: St.Button
+	_nextButton: St.Button
+	
 	constructor(player: Player, options: MediaItem.Options) {
-		super(player)
+		super(player.source)
+		this.add_style_class_name('media-message')
+
 		this._options = options
+		this._player = player
+
+		// Create controls
 		if (options.progressEnabled) {
 			this.child.add_child(
 				this._progressControl = new ProgressControl(player, options)
 			)
 		}
-		this._updateControlOpacity()
+		this._createControlButtons()
+
+		// Connect player
+		// @ts-expect-error
+		this._player.connectObject('changed', this._update.bind(this), this);
+		this._update()
+	}
+
+	// Create and update control buttons
+	_createControlButtons() {
+		const options = this._options
+		if (options.showPrevButton) this._prevButton ??= this.addMediaControl(
+			'media-skip-backward-symbolic',
+			() => this._player.previous()
+		) as unknown as St.Button
+		if (options.showPauseButton) this._pauseButton ??= this.addMediaControl(
+			'',
+			() => this._player.playPause()
+		) as unknown as St.Button
+		if (options.showNextButton) this._nextButton ??= this.addMediaControl(
+			'media-skip-forward-symbolic',
+			() => this._player.next()
+		) as unknown as St.Button
+		const opacity = options.contorlOpacity
+		if (this._nextButton) this._nextButton.opacity = opacity
+		if (this._prevButton) this._prevButton.opacity = opacity
+		if (this._pauseButton) this._pauseButton.opacity = opacity
+	}
+
+	// Sync to player
+	_update() {
+		// Get icon
+		let icon: Gio.Icon
+		if (this._player.trackCoverUrl) {
+			const file = Gio.File.new_for_uri(this._player.trackCoverUrl)
+			icon = new Gio.FileIcon({file});
+		} else {
+			icon = new Gio.ThemedIcon({name: 'audio-x-generic-symbolic'})
+		}
+
+		// Get artist string
+		let trackArtists: string
+		if (typeof this._player.trackArtists == "string") {
+			trackArtists = this._player.trackArtists
+		} else {
+			// @ts-ignore
+			trackArtists = this._player.trackArtists.join(",")
+		}
+
+		// Update base informations
+		this.set({
+			title: this._player.trackTitle,
+			body: trackArtists,
+			icon,
+		})
+
+		// Update control buttons
+		if (this._pauseButton) {
+			let isPlaying = this._player.status === 'Playing';
+			let iconName = isPlaying
+				? 'media-playback-pause-symbolic'
+				: 'media-playback-start-symbolic';
+			(this._pauseButton.child as St.Icon).icon_name = iconName
+		}
+		if (this._prevButton)
+			this._prevButton.reactive = this._player.canGoPrevious
+		if (this._nextButton)
+			this._nextButton.reactive = this._player.canGoNext
+
 		this._updateGradient()
 	}
-	protected _onDestroy(): void {
-		this._cachedColors = null
-		super._onDestroy()
-	}
 	_updateGradient(): void {
+		// If disabled
 		if (!this._options?.gradientEnabled) {
 			this.style = ""
 			return
 		}
+
+		// Push get color task, use cache if possible
 		this._cachedColors ??= new Map()
 		const coverUrl = this._player.trackCoverUrl
 		if (!coverUrl || coverUrl.endsWith(".svg")) return
@@ -341,6 +661,8 @@ class MediaItem extends Mpris.MediaMessage {
 			colorTask = getImageMeanColor(pixbuf)
 			this._cachedColors.set(coverPath, colorTask)
 		}
+
+		// Update style
 		colorTask.then(color=>{
 			if (!color) return
 			if (!this._cachedColors) return
@@ -368,15 +690,6 @@ class MediaItem extends Mpris.MediaMessage {
 				});`
 		})
 	}
-	_updateControlOpacity() {
-		this._nextButton.opacity =
-		this._prevButton.opacity =
-		this._playPauseButton.opacity = this._options.contorlOpacity
-	}
-	protected _update(): void {
-		super._update()
-		this._updateGradient()
-	}
 
 	// Pass all gesture actions to the parent
 	vfunc_button_press_event(_event: Clutter.Event): boolean {
@@ -403,6 +716,9 @@ namespace MediaItem {
 		gradientEndMix: number
 		gradientEnabled: boolean
 		contorlOpacity: number
+		showNextButton: boolean
+		showPrevButton: boolean
+		showPauseButton: boolean
 	}
 	export type Options = {
 	}
@@ -412,9 +728,8 @@ namespace MediaItem {
 // #endregion MediaItem
 
 // #region MediaList
-class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSection) as typeof Mpris.MediaSection) {
+class MediaList extends St.BoxLayout {
 	_options: MediaList.Options
-	_messages: MediaItem[]
 	_current?: MediaItem
 	_currentMaxPage: number
 	_currentPage: number
@@ -422,6 +737,12 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 	_drag: boolean
 	_scroll: boolean
 	_dragTranslation?: number
+	_items: Map<Player, MediaItem>
+	_source: Source
+	get _messages(): MediaItem[] {
+		return this.get_children() as MediaItem[]
+	}
+	empty: boolean
 
 	constructor(options: MediaList.Options) {
 		// @ts-ignore
@@ -429,18 +750,19 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 	}
 	// @ts-ignore
 	_init(options: MediaList.Options): void {
-		super._init()
+		super._init({
+			can_focus: true,
+			reactive: true,
+			track_hover: true,
+			hover: false,
+			clip_to_allocation: true,
+		})
 		this._current = null
 		this._options = options
 		this._currentMaxPage = 0
 		this._currentPage = 0
 		this._drag = false
-
-		// St props
-		this.can_focus = true
-		this.reactive = true
-		this.track_hover = true
-		this.hover = false
+		this._items = new Map()
 
 		// Round clip effect
 		this._initEffect()
@@ -458,6 +780,26 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 				this._seekPage(1)
 			}
 		})
+
+		// Connect source
+		this._source = new Source()
+		// @ts-expect-error
+		this._source.connectObject("player-removed", (_source: any, player: Player)=>{
+			const item = this._items.get(player)
+			if (!item) return
+			item.destroy()
+			this._items.delete(player)	
+			this._sync()
+		},this)
+		// @ts-expect-error
+		this._source.connectObject("player-added", (_source: any, player: Player)=>{
+			if (this._items.has(player)) return
+			const item = new MediaItem(player, this._options)
+			this._items.set(player, item)
+			this.add_child(item)
+			this._sync()
+		}, this)
+		this._source.start()
 	}
 
 	// Round clip effect
@@ -600,7 +942,7 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 		// Show first playing message
 		const messages = this._messages
 		this._setPage(
-			messages.find(message => message?._player.status === "Playing")
+			messages.find(message => message?._player.isPlaying())
 			?? messages[0]
 		)
 	}
@@ -667,9 +1009,8 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 
 	// New message / Remove message
 	_sync() {
-		// @ts-expect-error
-		super._sync()
 		const messages = this._messages
+		const empty = messages.length == 0
 
 		// Emit max page update
 		if (this._currentMaxPage != messages.length) {
@@ -679,7 +1020,7 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 		}
 
 		// Current message destroyed
-		if (this._current && (this.empty || !messages.includes(this._current))) {
+		if (this._current && (empty || !messages.includes(this._current))) {
 			this._current = null
 		}
 
@@ -693,32 +1034,9 @@ class MediaList extends ((Mpris.MediaSection || (MessageList as any).MediaSectio
 		if (!this._current) {
 			this._showFirstPlaying()
 		}
-	}
 
-	// Override for custom message and player
-	// See: https://github.com/GNOME/gnome-shell/blob/c58b826788f99bc783c36fa44e0e669dee638f0e/js/ui/mpris.js#L264
-	_addPlayer(busName: string) {
-		if (this._players.get(busName))
-			return
-
-		let player = new Player(busName)
-		let message = null
-		player.connect("closed",() => {
-			this._players.delete(busName)
-			return false
-		})
-		player.connect("show", () => {
-			message = new MediaItem(player, this._options)
-			this.addMessage(message, true)
-			return false
-		})
-		player.connect("hide", () => {
-			this.removeMessage(message, true)
-			message = null
-			return false
-		})
-
-		this._players.set(busName, player)
+		// Update empty state
+		this.empty = empty
 	}
 }
 Drag.applyTo(MediaList)
@@ -727,6 +1045,13 @@ GObject.registerClass({
 	Signals: {
 		"page-updated": {param_types: [GObject.TYPE_INT]},
 		"max-page-updated": {param_types: [GObject.TYPE_INT]},
+	},
+	Properties: {
+		"empty": GObject.ParamSpec.boolean(
+			"empty", null, null,
+			GObject.ParamFlags.READWRITE,
+			true
+		),
 	}
 }, MediaList)
 namespace MediaList {
@@ -887,13 +1212,21 @@ export class MediaWidgetFeature extends FeatureBase {
 	roundClipEnabled: boolean
 	roundClipPadding: null|[number, number, number, number]
 	smoothScrollSpeed: number
+	showNextButton: boolean
+	showPrevButton: boolean
+	showPauseButton: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("media-enabled")
 		this.header = loader.loadBoolean("media-show-header")
 		this.compact = loader.loadBoolean("media-compact")
 		this.removeShadow = loader.loadBoolean("media-remove-shadow")
-		this.contorlOpacity = loader.loadInt("media-contorl-opacity")
 		this.smoothScrollSpeed = loader.loadInt("media-smooth-scroll-speed")
+
+		// Control buttons
+		this.contorlOpacity = loader.loadInt("media-contorl-opacity")
+		this.showNextButton = loader.loadBoolean("media-contorl-show-next-button")
+		this.showPrevButton = loader.loadBoolean("media-contorl-show-prev-button")
+		this.showPauseButton = loader.loadBoolean("media-contorl-show-pause-button")
 
 		// Gradient
 		this.gradientBackground = loader.loadRgb("media-gradient-background-color")!
@@ -949,7 +1282,7 @@ export class MediaWidgetFeature extends FeatureBase {
 			case "media-contorl-opacity":
 				if (!this.enabled) return
 				for (const message of this.mediaWidget!._list._messages) {
-					message._updateControlOpacity()
+					message._createControlButtons()
 				}
 				break
 			// Gradient

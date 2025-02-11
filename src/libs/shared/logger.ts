@@ -47,4 +47,4 @@ namespace Logger {
 		currentLevel = level
 	}
 }
-export { Logger as logger }
+export default Logger

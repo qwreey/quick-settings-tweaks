@@ -5,8 +5,8 @@
  * https://github.com/qwreey/quick-settings-tweaks
 */
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
-import { logger } from "./libs/shared/logger.js"
-import { Global } from "./global.js"
+import Logger from "./libs/shared/logger.js"
+import Global from "./global.js"
 import Config from "./config.js"
 import { type FeatureBase } from "./libs/shell/feature.js"
 import { DndQuickToggleFeature } from "./features/toggle/dndQuickToggle.js"
@@ -28,7 +28,7 @@ export default class QstExtension extends Extension {
 	private debug: DebugFeature
 
 	disable() {
-		logger(`Extension ${this.metadata.name} deactivation started`)
+		Logger(`Extension ${this.metadata.name} deactivation started`)
 		let start = +Date.now()
 
 		// Unload debug feature
@@ -37,7 +37,7 @@ export default class QstExtension extends Extension {
 
 		// Unload features
 		for (const feature of this.features) {
-			logger(`Unload feature '${feature.constructor.name}'`)
+			Logger(`Unload feature '${feature.constructor.name}'`)
 			feature.unload()
 		}
 		this.features = null // Null-out all features, loaded objects, arrays should be GC'd
@@ -45,7 +45,7 @@ export default class QstExtension extends Extension {
 		// Unload global context
 		Global.unload()
 
-		logger("Diabled. " + (+new Date() - start) + "ms taken")
+		Logger("Diabled. " + (+new Date() - start) + "ms taken")
 	}
 
 	enable() {
@@ -72,15 +72,15 @@ export default class QstExtension extends Extension {
 		// Load debug feature
 		this.debug = new DebugFeature()
 		this.debug.load()
-		logger(`Extension activation started, version: ${Config.version}`)
+		Logger(`Extension activation started, version: ${Config.version}`)
 
 		// Load features
-		logger.debug("Initializing features ...")
+		Logger.debug("Initializing features ...")
 		let start = +Date.now()
 		for (const feature of this.features) {
-			logger.debug(()=>`Loading feature '${feature.constructor.name}'`)
+			Logger.debug(()=>`Loading feature '${feature.constructor.name}'`)
 			feature.load()
 		}
-		logger(`Extension Loaded, ${+Date.now() - start}ms taken`)
+		Logger(`Extension Loaded, ${+Date.now() - start}ms taken`)
 	}
 }

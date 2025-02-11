@@ -47,6 +47,15 @@
     <key name="media-enabled" type="b">
       <default>true</default>
     </key>
+    <key name="media-contorl-show-next-button" type="b">
+      <default>true</default>
+    </key>
+    <key name="media-contorl-show-prev-button" type="b">
+      <default>true</default>
+    </key>
+    <key name="media-contorl-show-pause-button" type="b">
+      <default>true</default>
+    </key>
     <key name="media-show-header" type="b">
       <default>true</default>
     </key>

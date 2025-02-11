@@ -1,7 +1,7 @@
-import Maid from "../shared/maid.js";
-import { Global } from "../../global.js";
-import { logger } from "../shared/logger.js";
 import { type Rgb, type Rgba } from "../shared/colors.js"
+import Maid from "../shared/maid.js";
+import Global from "../../global.js";
+import Logger from "../shared/logger.js";
 
 export class SettingLoader {
 	records: Set<string>
@@ -28,7 +28,7 @@ export class SettingLoader {
 			)
 		)
 		if (!this.parent.disableDebugMessage)
-			logger.debug(()=>`Setting listener for key '${key}' added for feature ${this.parent.constructor.name}`)
+			Logger.debug(()=>`Setting listener for key '${key}' added for feature ${this.parent.constructor.name}`)
 	}
 	clear() {
 		for (const source of this.listeners) {
@@ -37,7 +37,7 @@ export class SettingLoader {
 		this.listeners = []
 		this.records.clear()
 		if (!this.parent.disableDebugMessage) {
-			logger.debug(()=>`Disconnected setting listeners for feature ${this.parent.constructor.name	}`)
+			Logger.debug(()=>`Disconnected setting listeners for feature ${this.parent.constructor.name	}`)
 		}
 	}
 

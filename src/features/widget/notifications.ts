@@ -5,8 +5,8 @@ import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
 import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
-import { Global } from "../../global.js"
 import { StyledScroll } from "../../libs/shell/styler.js"
+import Global from "../../global.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {

@@ -12,20 +12,20 @@ import {
 	type CalendarMessageList
 } from "resource:///org/gnome/shell/ui/calendar.js";
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
-import { logger } from "./libs/shared/logger.js"
 import {
 	type SystemItem,
 	type Indicator as SystemIndicator
 } from "resource:///org/gnome/shell/ui/status/system.js"
 import { type PopupMenu } from "resource:///org/gnome/shell/ui/popupMenu.js"
 import { type QuickSlider, type QuickSettingsMenu } from "resource:///org/gnome/shell/ui/quickSettings.js"
+import Logger from "./libs/shared/logger.js"
 
 type StreamSlider = {
 	VolumeInput: any,
 	InputStreamSlider: QuickSlider,
 	OutputStreamSlider: QuickSlider,
 }
-export const Global = new (class Global {
+const Global = new (class Global {
 	QuickSettings: PanelMenu.Button
 	QuickSettingsMenu: QuickSettingsMenu
 	QuickSettingsGrid: St.Widget
@@ -49,7 +49,7 @@ export const Global = new (class Global {
 	get QuickSettingsSystemItem(): Promise<SystemItem> {
 		return this.QuickSettingsSystemIndicator
 			.then(system=>(system as any)._systemItem)
-			.catch(logger.error)
+			.catch(Logger.error)
 	}
 	Indicators: St.BoxLayout
 
@@ -185,3 +185,4 @@ export const Global = new (class Global {
 		this.MessageTray = Main.messageTray
 	}
 })()
+export default Global

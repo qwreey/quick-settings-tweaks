@@ -3,7 +3,7 @@ import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import St from "gi://St"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
-import { Global } from "../../global.js"
+import Global from "../../global.js"
 
 // #region Header
 class Header extends St.BoxLayout {

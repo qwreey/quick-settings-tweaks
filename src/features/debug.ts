@@ -1,6 +1,6 @@
-import { Global } from "../global.js"
 import { FeatureBase, type SettingLoader } from "../libs/shell/feature.js"
-import { logger } from "../libs/shared/logger.js"
+import Global from "../global.js"
+import Logger from "../libs/shared/logger.js"
 import Config from "../config.js"
 
 export class DebugFeature extends FeatureBase {
@@ -18,9 +18,9 @@ export class DebugFeature extends FeatureBase {
 	// #endregion settings
 
 	onLoad() {
-		logger.setHeader(Config.loggerPrefix)
-		logger.setLogLevel(this.logLevel)
-		logger.debug(()=>`Logger initialized, LogLevel: ${this.logLevel}`)
+		Logger.setHeader(Config.loggerPrefix)
+		Logger.setLogLevel(this.logLevel)
+		Logger.debug(()=>`Logger initialized, LogLevel: ${this.logLevel}`)
 		if (this.expose) {
 			globalThis.qst = Global
 			for (const feature of (Global.Extension as any).features) {
@@ -32,7 +32,7 @@ export class DebugFeature extends FeatureBase {
 				}
 				delete globalThis.qst
 			})
-			logger.debug("Extension environment expose enabled")
+			Logger.debug("Extension environment expose enabled")
 		}
 		if (this.showLayoutBorder) {
 			// @ts-ignore
@@ -43,7 +43,7 @@ export class DebugFeature extends FeatureBase {
 				// @ts-ignore
 				Global.QuickSettingsMenu._boxPointer.styleClass.replace(/ QSTWEAKS-debug-show-layout/, "")
 			})
-			logger.debug("Show layout border enabled")
+			Logger.debug("Show layout border enabled")
 		}
 	}
 	onUnload(): void {}

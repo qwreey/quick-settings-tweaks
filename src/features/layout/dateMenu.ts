@@ -1,7 +1,7 @@
-import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
-import { logger } from "../../libs/shared/logger.js"
 import { StyleClass } from "../../libs/shared/styleClass.js"
+import Global from "../../global.js"
+import Logger from "../../libs/shared/logger.js"
 
 export class DateMenuLayoutFeature extends FeatureBase {
 	// #region settings
@@ -47,7 +47,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 					()=>true
 				)
 			} else {
-				logger.error("Failed to get date menu left box")
+				Logger.error("Failed to get date menu left box")
 			}
 			style.add("QSTWEAKS-hide-left-box")
 		}
@@ -61,7 +61,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 					()=>true
 				)
 			} else {
-				logger.error("Failed to get date menu right box")
+				Logger.error("Failed to get date menu right box")
 			}
 			style.add("QSTWEAKS-hide-right-box")
 		}

@@ -1,7 +1,7 @@
 import GObject from 'gi://GObject'
 import Shell from 'gi://Shell'
 import Clutter from 'gi://Clutter'
-import { Global } from '../../global.js'
+import Global from '../../global.js'
 
 // #region RoundClipEffect
 export class RoundClipEffect extends Shell.GLSLEffect {
