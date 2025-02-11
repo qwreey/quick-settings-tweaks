@@ -12,6 +12,7 @@ export class TogglesOrderFeature extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	order: QuickToggleOrderItem[]
+	unordered: QuickToggleOrderItem
 	loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("toggles-layout-enabled")
 		this.order = loader.loadValue("toggles-layout-order")
@@ -19,14 +20,18 @@ export class TogglesOrderFeature extends FeatureBase {
 			if (orderItem.titleRegex) {
 				orderItem.cachedTitleRegex = new RegExp(orderItem.titleRegex)
 			}
+			if (orderItem.nonOrdered) {
+				this.unordered = orderItem
+			}
 		}
 	}
 	// #endregion settings
 
 	onToggleCreated(maid: Maid, toggle: QuickToggle|QuickMenuToggle): void {
-		const rule: QuickToggleOrderItem|undefined =
+		const rule: QuickToggleOrderItem =
 			this.order.find(item => QuickToggleOrderItem.toggleMatch(item, toggle))
-		if (!rule) return
+			?? this.unordered
+		log(rule)
 		if (rule.hide) maid.hideJob(toggle)
 	}
 	onUpdate(): void {

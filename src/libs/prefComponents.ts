@@ -553,11 +553,22 @@ export function Button({
 	})
 	box.insert_child_after(button, null)
 	setLinkCursor(button)
-	if (iconName) {
+	if (iconName && !text) {
 		button.icon_name = iconName
 	}
-	if (text) {
+	if (text && !iconName) {
 		button.label = text
+	}
+	if (iconName && text) {
+		const box = button.child = new Gtk.Box({})
+		new Gtk.Image({
+			icon_name: iconName,
+			pixel_size: 12,
+			margin_end: 6,
+		}).insert_before(box, null)
+		new Gtk.Label({
+			label: text,
+		}).insert_before(box, null)
 	}
 	if (tooltip) {
 		button.tooltip_text = tooltip

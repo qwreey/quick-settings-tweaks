@@ -4,6 +4,8 @@ Touch enchantments:
 
 Readme file
 
+배터리 알약 아이콘
+
 widgets:
     sound output:
         device to hide

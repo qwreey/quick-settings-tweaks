@@ -333,6 +333,7 @@
       ]]></default>
       <description><![CDATA[
 [{
+  gtypeName: <string>,
   constructorName: <string>,
   titleRegex: <string>,
   friendlyName: <string>,

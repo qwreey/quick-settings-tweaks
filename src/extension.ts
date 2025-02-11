@@ -36,7 +36,7 @@ export default class QstExtension extends Extension {
 			logger(`Unload feature '${feature.constructor.name}'`)
 			feature.unload()
 		}
-		this.features = null
+		this.features = null // Null-out all features, loaded objects, arrays should be GC'd
 
 		// Unload debug feature
 		this.debug.unload()

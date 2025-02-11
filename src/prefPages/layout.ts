@@ -19,6 +19,7 @@ import {
 	delayedSetScrollToFocus,
 	fixPageScrollIssue,
 	Dialog,
+	Button,
 } from "../libs/prefComponents.js"
 
 // #region ToggleOrderGroup
@@ -34,25 +35,27 @@ function ToggleOrderGroup(
 	const header = new Gtk.Box({})
 	const resetButton = ResetButton({ settings, bind: "toggles-layout-order", marginBottom: 0, marginTop: 0 })
 	resetButton.insert_after(header, null)
-	const addButton = new Gtk.Button({
-		icon_name: "list-add",
-	});
-	(addButton.get_first_child() as Gtk.Image).pixel_size = 12
-	addButton.insert_after(header, resetButton)
-	addButton.connect("clicked", ()=>{
-		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		let nth = 1
-		let name: string
-		while (true) {
-			name = _("My toggle #%d").format(nth)
-			if (list.findIndex(item => item.friendlyName == name) == -1) break
-			nth += 1
+	const addButton = Button({
+		marginBottom: 0,
+		marginTop: 0,
+		iconName: "list-add",
+		text: _("New Item"),
+		action: ()=>{
+			const list = ToggleOrderGroup.getOrderListFromSettings(settings)
+			let nth = 1
+			let name: string
+			while (true) {
+				name = _("My toggle #%d").format(nth)
+				if (list.findIndex(item => item.friendlyName == name) == -1) break
+				nth += 1
+			}
+			const item = QuickToggleOrderItem.create(name)
+			list.push(item)
+			ToggleOrderGroup.setOrderListToSettings(settings, list)
+			editItem(item)
 		}
-		const item = QuickToggleOrderItem.create(name)
-		list.push(item)
-		ToggleOrderGroup.setOrderListToSettings(settings, list)
-		editItem(item)
 	})
+	addButton.insert_after(header, resetButton)
 	const group = Group({
 		title: _("Ordering and Hiding"),
 		headerSuffix: header
@@ -80,45 +83,52 @@ function ToggleOrderGroup(
 			childrenRequest: (_page, _dialog)=>{
 				const friendlyName = new Adw.EntryRow({
 					// editable
-					text: item.friendlyName,
+					text: item.friendlyName ?? "",
 					max_length: 2048,
 					title: _("Friendly Name"),
 				})
 				const hideRow = new Adw.SwitchRow({
-					active: item.hide,
+					active: item.hide ?? false,
 					title: _("Hide"),
 				})
 				const titleRegex = new Adw.EntryRow({
-					text: item.titleRegex,
+					text: item.titleRegex ?? "",
 					max_length: 2048,
 					title: _("Title Regex (Javascript Regex)")
 				})
 				const constructorName = new Adw.EntryRow({
-					text: item.constructorName,
+					text: item.constructorName ?? "",
 					max_length: 2028,
 					title: _("Constructor Name")
 				})
-				const saveButton = new Gtk.Button({
-					label: _("Save"),
-					icon_name: "document-save-symbolic",
-					css_classes: []
+				const gtypeName = new Adw.EntryRow({
+					text: item.gtypeName ?? "",
+					max_length: 2028,
+					title: _("GType Name")
 				})
-				saveButton.connect("clicked", ()=>{
-					const edited = {
-						...item,
-						friendlyName: friendlyName.text,
-						constructorName: constructorName.text,
-						titleRegex: titleRegex.text,
-						hide: hideRow.active,
-					}
-					const saved = saveEditItem(item, edited)
-					if (saved == null) {
-						item = edited
-					} else {
-						dialog.add_toast(new Adw.Toast({
-							timeout: 6,
-							title: saved
-						}))
+				const saveButton = Button({
+					marginBottom: 0,
+					marginTop: 0,
+					iconName: "document-save-symbolic",
+					text: _("Save"),
+					action: ()=>{
+						const edited = {
+							...item,
+							friendlyName: friendlyName.text,
+							constructorName: constructorName.text,
+							gtypeName: gtypeName.text,
+							titleRegex: titleRegex.text,
+							hide: hideRow.active,
+						}
+						const saved = saveEditItem(item, edited)
+						if (saved == null) {
+							item = edited
+						} else {
+							dialog.add_toast(new Adw.Toast({
+								timeout: 6,
+								title: saved
+							}))
+						}
 					}
 				})
 				return [
@@ -128,6 +138,7 @@ function ToggleOrderGroup(
 					},[
 						friendlyName,
 						constructorName,
+						gtypeName,
 						titleRegex,
 						hideRow,
 					])
