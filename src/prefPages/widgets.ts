@@ -135,7 +135,6 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "media-contorl-show-next-button",
 				title: _("Show next button"),
 				subtitle: _("Add next contorl button next to description"),
-				experimental: true,
 				sensitiveBind: "media-enabled",
 			}),
 			SwitchRow({
@@ -143,7 +142,6 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "media-contorl-show-prev-button",
 				title: _("Show previous button"),
 				subtitle: _("Add previous contorl button next to description"),
-				experimental: true,
 				sensitiveBind: "media-enabled",
 			}),
 			SwitchRow({
@@ -151,7 +149,6 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "media-contorl-show-pause-button",
 				title: _("Show pause button"),
 				subtitle: _("Add pause contorl button next to description"),
-				experimental: true,
 				sensitiveBind: "media-enabled",
 			}),
 			SwitchRow({

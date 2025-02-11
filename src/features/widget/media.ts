@@ -29,6 +29,7 @@ class Player extends GObject.Object {
 
 	source: MessageList.Source
 	canPlay: boolean
+	canSeek: boolean
 
 	constructor(busName: string) {
 		super()
@@ -109,7 +110,6 @@ class Player extends GObject.Object {
 	// States
 	private _busName: string
 	private _trackId: string
-	private _canSeek: boolean
 	private _length: number | null
 	private _trackArtists: string[] | null
 	private _trackTitle: string | null
@@ -120,9 +120,6 @@ class Player extends GObject.Object {
 	}
 	get trackId(): string {
 		return this._trackId
-	}
-	get canSeek(): boolean {
-		return this._canSeek
 	}
 	get length(): number|null {
 		return this._length
@@ -202,6 +199,7 @@ class Player extends GObject.Object {
 
 		// Update can play
 		this.canPlay = !!this._playerProxy.CanPlay
+		this.canSeek = this._playerProxy.CanSeek
 	}
 	_update() {
 		try {
@@ -267,6 +265,11 @@ GObject.registerClass({
 	Properties: {
 		"can-play": GObject.ParamSpec.boolean(
 			"can-play", null, null,
+			GObject.ParamFlags.READWRITE,
+			false
+		),
+		"can-seek": GObject.ParamSpec.boolean(
+			"can-seek", null, null,
 			GObject.ParamFlags.READWRITE,
 			false
 		),
@@ -416,7 +419,6 @@ class ProgressControl extends St.BoxLayout {
 	_createSlider() {
 		const oldSlider = this._slider
 		const slider = this._slider ??= new Slider(0)
-		slider.reactive = true
 
 		// Update style
 		slider.style = StyledSlider.getStyle(this._options.sliderStyle)
@@ -503,7 +505,7 @@ class ProgressControl extends St.BoxLayout {
 				.then(this._updatePosition.bind(this))
 				.catch(Logger.error)
 		}
-		return GLib.SOURCE_CONTINUE;
+		return GLib.SOURCE_CONTINUE
 	}
 	_dropTracker() {
 		if (this._positionTracker === null) return
@@ -557,7 +559,7 @@ class MediaItem extends MessageList.Message {
 	_prevButton: St.Button
 	_pauseButton: St.Button
 	_nextButton: St.Button
-	
+
 	constructor(player: Player, options: MediaItem.Options) {
 		super(player.source)
 		this.add_style_class_name('media-message')
@@ -575,7 +577,10 @@ class MediaItem extends MessageList.Message {
 
 		// Connect player
 		// @ts-expect-error
-		this._player.connectObject('changed', this._update.bind(this), this);
+		this._player.connectObject(
+			'changed', this._update.bind(this),
+			this
+		)
 		this._update()
 	}
 
@@ -788,7 +793,7 @@ class MediaList extends St.BoxLayout {
 			const item = this._items.get(player)
 			if (!item) return
 			item.destroy()
-			this._items.delete(player)	
+			this._items.delete(player)
 			this._sync()
 		},this)
 		// @ts-expect-error
