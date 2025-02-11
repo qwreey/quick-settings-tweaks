@@ -5,8 +5,12 @@
 # 2.1-pre7
 <!-- @BuildNumber: 7 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-02-09 03:57:00 KST" -->
+<!-- @Date: "2025-02-12 1:33:00 KST" -->
 <!-- @Git: "30ad4df" -->
+
+{{HEADER}}
+
+- Improve ordering editors
 
 ## New Features
 
@@ -16,6 +20,8 @@
   - Improve prefs dialog
 - System indicators layout
   - Add ordering and hiding option
+  - Add accent screen sharing & recording indicators option
+  - Add accent privacy indicators option
 
 ## Fix
 
@@ -57,6 +63,8 @@
 <!-- @Includes: [] -->
 <!-- @Date: "2025-02-08 13:49:00 KST" -->
 <!-- @Git: "7acb2a4" -->
+
+{{HEADER}}
 
 - List the license in more detail
 - Weather feature is now stable

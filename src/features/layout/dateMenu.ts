@@ -1,6 +1,7 @@
 import { Global } from "../../global.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { logger } from "../../libs/shared/logger.js"
+import { StyleClass } from "../../libs/shared/styleClass.js"
 
 export class DateMenuLayoutFeature extends FeatureBase {
 	// #region settings
@@ -19,8 +20,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 	// #endregion settings
 
 	onLoad() {
-		const originalStyle = (Global.DateMenuBox as any).style_class
-		const style = [originalStyle]
+		const style = new StyleClass((Global.DateMenuBox as any).style_class)
 
 		// Hide media control from date menu
 		if (this.hideMediaControl) {
@@ -49,7 +49,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 			} else {
 				logger.error("Failed to get date menu left box")
 			}
-			style.push("QSTWEAKS-hide-left-box")
+			style.add("QSTWEAKS-hide-left-box")
 		}
 
 		// Hide right box from date menu
@@ -63,7 +63,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 			} else {
 				logger.error("Failed to get date menu right box")
 			}
-			style.push("QSTWEAKS-hide-right-box")
+			style.add("QSTWEAKS-hide-right-box")
 		}
 
 		// Disable menu open action
@@ -75,17 +75,22 @@ export class DateMenuLayoutFeature extends FeatureBase {
 		}
 
 		// Modify style class
-		if (style.length != 1) {
-			(Global.DateMenuBox as any).style_class = style.join(" ")
-			this.maid.functionJob(()=>{
-				(Global.DateMenuBox as any).style_class = originalStyle
-			})
+		if (style.modified) {
+			(Global.DateMenuBox as any).style_class = style.stringify()
 		}
 	}
 	onUnload(): void {
 		// @ts-ignore
-		if (Global.MediaSection._shouldShow()) Global.MediaSection.show();
+		if (Global.MediaSection._shouldShow()) Global.MediaSection.show()
 		// @ts-ignore
-		if (Global.NotificationSection._shouldShow()) Global.NotificationSection.show();
+		if (Global.NotificationSection._shouldShow()) Global.NotificationSection.show()
+
+		// Remove modified styles
+		const style = new StyleClass((Global.DateMenuBox as any).style_class)
+			.remove("QSTWEAKS-hide-right-box")
+			.remove("QSTWEAKS-hide-left-box")
+		if (style.modified) {
+			(Global.DateMenuBox as any).style_class = style.stringify()
+		}
 	}
 }

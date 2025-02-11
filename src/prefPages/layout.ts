@@ -20,6 +20,8 @@ import {
 	fixPageScrollIssue,
 	Dialog,
 	Button,
+	removeRowBottomBorder,
+	removeRowMinHeight,
 } from "../libs/prefs/components.js"
 import { SystemIndicatorOrderItem } from "../libs/types/systemIndicatorOrderItem.js"
 
@@ -276,7 +278,7 @@ abstract class OrderInfo<T extends OrderInfo.Base> {
 		let nth = 1
 		let name: string
 		while (true) {
-			name = _("My toggle #%d").format(nth)
+			name = _("My item #%d").format(nth)
 			if (list.findIndex(item => item.friendlyName == name) == -1) break
 			nth += 1
 		}
@@ -304,6 +306,7 @@ class ToggleOrderInfo extends OrderInfo<ToggleOrderItem> {
 			max_length: 2048,
 			title: _("Friendly Name"),
 		})
+		removeRowBottomBorder(friendlyName)
 		const hideRow = new Adw.SwitchRow({
 			active: item.hide ?? false,
 			title: _("Hide"),
@@ -318,17 +321,31 @@ class ToggleOrderInfo extends OrderInfo<ToggleOrderItem> {
 			max_length: 2028,
 			title: _("Constructor Name")
 		})
+		removeRowBottomBorder(constructorName)
 		const gtypeName = new Adw.EntryRow({
 			text: item.gtypeName ?? "",
 			max_length: 2028,
 			title: _("GType Name")
 		})
+		removeRowBottomBorder(gtypeName)
 		return {
 			layout: [
-				friendlyName,
 				hideRow,
+				friendlyName,
+				Row({
+					subtitle: _("This is the comment for easy identification in the settings list. It has no effect on the behavior of the extension"),
+					onCreated: removeRowMinHeight,
+				}),
 				constructorName,
+				Row({
+					subtitle: _("Javascript constructor name"),
+					onCreated: removeRowMinHeight,
+				}),
 				gtypeName,
+				Row({
+					subtitle: _("GObject gtype name. You can get this value by calling GObject.type_name_from_instance"),
+					onCreated: removeRowMinHeight,
+				}),
 				titleRegex,
 			],
 			getValue: ()=>({
@@ -440,6 +457,7 @@ class SystemIndicatorOrderInfo extends OrderInfo<SystemIndicatorOrderItem> {
 			max_length: 2048,
 			title: _("Friendly Name"),
 		})
+		removeRowBottomBorder(friendlyName)
 		const hideRow = new Adw.SwitchRow({
 			active: item.hide ?? false,
 			title: _("Hide"),
@@ -449,17 +467,31 @@ class SystemIndicatorOrderInfo extends OrderInfo<SystemIndicatorOrderItem> {
 			max_length: 2028,
 			title: _("Constructor Name")
 		})
+		removeRowBottomBorder(constructorName)
 		const gtypeName = new Adw.EntryRow({
 			text: item.gtypeName ?? "",
 			max_length: 2028,
 			title: _("GType Name")
 		})
+		removeRowBottomBorder(gtypeName)
 		return {
 			layout: [
-				friendlyName,
 				hideRow,
+				friendlyName,
+				Row({
+					subtitle: _("This is the comment for easy identification in the settings list. It has no effect on the behavior of the extension"),
+					onCreated: removeRowMinHeight,
+				}),
 				constructorName,
+				Row({
+					subtitle: _("Javascript constructor name"),
+					onCreated: removeRowMinHeight,
+				}),
 				gtypeName,
+				Row({
+					subtitle: _("GObject gtype name. You can get this value by calling GObject.type_name_from_instance"),
+					onCreated: removeRowMinHeight,
+				}),
 			],
 			getValue: ()=>({
 				...item,
@@ -701,56 +733,74 @@ export const LayoutPage = GObject.registerClass({
 			parent: this,
 			title: _("Quick Toggles Layout"),
 			description: _("Adjust quick toggles layout"),
-			headerSuffix: SwitchRow({
-				settings,
-				bind: "toggles-layout-enabled",
-			}),
 		},[
-			DialogRow({
+			SwitchRow({
+				bind: "toggles-layout-enabled",
 				settings,
-				window,
-				sensitiveBind: "toggles-layout-enabled",
+				onDetailed: ()=>{
+					Dialog({
+						window,
+						childrenRequest: (page, dialog) => [OrderGroup({
+							settings,
+							page,
+							dialog,
+							bind: "toggles-layout-order",
+							sensitiveBind: "toggles-layout-enabled",
+							info: new ToggleOrderInfo(),
+						})],
+						title: _("Adjust quick toggles layout"),
+					})
+				},
 				title: _("Ordering and Hiding"),
 				subtitle: _("Reorder and hide quick toggles"),
-				dialogTitle: _("Adjust system items layout"),
 				experimental: true,
-				childrenRequest: (page, dialog) => [OrderGroup({
-					settings,
-					page,
-					dialog,
-					bind: "toggles-layout-order",
-					sensitiveBind: "toggles-layout-enabled",
-					info: new ToggleOrderInfo(),
-				})],
 			}),
 		])
 
 		// System indicators
 		Group({
 			parent: this,
-			title: _("System Indicators Layout"),
-			description: _("Adjust system indicators layout"),
-			headerSuffix: SwitchRow({
+			title: _("System Indicators"),
+			description: _("Adjust system indicators layout and style"),
+		},[
+			SwitchRow({
+				settings,
+				bind: "system-indicator-screen-sharing-indicator-use-accent",
+				title: _("Accent screen sharing indicator"),
+				subtitle: _("Use shell accent color on screen sharing indicator"),
+			}),
+			SwitchRow({
+				settings,
+				bind: "system-indicator-screen-recording-indicator-use-accent",
+				title: _("Accent screen recording indicator"),
+				subtitle: _("Use shell accent color on screen recording indicator"),
+			}),
+			SwitchRow({
+				settings,
+				bind: "system-indicator-privacy-indicator-use-accent",
+				title: _("Accent privacy indicators"),
+				subtitle: _("Use shell accent color on privarcy indicators"),
+			}),
+			SwitchRow({
 				settings,
 				bind: "system-indicator-layout-enabled",
-			}),
-		},[
-			DialogRow({
-				settings,
-				window,
-				sensitiveBind: "system-indicator-layout-enabled",
+				onDetailed: ()=>{
+					Dialog({
+						window,
+						title: _("Adjust system indicators"),
+						childrenRequest: (page, dialog) => [OrderGroup({
+							settings,
+							page,
+							dialog,
+							bind: "system-indicator-layout-order",
+							sensitiveBind: "system-indicator-layout-enabled",
+							info: new SystemIndicatorOrderInfo(),
+						})],
+					})
+				},
 				title: _("Ordering and Hiding"),
 				subtitle: _("Reorder and hide system indicators"),
-				dialogTitle: _("Adjust system indicators"),
 				experimental: true,
-				childrenRequest: (page, dialog) => [OrderGroup({
-					settings,
-					page,
-					dialog,
-					bind: "system-indicator-layout-order",
-					sensitiveBind: "system-indicator-layout-enabled",
-					info: new SystemIndicatorOrderInfo(),
-				})],
 			}),
 		])
 

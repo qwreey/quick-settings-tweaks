@@ -74,6 +74,19 @@ export function pushDetailedButton(
 	if (switchWidget) switchWidget.canFocus = true
 	return button
 }
+export function removeRowBottomBorder(row: Adw.EntryRow|Adw.ActionRow) {
+	const style = new Gtk.CssProvider()
+	style.load_from_string("row{border-bottom-width:0px;}")
+	row.get_style_context().add_provider(style, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+}
+export function removeRowMinHeight(row: Adw.EntryRow|Adw.ActionRow) {
+	const styleRow = new Gtk.CssProvider()
+	styleRow.load_from_string("row{min-height:0px;}")
+	row.get_style_context().add_provider(styleRow, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+	const styleBox = new Gtk.CssProvider()
+	styleBox.load_from_string(".header{min-height:0px; margin-bottom: 4px;}")
+	row.get_first_child().get_style_context().add_provider(styleBox, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+}
 
 // #region Dialog
 export function Dialog({

@@ -7,9 +7,10 @@
 @use "./styles/message-remove-shadow.scss";
 @use "./styles/volume-mixer-widget.scss";
 @use "./styles/date-menu.scss";
+@use "./styles/system-indicator.scss";
 @use "./styles/debug.scss";
 
 /* input output labels */
-.QSTWEAWKS-input-output-label {
+#{$p}-input-output-label {
     width: auto;
 }

@@ -1,19 +1,27 @@
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { SystemIndicatorTracker } from "../../libs/shell/quickSettingsUtils.js"
 import Maid from "../../libs/shared/maid.js"
 import { Global } from "../../global.js"
 import { SystemIndicatorOrderItem } from "../../libs/types/systemIndicatorOrderItem.js"
+import { StyleClass } from "../../libs/shared/styleClass.js"
 
 export class SystemIndicatorLayoutFeature extends FeatureBase {
 	// #region settings
-	enabled: boolean
+	orderEnabled: boolean
 	order: SystemIndicatorOrderItem[]
 	unordered: SystemIndicatorOrderItem
+	coloredPrivacyIndicator: boolean
+	coloredScreenSharingIndicator: boolean
+	coloredScreenRecordingIndicator: boolean
 	loadSettings(loader: SettingLoader): void {
-		this.enabled = loader.loadBoolean("system-indicator-layout-enabled")
+		this.orderEnabled = loader.loadBoolean("system-indicator-layout-enabled")
 		this.order = loader.loadValue("system-indicator-layout-order")
 		this.unordered = this.order.find(item => item.nonOrdered)
+		this.coloredPrivacyIndicator = loader.loadBoolean("system-indicator-privacy-indicator-use-accent")
+		this.coloredScreenSharingIndicator = loader.loadBoolean("system-indicator-screen-sharing-indicator-use-accent")
+		this.coloredScreenRecordingIndicator = loader.loadBoolean("system-indicator-screen-recording-indicator-use-accent")
 	}
 	// #endregion settings
 
@@ -49,7 +57,50 @@ export class SystemIndicatorLayoutFeature extends FeatureBase {
 
 	tracker: SystemIndicatorTracker
 	onLoad(): void {
-		if (!this.enabled) return
+		// Colored privarcy indicator
+		if (this.coloredPrivacyIndicator) {
+			Global.Indicators.style_class =
+				new StyleClass(Global.Indicators.style_class)
+				.add("QSTWEAKS-privacy-indicator-use-accent")
+				.stringify()
+			this.maid.functionJob(()=>{
+				Global.Indicators.style_class =
+					new StyleClass(Global.Indicators.style_class)
+					.remove("QSTWEAKS-privacy-indicator-use-accent")
+					.stringify()
+			})
+		}
+
+		// Colored screen sharing indicator
+		if (this.coloredScreenSharingIndicator) {
+			Main.panel.statusArea["screenSharing"].style_class =
+				new StyleClass(Main.panel.statusArea["screenSharing"].style_class)
+				.add("QSTWEAKS-screen-sharing-indicator-use-accent")
+				.stringify()
+			this.maid.functionJob(()=>{
+				Main.panel.statusArea["screenSharing"].style_class =
+					new StyleClass(Main.panel.statusArea["screenSharing"].style_class)
+					.remove("QSTWEAKS-screen-sharing-indicator-use-accent")
+					.stringify()
+			})
+		}
+
+		// Colored screen recording indicator
+		if (this.coloredScreenRecordingIndicator) {
+			Main.panel.statusArea["screenRecording"].style_class =
+				new StyleClass(Main.panel.statusArea["screenRecording"].style_class)
+				.add("QSTWEAKS-screen-recording-indicator-use-accent")
+				.stringify()
+			this.maid.functionJob(()=>{
+				Main.panel.statusArea["screenRecording"].style_class =
+					new StyleClass(Main.panel.statusArea["screenRecording"].style_class)
+					.remove("QSTWEAKS-screen-recording-indicator-use-accent")
+					.stringify()
+			})
+		}
+
+		// Ordering
+		if (!this.orderEnabled) return
 		this.tracker = new SystemIndicatorTracker()
 		this.tracker.onIndicatorCreated = this.onIndicatorCreated.bind(this)
 		this.tracker.onUpdate = this.onUpdate.bind(this)

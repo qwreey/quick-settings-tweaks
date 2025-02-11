@@ -280,7 +280,16 @@
     </key>
     <!-- #endregion System Items Layout -->
 
-    <!-- #region Quick Toggle Layout -->
+    <!-- #region System Indicator Layout -->
+    <key name="system-indicator-privacy-indicator-use-accent" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-indicator-screen-sharing-indicator-use-accent" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-indicator-screen-recording-indicator-use-accent" type="b">
+      <default>false</default>
+    </key>
     <key name="system-indicator-layout-enabled" type="b">
       <default>false</default>
     </key>
@@ -314,7 +323,7 @@
 }]
       ]]></description>
     </key>
-    <!-- #endregion Quick Toggle Order -->
+    <!-- #endregion System Indicator Layout -->
 
     <!-- #region Input Output -->
     <key name="output-show-selected" type="b">

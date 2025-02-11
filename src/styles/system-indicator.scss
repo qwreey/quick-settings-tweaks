@@ -1,0 +1,13 @@
+@use "../global.scss" as *;
+
+#panel {
+    #{$p}-privacy-indicator-use-accent .privacy-indicator {
+        color: -st-accent-fg-color;
+    }
+    #{$p}-screen-recording-indicator-use-accent {
+        background-color: -st-accent-fg-color;
+    }
+    #{$p}-screen-sharing-indicator-use-accent {
+        background-color: -st-accent-fg-color;
+    }
+}
