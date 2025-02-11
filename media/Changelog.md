@@ -20,7 +20,7 @@
   - Improve prefs dialog
 - System indicators layout
   - Add ordering and hiding option
-  - Add accent screen sharing & recording indicators option
+  - Add accent screen sharing &amp; recording indicators option
   - Add accent privacy indicators option
 
 ## Fix
@@ -39,6 +39,8 @@
 <!-- @Includes: [] -->
 <!-- @Date: "2025-02-09 03:57:00 KST" -->
 <!-- @Git: "30ad4df" -->
+
+{{HEADER}}
 
 - Reduce reloading cost
 
