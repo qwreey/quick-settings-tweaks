@@ -11,6 +11,7 @@
 {{HEADER}}
 
 - Improve ordering editors
+- Update locale files
 
 ## New Features
 
@@ -33,6 +34,7 @@
 - Fix #170, some quick toggles are not hiding
 - Fix 'has been already disposed' error on weather widget
 - Fix '(intermediate value).Extension.features is null' error when extension unloading
+- Fix 'gschemas.compiled' not found error
 
 # 2.1-pre6
 <!-- @BuildNumber: 6 -->

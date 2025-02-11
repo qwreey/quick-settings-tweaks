@@ -82,6 +82,7 @@ function build() {
 		cp -r schemas target/out
 		cp -r media target/out
 		cp -r target/contributors target/out/media
+		compile-preferences
 	) &
 	COPYING_PID=$!
 
@@ -126,6 +127,7 @@ function build() {
 		--extra-source=media\
 		--extra-source=global.js\
 		--extra-source=config.js\
+
 		--out-dir=target\
 		--force
 	[ "$?" != "0" ] && echo "Failed to pack extension" && return 1
