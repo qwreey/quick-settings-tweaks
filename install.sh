@@ -82,7 +82,6 @@ function build() {
 		cp -r schemas target/out
 		cp -r media target/out
 		cp -r target/contributors target/out/media
-		compile-preferences
 	) &
 	COPYING_PID=$!
 
