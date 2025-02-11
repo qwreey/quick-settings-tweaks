@@ -14,6 +14,8 @@
   - Add GType name filter option
   - Now you can hide 'Unsorted items'
   - Improve prefs dialog
+- System indicators layout
+  - Add ordering and hiding option
 
 ## Fix
 

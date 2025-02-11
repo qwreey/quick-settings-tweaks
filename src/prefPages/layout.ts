@@ -21,17 +21,20 @@ import {
 	Dialog,
 	Button,
 } from "../libs/prefs/components.js"
+import { SystemIndicatorOrderItem } from "../libs/types/systemIndicatorOrderItem.js"
 
-// #region ToggleOrderGroup
-function ToggleOrderGroup(
+// #region OrderGroup
+function OrderGroup<T extends OrderInfo.Base>({
+	settings, page, dialog, bind, sensitiveBind, info
+}:{
 	settings: Gio.Settings,
 	page: Adw.PreferencesPage,
-	dialog: Adw.PreferencesDialog
-): Adw.PreferencesGroup {
-	const systemToggleNames = ToggleOrderGroup.getSystemToggleNames()
-	const systemToggleIcons = ToggleOrderGroup.getSystemToggleIcons()
-	const itemRows = new Map<ToggleOrderItem, Adw.ActionRow>()
-
+	dialog: Adw.PreferencesDialog,
+	bind: string,
+	sensitiveBind: string,
+	info: OrderInfo<T>
+}): Adw.PreferencesGroup {
+	const itemRows = new Map<T, Adw.ActionRow>()
 	const header = new Gtk.Box({})
 	const group = Group({
 		title: _("Ordering and Hiding"),
@@ -39,7 +42,7 @@ function ToggleOrderGroup(
 	})
 
 	// Reset button
-	const resetButton = ResetButton({ settings, bind: "toggles-layout-order", marginBottom: 0, marginTop: 0 })
+	const resetButton = ResetButton({ settings, bind, marginBottom: 0, marginTop: 0 })
 	resetButton.insert_after(header, null)
 
 	// Add button
@@ -49,84 +52,46 @@ function ToggleOrderGroup(
 		iconName: "list-add",
 		text: _("New Item"),
 		action: ()=>{
-			const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-			let nth = 1
-			let name: string
-			while (true) {
-				name = _("My toggle #%d").format(nth)
-				if (list.findIndex(item => item.friendlyName == name) == -1) break
-				nth += 1
-			}
-			const item = ToggleOrderItem.create(name)
+			const list = info.getListFromSettings(settings)
+			const item = info.create(info.getNextName(list))
 			list.push(item)
-			ToggleOrderGroup.setOrderListToSettings(settings, list)
+			info.setListToSettings(settings, list)
 			editItem(item)
 		}
 	})
 	addButton.insert_after(header, resetButton)
 
 	// Edit functions
-	const saveEditItem = (item: ToggleOrderItem, edited: ToggleOrderItem): string|null => {
-		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		const index = list.findIndex(targetItem => ToggleOrderItem.match(targetItem, item))
+	const saveItem = (item: T, edited: T): string|null => {
+		const list = info.getListFromSettings(settings)
+		const index = list.findIndex(targetItem => info.match(targetItem, item))
 		if (index == -1) {
-			return _("The toggle item not found")
+			return _("The item not found")
 		}
-		if (ToggleOrderItem.match(item, edited)) {
+		if (info.match(item, edited)) {
 			return _("No changes")
 		}
-		if (list.some(listItem => ToggleOrderItem.match(listItem, edited))) {
+		if (list.some(listItem => info.match(listItem, edited))) {
 			return _("The same item already exists")
 		}
 		list[index] = edited
-		ToggleOrderGroup.setOrderListToSettings(settings, list)
+		info.setListToSettings(settings, list)
 		return null
 	}
-	const editItem = (item: ToggleOrderItem)=>{
+	const editItem = (item: T)=>{
 		Dialog.StackedPage({
 			dialog,
 			title: _("Properties of %s").format(item.friendlyName),
 			childrenRequest: (_page, _dialog)=>{
-				const friendlyName = new Adw.EntryRow({
-					// editable
-					text: item.friendlyName ?? "",
-					max_length: 2048,
-					title: _("Friendly Name"),
-				})
-				const hideRow = new Adw.SwitchRow({
-					active: item.hide ?? false,
-					title: _("Hide"),
-				})
-				const titleRegex = new Adw.EntryRow({
-					text: item.titleRegex ?? "",
-					max_length: 2048,
-					title: _("Title Regex (Javascript Regex)")
-				})
-				const constructorName = new Adw.EntryRow({
-					text: item.constructorName ?? "",
-					max_length: 2028,
-					title: _("Constructor Name")
-				})
-				const gtypeName = new Adw.EntryRow({
-					text: item.gtypeName ?? "",
-					max_length: 2028,
-					title: _("GType Name")
-				})
+				const editLayout = info.createEditLayout(item)
 				const saveButton = Button({
 					marginBottom: 0,
 					marginTop: 0,
 					iconName: "document-save-symbolic",
 					text: _("Save"),
 					action: ()=>{
-						const edited = {
-							...item,
-							friendlyName: friendlyName.text,
-							constructorName: constructorName.text,
-							gtypeName: gtypeName.text,
-							titleRegex: titleRegex.text,
-							hide: hideRow.active,
-						}
-						const saved = saveEditItem(item, edited)
+						const edited = editLayout.getValue()
+						const saved = saveItem(item, edited)
 						if (saved == null) {
 							item = edited
 						} else {
@@ -141,41 +106,34 @@ function ToggleOrderGroup(
 					Group({
 						title: _("Toggle editor"),
 						header_suffix: saveButton,
-					},[
-						friendlyName,
-						constructorName,
-						gtypeName,
-						titleRegex,
-						hideRow,
-					])
+					}, )
 				]
 			}
 		})
 	}
-	const deleteItem = (item: ToggleOrderItem)=>{
-		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		const index = list.findIndex(targetItem => ToggleOrderItem.match(targetItem, item))
+	const deleteItem = (item: T)=>{
+		const list = info.getListFromSettings(settings)
+		const index = list.findIndex(targetItem => info.match(targetItem, item))
 		if (index == -1) return
 		list.splice(index, 1)
-		ToggleOrderGroup.setOrderListToSettings(settings, list)
+		info.setListToSettings(settings, list)
 	}
-	const setItemHide = (item: ToggleOrderItem, hide: boolean)=>{
-		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		list.find(targetItem => ToggleOrderItem.match(targetItem, item)).hide = hide
-		ToggleOrderGroup.setOrderListToSettings(settings, list)
+	const hideItem = (item: T, hide: boolean)=>{
+		const list = info.getListFromSettings(settings)
+		list.find(targetItem => info.match(targetItem, item)).hide = hide
+		info.setListToSettings(settings, list)
 		dialog.add_toast(new Adw.Toast({
 			title: _("This option requires full gnome-shell reloading"),
 			timeout: 12,
 		}))
 	}
-	const moveItem = (item: ToggleOrderItem, direction: number)=>{
-		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
-		const index = list.findIndex(targetItem => ToggleOrderItem.match(targetItem, item))
-
-		if (!direction) return
-		const sign = Math.sign(direction)
+	const moveItem = (item: T, offset: number)=>{
+		const list = info.getListFromSettings(settings)
+		const index = list.findIndex(targetItem => info.match(targetItem, item))
+		if (!offset) return
+		const sign = Math.sign(offset)
 		let targetIndex = index
-		for (let count = Math.abs(direction); count > 0; count--) {
+		for (let count = Math.abs(offset); count > 0; count--) {
 			if (targetIndex <= 0 && sign == -1) break
 			if ((targetIndex >= (list.length - 1)) && sign == 1) break
 			targetIndex += sign
@@ -183,29 +141,37 @@ function ToggleOrderGroup(
 		if (index == targetIndex) return
 		list.splice(index, 1)
 		list.splice(targetIndex, 0, item)
-		ToggleOrderGroup.setOrderListToSettings(settings, list)
+		info.setListToSettings(settings, list)
 	}
-	const removeOrphanItems = (list: ToggleOrderItem[])=>{
+
+	// Control items
+	const pruneItems = (list: T[])=>{
 		for (const [targetItem, row] of itemRows.entries()) {
-			if (list.some(item => ToggleOrderItem.match(item, targetItem))) continue
+			if (list.some(item => info.match(item, targetItem))) continue
 			itemRows.delete(targetItem)
 			group.remove(row)
 		}
 	}
-	const pushItems = (list: ToggleOrderItem[])=>{
+	const pushItems = (list: T[])=>{
 		for (const newItem of list) {
-			if ([...itemRows.entries()].find(([item]) => ToggleOrderItem.match(item, newItem)))
+			// Filter already exist
+			if ([...itemRows.entries()].find(([item]) => info.match(item, newItem)))
 				continue
+
+			// Create row
 			const row = Row({
 				settings,
-				title: ToggleOrderGroup.getDisplayName(newItem, systemToggleNames),
-				subtitle: ToggleOrderGroup.getSubtitle(newItem),
-				sensitiveBind: "toggles-layout-enabled"
+				title: info.getDisplayName(newItem),
+				subtitle: info.getSubtitle(newItem),
+				sensitiveBind,
 			})
 
-			if (newItem.isSystem && systemToggleIcons.has(newItem.constructorName)) {
+			// Update icon
+			const systemKey = info.getSystemKey(newItem)
+			const iconName = systemKey && info.systemIcons.get(systemKey)
+			if (iconName) {
 				const icon = new Gtk.Image({
-					icon_name: systemToggleIcons.get(newItem.constructorName),
+					icon_name: iconName,
 					pixel_size: 18,
 					margin_start: 8,
 					margin_end: 2,
@@ -213,27 +179,30 @@ function ToggleOrderGroup(
 				row.add_prefix(icon)
 			}
 
+			// Create Up & Down button
 			const updown = UpDownButton({
 				settings,
 				sensitiveBind: "toggles-layout-enabled",
-				action: (direction)=>moveItem(newItem, direction == UpDownButton.Direction.Up ? -1 : 1)
+				action: (direction)=>{
+					moveItem(newItem, direction == UpDownButton.Direction.Up ? -1 : 1)
+				}
 			})
 			row.add_prefix(updown)
 
 			// Hide button
-			if (!ToggleOrderGroup.noHideOption(newItem)) {
+			if (info.canHide(newItem)) {
 				const toggle = new Gtk.ToggleButton({
 					margin_bottom: 8,
 					margin_top: 8,
 					label: _("Hide"),
 					active: newItem.hide ?? false,
 				})
-				toggle.connect("notify::active", () => setItemHide(newItem, toggle.get_active()))
+				toggle.connect("notify::active", () => hideItem(newItem, toggle.get_active()))
 				row.add_suffix(toggle)
 			}
 
-			// Edit button
-			if (!newItem.isSystem && !newItem.nonOrdered) {
+			// Delete & Edit button
+			if (info.canEdit(newItem)) {
 				const deleteButton = new Gtk.Button({
 					icon_name: "edit-clear-symbolic",
 					margin_bottom: 8,
@@ -254,15 +223,16 @@ function ToggleOrderGroup(
 			group.add(row)
 		}
 	}
-	const orderChildren = (list: ToggleOrderItem[])=>{
+	const orderItems = (list: T[])=>{
 		const rows = [...itemRows.entries()]
 		const orderedRows = list
 			.map(
 				targetItem=>rows.find(
-					([item]) => ToggleOrderItem.match(targetItem, item)
-				)[1]
+					([item]) => info.match(targetItem, item)
+				)?.[1] ?? null
 			)
 		for (const row of orderedRows) {
+			if (!row) continue
 			group.remove(row)
 			group.add(row)
 		}
@@ -271,10 +241,10 @@ function ToggleOrderGroup(
 	// Sync to settings
 	const update = ()=>{
 		setScrollToFocus(page, false)
-		const list = ToggleOrderGroup.getOrderListFromSettings(settings)
+		const list = info.getListFromSettings(settings)
 		pushItems(list)
-		removeOrphanItems(list)
-		orderChildren(list)
+		pruneItems(list)
+		orderItems(list)
 		delayedSetScrollToFocus(page, true)
 	}
 	const settingsConnection = settings.connect("changed::toggles-layout-order", update.bind(null))
@@ -283,8 +253,98 @@ function ToggleOrderGroup(
 
 	return group
 }
-namespace ToggleOrderGroup {
-	export function getSystemToggleNames(): Map<string, string> {
+abstract class OrderInfo<T extends OrderInfo.Base> {
+	abstract getSystemNames(): Map<string, string>
+	abstract getSystemIcons(): Map<string, string>
+	abstract getSystemKey(item: T): string
+	abstract getListFromSettings(settings: Gio.Settings): T[]
+	abstract setListToSettings(settings: Gio.Settings, list: T[]): void
+	private _systemNames: Map<string, string>
+	private _systemIcons: Map<string, string>
+	get systemNames(): Map<string, string> {
+		return this._systemNames ??= this.getSystemNames()
+	}
+	get systemIcons(): Map<string, string> {
+		return this._systemIcons ??= this.getSystemIcons()
+	}
+	abstract getDisplayName(item: T): string
+	abstract getSubtitle(item: T): string
+	abstract canHide(item: T): boolean
+	abstract canEdit(item: T): boolean
+	abstract createEditLayout(item: T): OrderInfo.EditLayout<T>
+	getNextName(list: T[]): string {
+		let nth = 1
+		let name: string
+		while (true) {
+			name = _("My toggle #%d").format(nth)
+			if (list.findIndex(item => item.friendlyName == name) == -1) break
+			nth += 1
+		}
+		return name
+	}
+	abstract create(friendlyName: string): T
+	abstract match(a: T, b: T): boolean
+}
+namespace OrderInfo {
+	export type EditLayout<T> = {
+		layout: any[],
+		getValue: ()=>T,
+	}
+	export type Base = {
+		hide?: boolean,
+		friendlyName?: string,
+	}
+}
+// #endregion OrderGroup
+
+class ToggleOrderInfo extends OrderInfo<ToggleOrderItem> {
+	createEditLayout(item: ToggleOrderItem): OrderInfo.EditLayout<ToggleOrderItem> {
+		const friendlyName = new Adw.EntryRow({
+			text: item.friendlyName ?? "",
+			max_length: 2048,
+			title: _("Friendly Name"),
+		})
+		const hideRow = new Adw.SwitchRow({
+			active: item.hide ?? false,
+			title: _("Hide"),
+		})
+		const titleRegex = new Adw.EntryRow({
+			text: item.titleRegex ?? "",
+			max_length: 2048,
+			title: _("Title Regex (Javascript Regex)")
+		})
+		const constructorName = new Adw.EntryRow({
+			text: item.constructorName ?? "",
+			max_length: 2028,
+			title: _("Constructor Name")
+		})
+		const gtypeName = new Adw.EntryRow({
+			text: item.gtypeName ?? "",
+			max_length: 2028,
+			title: _("GType Name")
+		})
+		return {
+			layout: [
+				friendlyName,
+				hideRow,
+				constructorName,
+				gtypeName,
+				titleRegex,
+			],
+			getValue: ()=>({
+				...item,
+				friendlyName: friendlyName.text,
+				constructorName: constructorName.text,
+				gtypeName: gtypeName.text,
+				titleRegex: titleRegex.text,
+				hide: hideRow.active,
+			})
+		}
+	}
+	getSystemKey(item: ToggleOrderItem): string {
+		return item.constructorName
+	}
+	getSystemNames(): Map<string, string> {
 		const IGNORE_XGETTEXT=_
 		return new Map<string, string>([
 			[ "NMWiredToggle", IGNORE_XGETTEXT("Wired Connections") ],
@@ -303,7 +363,7 @@ namespace ToggleOrderGroup {
 			[ "UnsafeQuickToggle", _("Unsafe Mode") ],
 		])
 	}
-	export function getSystemToggleIcons(): Map<string, string> {
+	getSystemIcons(): Map<string, string> {
 		return new Map<string, string>([
 			[ "NMWiredToggle", "network-wired-symbolic" ],
 			[ "NMWirelessToggle", "network-wireless-signal-excellent-symbolic" ],
@@ -321,10 +381,10 @@ namespace ToggleOrderGroup {
 			[ "UnsafeQuickToggle", "channel-secure-symbolic" ],
 		])
 	}
-	export function getOrderListFromSettings(settings: Gio.Settings): ToggleOrderItem[] {
+	getListFromSettings(settings: Gio.Settings): ToggleOrderItem[] {
 		return settings.get_value("toggles-layout-order").recursiveUnpack() as ToggleOrderItem[]
 	}
-	export function setOrderListToSettings(settings: Gio.Settings, list: ToggleOrderItem[]): void {
+	setListToSettings(settings: Gio.Settings, list: ToggleOrderItem[]): void {
 		const mappedList = list.map(item => {
 			const out = {}
 			for (const [key, value] of Object.entries(item)) {
@@ -344,30 +404,158 @@ namespace ToggleOrderGroup {
 		})
 		settings.set_value("toggles-layout-order", new GLib.Variant("aa{sv}", mappedList))
 	}
-	export function getDisplayName(
-		item: ToggleOrderItem,
-		systemToggleNames: Map<string, string>
-	): string {
-		if (item.nonOrdered) return _("Unsorted items")
-		if (item.isSystem) return systemToggleNames.get(item.constructorName)
-		return item.friendlyName || item.constructorName || item.titleRegex || "Unknown"
+	getDisplayName(item: ToggleOrderItem): string {
+		if (item.nonOrdered) return _("Unordered items")
+		if (item.isSystem) return this.systemNames.get(item.constructorName) ?? "Unknown"
+		return item.friendlyName || item.constructorName || item.gtypeName || item.titleRegex || "Unknown"
 	}
-	export function getSubtitle(
-		item: ToggleOrderItem,
-	): string {
+	getSubtitle(item: ToggleOrderItem): string {
 		if (item.nonOrdered) return ""
-		if (item.isSystem) return item.constructorName
-		if (item.friendlyName) return item.constructorName || item.titleRegex || "Unknown"
+		if (item.isSystem) return item.constructorName ?? ""
+		if (item.friendlyName) return item.constructorName || item.gtypeName || item.titleRegex || "Unknown"
 		return ""
 	}
-	export function noHideOption(item: ToggleOrderItem): boolean {
-		if (!item.isSystem) return false
-		if (item.constructorName == "DndQuickToggle" || item.constructorName == "UnsafeQuickToggle")
-			return true
-		return false
+	canHide(item: ToggleOrderItem): boolean {
+		if (!item.isSystem) return true
+		return (
+			item.constructorName != "DndQuickToggle"
+			&& item.constructorName != "UnsafeQuickToggle"
+		)
+	}
+	canEdit(item: ToggleOrderItem): boolean {
+		return !item.isSystem && !item.nonOrdered
+	}
+	match(a: ToggleOrderItem, b: ToggleOrderItem): boolean {
+		return ToggleOrderItem.match(a, b)
+	}
+	create(friendlyName: string): ToggleOrderItem {
+		return ToggleOrderItem.create(friendlyName)
 	}
 }
-// #endregion ToggleOrderGroup
+
+class SystemIndicatorOrderInfo extends OrderInfo<SystemIndicatorOrderItem> {
+	createEditLayout(item: SystemIndicatorOrderItem): OrderInfo.EditLayout<SystemIndicatorOrderItem> {
+		const friendlyName = new Adw.EntryRow({
+			text: item.friendlyName ?? "",
+			max_length: 2048,
+			title: _("Friendly Name"),
+		})
+		const hideRow = new Adw.SwitchRow({
+			active: item.hide ?? false,
+			title: _("Hide"),
+		})
+		const constructorName = new Adw.EntryRow({
+			text: item.constructorName ?? "",
+			max_length: 2028,
+			title: _("Constructor Name")
+		})
+		const gtypeName = new Adw.EntryRow({
+			text: item.gtypeName ?? "",
+			max_length: 2028,
+			title: _("GType Name")
+		})
+		return {
+			layout: [
+				friendlyName,
+				hideRow,
+				constructorName,
+				gtypeName,
+			],
+			getValue: ()=>({
+				...item,
+				friendlyName: friendlyName.text,
+				constructorName: constructorName.text,
+				gtypeName: gtypeName.text,
+				hide: hideRow.active,
+			})
+		}
+	}
+	getSystemKey(item: SystemIndicatorOrderItem): string {
+		return item.gtypeName
+	}
+	getSystemNames(): Map<string, string> {
+		const IGNORE_XGETTEXT=_
+		return new Map<string, string>([
+			[ "Gjs_toggle_dndQuickToggle_DndIndicator", _("Do Not Disturb") ],
+			[ "Gjs_status_remoteAccess_RemoteAccessApplet", _("Remote Access Applet") ],
+			[ "Gjs_status_camera_Indicator", _("Camera") ],
+			[ "Gjs_status_volume_InputIndicator", _("Volume Input") ],
+			[ "Gjs_status_location_Indicator", _("Location") ],
+			[ "Gjs_status_thunderbolt_Indicator", _("Thunderbolt") ],
+			[ "Gjs_status_nightLight_Indicator", IGNORE_XGETTEXT("Night Light") ],
+			[ "Gjs_status_network_Indicator", _("Network") ],
+			[ "Gjs_status_bluetooth_Indicator", IGNORE_XGETTEXT("Bluetooth") ],
+			[ "Gjs_status_rfkill_Indicator", IGNORE_XGETTEXT("Airplane Mode") ],
+			[ "Gjs_status_volume_OutputIndicator", _("Volume Output") ],
+			[ "Gjs_ui_panel_UnsafeModeIndicator", _("Unsafe Mode") ],
+			[ "Gjs_status_system_Indicator", _("System (Battery)") ],
+		])
+	}
+	getSystemIcons(): Map<string, string> {
+		return new Map<string, string>([
+			[ "Gjs_toggle_dndQuickToggle_DndIndicator", "notifications-disabled-symbolic" ],
+			[ "Gjs_status_remoteAccess_RemoteAccessApplet", "preferences-desktop-remote-desktop" ],
+			[ "Gjs_status_camera_Indicator", "camera-photo-symbolic" ],
+			[ "Gjs_status_volume_InputIndicator", "microphone-sensitivity-high-symbolic" ],
+			[ "Gjs_status_location_Indicator", "find-location-symbolic" ],
+			[ "Gjs_status_thunderbolt_Indicator", "system-run-symbolic" ],
+			[ "Gjs_status_nightLight_Indicator", "night-light-symbolic" ],
+			[ "Gjs_status_network_Indicator", "network-wireless-signal-excellent-symbolic" ],
+			[ "Gjs_status_bluetooth_Indicator", "bluetooth-active-symbolic" ],
+			[ "Gjs_status_rfkill_Indicator", "airplane-mode-symbolic" ],
+			[ "Gjs_status_volume_OutputIndicator", "audio-volume-medium-symbolic" ],
+			[ "Gjs_ui_panel_UnsafeModeIndicator", "channel-secure-symbolic" ],
+			[ "Gjs_status_system_Indicator", "system-shutdown-symbolic" ],
+		])
+	}
+	getListFromSettings(settings: Gio.Settings): SystemIndicatorOrderItem[] {
+		return settings.get_value("system-indicator-layout-order").recursiveUnpack() as SystemIndicatorOrderItem[]
+	}
+	setListToSettings(settings: Gio.Settings, list: SystemIndicatorOrderItem[]): void {
+		const mappedList = list.map(item => {
+			const out = {}
+			for (const [key, value] of Object.entries(item)) {
+				switch (typeof value) {
+					case "boolean":
+						out[key] = GLib.Variant.new_variant(
+							GLib.Variant.new_boolean(value)
+						)
+						break
+					case "string":
+						out[key] = GLib.Variant.new_variant(
+							GLib.Variant.new_string(value)
+						)
+				}
+			}
+			return out
+		})
+		settings.set_value("system-indicator-layout-order", new GLib.Variant("aa{sv}", mappedList))
+	}
+	getDisplayName(item: SystemIndicatorOrderItem): string {
+		if (item.nonOrdered) return _("Unordered items")
+		if (item.isSystem) return this.systemNames.get(item.gtypeName) ?? "Unknown"
+		return item.friendlyName || item.constructorName || item.gtypeName || "Unknown"
+	}
+	getSubtitle(item: SystemIndicatorOrderItem): string {
+		if (item.nonOrdered) return ""
+		if (item.isSystem) return item.gtypeName ?? ""
+		if (item.friendlyName) return item.constructorName || item.gtypeName || "Unknown"
+		return ""
+	}
+	canHide(item: SystemIndicatorOrderItem): boolean {
+		if (!item.isSystem) return true
+		return item.gtypeName != "Gjs_toggle_dndQuickToggle_DndIndicator"
+	}
+	canEdit(item: SystemIndicatorOrderItem): boolean {
+		return !item.isSystem && !item.nonOrdered
+	}
+	match(a: SystemIndicatorOrderItem, b: SystemIndicatorOrderItem): boolean {
+		return SystemIndicatorOrderItem.match(a, b)
+	}
+	create(friendlyName: string): SystemIndicatorOrderItem {
+		return SystemIndicatorOrderItem.create(friendlyName)
+	}
+}
 
 // #region SystemItemOrderGroup
 function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Adw.PreferencesGroup {
@@ -526,7 +714,43 @@ export const LayoutPage = GObject.registerClass({
 				subtitle: _("Reorder and hide quick toggles"),
 				dialogTitle: _("Adjust system items layout"),
 				experimental: true,
-				childrenRequest: (page, dialog) => [ToggleOrderGroup(settings, page, dialog)],
+				childrenRequest: (page, dialog) => [OrderGroup({
+					settings,
+					page,
+					dialog,
+					bind: "toggles-layout-order",
+					sensitiveBind: "toggles-layout-enabled",
+					info: new ToggleOrderInfo(),
+				})],
+			}),
+		])
+
+		// System indicators
+		Group({
+			parent: this,
+			title: _("System Indicators Layout"),
+			description: _("Adjust system indicators layout"),
+			headerSuffix: SwitchRow({
+				settings,
+				bind: "system-indicator-layout-enabled",
+			}),
+		},[
+			DialogRow({
+				settings,
+				window,
+				sensitiveBind: "system-indicator-layout-enabled",
+				title: _("Ordering and Hiding"),
+				subtitle: _("Reorder and hide system indicators"),
+				dialogTitle: _("Adjust system indicators"),
+				experimental: true,
+				childrenRequest: (page, dialog) => [OrderGroup({
+					settings,
+					page,
+					dialog,
+					bind: "system-indicator-layout-order",
+					sensitiveBind: "system-indicator-layout-enabled",
+					info: new SystemIndicatorOrderInfo(),
+				})],
 			}),
 		])
 

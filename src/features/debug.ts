@@ -4,47 +4,47 @@ import { logger } from "../libs/shared/logger.js"
 import Config from "../config.js"
 
 export class DebugFeature extends FeatureBase {
-    disableDebugMessage = true
+	disableDebugMessage = true
 
-    // #region settings
-    expose: boolean
-    showLayoutBorder: boolean
-    logLevel: number
-    loadSettings(loader: SettingLoader): void {
-        this.expose = loader.loadBoolean("debug-expose")
-        this.showLayoutBorder = loader.loadBoolean("debug-show-layout-border")
-        this.logLevel = loader.loadInt("debug-log-level")
-    }
-    // #endregion settings
+	// #region settings
+	expose: boolean
+	showLayoutBorder: boolean
+	logLevel: number
+	loadSettings(loader: SettingLoader): void {
+		this.expose = loader.loadBoolean("debug-expose")
+		this.showLayoutBorder = loader.loadBoolean("debug-show-layout-border")
+		this.logLevel = loader.loadInt("debug-log-level")
+	}
+	// #endregion settings
 
-    onLoad() {
-        logger.setHeader(Config.loggerPrefix)
-        logger.setLogLevel(this.logLevel)
-        logger.debug(()=>`Logger initialized, LogLevel: ${this.logLevel}`)
-        if (this.expose) {
-            globalThis.qst = Global
-            for (const feature of (Global.Extension as any).features) {
-                Global[feature.constructor.name] = feature
-            }
-            this.maid.functionJob(()=>{
-                for (const feature of (Global.Extension as any).features) {
-                    delete Global[feature.constructor.name]
-                }
-                delete globalThis.qst
-            })
-            logger.debug("Extension environment expose enabled")
-        }
-        if (this.showLayoutBorder) {
-            // @ts-ignore
-            Global.QuickSettingsMenu._boxPointer.styleClass += " QSTWEAKS-debug-show-layout"
-            this.maid.functionJob(()=>{
-                // @ts-ignore
-                Global.QuickSettingsMenu._boxPointer.styleClass =
-                // @ts-ignore
-                Global.QuickSettingsMenu._boxPointer.styleClass.replace(/ QSTWEAKS-debug-show-layout/, "")
-            })
-            logger.debug("Show layout border enabled")
-        }
-    }
-    onUnload(): void {}
+	onLoad() {
+		logger.setHeader(Config.loggerPrefix)
+		logger.setLogLevel(this.logLevel)
+		logger.debug(()=>`Logger initialized, LogLevel: ${this.logLevel}`)
+		if (this.expose) {
+			globalThis.qst = Global
+			for (const feature of (Global.Extension as any).features) {
+				Global[feature.constructor.name] = feature
+			}
+			this.maid.functionJob(()=>{
+				for (const feature of (Global.Extension as any).features) {
+					delete Global[feature.constructor.name]
+				}
+				delete globalThis.qst
+			})
+			logger.debug("Extension environment expose enabled")
+		}
+		if (this.showLayoutBorder) {
+			// @ts-ignore
+			Global.QuickSettingsMenu._boxPointer.styleClass += " QSTWEAKS-debug-show-layout"
+			this.maid.functionJob(()=>{
+				// @ts-ignore
+				Global.QuickSettingsMenu._boxPointer.styleClass =
+				// @ts-ignore
+				Global.QuickSettingsMenu._boxPointer.styleClass.replace(/ QSTWEAKS-debug-show-layout/, "")
+			})
+			logger.debug("Show layout border enabled")
+		}
+	}
+	onUnload(): void {}
 }

@@ -280,6 +280,42 @@
     </key>
     <!-- #endregion System Items Layout -->
 
+    <!-- #region Quick Toggle Layout -->
+    <key name="system-indicator-layout-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="system-indicator-layout-order" type="aa{sv}">
+      <default><![CDATA[
+        [
+          { 'nonOrdered': <true>, 'hide': <false> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_toggle_dndQuickToggle_DndIndicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_remoteAccess_RemoteAccessApplet'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_camera_Indicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_volume_InputIndicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_location_Indicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_thunderbolt_Indicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_nightLight_Indicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_network_Indicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_bluetooth_Indicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_rfkill_Indicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_volume_OutputIndicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_ui_panel_UnsafeModeIndicator'> },
+          { 'hide': <false>, 'isSystem': <true>, 'gtypeName': <'Gjs_status_system_Indicator'> }
+        ]
+      ]]></default>
+      <description><![CDATA[
+[{
+  gtypeName: <string>,
+  constructorName: <string>,
+  friendlyName: <string>,
+  nonOrdered: <boolean>,
+  isSystem: <boolean>,
+  hide: <boolean>
+}]
+      ]]></description>
+    </key>
+    <!-- #endregion Quick Toggle Order -->
+
     <!-- #region Input Output -->
     <key name="output-show-selected" type="b">
       <default>false</default>
@@ -334,7 +370,7 @@
 }]
       ]]></description>
     </key>
-    <!-- #endregion Quick Toggle Order -->
+    <!-- #endregion Quick Toggle Layout -->
 
     <!-- #region Unsafe Mode Quick Toggle -->
     <key name="unsafe-quick-toggle-enabled" type="b">

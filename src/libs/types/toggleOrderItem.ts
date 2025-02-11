@@ -31,6 +31,7 @@ export namespace ToggleOrderItem {
         )
     }
     export function toggleMatch(item: ToggleOrderItem, toggle: QuickToggle|QuickMenuToggle): boolean {
+        if (item.nonOrdered) return false
         if (item.gtypeName && GObject.type_name_from_instance(toggle as any) != item.gtypeName)
             return false
         if (item.constructorName && toggle.constructor.name != item.constructorName)

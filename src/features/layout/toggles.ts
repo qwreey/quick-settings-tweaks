@@ -31,7 +31,6 @@ export class TogglesLayoutFeature extends FeatureBase {
 		const rule: ToggleOrderItem =
 			this.order.find(item => ToggleOrderItem.toggleMatch(item, toggle))
 			?? this.unordered
-		log(rule)
 		if (rule.hide) maid.hideJob(toggle)
 	}
 	onUpdate(): void {

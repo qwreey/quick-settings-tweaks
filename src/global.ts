@@ -6,6 +6,7 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { type Extension } from "resource:///org/gnome/shell/extensions/extension.js"
 import { type MessageTray } from "resource:///org/gnome/shell/ui/messageTray.js"
 import { type DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js"
+import * as PanelMenu from "resource:///org/gnome/shell/ui/panelMenu.js"
 import {
 	type NotificationSection,
 	type CalendarMessageList
@@ -25,7 +26,7 @@ type StreamSlider = {
 	OutputStreamSlider: QuickSlider,
 }
 export const Global = new (class Global {
-	QuickSettings: Clutter.Actor
+	QuickSettings: PanelMenu.Button
 	QuickSettingsMenu: QuickSettingsMenu
 	QuickSettingsGrid: St.Widget
 	QuickSettingsBox: St.BoxLayout
@@ -50,6 +51,7 @@ export const Global = new (class Global {
 			.then(system=>(system as any)._systemItem)
 			.catch(logger.error)
 	}
+	Indicators: St.BoxLayout
 
 	DateMenu: DateMenuButton
 	DateMenuMenu: PopupMenu
@@ -146,6 +148,7 @@ export const Global = new (class Global {
 		this.QuickSettingsGrid = null
 		this.QuickSettingsBox = null
 		this.QuickSettingsActor = null
+		this.Indicators = null
 		this.DateMenu = null
 		this.DateMenuMenu = null
 		this.DateMenuBox = null
@@ -170,6 +173,7 @@ export const Global = new (class Global {
 		this.QuickSettingsGrid = QuickSettings.menu._grid
 		this.QuickSettingsBox = QuickSettings.menu.box
 		this.QuickSettingsActor = QuickSettings.menu.actor
+		this.Indicators = QuickSettings._indicators
 
 		// Date Menu
 		const DateMenu = this.DateMenu = Main.panel.statusArea.dateMenu

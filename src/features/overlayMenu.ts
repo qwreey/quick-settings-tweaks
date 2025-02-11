@@ -149,7 +149,7 @@ export class OverlayMenu extends FeatureBase {
 
 		this.tracker = new QuickSettingsMenuTracker()
 		this.tracker.onMenuCreated = this.onMenuCreated.bind(this)
-		this.tracker.onOpen = this.onOpen.bind(this)
+		this.tracker.onMenuOpen = this.onOpen.bind(this)
 		this.tracker.load()
 	}
 	override onUnload(): void {
