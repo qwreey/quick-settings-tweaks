@@ -6,10 +6,11 @@
 <!-- @BuildNumber: 8 -->
 <!-- @Includes: [] -->
 <!-- @Date: "2025-02-15 03:55:00 KST" -->
-<!-- @Git: "d6727ac" -->
+<!-- @Git: "8596794" -->
 
 {{HEADER}}
 
+- Fix project name
 - Layout editor shows only useful items
   > For example, a DND quick toggle only appears when enabled
 - Migration for gnome 48 (partially)
