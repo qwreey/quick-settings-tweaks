@@ -142,6 +142,15 @@
     <key name="weather-click-command" type="s">
       <default>''</default>
     </key>
+    <key name="weather-show-location" type="b">
+      <default>true</default>
+    </key>
+    <key name="weather-max-forecasts" type="i">
+      <default>5</default>
+    </key>
+    <key name="weather-interval-hour" type="i">
+      <default>1</default>
+    </key>
     <!-- #endregion Weather Widget -->
 
     <!-- #region Volume Mixer Widget -->

@@ -6,25 +6,6 @@ Readme file
 
 배터리 알약 아이콘
 
-GObject.type_name_from_instance(r(0).get_parent())
-remoteaccess ScreenRecordingIndicator
-camera
-volumeinput
-location
-brightness
-thunderbolt
-nightlight
-network
-darkmode
-powerprofiles
-bluetooth
-rfkill
-autorotate
-volumeoutput
-unsafemode
-system
-
-
 widgets:
     sound output:
         device to hide

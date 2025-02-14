@@ -382,6 +382,29 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "weather-click-command",
 				sensitiveBind: "weather-enabled",
 			}),
+			SwitchRow({
+				settings,
+				title: _("Show location"),
+				subtitle: _("Show the location label on header"),
+				bind: "weather-show-location",
+				sensitiveBind: "weather-enabled",
+			}),
+			AdjustmentRow({
+				settings,
+				max: 1024,
+				min: 1,
+				bind: "weather-interval-hour",
+				title: _("Forecast interval"),
+				subtitle: _("Adjust forecast interval in hour"),
+			}),
+			AdjustmentRow({
+				settings,
+				max: 12,
+				min: 0,
+				bind: "weather-max-forecasts",
+				title: _("Max forecasts"),
+				subtitle: _("Adjust max forecasts"),
+			}),
 		])
 
 		// volume mixer

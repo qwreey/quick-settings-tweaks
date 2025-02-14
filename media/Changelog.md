@@ -2,7 +2,7 @@
 <!-- Note: -->
 <!-- This file is visible in prefs so if -->
 <!-- it is erased it may cause an error -->
-# 2.1-stable
+# 2.1-pre8
 <!-- @BuildNumber: 8 -->
 <!-- @Includes: [] -->
 <!-- @Date: "2025-02-12 4:56:00 KST" -->
@@ -12,11 +12,18 @@
 
 - Layout editor shows only useful items
   > For example, a DND quick toggle only appears when enabled
+- Migration for gnome 48 (partially)
+  - 'vertical' property migration
+- Fix some typescript type errors
 
 ## New Features
 
 - Menu animation
   - Add background brightness option
+- Weather widget
+  - Add show or hide location label option
+  - Add max forecasts option
+  - Add weather interval option
 
 # 2.1-pre7
 <!-- @BuildNumber: 7 -->

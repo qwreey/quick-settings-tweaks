@@ -8,7 +8,7 @@
     }
     &#{$p}-weather-compact {
         .weather-button {
-            padding: 0px 0px 10px 0px;
+            padding: 8px 0px 10px 0px;
             .weather-forecast-time {
                 padding-top: 4px;
                 padding-bottom: 2px;
@@ -20,8 +20,8 @@
     }
     .weather-button {
         margin: 0px;
-        .weather-header {
-            margin: 12px 2px 2px 12px;
+        #{$p}-status-label {
+            margin: 8px 10px 10px 10px;
         }
     }
 

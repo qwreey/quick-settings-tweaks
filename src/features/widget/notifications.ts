@@ -7,6 +7,7 @@ import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { StyledScroll } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
+import { VerticalProp } from "../../libs/shell/compat.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {
@@ -15,9 +16,9 @@ class Placeholder extends St.BoxLayout {
 
 	_init() {
 		super._init({
+			...VerticalProp,
 			style_class: "QSTWEAKS-placeholder",
 			x_align: Clutter.ActorAlign.CENTER,
-			vertical: true,
 			opacity: 60,
 		} as Partial<St.BoxLayout>)
 
@@ -227,7 +228,7 @@ class NotificationWidget extends St.BoxLayout {
 	}
 	_init(options: NotificationWidget.Options) {
 		super._init({
-			vertical: true,
+			...VerticalProp,
 		} as Partial<St.BoxLayout.ConstructorProps>)
 
 		this._options = options
@@ -277,7 +278,7 @@ class NotificationWidget extends St.BoxLayout {
 	// Scroll view
 	_createScroll() {
 		this._sections = new St.BoxLayout({
-			vertical: true,
+			...VerticalProp,
 			x_expand: true,
 			y_expand: true,
 		})

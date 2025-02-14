@@ -19,6 +19,7 @@ import { RoundClipEffect } from "../../libs/shell/effects.js"
 import { StyledSlider } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
 import Logger from "../../libs/shared/logger.js"
+import { VerticalProp } from "../../libs/shell/compat.js"
 
 // #region Player
 class Player extends GObject.Object {
@@ -380,7 +381,7 @@ class ProgressControl extends St.BoxLayout {
 		this._options = options
 
 		super._init({
-			vertical: false,
+			...VerticalProp,
 			x_expand: true,
 			style_class: "QSTWEAKS-progress-control",
 		})
@@ -1122,7 +1123,7 @@ class MediaWidget extends St.BoxLayout {
 	}
 	_init(options: MediaWidget.Options) {
 		super._init({
-			vertical: true,
+			...VerticalProp,
 			x_expand: true,
 			y_expand: true,
 			reactive: true,
