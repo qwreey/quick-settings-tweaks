@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-14 14:22+0000\n"
+"POT-Creation-Date: 2025-02-14 18:22+0000\n"
 "PO-Revision-Date: 2025-01-21 18:40+0900\n"
 "Last-Translator: nulta <nulta@knu.ac.kr>\n"
 "Language-Team: Korean <http://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/ko/>\n"
@@ -576,8 +576,8 @@ msgid "External links about this extension"
 msgstr "익스텐션과 관련된 외부 링크"
 
 #: target/out/prefPages/about.js:90
-msgid "Donate via patreon"
-msgstr "Patreon으로 후원"
+msgid "Donate via github sponsors"
+msgstr ""
 
 #: target/out/prefPages/about.js:91
 msgid "Support development!"
@@ -1086,7 +1086,7 @@ msgstr "알림 숨김"
 
 #: target/out/prefPages/layout.js:829
 msgid "Hide notifications on the date menu"
-msgstr 알림을 날짜 메뉴에서 숨깁니다"
+msgstr "알림을 날짜 메뉴에서 숨깁니다"
 
 #: target/out/prefPages/layout.js:834
 msgid "Hide Media Control"
@@ -1119,6 +1119,9 @@ msgstr "메뉴 비활성화"
 #: target/out/prefPages/layout.js:853
 msgid "Do not open date menu when the date menu button clicked"
 msgstr "날짜 메뉴 버튼을 눌렀을 때 날짜 메뉴가 열림을 비활성화합니다"
+
+#~ msgid "Donate via patreon"
+#~ msgstr "Patreon으로 후원"
 
 #~ msgid ""
 #~ "Use gradient background extracted from cover image\n"
@@ -1372,11 +1375,6 @@ msgstr "날짜 메뉴 버튼을 눌렀을 때 날짜 메뉴가 열림을 비활�
 
 #~ msgid "Unknown"
 #~ msgstr "알 수 없음"
-
-#~ msgid ""
-#~ "Do not separate Quick Settings and Notifications widgets, \byou should enable this option because separated panels can make many visual bugs\n"
-#~ "(such as margin or padding not matching with the theme)"
-#~ msgstr "퀵패널에서 분리하지 않기 (이 옵션을 사용하는것을 추천합니다. 분리된 알림 위젯은 표시 버그를 일으킬 수 있습니다)"
 
 #~ msgid "Information"
 #~ msgstr "정보"

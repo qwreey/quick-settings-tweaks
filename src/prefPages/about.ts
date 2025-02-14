@@ -66,7 +66,7 @@ export const AboutPage = GObject.registerClass({
 				subtitle: _("License of codes"),
 				dialogTitle: _("License"),
 				minHeight: 520,
-				icon: "emblem-documents-symbolic",
+				icon: "document-open-recent-symbolic",
 				childrenRequest: _page=>[
 					Group({
 						title: _("License"),
@@ -79,7 +79,7 @@ export const AboutPage = GObject.registerClass({
 				title: _("Contributors"),
 				subtitle: _("The creators of this extension"),
 				dialogTitle: _("Contributors"),
-				icon: "emblem-favorite-symbolic",
+				icon: "starred-symbolic",
 				childrenRequest: _page=>[
 					Group({
 						title: _("Contributors"),
@@ -103,10 +103,10 @@ export const AboutPage = GObject.registerClass({
 			description: _("External links about this extension")
 		},[
 			Row({
-				uri: "https://patreon.com/user?u=44216831",
-				title: _("Donate via patreon"),
+				uri: "https://github.com/sponsors/qwreey",
+				title: _("Donate via github sponsors"),
 				subtitle: _("Support development!"),
-				icon: "qst-patreon-logo-symbolic",
+				icon: "emblem-favorite-symbolic",
 			}),
 			Row({
 				uri: "https://extensions.gnome.org/extension/5446/quick-settings-tweaker/",

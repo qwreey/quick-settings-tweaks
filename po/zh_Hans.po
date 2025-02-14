@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-14 14:22+0000\n"
+"POT-Creation-Date: 2025-02-14 18:20+0000\n"
 "PO-Revision-Date: 2024-02-06 23:38+0000\n"
 "Last-Translator: mechtifs <mechtifs@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <http://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/zh_Hans/>\n"
@@ -569,8 +569,8 @@ msgid "External links about this extension"
 msgstr ""
 
 #: target/out/prefPages/about.js:90
-msgid "Donate via patreon"
-msgstr "在 Patreon 上捐赠"
+msgid "Donate via github sponsors"
+msgstr ""
 
 #: target/out/prefPages/about.js:91
 msgid "Support development!"
@@ -1101,6 +1101,9 @@ msgstr ""
 #: target/out/prefPages/layout.js:853
 msgid "Do not open date menu when the date menu button clicked"
 msgstr ""
+
+#~ msgid "Donate via patreon"
+#~ msgstr "在 Patreon 上捐赠"
 
 #~ msgid "Set maximum height of the Notifications widget. default is 292"
 #~ msgstr "设置通知组件的最大高度。默认为 292"

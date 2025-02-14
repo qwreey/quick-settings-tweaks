@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-14 14:22+0000\n"
+"POT-Creation-Date: 2025-02-14 18:20+0000\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -564,7 +564,7 @@ msgid "External links about this extension"
 msgstr ""
 
 #: target/out/prefPages/about.js:90
-msgid "Donate via patreon"
+msgid "Donate via github sponsors"
 msgstr ""
 
 #: target/out/prefPages/about.js:91
