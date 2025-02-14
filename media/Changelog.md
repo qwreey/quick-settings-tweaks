@@ -10,7 +10,6 @@
 
 {{HEADER}}
 
-- Fix project name
 - Layout editor shows only useful items
   > For example, a DND quick toggle only appears when enabled
 - Migration for gnome 48 (partially)
@@ -34,6 +33,9 @@
 
 - System Indicators
   - Fix accent indicators color not match with shell accent color
+- Weather widget
+  - Fix status label style
+- Fix project name
 
 # 2.1-pre7
 <!-- @BuildNumber: 7 -->
