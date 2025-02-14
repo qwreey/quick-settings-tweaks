@@ -70,7 +70,6 @@ export class OverlayMenu extends FeatureBase {
 
 		if (this.duration) {
 			menu.box.opacity = 0
-			// @ts-expect-error
 			menu.box.ease({
 				opacity: 255,
 				duration: Math.floor(this.duration / 3),
@@ -133,18 +132,18 @@ export class OverlayMenu extends FeatureBase {
 		// Offset handle
 		this.yconstraint = new Clutter.BindConstraint({
 			coordinate: Clutter.BindCoordinate.Y,
-			// @ts-expect-error
+			// @ts-ignore Box pointer is private
 			source: Global.QuickSettingsMenu._boxPointer,
 		})
 
 		// Disable Y sync (overlay y offset)
-		// @ts-expect-error
+		// @ts-ignore Overlay is private field
 		Global.QuickSettingsMenu._overlay.get_constraints()[0].enabled = false
-		// @ts-expect-error
+		// @ts-ignore Overlay is private field
 		Global.QuickSettingsMenu._overlay.add_constraint(this.yconstraint)
 
 		// Disable Placeholder height sync (grid height increase)
-		// @ts-expect-error
+		// @ts-ignore Overlay is private field
 		Global.QuickSettingsGrid.layout_manager._overlay.get_constraints()[0].enabled = false
 
 		this.tracker = new QuickSettingsMenuTracker()
@@ -161,11 +160,11 @@ export class OverlayMenu extends FeatureBase {
 			menu.actor.get_constraints()[0].enabled = true
 		}
 		tracker.unload()
-		// @ts-expect-error
+		// @ts-ignore Overlay is private field
 		Global.QuickSettingsMenu._overlay.get_constraints()[0].enabled = true
-		// @ts-expect-error
+		// @ts-ignore Overlay is private field
 		Global.QuickSettingsGrid.layout_manager._overlay.get_constraints()[0].enabled = true
-		// @ts-expect-error
+		// @ts-ignore Overlay is private field
 		Global.QuickSettingsMenu._overlay.remove_constraint(this.yconstraint)
 	}
 }

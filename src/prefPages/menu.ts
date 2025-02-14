@@ -52,6 +52,14 @@ function AdvancedAnimationStyleGroup(settings: Gio.Settings): Adw.PreferencesGro
 		}),
 		AdjustmentRow({
 			settings,
+			title: _("Background Brightness"),
+			subtitle: _("Adjust background brightness.\nSet this to 1000 to disable brightness control effect.\nNot impacts on gnome-shell's default dim effect."),
+			sensitiveBind: "menu-animation-enabled",
+			bind: "menu-animation-background-brightness",
+			max: 2000,
+		}),
+		AdjustmentRow({
+			settings,
 			title: _("Background Opacity"),
 			subtitle: _("Adjust background opacity.\nSet this to 255 to make opaque, and 0 to make transparent"),
 			sensitiveBind: "menu-animation-enabled",

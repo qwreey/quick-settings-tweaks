@@ -176,7 +176,6 @@ class NotificationList extends MessageList.MessageListSection {
 
 		this._nUrgent = 0
 
-		// @ts-expect-error missing connectObject type support
 		Global.MessageTray.connectObject("source-added", this._sourceAdded.bind(this), this)
 		Global.MessageTray.getSources().forEach(source => {
 			this._sourceAdded(Global.MessageTray, source)

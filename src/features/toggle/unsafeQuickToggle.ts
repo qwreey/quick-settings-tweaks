@@ -46,7 +46,7 @@ GObject.registerClass(UnsafeQuickToggle)
 // #region UnsafeIndicator
 class UnsafeIndicator extends SystemIndicator {
 	constructor(onUpdate: UnsafeQuickToggle["_onUpdate"]) { super(onUpdate as any) }
-	// @ts-expect-error
+	// @ts-ignore
 	_init(onUpdate: any) {
 		super._init()
 		this.quickSettingsItems.push(new UnsafeQuickToggle(onUpdate))
@@ -84,7 +84,7 @@ export class UnsafeQuickToggleFeature extends FeatureBase {
 				(state) => Global.Settings.set_boolean("unsafe-quick-toggle-last-state", state)
 			)
 		)
-		// @ts-ignore
+		// @ts-expect-error Missing addExternalIndicator method (QuickSettings is private class)
 		Global.QuickSettings.addExternalIndicator(this.indicator)
 	}
 	override onUnload(): void {

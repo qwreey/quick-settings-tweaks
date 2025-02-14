@@ -35,13 +35,13 @@ export class DebugFeature extends FeatureBase {
 			Logger.debug("Extension environment expose enabled")
 		}
 		if (this.showLayoutBorder) {
-			// @ts-ignore
-			Global.QuickSettingsMenu._boxPointer.styleClass += " QSTWEAKS-debug-show-layout"
+			// @ts-ignore Box pointer is private
+			Global.QuickSettingsMenu._boxPointer.style_class += " QSTWEAKS-debug-show-layout"
 			this.maid.functionJob(()=>{
-				// @ts-ignore
-				Global.QuickSettingsMenu._boxPointer.styleClass =
-				// @ts-ignore
-				Global.QuickSettingsMenu._boxPointer.styleClass.replace(/ QSTWEAKS-debug-show-layout/, "")
+				// @ts-ignore Box pointer is private
+				Global.QuickSettingsMenu._boxPointer.style_class =
+				// @ts-ignore Box pointer is private
+				Global.QuickSettingsMenu._boxPointer.style_class.replace(/ QSTWEAKS-debug-show-layout/, "")
 			})
 			Logger.debug("Show layout border enabled")
 		}

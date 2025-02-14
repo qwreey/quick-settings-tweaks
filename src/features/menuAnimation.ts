@@ -10,6 +10,7 @@ export class MenuAnimation extends FeatureBase {
 	// #region settings
 	enabled: boolean
 	backgroundBlurRadius: number
+	bakgroundBrightness: number
 	backgroundOpacity: number
 	backgroundScaleX: number
 	backgroundScaleY: number
@@ -19,6 +20,7 @@ export class MenuAnimation extends FeatureBase {
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("menu-animation-enabled")
 		this.backgroundBlurRadius = loader.loadInt("menu-animation-background-blur-radius")
+		this.bakgroundBrightness = loader.loadInt("menu-animation-background-brightness") / 1000
 		this.backgroundOpacity = loader.loadInt("menu-animation-background-opacity")
 		this.backgroundScaleX = loader.loadInt("menu-animation-background-scale-x") / 1000
 		this.backgroundScaleY = loader.loadInt("menu-animation-background-scale-y") / 1000
@@ -32,7 +34,6 @@ export class MenuAnimation extends FeatureBase {
 		if (this.blur) this.blur.enabled = isOpen
 		if (isOpen) {
 			Global.QuickSettingsBox.set_pivot_point(0.5, 0.5)
-			// @ts-expect-error
 			Global.QuickSettingsBox.ease({
 				duration: this.openDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
@@ -40,14 +41,12 @@ export class MenuAnimation extends FeatureBase {
 				scaleY: this.backgroundScaleY,
 				opacity: this.backgroundOpacity,
 			})
-			// @ts-expect-error
 			Global.QuickSettingsGrid.ease({
 				duration: this.openDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
 				opacity: this.gridContentOpacity,
 			})
 		} else {
-			// @ts-expect-error
 			Global.QuickSettingsBox.ease({
 				duration: this.closeDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
@@ -58,7 +57,6 @@ export class MenuAnimation extends FeatureBase {
 					Global.QuickSettingsBox.set_pivot_point(0, 0)
 				}
 			})
-			// @ts-expect-error
 			Global.QuickSettingsGrid.ease({
 				duration: this.openDuration,
 				mode: Clutter.AnimationMode.EASE_OUT_QUINT,
@@ -74,12 +72,12 @@ export class MenuAnimation extends FeatureBase {
 
 		if (this.backgroundBlurRadius) {
 			this.blur = new Shell.BlurEffect({
-				brightness: 1,
 				enabled: false,
 				mode: Shell.BlurMode.ACTOR,
 				radius: this.backgroundBlurRadius,
+				brightness: this.bakgroundBrightness,
 			})
-			// @ts-expect-error
+			// @ts-ignore Box pointer is private
 			Global.QuickSettingsMenu._boxPointer.add_effect_with_name("blur", this.blur)
 		}
 
@@ -93,7 +91,7 @@ export class MenuAnimation extends FeatureBase {
 		this.tracker = null
 		tracker.unload()
 		if (this.blur) {
-			// @ts-expect-error
+			// @ts-ignore Box pointer is private
 			Global.QuickSettingsMenu._boxPointer.remove_effect(this.blur)
 			this.blur = null
 		}

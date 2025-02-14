@@ -12,5 +12,5 @@
         "tsBuildInfoFile": "target/.tsbuildinfo",
         "useDefineForClassFields": false
     },
-    "include": ["./src/**/*.ts", "src/types.d.ts", "src/contributors.js", "src/prefPages/menu.ts"],
+    "include": ["./src/**/*.ts", "src/types.d.ts", "src/contributors.js"]
 }

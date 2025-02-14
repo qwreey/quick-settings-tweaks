@@ -25,7 +25,6 @@ export class SoundTweakFeature extends FeatureBase {
 			const label = this.maid.destroyJob(new St.Label({
 				style_class: "QSTWEAKS-volume-mixer-label"
 			}))
-			// @ts-expect-error
 			Global.QuickSettingsMenu.addItem(label, 2)
 			Global.GetStreamSlider().then(({ OutputStreamSlider }) => {
 				Global.QuickSettingsGrid.set_child_below_sibling(label, OutputStreamSlider)

@@ -71,7 +71,6 @@ export function ease(actor: Clutter.Actor, params: AdvEasingParams) {
     }
 
     // Run gnome ease function
-    // @ts-expect-error
     actor.ease(params)
     if (!modeDefine) return
 

@@ -22,7 +22,7 @@ export abstract class Drag extends St.Bin {
 		this._grabbedDevice = event.get_device()
 		this._grabbedSequence = event.get_event_sequence()
 
-		// @ts-expect-error
+		// @ts-expect-error Types not implemented
 		this._grab = global.stage.grab(this)
 
 		const dragEvent: Drag.Event = event as Drag.Event

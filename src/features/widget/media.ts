@@ -9,7 +9,6 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { loadInterfaceXML } from "resource:///org/gnome/shell/misc/fileUtils.js"
 import { Slider } from "resource:///org/gnome/shell/ui/slider.js"
-// @ts-expect-error
 import { PageIndicators } from "resource:///org/gnome/shell/ui/pageIndicators.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { Rgb } from "../../libs/shared/colors.js"
@@ -47,7 +46,7 @@ class Player extends GObject.Object {
 			propertiesIface.name,
 			null,
 		)
-		// @ts-expect-error
+		// @ts-expect-error Missing promise type support
 		.then((proxy: Gio.DbusProxy) => this._propertiesProxy = proxy)
 		.catch(Logger.error)
 
@@ -62,7 +61,7 @@ class Player extends GObject.Object {
 			playerIface.name,
 			null,
 		)
-		// @ts-expect-error
+		// @ts-expect-error Missing promise type support
 		.then((proxy: Gio.DbusProxy) => this._playerProxy = proxy)
 		.catch(Logger.error)
 
@@ -77,7 +76,7 @@ class Player extends GObject.Object {
 			mprisIface.name,
 			null,
 		)
-		// @ts-expect-error
+		// @ts-expect-error Missing promise type support
 		.then((proxy: Gio.DbusProxy) => this._mprisProxy = proxy)
 		.catch(Logger.error)
 
@@ -296,7 +295,7 @@ class Source extends GObject.Object {
 	}
 
 	start() {
-		// @ts-expect-error
+		// @ts-expect-error Type error (DBusProxy is not a class)
 		this._proxy = new DBusProxy(Gio.DBus.session,
 			'org.freedesktop.DBus',
 			'/org/freedesktop/DBus',
@@ -313,7 +312,6 @@ class Source extends GObject.Object {
 		const player = new Player(busName)
 		this._players.set(busName, player)
 
-		// @ts-expect-error
 		player.connectObject("notify::can-play",
 			() => {
 				this.emit(
@@ -345,7 +343,6 @@ class Source extends GObject.Object {
 			const player = this._players.get(name)
 			if (player) {
 				this._players.delete(name)
-				// @ts-expect-error
 				player.disconnectObject(this)
 				this.emit('player-removed', player)
 			}
@@ -397,7 +394,6 @@ class ProgressControl extends St.BoxLayout {
 
 		this.connect("notify::mapped", this._updateTracker.bind(this))
 		this.connect("destroy", this._dropTracker.bind(this))
-		// @ts-expect-error
 		this._player.connectObject("changed", () => this._updateStatus(), this)
 	}
 
@@ -459,12 +455,10 @@ class ProgressControl extends St.BoxLayout {
 			return
 		}
 		if (this._shown) {
-			// @ts-expect-error
 			this.ease({
 				height,
 				duration: 150,
 				onComplete: ()=>{
-					// @ts-expect-error
 					this.ease({
 						opacity,
 						duration: 150,
@@ -472,12 +466,10 @@ class ProgressControl extends St.BoxLayout {
 				}
 			})
 		} else {
-			// @ts-expect-error
 			this.ease({
 				opacity,
 				duration: 200,
 				onComplete: ()=>{
-					// @ts-expect-error
 					this.ease({
 						height,
 						duration: 150,
@@ -576,7 +568,6 @@ class MediaItem extends MessageList.Message {
 		this._createControlButtons()
 
 		// Connect player
-		// @ts-expect-error
 		this._player.connectObject(
 			'changed', this._update.bind(this),
 			this
@@ -617,13 +608,8 @@ class MediaItem extends MessageList.Message {
 		}
 
 		// Get artist string
-		let trackArtists: string
-		if (typeof this._player.trackArtists == "string") {
-			trackArtists = this._player.trackArtists
-		} else {
-			// @ts-ignore
-			trackArtists = this._player.trackArtists.join(",")
-		}
+		const trackArtists: string =
+			this._player.trackArtists?.join(",") ?? ""
 
 		// Update base informations
 		this.set({
@@ -788,7 +774,6 @@ class MediaList extends St.BoxLayout {
 
 		// Connect source
 		this._source = new Source()
-		// @ts-expect-error
 		this._source.connectObject("player-removed", (_source: any, player: Player)=>{
 			const item = this._items.get(player)
 			if (!item) return
@@ -796,7 +781,6 @@ class MediaList extends St.BoxLayout {
 			this._items.delete(player)
 			this._sync()
 		},this)
-		// @ts-expect-error
 		this._source.connectObject("player-added", (_source: any, player: Player)=>{
 			if (this._items.has(player)) return
 			const item = new MediaItem(player, this._options)
@@ -864,7 +848,6 @@ class MediaList extends St.BoxLayout {
 			|| (this._currentPage == 0 && direction == -1)
 			|| (width/4 > Math.abs(offset))
 		) {
-			// @ts-expect-error
 			current.ease({
 				mode: Clutter.AnimationMode.EASE_OUT_EXPO,
 				translationX: 0,
@@ -971,7 +954,6 @@ class MediaList extends St.BoxLayout {
 		const currentIndex = messages.findIndex(message => message == current)
 
 		if (this._effect) this._effect.enabled = true
-		// @ts-expect-error
 		current.ease({
 			opacity: 0,
 			translationX: (toIndex > currentIndex ? -120 : 120) + (this._dragTranslation ?? 0),
@@ -982,7 +964,6 @@ class MediaList extends St.BoxLayout {
 				to.opacity = 0
 				to.translationX = toIndex > currentIndex ? 120 : -120
 				to.show()
-				// @ts-expect-error
 				to.ease({
 					mode: Clutter.AnimationMode.EASE_OUT_EXPO,
 					duration: 280,
@@ -1073,12 +1054,12 @@ namespace MediaList {
 // #region Header
 class Header extends St.BoxLayout {
 	_headerLabel: St.Label
-	_pageIndicator: St.BoxLayout
+	_pageIndicator: PageIndicators
 
 	constructor(options: Header.Options) {
 		super(options)
 	}
-	_init(options: Header.Options) {
+	_init(_options: Header.Options) {
 		super._init({
 			style_class: "QSTWEAKS-header"
 		} as Partial<St.BoxLayout.ConstructorProps>)
@@ -1097,7 +1078,7 @@ class Header extends St.BoxLayout {
 		this._pageIndicator.x_align = Clutter.ActorAlign.END
 		this._pageIndicator.connect("page-activated", (_, page) => this.emit("page-activated", page))
 		this._pageIndicator.y_align = Clutter.ActorAlign.CENTER
-		this.add_child(this._pageIndicator)
+		this.add_child(this._pageIndicator)// as unknown as St.BoxLayout)
 	}
 
 	set maxPage(maxPage: number) {

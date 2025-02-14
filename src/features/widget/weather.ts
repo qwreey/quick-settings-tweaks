@@ -2,8 +2,10 @@ import Clutter from "gi://Clutter"
 import GObject from "gi://GObject"
 import GLib from "gi://GLib"
 import St from "gi://St"
+import { WeatherClient } from "resource:///org/gnome/shell/misc/weather.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import Global from "../../global.js"
+
 
 // #region Header
 class Header extends St.BoxLayout {
@@ -55,7 +57,6 @@ class WeatherWidget extends St.BoxLayout {
 		super._init({
 			vertical: true,
 		})
-		this._updateStyleClass()
 
 		this.add_child(
 			this._header = new Header({})
@@ -77,15 +78,15 @@ class WeatherWidget extends St.BoxLayout {
 			(this._item as any)._titleLocation.hide()
 		})
 
-		// Hide Title
-		const syncTitleVisible = ()=>{
-			(this._item as any)._titleLabel.visible = !(this._item as any)._weatherClient.hasLocation
-		}
-		syncTitleVisible()
-		const changedConnection = (this._item as any)._weatherClient.connect("changed", syncTitleVisible)
+		// Sync changes
+		const changedConnection = (this._item as any)._weatherClient.connect(
+			"changed",
+			this._changed.bind(this)
+		)
 		this.connect("destroy", ()=>{
 			(this._item as any)._weatherClient.disconnect(changedConnection)
-		});
+		})
+		this._changed();
 
 		// Sync Location
 		(this._item as any)._titleLocation.bind_property("text",
@@ -93,12 +94,19 @@ class WeatherWidget extends St.BoxLayout {
 			GObject.BindingFlags.DEFAULT)
 		this._header._locationLabel.text = (this._item as any)._titleLocation.text
 	}
-	_updateStyleClass() {
+	_updateStyleClass(): void {
 		const options = this._options
 		let style = "QSTWEAKS-weather"
 		if (options.removeShadow) style += " QSTWEAKS-weather-remove-shadow"
 		if (options.compact) style += " QSTWEAKS-weather-compact"
+		// if ((this._item as any)._weatherClient.)
 		this.styleClass = style
+	}
+	_changed(): void {
+		// Update title label
+		(this._item as any)._titleLabel.visible = !(this._item as any)._weatherClient.hasLocation
+
+		this._updateStyleClass()
 	}
 }
 GObject.registerClass(WeatherWidget)

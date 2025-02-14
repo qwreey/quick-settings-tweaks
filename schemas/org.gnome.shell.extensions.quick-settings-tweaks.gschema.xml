@@ -423,6 +423,9 @@
     <key name="menu-animation-background-blur-radius" type="i">
       <default>4</default>
     </key>
+    <key name="menu-animation-background-brightness" type="i">
+      <default>900</default>
+    </key>
     <key name="menu-animation-background-opacity" type="i">
       <default>220</default>
     </key>

@@ -17,7 +17,6 @@ class DndQuickToggle extends QuickToggle {
 		this._settings = new Gio.Settings({
 			schema_id: "org.gnome.desktop.notifications",
 		})
-		// @ts-expect-error missing connectObject type support
 		this._settings.connectObject("changed::show-banners", this._sync.bind(this), this)
 
 		this.connect("clicked", this._toggleMode.bind(this))
@@ -76,7 +75,6 @@ class DndIndicator extends SystemIndicator {
 			this._settings = new Gio.Settings({
 				schema_id: "org.gnome.desktop.notifications",
 			})
-			// @ts-expect-error missing connectObject type support
 			this._settings.connectObject("changed::show-banners", this._sync.bind(this), this)
 			this._sync()
 		}
@@ -131,7 +129,7 @@ export class DndQuickToggleFeature extends FeatureBase {
 		}
 
 		// Add to QS
-		// @ts-ignore
+		// @ts-expect-error Missing addExternalIndicator method (QuickSettings is private class)
 		Global.QuickSettings.addExternalIndicator(this.indicator)
 	}
 	override onUnload(): void {

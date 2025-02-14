@@ -35,11 +35,11 @@ class StreamSlider extends QuickSlider {
 		stream: Gvc.MixerStream,
 		options: VolumeMixerList.Options
 	) {
-		// @ts-expect-error
+		// @ts-ignore
 		super(control, stream, options)
 	}
 
-	// @ts-expect-error
+	// @ts-ignore
 	_init(control: Gvc.MixerControl, stream: Gvc.MixerStream|undefined, options: StreamSlider.Options) {
 		this._options = options
 		this._control = control
@@ -91,13 +91,11 @@ class StreamSlider extends QuickSlider {
 	set stream(stream: Gvc.MixerStream) {
 		if (this._stream == stream) return
 
-		// @ts-expect-error
 		this._stream?.disconnectObject(this)
 		this._stream = stream
 
 		if (stream) {
 			// Create connection
-			// @ts-expect-error
 			stream.connectObject(
 				'notify::is-muted', this._updateSlider.bind(this),
 				'notify::volume', this._updateSlider.bind(this),

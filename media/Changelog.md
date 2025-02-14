@@ -2,6 +2,22 @@
 <!-- Note: -->
 <!-- This file is visible in prefs so if -->
 <!-- it is erased it may cause an error -->
+# 2.1-stable
+<!-- @BuildNumber: 8 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-02-12 4:56:00 KST" -->
+<!-- @Git: "dafca5e" -->
+
+{{HEADER}}
+
+- Layout editor shows only useful items
+  > For example, a DND quick toggle only appears when enabled
+
+## New Features
+
+- Menu animation
+  - Add background brightness option
+
 # 2.1-pre7
 <!-- @BuildNumber: 7 -->
 <!-- @Includes: [] -->

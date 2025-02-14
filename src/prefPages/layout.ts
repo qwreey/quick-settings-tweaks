@@ -24,48 +24,30 @@ import {
 	removeRowMinHeight,
 } from "../libs/prefs/components.js"
 import { SystemIndicatorOrderItem } from "../libs/types/systemIndicatorOrderItem.js"
+import { QuickSettingsOrderItem } from "../libs/types/quickSettingsOrderItem.js"
 
 // #region OrderGroup
 function OrderGroup<T extends OrderInfo.Base>({
-	settings, page, dialog, bind, sensitiveBind, info
+	page, dialog, bind, sensitiveBind, info
 }:{
-	settings: Gio.Settings,
 	page: Adw.PreferencesPage,
 	dialog: Adw.PreferencesDialog,
 	bind: string,
 	sensitiveBind: string,
 	info: OrderInfo<T>
 }): Adw.PreferencesGroup {
+	// Create group
 	const itemRows = new Map<T, Adw.ActionRow>()
 	const header = new Gtk.Box({})
 	const group = Group({
-		title: _("Ordering and Hiding"),
+		title: info.getGroupTitle(),
+		description: info.getGroupDescription(),
 		headerSuffix: header
 	})
 
-	// Reset button
-	const resetButton = ResetButton({ settings, bind, marginBottom: 0, marginTop: 0 })
-	resetButton.insert_after(header, null)
-
-	// Add button
-	const addButton = Button({
-		marginBottom: 0,
-		marginTop: 0,
-		iconName: "list-add",
-		text: _("New Item"),
-		action: ()=>{
-			const list = info.getListFromSettings(settings)
-			const item = info.create(info.getNextName(list))
-			list.push(item)
-			info.setListToSettings(settings, list)
-			editItem(item)
-		}
-	})
-	addButton.insert_after(header, resetButton)
-
 	// Edit functions
 	const saveItem = (item: T, edited: T): string|null => {
-		const list = info.getListFromSettings(settings)
+		const list = info.getListFromSettings()
 		const index = list.findIndex(targetItem => info.match(targetItem, item))
 		if (index == -1) {
 			return _("The item not found")
@@ -77,7 +59,7 @@ function OrderGroup<T extends OrderInfo.Base>({
 			return _("The same item already exists")
 		}
 		list[index] = edited
-		info.setListToSettings(settings, list)
+		info.setListToSettings(list)
 		return null
 	}
 	const editItem = (item: T)=>{
@@ -114,36 +96,38 @@ function OrderGroup<T extends OrderInfo.Base>({
 		})
 	}
 	const deleteItem = (item: T)=>{
-		const list = info.getListFromSettings(settings)
+		const list = info.getListFromSettings()
 		const index = list.findIndex(targetItem => info.match(targetItem, item))
 		if (index == -1) return
 		list.splice(index, 1)
-		info.setListToSettings(settings, list)
+		info.setListToSettings(list)
 	}
 	const hideItem = (item: T, hide: boolean)=>{
-		const list = info.getListFromSettings(settings)
+		const list = info.getListFromSettings()
 		list.find(targetItem => info.match(targetItem, item)).hide = hide
-		info.setListToSettings(settings, list)
+		info.setListToSettings(list)
 		dialog.add_toast(new Adw.Toast({
 			title: _("This option requires full gnome-shell reloading"),
 			timeout: 12,
 		}))
 	}
 	const moveItem = (item: T, offset: number)=>{
-		const list = info.getListFromSettings(settings)
+		const list = info.getListFromSettings()
 		const index = list.findIndex(targetItem => info.match(targetItem, item))
 		if (!offset) return
 		const sign = Math.sign(offset)
 		let targetIndex = index
-		for (let count = Math.abs(offset); count > 0; count--) {
+		for (let count = Math.abs(offset); count > 0;) {
 			if (targetIndex <= 0 && sign == -1) break
 			if ((targetIndex >= (list.length - 1)) && sign == 1) break
+			if (info.moveBlocking(list, item, index, list[targetIndex], targetIndex)) break
 			targetIndex += sign
+			if (info.skip(list, item, index, list[targetIndex], targetIndex)) count--
 		}
 		if (index == targetIndex) return
 		list.splice(index, 1)
 		list.splice(targetIndex, 0, item)
-		info.setListToSettings(settings, list)
+		info.setListToSettings(list)
 	}
 
 	// Control items
@@ -162,11 +146,12 @@ function OrderGroup<T extends OrderInfo.Base>({
 
 			// Create row
 			const row = Row({
-				settings,
+				settings: info.settings,
 				title: info.getDisplayName(newItem),
 				subtitle: info.getSubtitle(newItem),
 				sensitiveBind,
 			})
+			row.visible = info.shouldShow(newItem)
 
 			// Update icon
 			const systemKey = info.getSystemKey(newItem)
@@ -183,7 +168,7 @@ function OrderGroup<T extends OrderInfo.Base>({
 
 			// Create Up & Down button
 			const updown = UpDownButton({
-				settings,
+				settings: info.settings,
 				sensitiveBind: "toggles-layout-enabled",
 				action: (direction)=>{
 					moveItem(newItem, direction == UpDownButton.Direction.Up ? -1 : 1)
@@ -240,27 +225,39 @@ function OrderGroup<T extends OrderInfo.Base>({
 		}
 	}
 
+	// Reset button
+	const resetButton = ResetButton({ settings: info.settings, bind, marginBottom: 0, marginTop: 0 })
+	resetButton.insert_after(header, null)
+
+	// Add button
+	const addButton = info.createAddButton(editItem)
+	addButton.insert_after(header, resetButton)
+
 	// Sync to settings
 	const update = ()=>{
 		setScrollToFocus(page, false)
-		const list = info.getListFromSettings(settings)
+		const list = info.getListFromSettings()
 		pushItems(list)
 		pruneItems(list)
 		orderItems(list)
 		delayedSetScrollToFocus(page, true)
 	}
-	const settingsConnection = settings.connect(`changed::${bind}`, update.bind(null))
+	const settingsConnection = info.settings.connect(`changed::${bind}`, update.bind(null))
 	update()
-	page.connect("destroy", ()=>settings.disconnect(settingsConnection))
+	page.connect("destroy", ()=>info.settings.disconnect(settingsConnection))
 
 	return group
 }
 abstract class OrderInfo<T extends OrderInfo.Base> {
+	settings: Gio.Settings
+	constructor(settings: Gio.Settings) {
+		this.settings = settings
+	}
 	abstract getSystemNames(): Map<string, string>
 	abstract getSystemIcons(): Map<string, string>
 	abstract getSystemKey(item: T): string
-	abstract getListFromSettings(settings: Gio.Settings): T[]
-	abstract setListToSettings(settings: Gio.Settings, list: T[]): void
+	abstract getListFromSettings(): T[]
+	abstract setListToSettings(list: T[]): void
 	private _systemNames: Map<string, string>
 	private _systemIcons: Map<string, string>
 	get systemNames(): Map<string, string> {
@@ -286,6 +283,34 @@ abstract class OrderInfo<T extends OrderInfo.Base> {
 	}
 	abstract create(friendlyName: string): T
 	abstract match(a: T, b: T): boolean
+	abstract shouldShow(item: T): boolean
+	skip(_list: T[], _moving: T, _movingIndex: number, target: T, _targetIndex: number): boolean {
+		return this.shouldShow(target)
+	}
+	moveBlocking(_list: T[], _moving: T, _movingIndex: number, target: T, _targetIndex: number): boolean {
+		return false
+	}
+	createAddButton(editItem: (item: T)=>void): Gtk.Widget {
+		return Button({
+			marginBottom: 0,
+			marginTop: 0,
+			iconName: "list-add",
+			text: _("New Item"),
+			action: ()=>{
+				const list = this.getListFromSettings()
+				const item = this.create(this.getNextName(list))
+				list.push(item)
+				this.setListToSettings(list)
+				editItem(item)
+			}
+		})
+	}
+	getGroupTitle(): string {
+		return _("Ordering and Hiding")
+	}
+	getGroupDescription(): string|null {
+		return null
+	}
 }
 namespace OrderInfo {
 	export type EditLayout<T> = {
@@ -398,10 +423,10 @@ class ToggleOrderInfo extends OrderInfo<ToggleOrderItem> {
 			[ "UnsafeQuickToggle", "channel-secure-symbolic" ],
 		])
 	}
-	getListFromSettings(settings: Gio.Settings): ToggleOrderItem[] {
-		return settings.get_value("toggles-layout-order").recursiveUnpack() as ToggleOrderItem[]
+	getListFromSettings(): ToggleOrderItem[] {
+		return this.settings.get_value("toggles-layout-order").recursiveUnpack() as ToggleOrderItem[]
 	}
-	setListToSettings(settings: Gio.Settings, list: ToggleOrderItem[]): void {
+	setListToSettings(list: ToggleOrderItem[]): void {
 		const mappedList = list.map(item => {
 			const out = {}
 			for (const [key, value] of Object.entries(item)) {
@@ -419,7 +444,7 @@ class ToggleOrderInfo extends OrderInfo<ToggleOrderItem> {
 			}
 			return out
 		})
-		settings.set_value("toggles-layout-order", new GLib.Variant("aa{sv}", mappedList))
+		this.settings.set_value("toggles-layout-order", new GLib.Variant("aa{sv}", mappedList))
 	}
 	getDisplayName(item: ToggleOrderItem): string {
 		if (item.nonOrdered) return _("Unordered items")
@@ -447,6 +472,14 @@ class ToggleOrderInfo extends OrderInfo<ToggleOrderItem> {
 	}
 	create(friendlyName: string): ToggleOrderItem {
 		return ToggleOrderItem.create(friendlyName)
+	}
+	shouldShow(item: ToggleOrderItem): boolean {
+		if (item.constructorName == "DndQuickToggle") {
+			return this.settings.get_boolean("dnd-quick-toggle-enabled")
+		} else if (item.constructorName == "UnsafeQuickToggle") {
+			return this.settings.get_boolean("unsafe-quick-toggle-enabled")
+		}
+		return true
 	}
 }
 
@@ -540,10 +573,10 @@ class SystemIndicatorOrderInfo extends OrderInfo<SystemIndicatorOrderItem> {
 			[ "Gjs_status_system_Indicator", "system-shutdown-symbolic" ],
 		])
 	}
-	getListFromSettings(settings: Gio.Settings): SystemIndicatorOrderItem[] {
-		return settings.get_value("system-indicator-layout-order").recursiveUnpack() as SystemIndicatorOrderItem[]
+	getListFromSettings(): SystemIndicatorOrderItem[] {
+		return this.settings.get_value("system-indicator-layout-order").recursiveUnpack() as SystemIndicatorOrderItem[]
 	}
-	setListToSettings(settings: Gio.Settings, list: SystemIndicatorOrderItem[]): void {
+	setListToSettings(list: SystemIndicatorOrderItem[]): void {
 		const mappedList = list.map(item => {
 			const out = {}
 			for (const [key, value] of Object.entries(item)) {
@@ -561,7 +594,7 @@ class SystemIndicatorOrderInfo extends OrderInfo<SystemIndicatorOrderItem> {
 			}
 			return out
 		})
-		settings.set_value("system-indicator-layout-order", new GLib.Variant("aa{sv}", mappedList))
+		this.settings.set_value("system-indicator-layout-order", new GLib.Variant("aa{sv}", mappedList))
 	}
 	getDisplayName(item: SystemIndicatorOrderItem): string {
 		if (item.nonOrdered) return _("Unordered items")
@@ -587,6 +620,19 @@ class SystemIndicatorOrderInfo extends OrderInfo<SystemIndicatorOrderItem> {
 	create(friendlyName: string): SystemIndicatorOrderItem {
 		return SystemIndicatorOrderItem.create(friendlyName)
 	}
+	shouldShow(item: SystemIndicatorOrderItem): boolean {
+		if (item.gtypeName == "Gjs_toggle_dndQuickToggle_DndIndicator") {
+			return (
+				this.settings.get_boolean("dnd-quick-toggle-enabled")
+				&& this.settings.get_string("dnd-quick-toggle-indicator-position") == "system-tray"
+			)
+		}
+		return true
+	}
+}
+
+class QuickSettingsOrderInfo extends OrderInfo<QuickSettingsOrderItem> {
+	
 }
 
 // #region SystemItemOrderGroup
@@ -741,12 +787,11 @@ export const LayoutPage = GObject.registerClass({
 					Dialog({
 						window,
 						childrenRequest: (page, dialog) => [OrderGroup({
-							settings,
 							page,
 							dialog,
 							bind: "toggles-layout-order",
 							sensitiveBind: "toggles-layout-enabled",
-							info: new ToggleOrderInfo(),
+							info: new ToggleOrderInfo(settings),
 						})],
 						title: _("Adjust quick toggles layout"),
 					})
@@ -789,12 +834,11 @@ export const LayoutPage = GObject.registerClass({
 						window,
 						title: _("Adjust system indicators"),
 						childrenRequest: (page, dialog) => [OrderGroup({
-							settings,
 							page,
 							dialog,
 							bind: "system-indicator-layout-order",
 							sensitiveBind: "system-indicator-layout-enabled",
-							info: new SystemIndicatorOrderInfo(),
+							info: new SystemIndicatorOrderInfo(settings),
 						})],
 					})
 				},

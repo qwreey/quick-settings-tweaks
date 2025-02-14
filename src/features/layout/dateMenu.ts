@@ -80,10 +80,8 @@ export class DateMenuLayoutFeature extends FeatureBase {
 		}
 	}
 	onUnload(): void {
-		// @ts-ignore
-		if (Global.MediaSection._shouldShow()) Global.MediaSection.show()
-		// @ts-ignore
-		if (Global.NotificationSection._shouldShow()) Global.NotificationSection.show()
+		if ((Global.MediaSection as any)._shouldShow()) Global.MediaSection.show()
+		if ((Global.NotificationSection as any)._shouldShow()) Global.NotificationSection.show()
 
 		// Remove modified styles
 		const style = new StyleClass((Global.DateMenuBox as any).style_class)
