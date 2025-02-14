@@ -27,6 +27,14 @@ Quick Settings Tweaker is a Gnome 43+ extension which allows you to customize th
 | <p align="center">**Layout customize**</p><p align="center">Hide, re-order, re-color your panel and Quick Settings layout<br><br>Make it simple and keep organized!</p> | <img src=".github/images/layout.png" width="600px" alt="Notifications widget screenshot"> |
 | <p align="center">**Overlay menu layout**</p><p align="center">Your Quick Settings panel is too big?<br><br>Try overlay layout! you can customize background and animation style too.</p> | <img src=".github/images/overlay.png" width="600px" alt="Notifications widget screenshot"> |
 
+## Sponsor
+
+You can promote and support development by [github sponsor!](https://github.com/sponsors/qwreey) You can help keep this project maintained
+
+Here is my sponsors, thank for your support!
+
+[![sponsors](https://readme-contribs.as93.net/sponsors/qwreey?shape=square&margin=16&perRow=15&title=Qwreey's%20Sponsors&textColor=f5acff&backgroundColor=0e001a&fontFamily=cursive&fontSize=14&limit=90&footerText=none&outerBorderRadius=24)](https://github.com/sponsors/qwreey)
+
 ## Development
 
 ### Translations
@@ -45,9 +53,19 @@ Or, you can get nightly preview build from [github releases tab](https://github.
 
 ### Contribution and Issues
 
-**You must search your issue first.** duplicated issue will be closed, and disturb developer's time.
+Keep in mind that there may be one or a few developers, but there may be many issues and users. I think you know how to behave with manners without even having to say it.
 
-If you want to contribute, you must pull `dev` branch. **Not master branch.** master branch is release branch, because AUR and some user distributions use master branch as build source. **If you create pull-request to master branch, it will be closed.** you should re-open PR to dev branch.
+#### Raise an issue
+
+If you want to raise an issue, First, **you must search your issue first.** duplicated issue will be closed, and disturb developer's time.
+
+Second, **you must attach a related log files, gnome version and extension version informations.** if you don't provide information much about your issue, it is hard to solve your issue.
+
+And last, **you must use well-formed english** You can use a translator or AI to write it, so avoid wasting time by having the developer translate and take notes. This takes up a surprising amount of the developer's time, making analysis very difficult, especially if the logs are mixed in English and other languages.
+
+#### PR and code contribution
+
+If you want to contribute, **you must pull `dev` branch, Not master branch.** master branch is release branch, because AUR and some user distributions use master branch as build source. **If you create pull-request to master branch, it will be closed.** you should re-open PR to dev branch.
 
 ### Testing
 
@@ -56,11 +74,3 @@ If you want to contribute, you must pull `dev` branch. **Not master branch.** ma
 You can test extension with command `./install.sh dev`. You will need tigervnc client and docker in host. Tested in arch linux but it should working on any systemd based platform
 
 You can re-build extension by log out and close vnc window or send SIGINT to exit dev docker.
-
-## Sponsor
-
-You can promote and support development by [github sponsor!](https://github.com/sponsors/qwreey) You can help keep this project maintained
-
-Here is my sponsors, thank for your support!
-
-[![sponsors](https://readme-contribs.as93.net/sponsors/qwreey?shape=square&margin=16&perRow=15&title=Qwreey's%20Sponsors&textColor=f5acff&backgroundColor=0e001a&fontFamily=cursive&fontSize=14&limit=90&footerText=none&outerBorderRadius=24)](https://github.com/sponsors/qwreey)

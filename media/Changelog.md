@@ -2,11 +2,11 @@
 <!-- Note: -->
 <!-- This file is visible in prefs so if -->
 <!-- it is erased it may cause an error -->
-# 2.1-pre8
+# 2.1-stable
 <!-- @BuildNumber: 8 -->
 <!-- @Includes: [] -->
-<!-- @Date: "2025-02-14 22:13:00 KST" -->
-<!-- @Git: "a163e30" -->
+<!-- @Date: "2025-02-15 03:55:00 KST" -->
+<!-- @Git: "36ec1cf" -->
 
 {{HEADER}}
 
@@ -16,6 +16,7 @@
   - 'vertical' property migration
 - Fix some typescript type errors
 - Update locales
+- Add github sponsor (replace original one)
 
 ## New Features
 
