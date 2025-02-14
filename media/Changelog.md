@@ -15,6 +15,7 @@
 - Migration for gnome 48 (partially)
   - 'vertical' property migration
 - Fix some typescript type errors
+- Update locales
 
 ## New Features
 

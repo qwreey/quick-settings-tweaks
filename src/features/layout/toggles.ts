@@ -13,7 +13,7 @@ export class TogglesLayoutFeature extends FeatureBase {
 	enabled: boolean
 	order: ToggleOrderItem[]
 	unordered: ToggleOrderItem
-	loadSettings(loader: SettingLoader): void {
+	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("toggles-layout-enabled")
 		this.order = loader.loadValue("toggles-layout-order")
 		for (const orderItem of this.order) {
@@ -64,14 +64,14 @@ export class TogglesLayoutFeature extends FeatureBase {
 	}
 
 	tracker: QuickSettingsToggleTracker
-	onLoad(): void {
+	override onLoad(): void {
 		if (!this.enabled) return
 		this.tracker = new QuickSettingsToggleTracker()
 		this.tracker.onToggleCreated = this.onToggleCreated.bind(this)
 		this.tracker.onUpdate = this.onUpdate.bind(this)
 		this.tracker.load()
 	}
-	onUnload(): void {
+	override onUnload(): void {
 		const tracker = this.tracker
 		if (tracker) {
 			this.tracker = null

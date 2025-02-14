@@ -10,14 +10,14 @@ export class DebugFeature extends FeatureBase {
 	expose: boolean
 	showLayoutBorder: boolean
 	logLevel: number
-	loadSettings(loader: SettingLoader): void {
+	override loadSettings(loader: SettingLoader): void {
 		this.expose = loader.loadBoolean("debug-expose")
 		this.showLayoutBorder = loader.loadBoolean("debug-show-layout-border")
 		this.logLevel = loader.loadInt("debug-log-level")
 	}
 	// #endregion settings
 
-	onLoad() {
+	override onLoad() {
 		Logger.setHeader(Config.loggerPrefix)
 		Logger.setLogLevel(this.logLevel)
 		Logger.debug(()=>`Logger initialized, LogLevel: ${this.logLevel}`)
@@ -46,5 +46,5 @@ export class DebugFeature extends FeatureBase {
 			Logger.debug("Show layout border enabled")
 		}
 	}
-	onUnload(): void {}
+	override onUnload(): void {}
 }

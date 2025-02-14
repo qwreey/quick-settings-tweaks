@@ -15,7 +15,7 @@ export class SystemIndicatorLayoutFeature extends FeatureBase {
 	privacyIndicatorStyle: "default" | "monochrome" | "accent"
 	accentScreenSharingIndicator: boolean
 	accentScreenRecordingIndicator: boolean
-	loadSettings(loader: SettingLoader): void {
+	override loadSettings(loader: SettingLoader): void {
 		this.orderEnabled = loader.loadBoolean("system-indicator-layout-enabled")
 		this.order = loader.loadValue("system-indicator-layout-order")
 		this.unordered = this.order.find(item => item.nonOrdered)
@@ -56,7 +56,7 @@ export class SystemIndicatorLayoutFeature extends FeatureBase {
 	}
 
 	tracker: SystemIndicatorTracker
-	onLoad(): void {
+	override onLoad(): void {
 		// Colored privacy indicator
 		const privacyIndicatorStyle = new StyleClass(Global.Indicators.style_class)
 		if (this.privacyIndicatorStyle == "accent") {
@@ -110,7 +110,7 @@ export class SystemIndicatorLayoutFeature extends FeatureBase {
 		this.tracker.onUpdate = this.onUpdate.bind(this)
 		this.tracker.load()
 	}
-	onUnload(): void {
+	override onUnload(): void {
 		const tracker = this.tracker
 		if (tracker) {
 			this.tracker = null

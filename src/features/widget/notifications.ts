@@ -422,19 +422,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 			this.notificationWidget = new NotificationWidget(this)
 		)
 
-		// add
-		// FIXME: with layout manager
-		// switch (this.position) {
-		// 	case "top":
-		// 		Global.QuickSettingsGrid.insert_child_at_index(this.notificationWidget,
-		// 			// get system item index
-		// 			Global.QuickSettingsGrid.get_children().findIndex((child) => child.constructor?.name == "SystemItem") + 1
-		// 		)
-		// 		break
-		// 	case "bottom":
-		// 		Global.QuickSettingsGrid.add_child(this.notificationWidget)
-		// 		break
-		// }
+		// Add to grid
 		Global.QuickSettingsGrid.add_child(this.notificationWidget)
 		Global.QuickSettingsGrid.layout_manager.child_set_property(
 			Global.QuickSettingsGrid, this.notificationWidget, "column-span", 2

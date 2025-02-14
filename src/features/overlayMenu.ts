@@ -121,7 +121,7 @@ export class OverlayMenu extends FeatureBase {
 
 	tracker: QuickSettingsMenuTracker
 	yconstraint: Clutter.BindConstraint
-	reload(changedKey?: string): void {
+	override reload(changedKey?: string): void {
 		if (changedKey == "overlay-menu-animate-duration") return
 		if (changedKey == "overlay-menu-animate-style") return
 		super.reload(changedKey)

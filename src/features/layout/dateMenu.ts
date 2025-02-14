@@ -10,7 +10,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 	hideLeftBox: boolean
 	hideRightBox: boolean
 	disableMenu: boolean
-	loadSettings(loader: SettingLoader): void {
+	override loadSettings(loader: SettingLoader): void {
 		this.hideMediaControl = loader.loadBoolean("datemenu-hide-media-control")
 		this.hideNotifications = loader.loadBoolean("datemenu-hide-notifications")
 		this.hideLeftBox = loader.loadBoolean("datemenu-hide-left-box")
@@ -19,7 +19,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 	}
 	// #endregion settings
 
-	onLoad() {
+	override onLoad() {
 		const style = new StyleClass((Global.DateMenuBox as any).style_class)
 
 		// Hide media control from date menu
@@ -79,7 +79,7 @@ export class DateMenuLayoutFeature extends FeatureBase {
 			(Global.DateMenuBox as any).style_class = style.stringify()
 		}
 	}
-	onUnload(): void {
+	override onUnload(): void {
 		if ((Global.MediaSection as any)._shouldShow()) Global.MediaSection.show()
 		if ((Global.NotificationSection as any)._shouldShow()) Global.NotificationSection.show()
 

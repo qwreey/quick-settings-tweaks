@@ -632,9 +632,9 @@ class SystemIndicatorOrderInfo extends OrderInfo<SystemIndicatorOrderItem> {
 	}
 }
 
-class QuickSettingsOrderInfo extends OrderInfo<QuickSettingsOrderItem> {
+// class QuickSettingsOrderInfo extends OrderInfo<QuickSettingsOrderItem> {
 	
-}
+// }
 
 // #region SystemItemOrderGroup
 function SystemItemOrderGroup(settings: Gio.Settings, page: Adw.PreferencesPage): Adw.PreferencesGroup {

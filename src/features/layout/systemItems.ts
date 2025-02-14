@@ -16,7 +16,7 @@ export class SystemItemsLayoutFeature extends FeatureBase {
 	hideLayout: boolean
 	enabled: boolean
 	order: string[]
-	loadSettings(loader: SettingLoader): void {
+	override loadSettings(loader: SettingLoader): void {
 		this.hideScreenshot = loader.loadBoolean("system-items-layout-hide-screenshot")
 		this.hideSettings = loader.loadBoolean("system-items-layout-hide-settings")
 		this.hideLock = loader.loadBoolean("system-items-layout-hide-lock")
@@ -73,7 +73,7 @@ export class SystemItemsLayoutFeature extends FeatureBase {
 		}
 	}
 
-	onLoad() {
+	override onLoad() {
 		if (!this.enabled) return
 		this.getItmes().then(items => {
 			if (this.hideLayout) {
@@ -105,5 +105,5 @@ export class SystemItemsLayoutFeature extends FeatureBase {
 			}
 		}).catch(Logger.error)
 	}
-	onUnload(): void {}
+	override onUnload(): void {}
 }
