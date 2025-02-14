@@ -381,7 +381,6 @@ class ProgressControl extends St.BoxLayout {
 		this._options = options
 
 		super._init({
-			...VerticalProp,
 			x_expand: true,
 			style_class: "QSTWEAKS-progress-control",
 		})
