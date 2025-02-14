@@ -56,3 +56,11 @@ If you want to contribute, you must pull `dev` branch. **Not master branch.** ma
 You can test extension with command `./install.sh dev`. You will need tigervnc client and docker in host. Tested in arch linux but it should working on any systemd based platform
 
 You can re-build extension by log out and close vnc window or send SIGINT to exit dev docker.
+
+## Sponsor
+
+You can promote and support development by [github sponsor!](https://github.com/sponsors/qwreey) You can help keep this project maintained
+
+Here is my sponsors, thank for your support!
+
+[![sponsors](https://readme-contribs.as93.net/sponsors/qwreey?shape=square&margin=16&perRow=15&title=Qwreey's%20Sponsors&textColor=f5acff&backgroundColor=0e001a&fontFamily=cursive&fontSize=14&limit=90&footerText=none&outerBorderRadius=24)](https://github.com/sponsors/qwreey)
