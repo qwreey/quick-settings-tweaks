@@ -90,7 +90,7 @@ export default class QstExtensionPreferences extends ExtensionPreferences {
 
 		// Window options
 		window.set_search_enabled(true)
-		window.set_default_size(640, 640)
+		window.set_default_size(690, 680)
 
 		// Register icon path
 		this.appendIconPath(this.path + "/media")
