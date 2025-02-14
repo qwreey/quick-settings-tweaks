@@ -176,7 +176,11 @@ class NotificationList extends MessageList.MessageListSection {
 
 		this._nUrgent = 0
 
-		Global.MessageTray.connectObject("source-added", this._sourceAdded.bind(this), this)
+		Global.MessageTray.connectObject(
+			"source-added",
+			this._sourceAdded.bind(this),
+			this
+		)
 		Global.MessageTray.getSources().forEach(source => {
 			this._sourceAdded(Global.MessageTray, source)
 		})
@@ -238,8 +242,16 @@ class NotificationWidget extends St.BoxLayout {
 		if (this._placeholder) this.add_child(this._placeholder)
 		if (this._nativeControl) this.add_child(this._nativeControl)
 
-		this._list.connect("notify::empty", this._syncEmpty.bind(this))
-		this._list.connect("notify::can-clear", this._syncClear.bind(this))
+		this._list.connectObject(
+			"notify::empty",
+			this._syncEmpty.bind(this),
+			this
+		)
+		this._list.connectObject(
+			"notify::can-clear",
+			this._syncClear.bind(this),
+			this
+		)
 		this._syncEmpty()
 		this._syncClear()
 		this._updateMaxHeight()
@@ -275,9 +287,10 @@ class NotificationWidget extends St.BoxLayout {
 			child: this._sections,
 		})
 		this._updateScrollStyle()
-		this._scroll.connect(
+		this._scroll.connectObject(
 			"notify::vscrollbar-visible",
-			this._syncScrollbarPadding.bind(this)
+			this._syncScrollbarPadding.bind(this),
+			this
 		)
 		this._syncScrollbarPadding()
 		this._list = new NotificationList()
@@ -297,9 +310,10 @@ class NotificationWidget extends St.BoxLayout {
 		const header = this._header = new Header({ createClearButton: !this._options.useNativeControls })
 
 		if (header._clearButton) {
-			header._clearButton.connect(
+			header._clearButton.connectObject(
 				"clicked",
-				this._list.clear.bind(this._list)
+				this._list.clear.bind(this._list),
+				this
 			)
 		}
 	}
@@ -310,9 +324,10 @@ class NotificationWidget extends St.BoxLayout {
 	_createNativeControl() {
 		if (!this._options.useNativeControls) return
 		this._nativeControl = new NativeControl()
-		this._nativeControl._clearButton.connect(
+		this._nativeControl._clearButton.connectObject(
 			"clicked",
-			this._list.clear.bind(this._list)
+			this._list.clear.bind(this._list),
+			this
 		)
 	}
 

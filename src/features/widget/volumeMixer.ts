@@ -476,7 +476,11 @@ class VolumeMixerWidget extends St.BoxLayout {
 		this.add_child(this._scroll)
 		this._updateMaxHeight()
 		this._updateStyleClass()
-		this._list.connect("notify::should-show", this._sync.bind(this))
+		this._list.connectObject(
+			"notify::should-show",
+			this._sync.bind(this),
+			this
+		)
 		this._sync()
 	}
 
@@ -506,9 +510,10 @@ class VolumeMixerWidget extends St.BoxLayout {
 			child: this._sections,
 		})
 		this._updateScrollStyle()
-		this._scroll.connect(
+		this._scroll.connectObject(
 			"notify::vscrollbar-visible",
-			this._syncScrollbarPadding.bind(this)
+			this._syncScrollbarPadding.bind(this),
+			this
 		)
 		this._syncScrollbarPadding()
 		this._list = new VolumeMixerList(this._options)
@@ -584,12 +589,12 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 		// Create button
 		this.mixerMenuButton = new St.Button({
 			child: new St.Icon({icon_name: this.menuIcon}),
-			style_class: 'icon-button flat',
+			style_class: "icon-button flat",
 			can_focus: true,
 			x_expand: false,
 			y_expand: true,
 			visible: this.volumeMixerWidget.visible,
-			accessible_name: _('Open volumx mixer'),
+			accessible_name: _("Open volumx mixer"),
 		})
 		this.volumeMixerWidget.bind_property(
 			"visible",
@@ -603,17 +608,17 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 		slider.menu.addMenuItem(this.mixerMenuSection, 1)
 		slider.child.add_child(this.mixerMenuButton)
 		const revertChanges = ()=>{
-			slider.menu.setHeader('audio-headphones-symbolic', (_)('Sound Output'));
+			slider.menu.setHeader("audio-headphones-symbolic", (_)("Sound Output"));
 			(slider.menu as any)._setSettingsVisibility(Main.sessionMode.allowSettings);
 			updateMenuSeparators(slider.menu);
 			(slider as any)._deviceSection.box.show()
 		}
-		this.mixerMenuButton.connect('clicked', () => {
+		this.maid.connectJob(this.mixerMenuButton, "clicked", () => {
 			this.mixerMenuSection.box.show();
 			(slider as any)._deviceSection.box.hide();
-			(slider.menu as any)._setSettingsVisibility(false);
+			(slider.menu as any)._setSettingsVisibility(false)
 			updateMenuSeparators(slider.menu)
-			slider.menu.setHeader('audio-headphones-symbolic', _('Volume Mixer'))
+			slider.menu.setHeader("audio-headphones-symbolic", _("Volume Mixer"))
 			slider.menu.open(true)
 		})
 		this.maid.connectJob(slider.menu, "menu-closed", ()=>{

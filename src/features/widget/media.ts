@@ -421,21 +421,21 @@ class ProgressControl extends St.BoxLayout {
 		if (oldSlider) return
 
 		// Process Dragging
-		slider.connect("drag-begin", () => {
+		slider.connectObject("drag-begin", () => {
 			this._dragging = true
 			return Clutter.EVENT_PROPAGATE
-		});
-		slider.connect("drag-end", () => {
+		}, this)
+		slider.connectObject("drag-end", () => {
 			this._player.position = (Math.floor(slider.value) * 1000000)
 			this._dragging = false
 			return Clutter.EVENT_PROPAGATE
-		})
-		slider.connect("scroll-event", () => {
+		}, this)
+		slider.connectObject("scroll-event", () => {
 			return Clutter.EVENT_STOP
-		})
-		slider.connect("notify::value", () => {
+		}, this)
+		slider.connectObject("notify::value", () => {
 			if (this._dragging) this._updatePosition(Math.floor(slider.value) * 1000000)
-		})
+		}, this)
 	}
 
 	// Show / Hide by playing status
@@ -806,10 +806,10 @@ class MediaList extends St.BoxLayout {
 		const effect = this._effect = new RoundClipEffect()
 		effect.enabled = false
 		this.add_effect_with_name("round-clip", effect)
-		effect.connect("notify::enabled", ()=>{
+		effect.connectObject("notify::enabled", ()=>{
 			if (effect !== this._effect) return
 			if (effect.enabled) this._updateEffect()
-		})
+		}, this)
 		this._updateEffect()
 	}
 	_updateEffect() {
@@ -1076,7 +1076,11 @@ class Header extends St.BoxLayout {
 
 		this._pageIndicator = new PageIndicators(Clutter.Orientation.HORIZONTAL)
 		this._pageIndicator.x_align = Clutter.ActorAlign.END
-		this._pageIndicator.connect("page-activated", (_, page) => this.emit("page-activated", page))
+		this._pageIndicator.connectObject(
+			"page-activated",
+			(_: any, page: number) => this.emit("page-activated", page),
+			this
+		)
 		this._pageIndicator.y_align = Clutter.ActorAlign.CENTER
 		this.add_child(this._pageIndicator)// as unknown as St.BoxLayout)
 	}
@@ -1133,27 +1137,27 @@ class MediaWidget extends St.BoxLayout {
 		// Create list
 		this._list = new MediaList(options)
 		this.add_child(this._list)
-		this._list.connect("notify::empty", this._syncEmpty.bind(this))
+		this._list.connectObject(
+			"notify::empty",
+			this._syncEmpty.bind(this),
+			this
+		)
 		this._syncEmpty()
 
 		// Sync page update & page indicator
 		this._header.page = this._list.page
 		this._header.maxPage = this._list.maxPage
-		const pageConnection = this._list.connect("page-updated", (_, page: number): void => {
+		this._list.connectObject("page-updated", (_, page: number): void => {
 			if (this._header.page == page) return
 			this._header.page = page
-		})
-		const maxPageConnection = this._list.connect("max-page-updated", (_, maxPage: number): void => {
+		}, this)
+		this._list.connectObject("max-page-updated", (_, maxPage: number): void => {
 			if (this._header.maxPage == maxPage) return
 			this._header.maxPage = maxPage
-		})
-		this._header.connect("page-activated", (_, page: number) => {
+		}, this)
+		this._header.connectObject("page-activated", (_, page: number) => {
 			this._list.page = page
-		})
-		this.connect("destroy", ()=>{
-			this._list.disconnect(pageConnection)
-			this._list.disconnect(maxPageConnection)
-		})
+		}, this)
 	}
 
 	_syncEmpty() {

@@ -6,7 +6,6 @@ import { WeatherClient } from "resource:///org/gnome/shell/misc/weather.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import Global from "../../global.js"
 
-
 // #region Header
 class Header extends St.BoxLayout {
 	_headerLabel: St.Label
