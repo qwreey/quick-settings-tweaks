@@ -1,0 +1,61 @@
+[
+	{
+		"licenseUri": "https://github.com/qwreey/quick-settings-tweaks/blob/master/LICENSE",
+		"name": "quick-settings-tweaks",
+		"author": "qwreey",
+		"url": "https://github.com/qwreey/quick-settings-tweaks",
+		"licenseSummary": "LGPL v3.0"
+	},
+	{
+		"licenseUri": "https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/COPYING",
+		"name": "gnome-shell",
+		"author": "gnome",
+		"url": "https://gitlab.gnome.org/GNOME/gnome-shell",
+		"licenseSummary": "GPL v2"
+	},
+	{
+		"licenseUri": "https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt",
+		"name": "TypeScript",
+		"author": "microsoft",
+		"url": "https://www.typescriptlang.org",
+		"description": "Typescript compiler",
+		"licenseSummary": "Apache License 2.0"
+	},
+	{
+		"licenseUri": "https://github.com/gjsify/gnome-shell/blob/main/LICENSE",
+		"name": "girs",
+		"author": "gisify",
+		"url": "https://github.com/gjsify/gnome-shell",
+		"description": "Gnome shell typescript types",
+		"licenseSummary": "MIT License"
+	},
+	{
+		"licenseUri": "https://github.com/sass/dart-sass/blob/main/LICENSE",
+		"name": "sass",
+		"url": "https://sass-lang.com/",
+		"description": "Stylesheet pre-processor",
+		"licenseSummary": "MIT License"
+	},
+	{
+		"name": "gnome-volume-mixer",
+		"author": "mymindstorm",
+		"url": "https://github.com/mymindstorm/gnome-volume-mixer",
+		"licenseUri": "https://github.com/mymindstorm/gnome-volume-mixer/blob/master/LICENSE",
+		"description": "Volume mixer widget",
+		"affectedFiles": [
+			"features/widget/volumeMixer.ts"
+		],
+		"licenseSummary": "MIT License"
+	},
+	{
+		"licenseUri": "https://github.com/yilozt/rounded-window-corners/blob/main/LICENSE",
+		"name": "rounded-window-corners",
+		"author": "yilozt",
+		"url": "https://github.com/yilozt/rounded-window-corners",
+		"affectedFiles": [
+			"media/rounded_corners.frag",
+			"libs/roundClip.ts"
+		],
+		"description": "Round clip shader"
+	}
+]

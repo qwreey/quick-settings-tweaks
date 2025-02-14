@@ -1,0 +1,19 @@
+@use "../global.scss" as *;
+
+#panel {
+    #{$p}-privacy-indicator-use-accent .privacy-indicator {
+        color: -st-accent-color;
+    }#{$p}-privacy-indicator-use-monochrome .privacy-indicator {
+        color: -st-accent-fg-color;
+    }
+    #{$p}-screen-sharing-indicator-use-accent,
+    #{$p}-screen-recording-indicator-use-accent {
+        box-shadow: inset 0 0 0 100px -st-accent-color;
+        &:hover, &:focus {
+            box-shadow: inset 0 0 0 100px st-mix(-st-accent-color, -st-accent-fg-color, 75%);
+        }
+        &:active {
+            box-shadow: inset 0 0 0 100px st-mix(-st-accent-color, -st-accent-fg-color, 60%);
+        }
+    }
+}
