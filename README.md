@@ -55,11 +55,13 @@ Or, you can get nightly preview build from [github releases tab](https://github.
 
 Keep in mind that there may be one or a few developers, but there may be many issues and users. I think you know how to behave with manners without even having to say it.
 
+Please check github [project board page](https://github.com/users/qwreey/projects/2) for issue priority and progress.
+
 #### Raise an issue
 
 If you want to raise an issue, First, **you must search your issue first.** duplicated issue will be closed, and disturb developer's time.
 
-Second, **you must attach a related log files, gnome version and extension version informations.** if you don't provide information much about your issue, it is hard to solve your issue.
+Second, **you must attach a related log files, gnome version and extension version informations.** if you don't provide information much about your issue, it is hard to solve your issue. and to be clear, Please use `[migration]`, `[feature]`, `[bug]` prefix for issue title, It is very useful for searching and organizing issues
 
 And last, **you must use well-formed english** You can use a translator or AI to write it, so avoid wasting time by having the developer translate and take notes. This takes up a surprising amount of the developer's time, making analysis very difficult, especially if the logs are mixed in English and other languages.
 
