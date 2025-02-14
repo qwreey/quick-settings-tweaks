@@ -299,8 +299,13 @@
     <!-- #endregion System Items Layout -->
 
     <!-- #region System Indicator Layout -->
-    <key name="system-indicator-privacy-indicator-use-accent" type="b">
-      <default>false</default>
+    <key name="system-indicator-privacy-indicator-style" type="s">
+      <default>'default'</default>
+      <choices>
+        <choice value='default'/>
+        <choice value='monochrome'/>
+        <choice value='accent'/>
+      </choices>
     </key>
     <key name="system-indicator-screen-sharing-indicator-use-accent" type="b">
       <default>false</default>

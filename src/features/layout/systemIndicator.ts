@@ -12,16 +12,16 @@ export class SystemIndicatorLayoutFeature extends FeatureBase {
 	orderEnabled: boolean
 	order: SystemIndicatorOrderItem[]
 	unordered: SystemIndicatorOrderItem
-	coloredPrivacyIndicator: boolean
-	coloredScreenSharingIndicator: boolean
-	coloredScreenRecordingIndicator: boolean
+	privacyIndicatorStyle: "default" | "monochrome" | "accent"
+	accentScreenSharingIndicator: boolean
+	accentScreenRecordingIndicator: boolean
 	loadSettings(loader: SettingLoader): void {
 		this.orderEnabled = loader.loadBoolean("system-indicator-layout-enabled")
 		this.order = loader.loadValue("system-indicator-layout-order")
 		this.unordered = this.order.find(item => item.nonOrdered)
-		this.coloredPrivacyIndicator = loader.loadBoolean("system-indicator-privacy-indicator-use-accent")
-		this.coloredScreenSharingIndicator = loader.loadBoolean("system-indicator-screen-sharing-indicator-use-accent")
-		this.coloredScreenRecordingIndicator = loader.loadBoolean("system-indicator-screen-recording-indicator-use-accent")
+		this.privacyIndicatorStyle = loader.loadString("system-indicator-privacy-indicator-style") as SystemIndicatorLayoutFeature["privacyIndicatorStyle"]
+		this.accentScreenSharingIndicator = loader.loadBoolean("system-indicator-screen-sharing-indicator-use-accent")
+		this.accentScreenRecordingIndicator = loader.loadBoolean("system-indicator-screen-recording-indicator-use-accent")
 	}
 	// #endregion settings
 
@@ -57,22 +57,26 @@ export class SystemIndicatorLayoutFeature extends FeatureBase {
 
 	tracker: SystemIndicatorTracker
 	onLoad(): void {
-		// Colored privarcy indicator
-		if (this.coloredPrivacyIndicator) {
-			Global.Indicators.style_class =
-				new StyleClass(Global.Indicators.style_class)
-				.add("QSTWEAKS-privacy-indicator-use-accent")
-				.stringify()
+		// Colored privacy indicator
+		const privacyIndicatorStyle = new StyleClass(Global.Indicators.style_class)
+		if (this.privacyIndicatorStyle == "accent") {
+			privacyIndicatorStyle.add("QSTWEAKS-privacy-indicator-use-accent")
+		} else if (this.privacyIndicatorStyle == "monochrome") {
+			privacyIndicatorStyle.add("QSTWEAKS-privacy-indicator-use-monochrome")
+		}
+		if (privacyIndicatorStyle.modified) {
+			Global.Indicators.style_class = privacyIndicatorStyle.stringify()
 			this.maid.functionJob(()=>{
 				Global.Indicators.style_class =
 					new StyleClass(Global.Indicators.style_class)
 					.remove("QSTWEAKS-privacy-indicator-use-accent")
+					.remove("QSTWEAKS-privacy-indicator-use-monochrome")
 					.stringify()
 			})
 		}
 
 		// Colored screen sharing indicator
-		if (this.coloredScreenSharingIndicator) {
+		if (this.accentScreenSharingIndicator) {
 			Main.panel.statusArea["screenSharing"].style_class =
 				new StyleClass(Main.panel.statusArea["screenSharing"].style_class)
 				.add("QSTWEAKS-screen-sharing-indicator-use-accent")
@@ -86,7 +90,7 @@ export class SystemIndicatorLayoutFeature extends FeatureBase {
 		}
 
 		// Colored screen recording indicator
-		if (this.coloredScreenRecordingIndicator) {
+		if (this.accentScreenRecordingIndicator) {
 			Main.panel.statusArea["screenRecording"].style_class =
 				new StyleClass(Main.panel.statusArea["screenRecording"].style_class)
 				.add("QSTWEAKS-screen-recording-indicator-use-accent")

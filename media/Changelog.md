@@ -24,6 +24,13 @@
   - Add show or hide location label option
   - Add max forecasts option
   - Add weather interval option
+- System Indicators
+  - Monochrome option for privacy indicators
+
+## Fix
+
+- System Indicators
+  - Fix accent indicators color not match with shell accent color
 
 # 2.1-pre7
 <!-- @BuildNumber: 7 -->

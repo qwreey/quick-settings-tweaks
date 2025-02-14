@@ -22,6 +22,7 @@ import {
 	Button,
 	removeRowBottomBorder,
 	removeRowMinHeight,
+	DropdownRow,
 } from "../libs/prefs/components.js"
 import { SystemIndicatorOrderItem } from "../libs/types/systemIndicatorOrderItem.js"
 import { QuickSettingsOrderItem } from "../libs/types/quickSettingsOrderItem.js"
@@ -820,11 +821,16 @@ export const LayoutPage = GObject.registerClass({
 				title: _("Accent screen recording indicator"),
 				subtitle: _("Use shell accent color on screen recording indicator"),
 			}),
-			SwitchRow({
+			DropdownRow({
 				settings,
-				bind: "system-indicator-privacy-indicator-use-accent",
-				title: _("Accent privacy indicators"),
-				subtitle: _("Use shell accent color on privarcy indicators"),
+				bind: "system-indicator-privacy-indicator-style",
+				title: _("Privacy indicators style"),
+				subtitle: _("Use monochrome or shell accent color on privarcy indicators"),
+				items: [
+					{ name: _("Default"), value: "default" },
+					{ name: _("Accent"), value: "accent" },
+					{ name: _("Monochrome"), value: "monochrome" },
+				],
 			}),
 			SwitchRow({
 				settings,

@@ -3,6 +3,7 @@ Touch enchantments:
     Notifications: slide to discard
 
 Readme file
+homepage?
 
 배터리 알약 아이콘
 
@@ -18,8 +19,6 @@ widgets:
         item to hide
             show hidden item button (temporary)
         as submenu (like background apps)
-        as system item (like background apps,
-                        should able to adjust order in systemitem order option)
 
 키보드로 포커스 가능해야함
 
@@ -46,14 +45,9 @@ show full title
     always, move around
     when hover, as tooltip
 
-저장 버튼을 만들기
 어나더: 자동으로 지우는 알림 리스트 (타이틀 regex)
 datemenu 왼쪽 레이아웃 오른쪽레이아웃, 메뉴 열지 않기
 more dimmer
 
 option to hide widget header?
 믹서 디바이스 변경 구현하기
-
-done;
-~~dnd-quick-toggle-indicator-position: hide 구현하기 (전부 가림)~~
-~~page indicator 왜 클릭 안먹냐~~
