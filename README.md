@@ -1,8 +1,8 @@
-# Quick Settings Tweaker [<img src=".github/images/quick-settings-tweaker.png" width="200px" align="right" alt="QuickSettings-Tweaker SkeletonUI">](https://extensions.gnome.org/extension/5446/quick-settings-tweaker/)
+# Quick Settings Tweaks [<img src=".github/images/quick-settings-tweaker.png" width="200px" align="right" alt="QuickSettings-Tweaker SkeletonUI">](https://extensions.gnome.org/extension/5446/quick-settings-tweaker/)
 
 <div align="center">
 
-### Let's tweak Gnome 47 quick settings!
+### Let's tweak Gnome Quick Settings!
 
 [<img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" height="100" align="middle">](https://extensions.gnome.org/extension/5446/quick-settings-tweaker/)
 
@@ -11,7 +11,7 @@
 </a>
 <br>
 <br>
-Quick Settings Tweaker is a Gnome 43+ extension which allows you to customize the new Quick Settings Panel to your liking!
+Quick Settings Tweaker is a Gnome 46+ extension which allows you to customize the new Quick Settings Panel to your liking!
 
 </div>
 <br>
