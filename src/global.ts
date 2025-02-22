@@ -25,13 +25,13 @@ type StreamSlider = {
 	InputStreamSlider: QuickSlider,
 	OutputStreamSlider: QuickSlider,
 }
-const Global = new (class Global {
-	QuickSettings: PanelMenu.Button
-	QuickSettingsMenu: QuickSettingsMenu
-	QuickSettingsGrid: St.Widget
-	QuickSettingsBox: St.BoxLayout
-	QuickSettingsActor: St.Widget
-	get QuickSettingsSystemIndicator(): Promise<SystemIndicator> {
+export default class Global {
+	static QuickSettings: PanelMenu.Button
+	static QuickSettingsMenu: QuickSettingsMenu
+	static QuickSettingsGrid: St.Widget
+	static QuickSettingsBox: St.BoxLayout
+	static QuickSettingsActor: St.Widget
+	static get QuickSettingsSystemIndicator(): Promise<SystemIndicator> {
 		return new Promise(resolve => {
 			let system = (this.QuickSettings as any)._system
 			if (system) {
@@ -46,37 +46,37 @@ const Global = new (class Global {
 			})
 		})
 	}
-	get QuickSettingsSystemItem(): Promise<SystemItem> {
+	static get QuickSettingsSystemItem(): Promise<SystemItem> {
 		return this.QuickSettingsSystemIndicator
 			.then(system=>(system as any)._systemItem)
 			.catch(Logger.error)
 	}
-	Indicators: St.BoxLayout
+	static Indicators: St.BoxLayout
 
-	DateMenu: DateMenuButton
-	DateMenuMenu: PopupMenu
-	DateMenuBox: Clutter.Actor
-	DateMenuHolder: Clutter.Actor
+	static DateMenu: DateMenuButton
+	static DateMenuMenu: PopupMenu
+	static DateMenuBox: Clutter.Actor
+	static DateMenuHolder: Clutter.Actor
 
-	MessageTray: MessageTray
+	static MessageTray: MessageTray
 
-	Extension: Extension
-	Settings: Gio.Settings
+	static Extension: Extension
+	static Settings: Gio.Settings
 
-	get MessageList(): CalendarMessageList {
+	static get MessageList(): CalendarMessageList {
 		return (this.DateMenu as any)._messageList
 	}
-	get NotificationSection(): NotificationSection {
+	static get NotificationSection(): NotificationSection {
 		return (this.DateMenu as any)._messageList._notificationSection
 	}
-	get MediaSection(): MediaSection {
+	static get MediaSection(): MediaSection {
 		return (this.DateMenu as any)._messageList._mediaSection
 	}
-	get DateMenuIndicator(): Clutter.Actor {
+	static get DateMenuIndicator(): Clutter.Actor {
 		return (this.DateMenu as any)._indicator
 	}
 
-	GetShutdownMenuBox(): Promise<Clutter.Actor> {
+	static GetShutdownMenuBox(): Promise<Clutter.Actor> {
 		// To prevent freeze, priority should be PRIORITY_DEFAULT_IDLE instead of PRIORITY_DEFAULT
 		return new Promise(resolve => {
 			GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
@@ -88,7 +88,7 @@ const Global = new (class Global {
 		})
 	}
 
-	private StreamSliderGetter(): StreamSlider|null {
+	private static StreamSliderGetter(): StreamSlider|null {
 		if (!(this.QuickSettings as any)._volumeInput)
 			return null
 		return {
@@ -97,7 +97,7 @@ const Global = new (class Global {
 			OutputStreamSlider: (this.QuickSettings as any)._volumeOutput._output,
 		}
 	}
-	GetStreamSlider(): Promise<StreamSlider> {
+	static GetStreamSlider(): Promise<StreamSlider> {
 		return new Promise(resolve => {
 			let streamSlider = this.StreamSliderGetter()
 			if (streamSlider) {
@@ -113,9 +113,9 @@ const Global = new (class Global {
 		})
 	}
 
-	private DBusFiles: Map<string, Gio.DBusNodeInfo>
-	private Decoder: TextDecoder
-	GetDbusInterface(path: string, interfaceName: string) {
+	private static DBusFiles: Map<string, Gio.DBusNodeInfo>
+	private static Decoder: TextDecoder
+	static GetDbusInterface(path: string, interfaceName: string) {
 		let cachedInfo = this.DBusFiles.get(path)
 		if (!cachedInfo) {
 			const DbusFile = Gio.File.new_for_path(`${this.Extension.path}/${path}`)
@@ -125,8 +125,8 @@ const Global = new (class Global {
 		return cachedInfo.lookup_interface(interfaceName)
 	}
 
-	private Shaders: Map<string, [string, string]>
-	GetShader(path: string): [string, string] {
+	private static Shaders: Map<string, [string, string]>
+	static GetShader(path: string): [string, string] {
 		let cachedInfo = this.Shaders.get(path)
 		if (!cachedInfo) {
 			const shaderFile = Gio.File.new_for_path(`${this.Extension.path}/${path}`)
@@ -142,7 +142,7 @@ const Global = new (class Global {
 		return cachedInfo
 	}
 
-	unload() {
+	static unload() {
 		this.QuickSettings = null
 		this.QuickSettingsMenu = null
 		this.QuickSettingsGrid = null
@@ -160,7 +160,7 @@ const Global = new (class Global {
 		this.Shaders = null
 		this.Decoder = null
 	}
-	load(extension: Extension) {
+	static load(extension: Extension) {
 		this.Extension = extension
 		this.Settings = extension.getSettings()
 		this.Shaders = new Map()
@@ -184,5 +184,4 @@ const Global = new (class Global {
 		// Message
 		this.MessageTray = Main.messageTray
 	}
-})()
-export default Global
+}
