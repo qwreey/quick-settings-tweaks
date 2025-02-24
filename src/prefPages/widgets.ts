@@ -85,11 +85,11 @@ function SliderCustomizes({
 		}),
 		AdjustmentRow({
 			settings,
-			title: _("Height"),
+			title: _("Thickness"),
 			max: 1000,
-			bind: baseName+"-height",
+			bind: baseName+"-thickness",
 			sensitiveBind,
-			subtitle: _("Set this to 0 to use default height"),
+			subtitle: _("Set this to 0 to use default thickness"),
 		})
 	]
 }
