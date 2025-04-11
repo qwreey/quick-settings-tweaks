@@ -157,7 +157,8 @@ class Player extends GObject.Object {
 		}
 
 		this._trackId = metadata["mpris:trackid"]?.get_string()[0] ?? null
-		this._length = metadata["mpris:length"]?.get_int64() ?? null
+		
+		this._length = metadata["mpris:length"]?.deepUnpack() ?? null
 
 		// Get trak artists
 		this._trackArtists = metadata['xesam:artist']?.deepUnpack()
@@ -645,12 +646,23 @@ class MediaItem extends MessageList.Message {
 		const coverUrl = this._player.trackCoverUrl
 		if (!coverUrl || coverUrl.endsWith(".svg")) return
 		const coverPath = coverUrl.replace(/^file:\/\//,"")
+		console.log("MediaItem", "get color from file", coverPath);
 		let colorTask = this._cachedColors.get(coverPath)
 		if (!colorTask) {
-			const pixbuf = GdkPixbuf.Pixbuf.new_from_file(coverPath)
-			if (!pixbuf) return
-			colorTask = getImageMeanColor(pixbuf)
-			this._cachedColors.set(coverPath, colorTask)
+			console.log("MediaItem", "get color from file, not in cache", coverPath);
+			let pixbuf: GdkPixbuf.Pixbuf;
+			try {
+				pixbuf = GdkPixbuf.Pixbuf.new_from_file(coverPath)
+			} catch (error) {
+				console.log("MediaItem", "get color from file failed", coverPath, error);
+				return
+			}  finally {
+				if (!pixbuf) {
+					return
+				}
+				colorTask = getImageMeanColor(pixbuf)
+				this._cachedColors.set(coverPath, colorTask)
+			}
 		}
 
 		// Update style
