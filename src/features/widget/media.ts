@@ -651,15 +651,12 @@ class MediaItem extends MessageList.Message {
 
 		if (coverUrl.startsWith("file://")) {
 			const coverPath = decodeURIComponent(coverUrl.replace(/^file:\/\//,""))
-			console.log("MediaItem", "get color from file", coverPath);
 			colorTask = this._cachedColors.get(coverPath)
 			if (!colorTask) {
-				console.log("MediaItem", "get color from file, not in cache", coverPath);
 				let pixbuf: GdkPixbuf.Pixbuf;
 				try {
 					pixbuf = GdkPixbuf.Pixbuf.new_from_file(coverPath)
 				} catch (error) {
-					console.log("MediaItem", "get color from file failed", coverPath, error);
 					return
 				}  finally {
 					if (!pixbuf) {
@@ -671,11 +668,9 @@ class MediaItem extends MessageList.Message {
 			}
 		} else if (coverUrl.startsWith("https://") || coverUrl.startsWith("http://")) {
 			const coverPath = decodeURIComponent(coverUrl.replace(/^https?:\/\//,"").replace(/^http?:\/\//,""))
-			console.log("MediaItem", "get color from url", coverPath);
 			colorTask = this._cachedColors.get(coverPath)
 
 			if (!colorTask) {
-				console.log("MediaItem", "get color from url, not in cache", coverPath);
 				const session = new Soup.Session();
 				const uri = GLib.Uri.parse(coverUrl, GLib.UriFlags.NONE);
 				const message = new Soup.Message({method: 'GET', uri});
@@ -689,7 +684,6 @@ class MediaItem extends MessageList.Message {
 						return getImageMeanColor(pixbuf);
 					})
 					.catch(error => {
-						console.error("MediaItem: Failed to load image:", error);
 						return null;
 					});
 
