@@ -81,7 +81,7 @@ class Header extends St.BoxLayout {
 			text: _("Weather"),
 			style_class: "QSTWEAKS-header-label",
 			y_align: Clutter.ActorAlign.CENTER,
-			x_align: Clutter.ActorAlign.START,
+			x_align: true,
 			x_expand: true,
 		})
 		this._locationLabel = new St.Label({

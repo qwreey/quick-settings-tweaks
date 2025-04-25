@@ -784,7 +784,7 @@ class MediaList extends St.BoxLayout {
 			reactive: true,
 			track_hover: true,
 			hover: false,
-			clip_to_allocation: true,
+			clip_to_allocation: true
 		})
 		this._current = null
 		this._options = options
