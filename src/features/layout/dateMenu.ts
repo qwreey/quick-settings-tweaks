@@ -24,10 +24,12 @@ export class DateMenuLayoutFeature extends FeatureBase {
 
 		// Hide media control from date menu
 		if (this.hideMediaControl) {
-			this.maid.hideJob(
-				Global.MediaSection,
-				()=>true
-			)
+                        for (const mediaMessage of Global.MediaMessages) {
+                                this.maid.hideJob(
+                                        mediaMessage,
+                                        ()=>true
+                                )
+                        }
 		}
 
 		// Hide notifications from date menu
@@ -80,7 +82,9 @@ export class DateMenuLayoutFeature extends FeatureBase {
 		}
 	}
 	override onUnload(): void {
-		if ((Global.MediaSection as any)._shouldShow()) Global.MediaSection.show()
+                for (const mediaMessage of Global.MediaMessages) {
+                    mediaMessage.show();
+                }
 		if ((Global.NotificationSection as any)._shouldShow()) Global.NotificationSection.show()
 
 		// Remove modified styles
