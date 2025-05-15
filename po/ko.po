@@ -1080,14 +1080,6 @@ msgstr "달력 메뉴"
 msgid "Adjust Date Menu layout"
 msgstr "달력 메뉴의 레이아웃을 조절합니다"
 
-#: target/out/prefPages/layout.js:828
-msgid "Hide Notifications"
-msgstr "알림 숨김"
-
-#: target/out/prefPages/layout.js:829
-msgid "Hide notifications on the date menu"
-msgstr "알림을 날짜 메뉴에서 숨깁니다"
-
 #: target/out/prefPages/layout.js:834
 msgid "Hide Media Control"
 msgstr "미디어 컨트롤 숨김"

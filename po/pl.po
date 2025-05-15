@@ -1087,14 +1087,6 @@ msgstr "Data"
 msgid "Adjust Date Menu layout"
 msgstr "Dostosuj układ menu daty"
 
-#: target/out/prefPages/layout.js:828
-msgid "Hide Notifications"
-msgstr "Przestrzeń powiadomień"
-
-#: target/out/prefPages/layout.js:829
-msgid "Hide notifications on the date menu"
-msgstr "Ukryj przestrzeń powiadomień"
-
 #: target/out/prefPages/layout.js:834
 msgid "Hide Media Control"
 msgstr "Sterowanie mediami"

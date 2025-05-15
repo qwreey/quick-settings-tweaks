@@ -891,12 +891,6 @@ export const LayoutPage = GObject.registerClass({
 		},[
 			SwitchRow({
 				settings,
-				title: _("Hide Notifications"),
-				subtitle: _("Hide notifications on the date menu"),
-				bind: "datemenu-hide-notifications",
-			}),
-			SwitchRow({
-				settings,
 				title: _("Hide Media Control"),
 				subtitle: _("Hide media control on the date menu"),
 				bind: "datemenu-hide-media-control",
