@@ -82,11 +82,6 @@ export class DateMenuLayoutFeature extends FeatureBase {
 		}
 	}
 	override onUnload(): void {
-                for (const mediaMessage of Global.MediaMessages) {
-                    mediaMessage.show();
-                }
-		if ((Global.NotificationSection as any)._shouldShow()) Global.NotificationSection.show()
-
 		// Remove modified styles
 		const style = new StyleClass((Global.DateMenuBox as any).style_class)
 			.remove("QSTWEAKS-hide-right-box")
