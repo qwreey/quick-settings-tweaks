@@ -169,7 +169,7 @@ GObject.registerClass(NativeControl)
 // #endregion NativeControl
 
 // #region NotificationList
-class NotificationList extends MessageList.MessageListSection {
+class NotificationList extends MessageList.NotificationMessageGroup {
 	_nUrgent: number
 
 	_init() {

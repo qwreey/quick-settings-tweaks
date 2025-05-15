@@ -6,13 +6,11 @@ import Logger from "../../libs/shared/logger.js"
 export class DateMenuLayoutFeature extends FeatureBase {
 	// #region settings
 	hideMediaControl: boolean
-	hideNotifications: boolean
 	hideLeftBox: boolean
 	hideRightBox: boolean
 	disableMenu: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.hideMediaControl = loader.loadBoolean("datemenu-hide-media-control")
-		this.hideNotifications = loader.loadBoolean("datemenu-hide-notifications")
 		this.hideLeftBox = loader.loadBoolean("datemenu-hide-left-box")
 		this.hideRightBox = loader.loadBoolean("datemenu-hide-right-box")
 		this.disableMenu = loader.loadBoolean("datemenu-disable-menu")
@@ -24,18 +22,12 @@ export class DateMenuLayoutFeature extends FeatureBase {
 
 		// Hide media control from date menu
 		if (this.hideMediaControl) {
-			this.maid.hideJob(
-				Global.MediaSection,
-				()=>true
-			)
-		}
-
-		// Hide notifications from date menu
-		if (this.hideNotifications) {
-			this.maid.hideJob(
-				Global.NotificationSection,
-				()=>true
-			)
+                        for (const mediaMessage of Global.MediaMessages) {
+                                this.maid.hideJob(
+                                        mediaMessage,
+                                        ()=>true
+                                )
+                        }
 		}
 
 		// Hide left box from date menu
@@ -80,9 +72,6 @@ export class DateMenuLayoutFeature extends FeatureBase {
 		}
 	}
 	override onUnload(): void {
-		if ((Global.MediaSection as any)._shouldShow()) Global.MediaSection.show()
-		if ((Global.NotificationSection as any)._shouldShow()) Global.NotificationSection.show()
-
 		// Remove modified styles
 		const style = new StyleClass((Global.DateMenuBox as any).style_class)
 			.remove("QSTWEAKS-hide-right-box")

@@ -1079,14 +1079,6 @@ msgstr ""
 msgid "Adjust Date Menu layout"
 msgstr ""
 
-#: target/out/prefPages/layout.js:828
-msgid "Hide Notifications"
-msgstr ""
-
-#: target/out/prefPages/layout.js:829
-msgid "Hide notifications on the date menu"
-msgstr ""
-
 #: target/out/prefPages/layout.js:834
 msgid "Hide Media Control"
 msgstr ""

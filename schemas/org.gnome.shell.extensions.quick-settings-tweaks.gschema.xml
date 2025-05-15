@@ -263,9 +263,6 @@
     <key name="datemenu-disable-menu" type="b">
       <default>false</default>
     </key>
-    <key name="datemenu-hide-notifications" type="b">
-      <default>true</default>
-    </key>
     <key name="datemenu-hide-media-control" type="b">
       <default>true</default>
     </key>
