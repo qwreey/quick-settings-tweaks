@@ -32,10 +32,17 @@ export class DateMenuLayoutFeature extends FeatureBase {
 
 		// Hide notifications from date menu
 		if (this.hideNotifications) {
-			this.maid.hideJob(
-				Global.NotificationSection,
-				()=>true
-			)
+			try {
+				const notificationSection = Global.NotificationSection;
+				if (notificationSection) {
+					this.maid.hideJob(
+						notificationSection,
+						()=>true
+					);
+				}
+			} catch (e) {
+				Logger.error(`Failed to hide notification section: ${e}`);
+			}
 		}
 
 		// Hide left box from date menu
@@ -80,8 +87,12 @@ export class DateMenuLayoutFeature extends FeatureBase {
 		}
 	}
 	override onUnload(): void {
-		if ((Global.MediaSection as any)._shouldShow()) Global.MediaSection.show()
-		if ((Global.NotificationSection as any)._shouldShow()) Global.NotificationSection.show()
+		if (Global.MediaSection && (Global.MediaSection as any)._shouldShow) {
+			Global.MediaSection.show()
+		}
+		if (Global.NotificationSection && (Global.NotificationSection as any)._shouldShow) {
+			Global.NotificationSection.show()
+		}
 
 		// Remove modified styles
 		const style = new StyleClass((Global.DateMenuBox as any).style_class)
