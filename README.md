@@ -35,6 +35,10 @@ Here is my sponsors, thank for your support!
 
 [![sponsors](https://readme-contribs.as93.net/sponsors/qwreey?shape=square&margin=16&perRow=15&title=Qwreey's%20Sponsors&textColor=f5acff&backgroundColor=0e001a&fontFamily=cursive&fontSize=14&limit=90&footerText=none&outerBorderRadius=24)](https://github.com/sponsors/qwreey)
 
+## Stars
+
+[![Star History Chart](https://api.star-history.com/svg?repos=qwreey/quick-settings-tweaks&type=Date)](https://star-history.com/#qwreey/quick-settings-tweaks&Date)
+
 ## Development
 
 ### Translations
