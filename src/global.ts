@@ -11,7 +11,7 @@ import {
 	type NotificationSection,
 	type CalendarMessageList
 } from "resource:///org/gnome/shell/ui/calendar.js";
-import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
+import { type MediaMessage } from "resource:///org/gnome/shell/ui/messageList.js"
 import {
 	type SystemItem,
 	type Indicator as SystemIndicator
@@ -69,8 +69,8 @@ const Global = new (class Global {
 	get NotificationSection(): NotificationSection {
 		return (this.DateMenu as any)._messageList._notificationSection
 	}
-	get MediaSection(): MediaSection {
-		return (this.DateMenu as any)._messageList._mediaSection
+	get MediaMessages(): MediaMessage[] {
+		return [...((this.DateMenu as any)._messageList._messageView._playerToMessage.values())]
 	}
 	get DateMenuIndicator(): Clutter.Actor {
 		return (this.DateMenu as any)._indicator
