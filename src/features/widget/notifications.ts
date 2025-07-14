@@ -21,6 +21,7 @@ class Placeholder extends St.BoxLayout {
 			style_class: "QSTWEAKS-placeholder",
 			x_align: Clutter.ActorAlign.CENTER,
 			opacity: 60,
+			x_expand: true,
 		} as Partial<St.BoxLayout>)
 
 		// Symbolic Icon
@@ -352,13 +353,14 @@ class NotificationList extends St.BoxLayout {
 		// Set up action buttons
 		if (notification.actions && notification.actions.length > 0) {
 			const actionArea = new St.BoxLayout({
-				style_class: 'message-actions',
+				style_class: 'notification-buttons',
 				x_expand: true,
 			});
 			
 			notification.actions.forEach(action => {
 				const button = new St.Button({
-					style_class: 'message-action',
+					style_class: 'notification-button',
+					x_expand: true,
 					can_focus: true,
 					label: action.label,
 				});
@@ -394,14 +396,6 @@ class NotificationList extends St.BoxLayout {
 		}, this);
 
 		this._updateState();
-	}
-
-	// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L900
-	vfunc_map() {
-		super.vfunc_map()
-		this._messages.forEach(message => {
-			message.mapped = this.mapped
-		})
 	}
 
 	_updateState() {
@@ -473,7 +467,20 @@ class NotificationList extends St.BoxLayout {
 		super.destroy();
 	}
 }
-GObject.registerClass(NotificationList)
+GObject.registerClass({
+	Properties: {
+		"empty": GObject.ParamSpec.boolean(
+			"empty", null, null,
+			GObject.ParamFlags.READWRITE,
+			true
+		),
+		"can-clear": GObject.ParamSpec.boolean(
+			"can-clear", null, null,
+			GObject.ParamFlags.READWRITE,
+			true
+		),
+	},
+}, NotificationList)
 // #endregion NotificationList
 
 // #region NotificationWidget

@@ -6,33 +6,7 @@
 
     // Message Card
     .message {
-        margin: 5px;
-
-        // Add styling for message close buttons
-        .message-close-button {
-            padding: 4px;
-            margin-right: 4px;
-            border-radius: 50%;
-            min-height: 16px;
-            min-width: 16px;
-
-            &:hover {
-                background-color: rgba(255, 0, 0, 0.15);
-            }
-        }
-
-        // Also style GNOME's native close button if present
-        .message-close {
-            -st-icon-style: symbolic;
-            icon-size: 16px;
-            padding: 4px;
-            border-radius: 50%;
-            margin-right: 2px;
-
-            &:hover {
-                background-color: rgba(255, 0, 0, 0.15);
-            }
-        }
+        margin: 0px;
     }
 
     // Message Content (Texts)
@@ -42,16 +16,18 @@
     }
 
     // Scrolling list margin/padding/spacing
-    .message-list-section-list {
+    .message-list {
+        width: auto;
         margin: 0px;
         padding: 0px;
+        border: none;
         spacing: 8px; // Message spacing
     }
 
     // Message header styling (for close buttons)
     .message-header {
         margin: 0px;
-        padding: 4px;
+        padding: 0px 4px 2px 6px;
         spacing: 4px;
     }
 
@@ -95,7 +71,6 @@
 
     // No notification placeholder
     #{$p}-placeholder {
-        width: 100%;
         font-weight: bold;
         margin: 10px 0px;
         #{$p}-icon {
