@@ -9,6 +9,7 @@ import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { StyledScroll } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
 import { VerticalProp } from "../../libs/shell/compat.js"
+import Logger from "../../libs/shared/logger.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {
@@ -259,7 +260,7 @@ class NotificationList extends St.BoxLayout {
 
 			this._updateState();
 		} catch (e) {
-			console.error('Error syncing notifications:', e);
+			Logger.error(`Error syncing notifications: ${e}`)
 		}
 	}
 
@@ -322,7 +323,7 @@ class NotificationList extends St.BoxLayout {
 				}
 			}
 		} catch (e) {
-			console.error('Error setting up close button:', e);
+			Logger.error(`Error setting up close button: ${e}`)
 		}
 	}
 
@@ -425,7 +426,7 @@ class NotificationList extends St.BoxLayout {
 				return;
 			}
 		} catch (e) {
-			console.error('Error clearing native notifications:', e);
+			Logger.error(`Error clearing native notifications: ${e}`)
 		}
 		
 		// If native clear didn't work, try the traditional way
@@ -439,7 +440,7 @@ class NotificationList extends St.BoxLayout {
 					(message as any).notification.destroy();
 					anyCleared = true;
 				} catch (e) {
-					console.error('Error destroying notification:', e);
+					Logger.error(`Error destroying notification: ${e}`)
 				}
 			}
 		});
@@ -450,7 +451,7 @@ class NotificationList extends St.BoxLayout {
 				try {
 					message.destroy();
 				} catch (e) {
-					console.error('Error destroying message:', e);
+					Logger.error(`Error destroying message: ${e}`)
 				}
 			});
 			this._messages = [];
