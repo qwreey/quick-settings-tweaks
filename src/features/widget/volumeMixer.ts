@@ -17,9 +17,9 @@ import { updateMenuSeparators } from "../../libs/shell/quickSettingsUtils.js"
 import Maid from "../../libs/shared/maid.js"
 import Global from "../../global.js"
 import Logger from "../../libs/shared/logger.js"
-import { VerticalProp } from "../../libs/shell/compat.js"
+import Clutter from "gi://Clutter"
 
-const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent'
+const ALLOW_AMPLIFIED_VOLUME_KEY = "allow-volume-above-100-percent"
 
 // #region StreamSlider
 class StreamSlider extends QuickSlider {
@@ -256,7 +256,7 @@ class VolumeMixerItem extends St.BoxLayout {
 		options: VolumeMixerItem.Options
 	) {
 		super._init({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 			style_class: "QSTWEAKS-item",
 		})
 		this._control = control
@@ -331,7 +331,7 @@ class VolumeMixerList extends St.BoxLayout {
 
 	constructor(options: VolumeMixerList.Options) {
 		super({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 			style_class: "QSTWEAKS-volume-mixer",
 			clip_to_allocation: true,
 			x_expand: true,
@@ -468,7 +468,7 @@ class VolumeMixerWidget extends St.BoxLayout {
 	}
 	_init(options: VolumeMixerWidget.Options) {
 		super._init({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 		} as Partial<St.BoxLayout.ConstructorProps>)
 
 		this._options = options
@@ -501,7 +501,7 @@ class VolumeMixerWidget extends St.BoxLayout {
 	// Scroll view
 	_createScroll() {
 		this._sections = new St.BoxLayout({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 			x_expand: true,
 			y_expand: true,
 		})

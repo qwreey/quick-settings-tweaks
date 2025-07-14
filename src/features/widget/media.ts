@@ -5,7 +5,8 @@ import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Shell from "gi://Shell"
-import Soup from 'gi://Soup';
+// @ts-expect-error idk why
+import Soup from "gi://Soup"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { loadInterfaceXML } from "resource:///org/gnome/shell/misc/fileUtils.js"
@@ -20,7 +21,6 @@ import { RoundClipEffect } from "../../libs/shell/effects.js"
 import { StyledSlider } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
 import Logger from "../../libs/shared/logger.js"
-import { VerticalProp } from "../../libs/shell/compat.js"
 
 // #region Player
 class Player extends GObject.Object {
@@ -1160,7 +1160,7 @@ class MediaWidget extends St.BoxLayout {
 	}
 	_init(options: MediaWidget.Options) {
 		super._init({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 			x_expand: true,
 			y_expand: true,
 			reactive: true,
