@@ -2,6 +2,31 @@
 <!-- Note: -->
 <!-- This file is visible in prefs so if -->
 <!-- it is erased it may cause an error -->
+# 2.2-stable
+<!-- @BuildNumber: 9 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-07-15 00:37:00 KST" -->
+<!-- @Git: "62cd7a3" -->
+
+{{HEADER}}
+
+- Drop gnome 46, 47 support
+- Add support for gnome 48
+- Remove non-compatible feature
+  - Date Menu
+    - Hide Media Control
+    - Hide Notifications
+
+## Fix
+
+- Weather widget
+  - Fix 'already disposed' warning
+- DND Toggle
+  - Fix missing icon when it's turned off by PR #191
+- Notification
+  - Better padding for Native notifications clear button by PR #184
+- Fix settings names by PR #183
+
 # 2.1-stable
 <!-- @BuildNumber: 8 -->
 <!-- @Includes: [] -->

@@ -680,7 +680,7 @@ class MediaItem extends MessageList.Message {
 						if (!img_bytes) throw new Error("No image data received");
 						
 						const stream = Gio.MemoryInputStream.new_from_bytes(img_bytes);
-						const pixbuf = GdkPixbuf.Pixbuf.new_from_stream(stream, null);
+						const pixbuf = GdkPixbuf.Pixbuf.new_from_stream(stream as any, null);
 						return getImageMeanColor(pixbuf);
 					})
 					.catch(error => {

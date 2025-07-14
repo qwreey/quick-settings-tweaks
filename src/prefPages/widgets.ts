@@ -87,7 +87,7 @@ function SliderCustomizes({
 			settings,
 			title: _("Thickness"),
 			max: 1000,
-			bind: baseName+"-thickness",
+			bind: baseName+"-height",
 			sensitiveBind,
 			subtitle: _("Set this to 0 to use default thickness"),
 		})
