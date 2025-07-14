@@ -6,35 +6,29 @@
 
     // Message Card
     .message {
-        margin: 0px;
-    }
+        // Message Content (Texts)
+        .message-content {
+            width: 0px; // Min size, texts will be expended
+            text-overflow: ellipsis;
+        }
 
-    // Message Content (Texts)
-    .message-content {
-        width: 0px; // Min size, texts will be expended
-        text-overflow: ellipsis;
+        // Message header
+        .message-header {
+            margin: 0px;
+            padding: 0px 4px 2px 6px;
+            spacing: 4px;
+        }
     }
-
-    // Scrolling list margin/padding/spacing
-    .message-list {
-        width: auto;
+    .message-view > *:first-child .message {
         margin: 0px;
-        padding: 0px;
-        border: none;
-        spacing: 8px; // Message spacing
-    }
-
-    // Message header styling (for close buttons)
-    .message-header {
-        margin: 0px;
-        padding: 0px 4px 2px 6px;
-        spacing: 4px;
     }
 
     // Avoid Scrollbar
-    .message-list-sections {
+    .message-view {
         margin: 0px;
-        &#{$p}-has-scrollbar {
+    }
+    #{$p}-has-scrollbar {
+        .message-view {
             padding: 0px 5px 0px 0px;
         }
     }

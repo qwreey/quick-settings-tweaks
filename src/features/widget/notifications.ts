@@ -1,7 +1,6 @@
 import GObject from "gi://GObject"
 import St from "gi://St"
 import Clutter from "gi://Clutter"
-import GLib from "gi://GLib"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
 import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
@@ -9,7 +8,6 @@ import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { StyledScroll } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
 import { VerticalProp } from "../../libs/shell/compat.js"
-import Logger from "../../libs/shared/logger.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {
@@ -172,316 +170,14 @@ GObject.registerClass(NativeControl)
 // #endregion NativeControl
 
 // #region NotificationList
-class NotificationList extends St.BoxLayout {
-	_nUrgent: number
-	_messages: any[]
-	empty: boolean
-	canClear: boolean
-	_monitorTimeout: number
-
-	_init() {
-		super._init({
-			style_class: "message-list",
-			reactive: true,
-			...VerticalProp,
-		} as Partial<St.BoxLayout.ConstructorProps>)
-		this._messages = []
-		this._nUrgent = 0
-
-		// Connect to global notification tray
-		const messageTray = Global.MessageTray;
-		messageTray.connectObject(
-			"source-added",
-			this._sourceAdded.bind(this),
-			this
-		)
-		// Get all sources using getSources() method
-		messageTray.getSources().forEach(source => {
-			this._sourceAdded(messageTray, source)
-		})
-
-		// Sync with notifications from the message list
-		this._syncWithNativeNotifications();
-
-		// Setup notification monitoring to keep in sync
-		this._setupNotificationMonitoring();
+class NotificationList extends MessageList.MessageView {
+	constructor() {
+		super()
 	}
-
-	_setupNotificationMonitoring() {
-		// Monitor notification changes in the native section
-		const notificationSection = Global.NotificationSection;
-		if (notificationSection) {
-			// Watch for notification changes in the native section
-			notificationSection.connectObject(
-				'notify::visible', 
-				this._syncWithNativeNotifications.bind(this),
-				this
-			);
-
-			// Use a timeout to periodically check for new notifications
-			// This ensures we catch notifications that might be missed by other mechanisms
-			this._monitorTimeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 2000, () => {
-				this._syncWithNativeNotifications();
-				return GLib.SOURCE_CONTINUE; // Continue the timeout
-			});
-		}
-	}
-
-	_syncWithNativeNotifications() {
-		try {
-			const notificationSection = Global.NotificationSection;
-			if (!notificationSection || !notificationSection._messages) return;
-
-			// Get all current native notifications
-			const nativeMessages = notificationSection._messages;
-			const nativeNotifications = new Set();
-
-			// Add any notifications we don't already have
-			nativeMessages.forEach(message => {
-				if (message && message.notification) {
-					nativeNotifications.add(message.notification);
-					// Check if we already have this notification
-					if (!this._messages.some(m => m.notification === message.notification)) {
-						this._onNotificationAdded(null, message.notification);
-					}
-				}
-			});
-
-			// Clean up notifications that no longer exist in the native section
-			this._messages.forEach(message => {
-				if (message.notification && !nativeNotifications.has(message.notification)) {
-					// Remove from our list if it's gone from native list
-					const index = this._messages.indexOf(message);
-					if (index >= 0) {
-						this._messages.splice(index, 1)[0].destroy();
-					}
-				}
-			});
-
-			this._updateState();
-		} catch (e) {
-			Logger.error(`Error syncing notifications: ${e}`)
-		}
-	}
-
-	// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L866
-	_sourceAdded(tray, source) {
-		source.connectObject('notification-added', this._onNotificationAdded.bind(this), this)
-		source.notifications.forEach(notification => {
-			this._onNotificationAdded(source, notification)
-		})
-	}
-	
-	// Helper function to ensure the close button works properly
-	_ensureCloseButton(message, notification) {
-		try {
-			// Make sure the message can be closed
-			if ((message as any).canClose) {
-				(message as any).canClose = () => true;
-			}
-			
-			// Find the header and closeButton
-			if ((message as any)._header && (message as any)._header.closeButton) {
-				// Make sure the close button is visible
-				(message as any)._header.closeButton.visible = true;
-				(message as any)._header.closeButton.reactive = true;
-				(message as any)._header.closeButton.can_focus = true;
-				
-				// Connect the close button to destroy the notification
-				(message as any)._header.closeButton.connect('clicked', () => {
-					notification.destroy();
-				});
-			} else {
-				// If no _header.closeButton exists, create our own close button
-				const closeButton = new St.Button({
-					style_class: 'message-close-button',
-					x_expand: false,
-					y_expand: false,
-					icon_name: 'window-close-symbolic',
-				});
-				
-				closeButton.connect('clicked', () => {
-					notification.destroy();
-				});
-				
-				// Find a place to add it
-				const vbox = message.get_child() as St.BoxLayout;
-				if (vbox && vbox.first_child) {
-					const headerArea = vbox.first_child;
-					if (headerArea instanceof St.BoxLayout) {
-						// Add to the end of the header
-						headerArea.add_child(closeButton);
-					} else {
-						// Create a new header if needed
-						const newHeader = new St.BoxLayout({
-							style_class: 'message-header',
-							x_expand: true,
-						});
-						newHeader.add_child(closeButton);
-						vbox.insert_child_at_index(newHeader, 0);
-					}
-				}
-			}
-		} catch (e) {
-			Logger.error(`Error setting up close button: ${e}`)
-		}
-	}
-
-	// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L871
-	_onNotificationAdded(source, notification) {
-		if (this._messages.some(m => m.notification === notification))
-			return
-
-		// Create the message with the source
-		const message = new MessageList.Message(source);
-		
-		// In GNOME Shell, the message object is set up with the notification
-		// We need to access it as "any" type since TypeScript definitions don't include these properties
-		(message as any).notification = notification;
-		
-		// In GNOME 48, we need to explicitly set title and body for the message
-		if (notification.title) {
-			(message as any).title = notification.title;
-		}
-		
-		if (notification.body) {
-			(message as any).body = notification.body;
-		}
-		
-		// Enable the close button
-		this._ensureCloseButton(message, notification);
-		
-		// Set up action buttons
-		if (notification.actions && notification.actions.length > 0) {
-			const actionArea = new St.BoxLayout({
-				style_class: 'notification-buttons',
-				x_expand: true,
-			});
-			
-			notification.actions.forEach(action => {
-				const button = new St.Button({
-					style_class: 'notification-button',
-					x_expand: true,
-					can_focus: true,
-					label: action.label,
-				});
-				
-				button.connect('clicked', () => {
-					action.activate();
-				});
-				
-				actionArea.add_child(button);
-			});
-			
-			// Set the action area and make sure it's expanded and visible
-			if ((message as any).setActionArea) {
-				(message as any).setActionArea(actionArea);
-				(message as any).expand(false); // Expand without animation
-			} else if ((message as any)._actionBin) {
-				(message as any)._actionBin.child = actionArea;
-				(message as any)._actionBin.visible = true;
-				(message as any).expanded = true;
-			}
-		}
-
-		this._messages.push(message);
-		this.add_child(message);
-
-		notification.connectObject('destroy', () => {
-			const index = this._messages.findIndex(m => m.notification === notification);
-			if (index >= 0) {
-				const message = this._messages.splice(index, 1)[0];
-				message.destroy();
-			}
-			this._updateState();
-		}, this);
-
-		this._updateState();
-	}
-
-	_updateState() {
-		this.empty = this._messages.length === 0;
-		// Make sure canClear is properly set and notifications exist
-		this.canClear = this._messages.length > 0;
-		
-		// Notify about property changes
-		this.notify('empty');
-		this.notify('can-clear');
-		
-		// Update UI elements based on state
-		const notificationWidget = this.get_parent()?.get_parent() as any;
-		if (notificationWidget && notificationWidget._syncClear) {
-			notificationWidget._syncClear();
-		}
-	}
-
-	clear() {
-		// First try to clear via the native notification section for complete sync
-		try {
-			const notificationSection = Global.NotificationSection;
-			if (notificationSection && typeof notificationSection.clear === 'function') {
-				notificationSection.clear();
-				// The sync will happen automatically, but we force it to be immediate
-				this._syncWithNativeNotifications();
-				return;
-			}
-		} catch (e) {
-			Logger.error(`Error clearing native notifications: ${e}`)
-		}
-		
-		// If native clear didn't work, try the traditional way
-		const messages = this._messages.slice();
-		let anyCleared = false;
-		
-		// First attempt to clear using each notification's destroy method
-		messages.forEach(message => {
-			if ((message as any).notification && !(message as any).notification.resident) {
-				try {
-					(message as any).notification.destroy();
-					anyCleared = true;
-				} catch (e) {
-					Logger.error(`Error destroying notification: ${e}`)
-				}
-			}
-		});
-
-		// If that didn't work, force clear by removing messages directly
-		if (!anyCleared && this._messages.length > 0) {
-			this._messages.forEach(message => {
-				try {
-					message.destroy();
-				} catch (e) {
-					Logger.error(`Error destroying message: ${e}`)
-				}
-			});
-			this._messages = [];
-			this._updateState();
-		}
-	}
-
-	// Clean up any monitoring when destroyed
-	destroy() {
-		if (this._monitorTimeout) {
-			GLib.source_remove(this._monitorTimeout);
-			this._monitorTimeout = 0;
-		}
-		super.destroy();
-	}
+	// Do not setup mpris
+	_setupMpris() {}
 }
-GObject.registerClass({
-	Properties: {
-		"empty": GObject.ParamSpec.boolean(
-			"empty", null, null,
-			GObject.ParamFlags.READWRITE,
-			true
-		),
-		"can-clear": GObject.ParamSpec.boolean(
-			"can-clear", null, null,
-			GObject.ParamFlags.READWRITE,
-			true
-		),
-	},
-}, NotificationList)
+GObject.registerClass(NotificationList)
 // #endregion NotificationList
 
 // #region NotificationWidget
@@ -547,15 +243,11 @@ class NotificationWidget extends St.BoxLayout {
 
 	// Scroll view
 	_createScroll() {
-		this._sections = new St.BoxLayout({
-			...VerticalProp,
-			x_expand: true,
-			y_expand: true,
-		})
+		this._list = new NotificationList()
 		this._scroll = new St.ScrollView({
 			x_expand: true,
 			y_expand: true,
-			child: this._sections,
+			child: this._list,
 		})
 		this._updateScrollStyle()
 		this._scroll.connectObject(
@@ -564,17 +256,15 @@ class NotificationWidget extends St.BoxLayout {
 			this
 		)
 		this._syncScrollbarPadding()
-		this._list = new NotificationList()
-		this._sections.add_child(this._list)
 	}
 	_updateScrollStyle() {
 		StyledScroll.updateStyle(this._scroll, this._options.scrollStyle)
 	}
 	_syncScrollbarPadding() {
-		this._sections.style_class =
+		this._scroll.style_class =
 			this._scroll.vscrollbar_visible
-			? "message-list-sections QSTWEAKS-has-scrollbar"
-			: "message-list-sections"
+			? "QSTWEAKS-has-scrollbar"
+			: ""
 	}
 
 	_createHeaderArea() {
