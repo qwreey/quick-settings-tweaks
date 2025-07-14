@@ -11,8 +11,6 @@ export class DateMenuLayoutFeature extends FeatureBase {
 	hideRightBox: boolean
 	disableMenu: boolean
 	override loadSettings(loader: SettingLoader): void {
-		this.hideMediaControl = loader.loadBoolean("datemenu-hide-media-control")
-		this.hideNotifications = loader.loadBoolean("datemenu-hide-notifications")
 		this.hideLeftBox = loader.loadBoolean("datemenu-hide-left-box")
 		this.hideRightBox = loader.loadBoolean("datemenu-hide-right-box")
 		this.disableMenu = loader.loadBoolean("datemenu-disable-menu")
@@ -21,29 +19,6 @@ export class DateMenuLayoutFeature extends FeatureBase {
 
 	override onLoad() {
 		const style = new StyleClass((Global.DateMenuBox as any).style_class)
-
-		// Hide media control from date menu
-		if (this.hideMediaControl) {
-			this.maid.hideJob(
-				Global.MediaSection,
-				()=>true
-			)
-		}
-
-		// Hide notifications from date menu
-		if (this.hideNotifications) {
-			try {
-				const notificationSection = Global.NotificationSection;
-				if (notificationSection) {
-					this.maid.hideJob(
-						notificationSection,
-						()=>true
-					);
-				}
-			} catch (e) {
-				Logger.error(`Failed to hide notification section: ${e}`);
-			}
-		}
 
 		// Hide left box from date menu
 		if (this.hideLeftBox) {
@@ -87,13 +62,6 @@ export class DateMenuLayoutFeature extends FeatureBase {
 		}
 	}
 	override onUnload(): void {
-		if (Global.MediaSection && (Global.MediaSection as any)._shouldShow) {
-			Global.MediaSection.show()
-		}
-		if (Global.NotificationSection && (Global.NotificationSection as any)._shouldShow) {
-			Global.NotificationSection.show()
-		}
-
 		// Remove modified styles
 		const style = new StyleClass((Global.DateMenuBox as any).style_class)
 			.remove("QSTWEAKS-hide-right-box")
