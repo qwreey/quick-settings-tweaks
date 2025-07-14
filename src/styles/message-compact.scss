@@ -3,6 +3,7 @@
 #{$p}-message-compact {
     // Message Card
     .message {
+        margin-bottom: 8px;
         padding: 5px 6px;
         &.media-message {
             padding: 3px 6px 8px 6px !important; // idk required for some reason
@@ -38,6 +39,13 @@
             .message-header-content {
                 padding-left: 6px;
             }
+        }
+
+        // Action buttons
+        .notification-button {
+            font-size: 0.9em;
+            padding: 5px;
+            margin-top: 0px;
         }
     }
 }

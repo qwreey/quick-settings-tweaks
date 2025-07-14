@@ -1,5 +1,6 @@
 import GObject from 'gi://GObject'
 import Shell from 'gi://Shell'
+import Cogl from 'gi://Cogl'
 import Clutter from 'gi://Clutter'
 import Global from '../../global.js'
 
@@ -10,7 +11,8 @@ export class RoundClipEffect extends Shell.GLSLEffect {
 	vfunc_build_pipeline (): void {
 		const [declarations, code] = Global.GetShader("media/rounded_corners.frag")
 		this.add_glsl_snippet(
-			Shell.SnippetHook.FRAGMENT,
+			// FIXME: waitting for type definition update
+			Cogl.SnippetHook.FRAGMENT as any,
 			declarations,
 			code,
 			false

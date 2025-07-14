@@ -28,7 +28,7 @@ class DndQuickToggle extends QuickToggle {
 		this.iconName =
 			this.checked
 			? "notifications-disabled-symbolic"
-			: "notifications-symbolic"
+			: "org.gnome.Settings-notifications-symbolic"
 	}
 
 	// Toggle DND Mode

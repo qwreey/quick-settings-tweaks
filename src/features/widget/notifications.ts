@@ -7,7 +7,6 @@ import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { StyledScroll } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
-import { VerticalProp } from "../../libs/shell/compat.js"
 
 // #region Placeholder
 class Placeholder extends St.BoxLayout {
@@ -16,10 +15,11 @@ class Placeholder extends St.BoxLayout {
 
 	_init() {
 		super._init({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 			style_class: "QSTWEAKS-placeholder",
 			x_align: Clutter.ActorAlign.CENTER,
 			opacity: 60,
+			x_expand: true,
 		} as Partial<St.BoxLayout>)
 
 		// Symbolic Icon
@@ -169,47 +169,12 @@ GObject.registerClass(NativeControl)
 // #endregion NativeControl
 
 // #region NotificationList
-class NotificationList extends MessageList.MessageListSection {
-	_nUrgent: number
-
-	_init() {
-		super._init()
-
-		this._nUrgent = 0
-
-		Global.MessageTray.connectObject(
-			"source-added",
-			this._sourceAdded.bind(this),
-			this
-		)
-		Global.MessageTray.getSources().forEach(source => {
-			this._sourceAdded(Global.MessageTray, source)
-		})
-
-		// sync notifications from gnome stock notifications
-		// @ts-ignore
-		Global.NotificationSection._messages.forEach((notification) => {
-			this._onNotificationAdded(null, notification.notification)
-		})
+class NotificationList extends MessageList.MessageView {
+	constructor() {
+		super()
 	}
-
-	// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L866
-	_sourceAdded(tray, source) {
-		// @ts-ignore
-		Global.NotificationSection._sourceAdded.call(this, tray, source)
-	}
-
-	// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L871
-	_onNotificationAdded(source, notification) {
-		// @ts-ignore
-		Global.NotificationSection._onNotificationAdded.call(this, source, notification)
-	}
-
-	// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L900
-	vfunc_map() {
-		// @ts-ignore
-		Global.NotificationSection.vfunc_map.call(this)
-	}
+	// Do not setup mpris
+	_setupMpris() {}
 }
 GObject.registerClass(NotificationList)
 // #endregion NotificationList
@@ -228,7 +193,7 @@ class NotificationWidget extends St.BoxLayout {
 	}
 	_init(options: NotificationWidget.Options) {
 		super._init({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 		} as Partial<St.BoxLayout.ConstructorProps>)
 
 		this._options = options
@@ -277,15 +242,11 @@ class NotificationWidget extends St.BoxLayout {
 
 	// Scroll view
 	_createScroll() {
-		this._sections = new St.BoxLayout({
-			...VerticalProp,
-			x_expand: true,
-			y_expand: true,
-		})
+		this._list = new NotificationList()
 		this._scroll = new St.ScrollView({
 			x_expand: true,
 			y_expand: true,
-			child: this._sections,
+			child: this._list,
 		})
 		this._updateScrollStyle()
 		this._scroll.connectObject(
@@ -294,17 +255,15 @@ class NotificationWidget extends St.BoxLayout {
 			this
 		)
 		this._syncScrollbarPadding()
-		this._list = new NotificationList()
-		this._sections.add_child(this._list)
 	}
 	_updateScrollStyle() {
 		StyledScroll.updateStyle(this._scroll, this._options.scrollStyle)
 	}
 	_syncScrollbarPadding() {
-		this._sections.style_class =
+		this._scroll.style_class =
 			this._scroll.vscrollbar_visible
-			? "message-list-sections QSTWEAKS-has-scrollbar"
-			: "message-list-sections"
+			? "QSTWEAKS-has-scrollbar"
+			: ""
 	}
 
 	_createHeaderArea() {
@@ -334,14 +293,33 @@ class NotificationWidget extends St.BoxLayout {
 
 	// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L1043
 	_syncClear() {
-		// Sync clear button reactive
-		const canClear = this._list.canClear
+		// Sync clear button reactive state
+		const canClear = this._list.canClear;
+		
+		// Update native control clear button if it exists
 		if (this._nativeControl) {
-			this._nativeControl._clearButton.reactive = canClear
+			this._nativeControl._clearButton.reactive = canClear;
+			this._nativeControl._clearButton.can_focus = canClear;
+			// Update style to visually indicate if button is enabled/disabled
+			if (canClear) {
+				this._nativeControl._clearButton.remove_style_class_name('disabled');
+			} else {
+				this._nativeControl._clearButton.add_style_class_name('disabled');
+			}
 		}
-		const clearButton = this._header._clearButton
+		
+		// Update custom clear button if it exists
+		const clearButton = this._header._clearButton;
 		if (clearButton) {
-			clearButton.visible = canClear
+			clearButton.visible = canClear;
+			clearButton.reactive = canClear;
+			clearButton.can_focus = canClear;
+			// Update style to visually indicate if button is enabled/disabled
+			if (canClear) {
+				clearButton.remove_style_class_name('disabled');
+			} else {
+				clearButton.add_style_class_name('disabled');
+			}
 		}
 	}
 	_syncEmpty() {

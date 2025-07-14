@@ -8,7 +8,6 @@ import { type MessageTray } from "resource:///org/gnome/shell/ui/messageTray.js"
 import { type DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js"
 import * as PanelMenu from "resource:///org/gnome/shell/ui/panelMenu.js"
 import {
-	type NotificationSection,
 	type CalendarMessageList
 } from "resource:///org/gnome/shell/ui/calendar.js";
 import { type MediaSection } from "resource:///org/gnome/shell/ui/mpris.js"
@@ -66,8 +65,10 @@ export default class Global {
 	static get MessageList(): CalendarMessageList {
 		return (this.DateMenu as any)._messageList
 	}
-	static get NotificationSection(): NotificationSection {
-		return (this.DateMenu as any)._messageList._notificationSection
+	get NotificationSection(): any {
+		// In GNOME 48, NotificationSection might not exist
+		const messageList = (this.DateMenu as any)._messageList;
+		return messageList && messageList._notificationSection;
 	}
 	static get MediaSection(): MediaSection {
 		return (this.DateMenu as any)._messageList._mediaSection

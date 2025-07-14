@@ -1,8 +1,8 @@
-# Quick Settings Tweaker [<img src=".github/images/quick-settings-tweaker.png" width="200px" align="right" alt="QuickSettings-Tweaker SkeletonUI">](https://extensions.gnome.org/extension/5446/quick-settings-tweaker/)
+# Quick Settings Tweaks [<img src=".github/images/quick-settings-tweaker.png" width="200px" align="right" alt="QuickSettings-Tweaker SkeletonUI">](https://extensions.gnome.org/extension/5446/quick-settings-tweaker/)
 
 <div align="center">
 
-### Let's tweak Gnome 47 quick settings!
+### Let's tweak Gnome Quick Settings!
 
 [<img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" height="100" align="middle">](https://extensions.gnome.org/extension/5446/quick-settings-tweaker/)
 
@@ -11,7 +11,7 @@
 </a>
 <br>
 <br>
-Quick Settings Tweaker is a Gnome 43+ extension which allows you to customize the new Quick Settings Panel to your liking!
+Quick Settings Tweaker is a Gnome 46+ extension which allows you to customize the new Quick Settings Panel to your liking!
 
 </div>
 <br>
@@ -35,6 +35,10 @@ Here is my sponsors, thank for your support!
 
 [![sponsors](https://readme-contribs.as93.net/sponsors/qwreey?shape=square&margin=16&perRow=15&title=Qwreey's%20Sponsors&textColor=f5acff&backgroundColor=0e001a&fontFamily=cursive&fontSize=14&limit=90&footerText=none&outerBorderRadius=24)](https://github.com/sponsors/qwreey)
 
+## Stars
+
+[![Star History Chart](https://api.star-history.com/svg?repos=qwreey/quick-settings-tweaks&type=Date)](https://star-history.com/#qwreey/quick-settings-tweaks&Date)
+
 ## Development
 
 ### Translations
@@ -55,11 +59,13 @@ Or, you can get nightly preview build from [github releases tab](https://github.
 
 Keep in mind that there may be one or a few developers, but there may be many issues and users. I think you know how to behave with manners without even having to say it.
 
+Please check github [project board page](https://github.com/users/qwreey/projects/2) for issue priority and progress.
+
 #### Raise an issue
 
 If you want to raise an issue, First, **you must search your issue first.** duplicated issue will be closed, and disturb developer's time.
 
-Second, **you must attach a related log files, gnome version and extension version informations.** if you don't provide information much about your issue, it is hard to solve your issue.
+Second, **you must attach a related log files, gnome version and extension version informations.** if you don't provide information much about your issue, it is hard to solve your issue. and to be clear, Please use `[migration]`, `[feature]`, `[bug]` prefix for issue title, It is very useful for searching and organizing issues
 
 And last, **you must use well-formed english** You can use a translator or AI to write it, so avoid wasting time by having the developer translate and take notes. This takes up a surprising amount of the developer's time, making analysis very difficult, especially if the logs are mixed in English and other languages.
 

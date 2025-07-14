@@ -5,6 +5,8 @@ import GLib from "gi://GLib"
 import Gio from "gi://Gio"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Shell from "gi://Shell"
+// @ts-expect-error idk why
+import Soup from "gi://Soup"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { loadInterfaceXML } from "resource:///org/gnome/shell/misc/fileUtils.js"
@@ -19,7 +21,6 @@ import { RoundClipEffect } from "../../libs/shell/effects.js"
 import { StyledSlider } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
 import Logger from "../../libs/shared/logger.js"
-import { VerticalProp } from "../../libs/shell/compat.js"
 
 // #region Player
 class Player extends GObject.Object {
@@ -157,7 +158,8 @@ class Player extends GObject.Object {
 		}
 
 		this._trackId = metadata["mpris:trackid"]?.get_string()[0] ?? null
-		this._length = metadata["mpris:length"]?.get_int64() ?? null
+		
+		this._length = metadata["mpris:length"]?.deepUnpack() ?? null
 
 		// Get trak artists
 		this._trackArtists = metadata['xesam:artist']?.deepUnpack()
@@ -643,14 +645,50 @@ class MediaItem extends MessageList.Message {
 		// Push get color task, use cache if possible
 		this._cachedColors ??= new Map()
 		const coverUrl = this._player.trackCoverUrl
+		let colorTask;
+
 		if (!coverUrl || coverUrl.endsWith(".svg")) return
-		const coverPath = coverUrl.replace(/^file:\/\//,"")
-		let colorTask = this._cachedColors.get(coverPath)
-		if (!colorTask) {
-			const pixbuf = GdkPixbuf.Pixbuf.new_from_file(coverPath)
-			if (!pixbuf) return
-			colorTask = getImageMeanColor(pixbuf)
-			this._cachedColors.set(coverPath, colorTask)
+
+		if (coverUrl.startsWith("file://")) {
+			const coverPath = decodeURIComponent(coverUrl.replace(/^file:\/\//,""))
+			colorTask = this._cachedColors.get(coverPath)
+			if (!colorTask) {
+				let pixbuf: GdkPixbuf.Pixbuf;
+				try {
+					pixbuf = GdkPixbuf.Pixbuf.new_from_file(coverPath)
+				} catch (error) {
+					return
+				}  finally {
+					if (!pixbuf) {
+						return
+					}
+					colorTask = getImageMeanColor(pixbuf)
+					this._cachedColors.set(coverPath, colorTask)
+				}
+			}
+		} else if (coverUrl.startsWith("https://") || coverUrl.startsWith("http://")) {
+			const coverPath = decodeURIComponent(coverUrl.replace(/^https?:\/\//,"").replace(/^http?:\/\//,""))
+			colorTask = this._cachedColors.get(coverPath)
+
+			if (!colorTask) {
+				const session = new Soup.Session();
+				const uri = GLib.Uri.parse(coverUrl, GLib.UriFlags.NONE);
+				const message = new Soup.Message({method: 'GET', uri});
+
+				colorTask = session.send_and_read_async(message, null, null)
+					.then(img_bytes => {
+						if (!img_bytes) throw new Error("No image data received");
+						
+						const stream = Gio.MemoryInputStream.new_from_bytes(img_bytes);
+						const pixbuf = GdkPixbuf.Pixbuf.new_from_stream(stream, null);
+						return getImageMeanColor(pixbuf);
+					})
+					.catch(error => {
+						return null;
+					});
+
+				this._cachedColors.set(coverPath, colorTask);
+			}
 		}
 
 		// Update style
@@ -1122,7 +1160,7 @@ class MediaWidget extends St.BoxLayout {
 	}
 	_init(options: MediaWidget.Options) {
 		super._init({
-			...VerticalProp,
+			orientation: Clutter.Orientation.VERTICAL,
 			x_expand: true,
 			y_expand: true,
 			reactive: true,
