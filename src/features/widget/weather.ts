@@ -145,7 +145,7 @@ class WeatherSection extends St.Button {
 		// @ts-expect-error
 		layout.hookup_style(grid)
 		box.add_child(grid)
-		client.connectObject("changed", this._sync.bind(this))
+		client.connectObject("changed", this._sync.bind(this), this)
 		this._sync()
 		this.connect("clicked", this._click.bind(this))
 	}

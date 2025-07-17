@@ -2,6 +2,21 @@
 <!-- Note: -->
 <!-- This file is visible in prefs so if -->
 <!-- it is erased it may cause an error -->
+# 2.3-stable
+<!-- @BuildNumber: 10 -->
+<!-- @Includes: [] -->
+<!-- @Date: "2025-07-15 00:37:00 KST" -->
+<!-- @Git: "7142389" -->
+
+{{HEADER}}
+
+## Fix
+
+- Weather widget
+  - Fix already been disposed warning (again..)
+- VolumeMixer widget
+  - Fix already been disposed warning
+
 # 2.2-stable
 <!-- @BuildNumber: 9 -->
 <!-- @Includes: [] -->

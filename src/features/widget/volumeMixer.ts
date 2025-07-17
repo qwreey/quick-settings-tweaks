@@ -603,7 +603,6 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 			"visible",
 			null
 		)
-		this.maid.destroyJob(this.mixerMenuButton)
 
 		// Push to output stream slider menu
 		slider.menu.addMenuItem(this.mixerMenuSection, 1)
@@ -622,6 +621,7 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 			slider.menu.setHeader("audio-headphones-symbolic", _("Volume Mixer"))
 			slider.menu.open(true)
 		})
+		this.maid.destroyJob(this.mixerMenuButton)
 		this.maid.connectJob(slider.menu, "menu-closed", ()=>{
 			this.mixerMenuSection.box.hide()
 			revertChanges()
