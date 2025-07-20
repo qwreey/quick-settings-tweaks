@@ -5,11 +5,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-14 18:22+0000\n"
+"POT-Creation-Date: 2025-07-20 15:34+0000\n"
 "PO-Revision-Date: 2025-07-15 12:36+0000\n"
 "Last-Translator: Qwreey <qwreey75@gmail.com>\n"
-"Language-Team: Korean <https://weblate.paring.moe/projects/"
-"gs-quick-settings-tweaks/gs-extension/ko/>\n"
+"Language-Team: Korean <https://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,11 +133,11 @@ msgstr "알림"
 msgid "Do Not Disturb"
 msgstr "방해 금지 모드"
 
-#: target/out/features/widget/media.js:117
+#: target/out/features/widget/media.js:118
 msgid "Unknown title"
 msgstr "알 수 없는 제목"
 
-#: target/out/features/widget/media.js:855
+#: target/out/features/widget/media.js:888
 msgid "Media"
 msgstr "미디어"
 
@@ -150,15 +149,15 @@ msgstr "볼륨 변경됨"
 msgid "Open volumx mixer"
 msgstr "볼륨 믹서 열기"
 
-#: target/out/features/widget/volumeMixer.js:481
+#: target/out/features/widget/volumeMixer.js:480
 msgid "Volume Mixer"
 msgstr "볼륨 믹서"
 
-#: target/out/features/widget/weather.js:74
+#: target/out/features/widget/weather.js:73
 msgid "Weather"
 msgstr "날씨"
 
-#: target/out/features/widget/weather.js:193
+#: target/out/features/widget/weather.js:192
 msgid "Location has not been set"
 msgstr "위치가 지정되지 않았습니다"
 
@@ -200,12 +199,12 @@ msgid "Active Background color"
 msgstr "활성화된 배경 색깔"
 
 #: target/out/prefPages/widgets.js:62
-msgid "Height"
-msgstr "높이"
+msgid "Thickness"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:66
-msgid "Set this to 0 to use default height"
-msgstr "0 으로 설정하여 기본 높이를 사용합니다"
+msgid "Set this to 0 to use default thickness"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:76
 msgid "Widgets"
@@ -289,30 +288,37 @@ msgstr ""
 msgid "Base background color"
 msgstr "기반 배경 색깔"
 
-#: target/out/prefPages/widgets.js:182 target/out/prefPages/widgets.js:190
-#: target/out/prefPages/widgets.js:198
-msgid "Start opaque"
-msgstr "시작 불투명도"
+#: target/out/prefPages/widgets.js:182
+msgid "Start opacity"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:183
 msgid "Adjust left side transparency, Set this to 1000 to make opaque"
 msgstr "왼쪽 구석의 투명도를 설정합니다, 1000 으로 설정하여 완전히 불투명하게 만듭니다"
 
+#: target/out/prefPages/widgets.js:190
+msgid "Start color"
+msgstr ""
+
 #: target/out/prefPages/widgets.js:191
-msgid "Adjust right side background color mixing, Set this to 1000 to show extracted color"
-msgstr "오른쪽 구석의 배경 믹싱을 조절합니다, 1000 으로 설정하여 추출된 색을 그대로 보여줍니다"
+msgid "Adjust left side background color mixing, Set this to 1000 to show extracted color"
+msgstr "왼쪽 구석의 배경 믹싱을 조절합니다, 1000 으로 설정하여 추출된 색을 그대로 보여줍니다"
+
+#: target/out/prefPages/widgets.js:198
+msgid "End opacity"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:199
 msgid "Adjust right side transparency, Set this to 1000 to make opaque"
 msgstr "오른쪽 구석의 투명도를 설정합니다, 1000 으로 설정하여 완전히 불투명하게 만듭니다"
 
 #: target/out/prefPages/widgets.js:206
-msgid "End opaque"
-msgstr "끝 불투명도"
+msgid "End color"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:207
-msgid "Adjust left side background color mixing, Set this to 1000 to show extracted color"
-msgstr "왼쪽 구석의 배경 믹싱을 조절합니다, 1000 으로 설정하여 추출된 색을 그대로 보여줍니다"
+msgid "Adjust right side background color mixing, Set this to 1000 to show extracted color"
+msgstr "오른쪽 구석의 배경 믹싱을 조절합니다, 1000 으로 설정하여 추출된 색을 그대로 보여줍니다"
 
 #: target/out/prefPages/widgets.js:216 target/out/prefPages/widgets.js:226
 msgid "Round clip effect"
@@ -370,8 +376,7 @@ msgstr "최대 높이"
 #: target/out/prefPages/widgets.js:288
 #, javascript-format
 msgid "Set maximum height of the Notifications widget, default is %d. Set this to 0 to disable max height"
-msgstr "알림 위젯의 최대 높이를 지정합니다. 기본값은 %d 입니다. 0 으로 설정하여 높이 "
-"제한을 해제합니다"
+msgstr "알림 위젯의 최대 높이를 지정합니다. 기본값은 %d 입니다. 0 으로 설정하여 높이 제한을 해제합니다"
 
 #: target/out/prefPages/widgets.js:296 target/out/prefPages/widgets.js:441
 msgid "Fade out offset"
@@ -379,8 +384,7 @@ msgstr "페이드 아웃 오프셋"
 
 #: target/out/prefPages/widgets.js:297 target/out/prefPages/widgets.js:442
 msgid "Set position of the fade out effect begins. Set this to 0 to disable fade out effect. default is 46"
-msgstr "페이드 아웃 효과가 시작되는 위치를 지정합니다. 0 으로 설정하여 페이드 아웃 "
-"효과를 비활성화합니다. 기본값은 46 입니다"
+msgstr "페이드 아웃 효과가 시작되는 위치를 지정합니다. 0 으로 설정하여 페이드 아웃 효과를 비활성화합니다. 기본값은 46 입니다"
 
 #: target/out/prefPages/widgets.js:304
 msgid "Auto hide"
@@ -1084,44 +1088,52 @@ msgid "Adjust Date Menu layout"
 msgstr "달력 메뉴의 레이아웃을 조절합니다"
 
 #: target/out/prefPages/layout.js:828
-msgid "Hide Notifications"
-msgstr "알림 숨김"
-
-#: target/out/prefPages/layout.js:829
-msgid "Hide notifications on the date menu"
-msgstr "알림을 날짜 메뉴에서 숨깁니다"
-
-#: target/out/prefPages/layout.js:834
-msgid "Hide Media Control"
-msgstr "미디어 컨트롤 숨김"
-
-#: target/out/prefPages/layout.js:835
-msgid "Hide media control on the date menu"
-msgstr "미디어 컨트롤을 날짜 메뉴에서 숨깁니다"
-
-#: target/out/prefPages/layout.js:840
 msgid "Hide left box"
 msgstr "왼쪽 상자 숨기기"
 
-#: target/out/prefPages/layout.js:841
+#: target/out/prefPages/layout.js:829
 msgid "Hide the left box of the date menu, which contains notifications and media control"
 msgstr "날짜 메뉴의 알림과 미디어 컨트롤이 있는 왼쪽 레이아웃을 숨깁니다"
 
-#: target/out/prefPages/layout.js:846
+#: target/out/prefPages/layout.js:834
 msgid "Hide right box"
 msgstr "오른쪽 상자 숨기기"
 
-#: target/out/prefPages/layout.js:847
+#: target/out/prefPages/layout.js:835
 msgid "Hide the right box of the date menu, which contains calendar, world clock and weather"
 msgstr "날짜 메뉴의 칼렌더와 세계 시간, 날씨가 있는 오른쪽 레이아웃을 숨깁니다"
 
-#: target/out/prefPages/layout.js:852
+#: target/out/prefPages/layout.js:840
 msgid "Disable menu"
 msgstr "메뉴 비활성화"
 
-#: target/out/prefPages/layout.js:853
+#: target/out/prefPages/layout.js:841
 msgid "Do not open date menu when the date menu button clicked"
 msgstr "날짜 메뉴 버튼을 눌렀을 때 날짜 메뉴가 열림을 비활성화합니다"
+
+#~ msgid "Height"
+#~ msgstr "높이"
+
+#~ msgid "Set this to 0 to use default height"
+#~ msgstr "0 으로 설정하여 기본 높이를 사용합니다"
+
+#~ msgid "Start opaque"
+#~ msgstr "시작 불투명도"
+
+#~ msgid "End opaque"
+#~ msgstr "끝 불투명도"
+
+#~ msgid "Hide Notifications"
+#~ msgstr "알림 숨김"
+
+#~ msgid "Hide notifications on the date menu"
+#~ msgstr "알림을 날짜 메뉴에서 숨깁니다"
+
+#~ msgid "Hide Media Control"
+#~ msgstr "미디어 컨트롤 숨김"
+
+#~ msgid "Hide media control on the date menu"
+#~ msgstr "미디어 컨트롤을 날짜 메뉴에서 숨깁니다"
 
 #~ msgid "Donate via patreon"
 #~ msgstr "Patreon으로 후원"

@@ -5,11 +5,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-14 18:20+0000\n"
+"POT-Creation-Date: 2025-07-20 15:34+0000\n"
 "PO-Revision-Date: 2025-03-09 17:10+0000\n"
 "Last-Translator: Duarte Souto Assunção <duarte.s.assuncao.3@gmail.com>\n"
-"Language-Team: Portuguese <https://weblate.paring.moe/projects/"
-"gs-quick-settings-tweaks/gs-extension/pt/>\n"
+"Language-Team: Portuguese <https://weblate.paring.moe/projects/gs-quick-settings-tweaks/gs-extension/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,11 +134,11 @@ msgstr "Notificações"
 msgid "Do Not Disturb"
 msgstr "Não Perturbe"
 
-#: target/out/features/widget/media.js:117
+#: target/out/features/widget/media.js:118
 msgid "Unknown title"
 msgstr "Título desconhecido"
 
-#: target/out/features/widget/media.js:855
+#: target/out/features/widget/media.js:888
 msgid "Media"
 msgstr "Mídia"
 
@@ -151,15 +150,15 @@ msgstr "Volume alterado"
 msgid "Open volumx mixer"
 msgstr "Abrir mixer de volume"
 
-#: target/out/features/widget/volumeMixer.js:481
+#: target/out/features/widget/volumeMixer.js:480
 msgid "Volume Mixer"
 msgstr "Mixer de Volume"
 
-#: target/out/features/widget/weather.js:74
+#: target/out/features/widget/weather.js:73
 msgid "Weather"
 msgstr "Clima"
 
-#: target/out/features/widget/weather.js:193
+#: target/out/features/widget/weather.js:192
 msgid "Location has not been set"
 msgstr "Localização não foi definida"
 
@@ -201,12 +200,12 @@ msgid "Active Background color"
 msgstr "Cor de fundo ativa"
 
 #: target/out/prefPages/widgets.js:62
-msgid "Height"
-msgstr "Altura"
+msgid "Thickness"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:66
-msgid "Set this to 0 to use default height"
-msgstr "Coloque a 0 para usar a altura padrão"
+msgid "Set this to 0 to use default thickness"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:76
 msgid "Widgets"
@@ -290,17 +289,24 @@ msgstr ""
 msgid "Base background color"
 msgstr "Cor de fundo base"
 
-#: target/out/prefPages/widgets.js:182 target/out/prefPages/widgets.js:190
-#: target/out/prefPages/widgets.js:198
-msgid "Start opaque"
-msgstr "Começar opaco"
+#: target/out/prefPages/widgets.js:182
+msgid "Start opacity"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:183
 msgid "Adjust left side transparency, Set this to 1000 to make opaque"
 msgstr "Ajustar transparência do lado esquerdo, Coloque a 1000 para opaco"
 
+#: target/out/prefPages/widgets.js:190
+msgid "Start color"
+msgstr ""
+
 #: target/out/prefPages/widgets.js:191
-msgid "Adjust right side background color mixing, Set this to 1000 to show extracted color"
+msgid "Adjust left side background color mixing, Set this to 1000 to show extracted color"
+msgstr ""
+
+#: target/out/prefPages/widgets.js:198
+msgid "End opacity"
 msgstr ""
 
 #: target/out/prefPages/widgets.js:199
@@ -308,11 +314,11 @@ msgid "Adjust right side transparency, Set this to 1000 to make opaque"
 msgstr ""
 
 #: target/out/prefPages/widgets.js:206
-msgid "End opaque"
-msgstr "Terminar opaco"
+msgid "End color"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:207
-msgid "Adjust left side background color mixing, Set this to 1000 to show extracted color"
+msgid "Adjust right side background color mixing, Set this to 1000 to show extracted color"
 msgstr ""
 
 #: target/out/prefPages/widgets.js:216 target/out/prefPages/widgets.js:226
@@ -420,8 +426,7 @@ msgstr "Widget de Clima"
 
 #: target/out/prefPages/widgets.js:339
 msgid "Turn on to make the weather widget visible on the Quick Settings panel"
-msgstr ""
-"Ligue para fazer o widget de clima visível no Painel de Definições Rápidas"
+msgstr "Ligue para fazer o widget de clima visível no Painel de Definições Rápidas"
 
 #: target/out/prefPages/widgets.js:344
 msgid "Make weather widget smaller"
@@ -665,9 +670,7 @@ msgstr "Botão Rápido do Não Perturbe"
 
 #: target/out/prefPages/toggles.js:20
 msgid "Turn on to add the DND quick toggle on the Quick Settings panel"
-msgstr ""
-"Ligue para adicionar o botão rápido de Não Perturbe no Painel de Definições "
-"Rápidas"
+msgstr "Ligue para adicionar o botão rápido de Não Perturbe no Painel de Definições Rápidas"
 
 #: target/out/prefPages/toggles.js:28
 msgid "DND indicator position"
@@ -1078,48 +1081,52 @@ msgid "Adjust Date Menu layout"
 msgstr "Ajustar esquema do Menu de Data"
 
 #: target/out/prefPages/layout.js:828
-msgid "Hide Notifications"
-msgstr "Esconder Notificações"
-
-#: target/out/prefPages/layout.js:829
-msgid "Hide notifications on the date menu"
-msgstr "Esconder notificações no menu de data"
-
-#: target/out/prefPages/layout.js:834
-msgid "Hide Media Control"
-msgstr "Esconder controle de mídia"
-
-#: target/out/prefPages/layout.js:835
-msgid "Hide media control on the date menu"
-msgstr "Esconder controle de mídia no menu de data"
-
-#: target/out/prefPages/layout.js:840
 msgid "Hide left box"
 msgstr "Esconder caixa da esquerda"
 
-#: target/out/prefPages/layout.js:841
+#: target/out/prefPages/layout.js:829
 msgid "Hide the left box of the date menu, which contains notifications and media control"
-msgstr ""
-"Esconder caixa da esquerda do menu de data, que contém notificações e "
-"controlo de mídia"
+msgstr "Esconder caixa da esquerda do menu de data, que contém notificações e controlo de mídia"
 
-#: target/out/prefPages/layout.js:846
+#: target/out/prefPages/layout.js:834
 msgid "Hide right box"
 msgstr "Esconder caixa da direita"
 
-#: target/out/prefPages/layout.js:847
+#: target/out/prefPages/layout.js:835
 msgid "Hide the right box of the date menu, which contains calendar, world clock and weather"
-msgstr ""
-"Esconder caixa da direita do menu de data, que contém calendário, relógio "
-"mundial e clima"
+msgstr "Esconder caixa da direita do menu de data, que contém calendário, relógio mundial e clima"
 
-#: target/out/prefPages/layout.js:852
+#: target/out/prefPages/layout.js:840
 msgid "Disable menu"
 msgstr "Desabilitar menu"
 
-#: target/out/prefPages/layout.js:853
+#: target/out/prefPages/layout.js:841
 msgid "Do not open date menu when the date menu button clicked"
 msgstr "Não abrir menu de data quando for clicado"
+
+#~ msgid "Height"
+#~ msgstr "Altura"
+
+#~ msgid "Set this to 0 to use default height"
+#~ msgstr "Coloque a 0 para usar a altura padrão"
+
+#~ msgid "Start opaque"
+#~ msgstr "Começar opaco"
+
+#~ msgid "End opaque"
+#~ msgstr "Terminar opaco"
+
+#~ msgid "Hide Notifications"
+#~ msgstr "Esconder Notificações"
+
+#~ msgid "Hide notifications on the date menu"
+#~ msgstr "Esconder notificações no menu de data"
+
+#~ msgid "Hide Media Control"
+#~ msgstr "Esconder controle de mídia"
+
+#~ msgid "Hide media control on the date menu"
+#~ msgstr "Esconder controle de mídia no menu de data"
 
 #~ msgid "Donate via patreon"
 #~ msgstr "Doar pelo Patreon"

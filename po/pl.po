@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-14 18:20+0000\n"
+"POT-Creation-Date: 2025-07-20 15:34+0000\n"
 "PO-Revision-Date: 2025-03-13 13:35+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -135,11 +135,11 @@ msgstr "Powiadomienia"
 msgid "Do Not Disturb"
 msgstr "Nie przeszkadzać"
 
-#: target/out/features/widget/media.js:117
+#: target/out/features/widget/media.js:118
 msgid "Unknown title"
 msgstr "Nieznany tytuł"
 
-#: target/out/features/widget/media.js:855
+#: target/out/features/widget/media.js:888
 msgid "Media"
 msgstr "Media"
 
@@ -151,15 +151,15 @@ msgstr "Zmieniono głośność"
 msgid "Open volumx mixer"
 msgstr "Otwórz poziomy głośności"
 
-#: target/out/features/widget/volumeMixer.js:481
+#: target/out/features/widget/volumeMixer.js:480
 msgid "Volume Mixer"
 msgstr "Poziomy głośności"
 
-#: target/out/features/widget/weather.js:74
+#: target/out/features/widget/weather.js:73
 msgid "Weather"
 msgstr "Pogoda"
 
-#: target/out/features/widget/weather.js:193
+#: target/out/features/widget/weather.js:192
 msgid "Location has not been set"
 msgstr "Nie ustawiono lokalizacji"
 
@@ -201,12 +201,12 @@ msgid "Active Background color"
 msgstr "Aktywny kolor tła"
 
 #: target/out/prefPages/widgets.js:62
-msgid "Height"
-msgstr "Wysokość"
+msgid "Thickness"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:66
-msgid "Set this to 0 to use default height"
-msgstr "0 - domyślna wysokość"
+msgid "Set this to 0 to use default thickness"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:76
 msgid "Widgets"
@@ -290,30 +290,37 @@ msgstr ""
 msgid "Base background color"
 msgstr "Kolor tła"
 
-#: target/out/prefPages/widgets.js:182 target/out/prefPages/widgets.js:190
-#: target/out/prefPages/widgets.js:198
-msgid "Start opaque"
-msgstr "Wyłącz przezroczystość"
+#: target/out/prefPages/widgets.js:182
+msgid "Start opacity"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:183
 msgid "Adjust left side transparency, Set this to 1000 to make opaque"
 msgstr "Dostosuj przezroczystość po lewej stronie. 1000 oznacza brak przezroczystości"
 
+#: target/out/prefPages/widgets.js:190
+msgid "Start color"
+msgstr ""
+
 #: target/out/prefPages/widgets.js:191
-msgid "Adjust right side background color mixing, Set this to 1000 to show extracted color"
-msgstr "Dostosuj mieszanie koloru po prawej stronie. 1000 oznacza kolor pobrany"
+msgid "Adjust left side background color mixing, Set this to 1000 to show extracted color"
+msgstr "Dostosuj mieszanie koloru po lewej stronie. 1000 oznacza kolor pobrany"
+
+#: target/out/prefPages/widgets.js:198
+msgid "End opacity"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:199
 msgid "Adjust right side transparency, Set this to 1000 to make opaque"
 msgstr "Dostosuj przezroczystość po prawej stronie. 1000 oznacza brak przezroczystości"
 
 #: target/out/prefPages/widgets.js:206
-msgid "End opaque"
-msgstr "Włącz przezroczystość"
+msgid "End color"
+msgstr ""
 
 #: target/out/prefPages/widgets.js:207
-msgid "Adjust left side background color mixing, Set this to 1000 to show extracted color"
-msgstr "Dostosuj mieszanie koloru po lewej stronie. 1000 oznacza kolor pobrany"
+msgid "Adjust right side background color mixing, Set this to 1000 to show extracted color"
+msgstr "Dostosuj mieszanie koloru po prawej stronie. 1000 oznacza kolor pobrany"
 
 #: target/out/prefPages/widgets.js:216 target/out/prefPages/widgets.js:226
 msgid "Round clip effect"
@@ -1088,41 +1095,49 @@ msgid "Adjust Date Menu layout"
 msgstr "Dostosuj układ menu daty"
 
 #: target/out/prefPages/layout.js:828
-msgid "Hide Notifications"
-msgstr "Przestrzeń powiadomień"
-
-#: target/out/prefPages/layout.js:829
-msgid "Hide notifications on the date menu"
-msgstr "Ukryj przestrzeń powiadomień"
-
-#: target/out/prefPages/layout.js:834
-msgid "Hide Media Control"
-msgstr "Sterowanie mediami"
-
-#: target/out/prefPages/layout.js:835
-msgid "Hide media control on the date menu"
-msgstr "Ukryj sterowanie mediami"
-
-#: target/out/prefPages/layout.js:840
 msgid "Hide left box"
 msgstr "Lewy panel"
 
-#: target/out/prefPages/layout.js:841
+#: target/out/prefPages/layout.js:829
 msgid "Hide the left box of the date menu, which contains notifications and media control"
 msgstr "Ukryj lewy panel, który zawiera powiadomienia oraz sterownie mediami"
 
-#: target/out/prefPages/layout.js:846
+#: target/out/prefPages/layout.js:834
 msgid "Hide right box"
 msgstr "Prawy panel"
 
-#: target/out/prefPages/layout.js:847
+#: target/out/prefPages/layout.js:835
 msgid "Hide the right box of the date menu, which contains calendar, world clock and weather"
 msgstr "Ukryj prawy panel. który zawiera kalendarz, zegar światowy oraz pogodę"
 
-#: target/out/prefPages/layout.js:852
+#: target/out/prefPages/layout.js:840
 msgid "Disable menu"
 msgstr "Wyłącz menu"
 
-#: target/out/prefPages/layout.js:853
+#: target/out/prefPages/layout.js:841
 msgid "Do not open date menu when the date menu button clicked"
 msgstr "Nie otwieraj menu po jego kliknięciu"
+
+#~ msgid "Height"
+#~ msgstr "Wysokość"
+
+#~ msgid "Set this to 0 to use default height"
+#~ msgstr "0 - domyślna wysokość"
+
+#~ msgid "Start opaque"
+#~ msgstr "Wyłącz przezroczystość"
+
+#~ msgid "End opaque"
+#~ msgstr "Włącz przezroczystość"
+
+#~ msgid "Hide Notifications"
+#~ msgstr "Przestrzeń powiadomień"
+
+#~ msgid "Hide notifications on the date menu"
+#~ msgstr "Ukryj przestrzeń powiadomień"
+
+#~ msgid "Hide Media Control"
+#~ msgstr "Sterowanie mediami"
+
+#~ msgid "Hide media control on the date menu"
+#~ msgstr "Ukryj sterowanie mediami"
