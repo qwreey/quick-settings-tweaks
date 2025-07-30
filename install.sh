@@ -172,7 +172,7 @@ function increase-minor-version() {
 	echo $(( $(cat scripts/version/latest-minor-version) + 1 )) > scripts/version/latest-minor-version
 }
 
-function create-release() {
+function get-full-version() {
 	VERSION_MAJOR=$(cat scripts/version/major-version)
 	VERSION_MIDDLE=$(cat scripts/version/latest-middle-version)
 	VERSION_MINOR=$(cat scripts/version/latest-minor-version)
@@ -196,6 +196,16 @@ function create-release() {
 		;;
 	esac
 	VERSION="$VERSION_MAJOR.$VERSION_MIDDLE$VERSION_TAG"
+}
+
+function update-metadata-version() {
+	get-full-version
+	sed 's| *"version-name": *"[^"]*",|  "version-name": "'$VERSION'",|g' -i metadata.json
+}
+
+function create-release() {
+	get-full-version
+	update-metadata-version
 	VERSION=$VERSION BUILD_NUMBER=$BUILD_NUMBER build
 	cp target/quick-settings-tweaks@qwreey.shell-extension.zip target/$VERSION-$TARGET.zip
 }
@@ -324,6 +334,10 @@ case "$1" in
 
 	"increase-middle-version")
 		increase-middle-version
+	;;
+
+	"update-metadata-version")
+		update-metadata-version
 	;;
 
 	"create-release")

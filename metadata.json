@@ -6,6 +6,7 @@
   "url": "https://github.com/qwreey/quick-settings-tweaks",
   "settings-schema": "org.gnome.shell.extensions.quick-settings-tweaks",
   "gettext-domain": "quick-settings-tweaks",
+  "version-name": "2.2",
   "donations": {
     "github": "qwreey"
   }
