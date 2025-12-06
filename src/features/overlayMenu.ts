@@ -39,10 +39,14 @@ export class OverlayMenu extends FeatureBase {
 		const targetHeight = outerHeight - menu.box.marginTop
 		let offsetY: number
 		if (Global.QuickSettingsBox.height < targetHeight && this.overflowAnchor != "center") {
+			// When menu is taller than Quick Settings box and anchor is set
 			if (this.overflowAnchor == "top") {
+				// Top anchor: menu top aligns with box top, overflows downward
 				offsetY = 0
 			} else {
-				offsetY = Global.QuickSettingsBox.height - targetHeight
+				// Bottom anchor: menu bottom aligns with box bottom, overflows upward
+				// Ensure offsetY doesn't go negative to prevent menu from positioning above the box
+				offsetY = Math.max(0, Global.QuickSettingsBox.height - targetHeight)
 			}
 		} else {
 			offsetY = Math.floor((Global.QuickSettingsBox.height - targetHeight) / 2)

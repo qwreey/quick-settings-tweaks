@@ -1,9 +1,9 @@
 import GObject from "gi://GObject"
+import Gio from "gi://Gio"
 import St from "gi://St"
 import Clutter from "gi://Clutter"
 import * as MessageList from "resource:///org/gnome/shell/ui/messageList.js"
 import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js"
-import { type DoNotDisturbSwitch } from "resource:///org/gnome/shell/ui/calendar.js"
 import { FeatureBase, type SettingLoader } from "../../libs/shell/feature.js"
 import { StyledScroll } from "../../libs/shell/styler.js"
 import Global from "../../global.js"
@@ -121,36 +121,64 @@ class NativeControl extends St.BoxLayout {
 	_clearButton: St.Button
 	_dndButton: St.Button
 	_dndLabel: St.Label
-	_dndSwitch: DoNotDisturbSwitch
+	_dndIcon: St.Icon
+	_notificationSettings: Gio.Settings
+	_settingsChangedId: number
 
 	_init() {
-		// See : https://github.com/GNOME/gnome-shell/blob/934dbe549567f87d7d6deb6f28beaceda7da1d46/js/ui/calendar.js#L979
 		super._init({
 			style_class: "QSTWEAKS-native-controls",
 		} as Partial<St.BoxLayout.ConstructorProps>)
 
-		// DND Switch
-		this._dndSwitch = new (Global.MessageList._dndSwitch.constructor as any)() // Calendar.DoNotDisturbSwitch();
-		this._dndSwitch.style_class += " QSTWEAKS-native-dnd-switch"
-		
+		// DND Settings - Using GSettings directly for GNOME 49+ compatibility
+		this._notificationSettings = new Gio.Settings({
+			schema_id: 'org.gnome.desktop.notifications'
+		})
+
+		// DND Icon
+		this._dndIcon = new St.Icon({
+			style_class: "QSTWEAKS-native-dnd-icon",
+			icon_name: "notifications-disabled-symbolic",
+		})
+
 		// DND Label
 		this._dndLabel = new St.Label({
 			style_class: "QSTWEAKS-native-dnd-text",
 			text: _("Do Not Disturb"),
 			y_align: Clutter.ActorAlign.CENTER,
 		})
-		this.add_child(this._dndLabel)
+
+		// DND Button - Toggle button for DND state
 		this._dndButton = new St.Button({
-			style_class: "dnd-button",
+			style_class: "dnd-button message-list-clear-button button QSTWEAKS-native-dnd-button",
 			can_focus: true,
 			toggle_mode: true,
-			child: this._dndSwitch,
-			label_actor: this._dndLabel,
 			y_align: Clutter.ActorAlign.CENTER,
 		})
-		this._dndSwitch.bind_property("state",
-			this._dndButton, "checked",
-			GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
+
+		// Add icon and label to button
+		const buttonBox = new St.BoxLayout({
+			style_class: "QSTWEAKS-native-dnd-box",
+		})
+		buttonBox.add_child(this._dndIcon)
+		buttonBox.add_child(this._dndLabel)
+		this._dndButton.set_child(buttonBox)
+
+		// Initialize button state
+		this._syncDndState()
+
+		// Sync button state with GSettings
+		this._settingsChangedId = this._notificationSettings.connect(
+			'changed::show-banners',
+			() => this._syncDndState()
+		)
+
+		// Handle button click
+		this._dndButton.connect('clicked', () => {
+			const currentState = this._notificationSettings.get_boolean('show-banners')
+			this._notificationSettings.set_boolean('show-banners', !currentState)
+		})
+
 		this.add_child(this._dndButton)
 
 		// Clear Button
@@ -163,6 +191,23 @@ class NativeControl extends St.BoxLayout {
 			accessible_name: C_("action", "Clear all notifications"),
 		})
 		this.add_child(this._clearButton)
+
+		// Cleanup on destroy
+		this.connect('destroy', () => {
+			if (this._settingsChangedId) {
+				this._notificationSettings.disconnect(this._settingsChangedId)
+				this._settingsChangedId = 0
+			}
+			this._notificationSettings = null
+		})
+	}
+
+	_syncDndState() {
+		const dndEnabled = !this._notificationSettings.get_boolean('show-banners')
+		this._dndButton.checked = dndEnabled
+		this._dndIcon.icon_name = dndEnabled
+			? "notifications-disabled-symbolic"
+			: "org.gnome.Settings-notifications-symbolic"
 	}
 }
 GObject.registerClass(NativeControl)

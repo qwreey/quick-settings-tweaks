@@ -736,8 +736,9 @@ class MediaItem extends MessageList.Message {
 	}
 
 	addEventStop<T extends Clutter.Actor>(actor: T): T {
-		// actor.connect("button-press-event", ()=>Clutter.EVENT_STOP);
-		return actor;
+		actor.connect("button-press-event", () => Clutter.EVENT_STOP)
+		actor.connect("button-release-event", () => Clutter.EVENT_STOP)
+		return actor
 	}
 }
 GObject.registerClass(MediaItem)
