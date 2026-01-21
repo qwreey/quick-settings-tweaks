@@ -168,7 +168,12 @@ export abstract class Scroll extends St.Bin {
 		) return Clutter.EVENT_PROPAGATE
 		const finish = event.get_scroll_finish_flags()
 		const [dx, dy] = event.get_scroll_delta()
+
+        const shouldStop = (finish != Clutter.ScrollFinishFlags.NONE) || (dx === 0 && dy === 0)
+
 		if (!this._scrolling) {
+            if (shouldStop) return Clutter.EVENT_PROPAGATE
+
 			this._scrolling = true
 			this._scrollSumX = dx
 			this._scrollSumY = dy
@@ -192,7 +197,7 @@ export abstract class Scroll extends St.Bin {
 				this.dfunc_scroll_motion(scrollEvent)
 			}
 		}
-		if (finish != Clutter.ScrollFinishFlags.NONE) {
+        if (shouldStop) {
 			this._scrolling = false
 			if (this.dfunc_scroll_end) {
 				const scrollEvent: Scroll.Event = event as Scroll.Event
@@ -204,6 +209,8 @@ export abstract class Scroll extends St.Bin {
 				this.dfunc_scroll_end(scrollEvent)
 			}
 		}
+
+        return Clutter.EVENT_STOP
 	}
 
 	static applyTo(widgetClass: any) {
