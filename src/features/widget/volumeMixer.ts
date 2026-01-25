@@ -648,6 +648,7 @@ export class VolumeMixerWidgetFeature extends FeatureBase {
 		this.maid.destroyJob(
 			this.volumeMixerWidget = new VolumeMixerWidget(this)
 		)
+		if (!this.enabled) return
 		if (this.menuEnabled) {
 			Global.GetStreamSlider().then(
 				({ OutputStreamSlider }) => this.createMenu(OutputStreamSlider)
