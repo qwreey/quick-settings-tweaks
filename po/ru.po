@@ -18,37 +18,37 @@ msgstr ""
 
 #: target/out/libs/prefs/components.js:57
 msgid "Details"
-msgstr ""
+msgstr "Детали"
 
 #: target/out/libs/prefs/components.js:144
 msgid "This feature marked as experimental"
-msgstr ""
+msgstr "Эта функция была отмечена как эксперементальная"
 
 #: target/out/libs/prefs/components.js:274
 msgid "Reset to default"
-msgstr ""
+msgstr "Вернуться к настройкам по умолчанию"
 
 #: target/out/libs/prefs/components.js:512
 msgid "Theme default"
-msgstr ""
+msgstr "Тема по умолчанию"
 
 #: target/out/libs/prefs/components.js:853
 msgid "Homepage"
-msgstr ""
+msgstr "Домашняя страница"
 
 #: target/out/libs/prefs/components.js:859
 #: target/out/libs/prefs/components.js:863 target/out/prefPages/about.js:49
 #: target/out/prefPages/about.js:51 target/out/prefPages/about.js:56
 msgid "License"
-msgstr ""
+msgstr "Лицензии"
 
 #: target/out/libs/prefs/components.js:860
 msgid "Loading ..."
-msgstr ""
+msgstr "Загрузка ..."
 
 #: target/out/libs/prefs/components.js:869
 msgid "Affected Files"
-msgstr ""
+msgstr "Затронутые файлы"
 
 #: target/out/libs/prefs/components.js:924
 msgid "Changelog"
@@ -61,7 +61,7 @@ msgstr ""
 #: target/out/libs/prefs/components.js:969
 #, javascript-format
 msgid "> **Date:** %s"
-msgstr ""
+msgstr "> **Дата:** %s"
 
 #: target/out/libs/prefs/components.js:970
 #, javascript-format
@@ -71,7 +71,7 @@ msgstr ""
 #: target/out/libs/prefs/components.js:971
 #, javascript-format
 msgid "> **Build Number:** %d"
-msgstr ""
+msgstr "> **Номер сборки:** %d"
 
 #: target/out/libs/prefs/components.js:1034
 msgid "Padding"
@@ -87,11 +87,11 @@ msgstr "Низ"
 
 #: target/out/libs/prefs/components.js:1060
 msgid "Left"
-msgstr ""
+msgstr "Лево"
 
 #: target/out/libs/prefs/components.js:1071
 msgid "Right"
-msgstr ""
+msgstr "Право"
 
 #: target/out/prefs.js:60
 msgid "Stable"
@@ -140,15 +140,15 @@ msgstr ""
 
 #: target/out/features/widget/media.js:888
 msgid "Media"
-msgstr ""
+msgstr "Медия"
 
 #: target/out/features/widget/volumeMixer.js:105
 msgid "Volume changed"
 msgstr "Громкость изменена"
 
 #: target/out/features/widget/volumeMixer.js:463
-msgid "Open volumx mixer"
-msgstr ""
+msgid "Open volume mixer"
+msgstr "Открыть микшер громкости"
 
 #: target/out/features/widget/volumeMixer.js:480
 msgid "Volume Mixer"
@@ -156,7 +156,7 @@ msgstr "Микшер громкости"
 
 #: target/out/features/widget/weather.js:73
 msgid "Weather"
-msgstr ""
+msgstr "Погода"
 
 #: target/out/features/widget/weather.js:192
 msgid "Location has not been set"
@@ -209,7 +209,7 @@ msgstr ""
 
 #: target/out/prefPages/widgets.js:76
 msgid "Widgets"
-msgstr ""
+msgstr "Виджеты"
 
 #: target/out/prefPages/widgets.js:83 target/out/prefPages/widgets.js:136
 #: target/out/prefPages/widgets.js:162 target/out/prefPages/widgets.js:224
@@ -223,7 +223,7 @@ msgstr ""
 #: target/out/prefPages/widgets.js:92 target/out/prefPages/widgets.js:280
 #: target/out/prefPages/widgets.js:343
 msgid "Compact mode"
-msgstr ""
+msgstr "Компактный режим"
 
 #: target/out/prefPages/widgets.js:93
 msgid ""
@@ -477,15 +477,15 @@ msgstr ""
 
 #: target/out/prefPages/widgets.js:400
 msgid "Both"
-msgstr ""
+msgstr "Оба"
 
 #: target/out/prefPages/widgets.js:401
 msgid "Title"
-msgstr ""
+msgstr "Заголовок"
 
 #: target/out/prefPages/widgets.js:402
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #: target/out/prefPages/widgets.js:403
 msgid "None"
@@ -528,7 +528,7 @@ msgstr ""
 
 #: target/out/prefPages/widgets.js:468
 msgid "Menu icon"
-msgstr ""
+msgstr "Иконка меню"
 
 #: target/out/prefPages/about.js:12 target/out/prefPages/about.js:32
 msgid "About"
@@ -569,7 +569,7 @@ msgstr ""
 
 #: target/out/prefPages/about.js:85
 msgid "Link"
-msgstr ""
+msgstr "Ссылка"
 
 #: target/out/prefPages/about.js:86
 msgid "External links about this extension"
