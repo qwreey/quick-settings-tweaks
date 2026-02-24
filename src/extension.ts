@@ -21,6 +21,7 @@ import { MenuAnimation } from "./features/menuAnimation.js"
 import { DebugFeature } from "./features/debug.js"
 import { VolumeMixerWidgetFeature } from "./features/widget/volumeMixer.js"
 import { SystemIndicatorLayoutFeature } from "./features/layout/systemIndicator.js"
+import { QuickSettingsPaginationFeature } from "./features/layout/pagination.js"
 
 export default class QstExtension extends Extension {
 	private features: FeatureBase[]
@@ -64,6 +65,7 @@ export default class QstExtension extends Extension {
 			new MenuAnimation(),
 			new SystemItemsLayoutFeature(),
 			new TogglesLayoutFeature(),
+			new QuickSettingsPaginationFeature(),
 			new SystemIndicatorLayoutFeature(),
 		]
 

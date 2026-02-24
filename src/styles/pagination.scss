@@ -1,0 +1,42 @@
+@use "../global.scss" as *;
+
+.quick-settings .qst-pagination-row {
+	padding-top: 4px;
+	margin-top: 8px;
+	spacing: 8px;
+	align-items: center;
+}
+
+.quick-settings .qst-pagination-dots {
+	spacing: 6px;
+	justify-content: center;
+}
+
+.quick-settings .qst-pagination-button {
+	min-height: 12px;
+	min-width: 12px;
+	width: 18px;
+	height: 18px;
+	padding: 2px;
+}
+
+.quick-settings .qst-pagination-dot {
+	min-height: 10px;
+	min-width: 10px;
+	width: 10px;
+	height: 10px;
+	border-radius: 999px;
+	padding: 0;
+	background-color: rgba(255,255,255,0.3);
+	align-items: center;
+	justify-content: center;
+}
+
+.quick-settings .qst-pagination-dot:hover,
+.quick-settings .qst-pagination-dot:focus {
+	background-color: rgba(255,255,255,0.5);
+}
+
+.quick-settings .qst-pagination-dot-active {
+	background-color: rgba(255,255,255,0.85);
+}

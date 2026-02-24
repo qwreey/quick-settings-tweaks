@@ -9,6 +9,7 @@ import type QstExtensionPreferences from "../prefs.js"
 import { ToggleOrderItem } from "../libs/types/toggleOrderItem.js"
 import {
 	SwitchRow,
+	AdjustmentRow,
 	UpDownButton,
 	Row,
 	Group,
@@ -796,6 +797,21 @@ export const LayoutPage = GObject.registerClass({
 				title: _("Ordering and Hiding"),
 				subtitle: _("Reorder and hide quick toggles"),
 				experimental: true,
+			}),
+			SwitchRow({
+				settings,
+				bind: "quick-settings-pagination-enabled",
+				title: _("Enable pagination"),
+				subtitle: _("Show extra quick toggles on additional pages"),
+			}),
+			AdjustmentRow({
+				settings,
+				bind: "quick-settings-pagination-rows",
+				min: 1,
+				max: 6,
+				title: _("Rows per page"),
+				subtitle: _("Number of quick toggle rows shown before overflowing"),
+				sensitiveBind: "quick-settings-pagination-enabled",
 			}),
 		])
 

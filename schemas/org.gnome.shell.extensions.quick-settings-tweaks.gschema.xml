@@ -397,6 +397,12 @@
 }]
       ]]></description>
     </key>
+    <key name="quick-settings-pagination-enabled" type="b">
+      <default>false</default>
+    </key>
+    <key name="quick-settings-pagination-rows" type="i">
+      <default>3</default>
+    </key>
     <!-- #endregion Quick Toggle Layout -->
 
     <!-- #region Unsafe Mode Quick Toggle -->
