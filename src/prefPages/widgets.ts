@@ -350,6 +350,13 @@ export const WidgetsPage = GObject.registerClass({
 				bind: "notifications-show-scrollbar",
 				sensitiveBind: "notifications-enabled",
 			}),
+			SwitchRow({
+				settings,
+				title: _("Show notifications on the left"),
+				subtitle: _("Place the notifications panel to the left of the Quick Settings panel instead of below it"),
+				bind: "notifications-left-of-quick-settings",
+				sensitiveBind: "notifications-enabled",
+			}),
 		])
 
 		// weather

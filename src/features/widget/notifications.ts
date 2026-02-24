@@ -358,6 +358,7 @@ export class NotificationsWidgetFeature extends FeatureBase {
 	removeShadow: boolean
 	header: boolean
 	scrollStyle: StyledScroll.Options
+	leftOfQuickSettings: boolean
 	override loadSettings(loader: SettingLoader): void {
 		this.enabled = loader.loadBoolean("notifications-enabled")
 		this.useNativeControls = loader.loadBoolean("notifications-use-native-controls")
@@ -367,10 +368,14 @@ export class NotificationsWidgetFeature extends FeatureBase {
 		this.removeShadow = loader.loadBoolean("notifications-remove-shadow")
 		this.header = loader.loadBoolean("notifications-show-header")
 		this.scrollStyle = StyledScroll.Options.fromLoader(loader, "notifications")
+		this.leftOfQuickSettings = loader.loadBoolean("notifications-left-of-quick-settings")
 	}
 	// #endregion settings
 
 	notificationWidget: NotificationWidget
+	sideBySideBox: St.BoxLayout
+	gridParent: Clutter.Actor
+	gridNextSibling: Clutter.Actor
 	override reload(key: string): void {
 		switch (key) {
 			case "notifications-max-height":
@@ -387,6 +392,10 @@ export class NotificationsWidgetFeature extends FeatureBase {
 				if (!this.enabled) return
 				this.notificationWidget!._updateScrollStyle()
 				break
+			case "notifications-left-of-quick-settings":
+				if (!this.enabled) return
+				this._syncPlacement()
+				break
 			default:
 				super.reload()
 				break
@@ -400,14 +409,113 @@ export class NotificationsWidgetFeature extends FeatureBase {
 			this.notificationWidget = new NotificationWidget(this)
 		)
 
-		// Add to grid
-		Global.QuickSettingsGrid.add_child(this.notificationWidget)
-		Global.QuickSettingsGrid.layout_manager.child_set_property(
-			Global.QuickSettingsGrid, this.notificationWidget, "column-span", 2
-		)
+		this._syncPlacement()
 	}
 	override onUnload(): void {
+		this._teardownSideBySide()
 		this.notificationWidget = null
+	}
+
+	private _syncPlacement(): void {
+		if (!this.notificationWidget) return
+		if (this.leftOfQuickSettings) {
+			this._setupSideBySide()
+		} else {
+			this._teardownSideBySide()
+			this._attachToGrid()
+		}
+	}
+
+	private _attachToGrid(): void {
+		if (!this.notificationWidget) return
+		const grid = Global.QuickSettingsGrid
+		if (!grid) return
+		if (this.notificationWidget.get_parent() !== grid) {
+			this.notificationWidget.get_parent()?.remove_child(this.notificationWidget)
+			grid.add_child(this.notificationWidget)
+		}
+		const layout = grid.layout_manager
+		if (layout && "child_set_property" in layout) {
+			layout.child_set_property(
+				grid,
+				this.notificationWidget,
+				"column-span",
+				2
+			)
+		}
+	}
+
+	private _setupSideBySide(): void {
+		if (!this.notificationWidget) return
+		const grid = Global.QuickSettingsGrid
+		if (!grid) return
+
+		// If we already have a container just make sure the widget sits there
+		if (this.sideBySideBox) {
+			if (this.notificationWidget.get_parent() !== this.sideBySideBox) {
+				this.notificationWidget.reparent(this.sideBySideBox)
+			}
+			return
+		}
+
+		const parent = grid.get_parent()
+		if (!parent) return
+
+		if (this.notificationWidget.get_parent()) {
+			this.notificationWidget.get_parent().remove_child(this.notificationWidget)
+		}
+
+		this.gridParent = parent
+		this.gridNextSibling = grid.get_next_sibling()
+		parent.remove_child(grid)
+
+		const sideBySide = new St.BoxLayout({
+			vertical: false,
+			x_expand: true,
+			y_expand: true,
+			style_class: "QSTWEAKS-notifications-left-layout",
+		})
+		this.sideBySideBox = sideBySide
+
+		if (this.gridNextSibling && this.gridNextSibling.get_parent() === parent) {
+			parent.insert_child_above(sideBySide, this.gridNextSibling)
+		} else {
+			parent.add_child(sideBySide)
+		}
+
+		this.notificationWidget.x_expand = true
+		this.notificationWidget.y_expand = true
+		sideBySide.add_child(this.notificationWidget)
+
+		grid.x_expand = true
+		grid.y_expand = true
+		sideBySide.add_child(grid)
+	}
+
+	private _teardownSideBySide(): void {
+		if (!this.sideBySideBox) return
+		const container = this.sideBySideBox
+		const grid = Global.QuickSettingsGrid
+
+		if (this.notificationWidget && this.notificationWidget.get_parent() === container) {
+			container.remove_child(this.notificationWidget)
+		}
+
+		if (grid && grid.get_parent() === container) {
+			container.remove_child(grid)
+			if (this.gridParent) {
+				if (this.gridNextSibling && this.gridNextSibling.get_parent() === this.gridParent) {
+					this.gridParent.insert_child_above(grid, this.gridNextSibling)
+				} else {
+					this.gridParent.add_child(grid)
+				}
+			}
+		}
+
+		container.destroy()
+		this.sideBySideBox = null
+		this.gridParent = null
+		this.gridNextSibling = null
 	}
 }
 // #endregion NotificationsWidgetFeature

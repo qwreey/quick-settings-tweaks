@@ -97,3 +97,17 @@
         }
     }
 }
+
+#{$p}-notifications-left-layout {
+    spacing: 12px;
+    min-width: 0;
+
+    > * {
+        min-width: 0;
+    }
+
+    #{$p}-notifications {
+        min-width: 360px;
+        max-width: 460px;
+    }
+}

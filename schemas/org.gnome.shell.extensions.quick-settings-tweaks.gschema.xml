@@ -41,6 +41,9 @@
     <key name="notifications-show-scrollbar" type="b">
       <default>true</default>
     </key>
+    <key name="notifications-left-of-quick-settings" type="b">
+      <default>false</default>
+    </key>
     <!-- #endregion Notifications Widget -->
 
     <!-- #region Media Widget -->
