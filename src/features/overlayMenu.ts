@@ -74,6 +74,7 @@ export class OverlayMenu extends FeatureBase {
 		if (!isOpen) return
 
 		const coords = this.getCoords(menu)
+		this.xconstraint.offset = coords.offsetX
 		this.yconstraint.offset = coords.offsetY
 
 		if (this.duration) {
@@ -119,11 +120,13 @@ export class OverlayMenu extends FeatureBase {
 		if (this.width) {
 			menu.actor.width = this.width
 			menu.actor.x_expand = false
+			menu.actor.x_align = Clutter.ActorAlign.CENTER
 		}
 		maid.connectJob(menu.box, "notify::height", ()=>{
 			if (!menu.isOpen) return
 			const coords = this.getCoords(menu)
 			this.yconstraint.offset = coords.offsetY
+			this.xconstraint.offset = coords.offsetX
 		})
 	}
 
@@ -138,18 +141,27 @@ export class OverlayMenu extends FeatureBase {
 	override onLoad(): void {
 		if (!this.enabled) return
 
-		// Offset handle
+		// Offset handle for Y
 		this.yconstraint = new Clutter.BindConstraint({
 			coordinate: Clutter.BindCoordinate.Y,
 			// @ts-ignore Box pointer is private
 			source: Global.QuickSettingsMenu._boxPointer,
 		})
-
-		// Disable Y sync (overlay y offset)
+		
+		// Offset handle for X
+		this.xconstraint = new Clutter.BindConstraint({
+			coordinate: Clutter.BindCoordinate.X,
+			// @ts-ignore Box pointer is private
+			source: Global.QuickSettingsMenu._boxPointer,
+		})
+		
+		// Disable default sync (overlay x&y offset)
 		// @ts-ignore Overlay is private field
 		Global.QuickSettingsMenu._overlay.get_constraints()[0].enabled = false
 		// @ts-ignore Overlay is private field
 		Global.QuickSettingsMenu._overlay.add_constraint(this.yconstraint)
+		// @ts-ignore Overlay is private field
+		Global.QuickSettingsMenu._overlay.add_constraint(this.xconstraint)
 
 		// Disable Placeholder height sync (grid height increase)
 		// @ts-ignore Overlay is private field
@@ -175,5 +187,7 @@ export class OverlayMenu extends FeatureBase {
 		Global.QuickSettingsGrid.layout_manager._overlay.get_constraints()[0].enabled = true
 		// @ts-ignore Overlay is private field
 		Global.QuickSettingsMenu._overlay.remove_constraint(this.yconstraint)
+		// @ts-ignore Overlay is private field
+		Global.QuickSettingsMenu._overlay.remove_constraint(this.xconstraint)
 	}
 }
