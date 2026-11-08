@@ -1,29 +1,24 @@
 import GObject from 'gi://GObject'
-import Shell from 'gi://Shell'
-import Cogl from 'gi://Cogl'
 import Clutter from 'gi://Clutter'
+import Cogl from 'gi://Cogl'
 import Global from '../../global.js'
 
 // #region RoundClipEffect
-export class RoundClipEffect extends Shell.GLSLEffect {
-	static uniforms: RoundClipEffect.Uniforms|null = null
+export class RoundClipEffect extends Clutter.ShaderEffect {
+	static uniforms: RoundClipEffect.Uniforms | null = null
 
-	vfunc_build_pipeline (): void {
+	vfunc_get_static_snippet (): any {
 		const [declarations, code] = Global.GetShader("media/rounded_corners.frag")
-		this.add_glsl_snippet(
-			// FIXME: waitting for type definition update
-			Cogl.SnippetHook.FRAGMENT as any,
-			declarations,
-			code,
-			false
-		)
+		const snippet = new (Cogl as any).Snippet((Cogl as any).SnippetHook.FRAGMENT, declarations, code)
+		return snippet
 	}
 
 	vfunc_paint_target (node: Clutter.PaintNode, ctx: Clutter.PaintContext) {
 		// Reset to default blend string.
-		this.get_pipeline()?.set_blend(
-			'RGBA = ADD(SRC_COLOR, DST_COLOR*(1-SRC_COLOR[A]))'
-		)
+		const pipeline = (this as any).get_pipeline()
+		if (pipeline) {
+			pipeline.set_blend('RGBA = ADD(SRC_COLOR, DST_COLOR*(1-SRC_COLOR[A]))')
+		}
 		super.vfunc_paint_target(node, ctx)
 	}
 
@@ -74,35 +69,22 @@ export class RoundClipEffect extends Shell.GLSLEffect {
 		// Setup with squircle shape
 		let exponent = smoothing * 10.0 + 2.0
 		let radius = outer_radius * 0.5 * exponent
-		const max_radius = Math.min (bounds[3] - bounds[0], bounds[4] - bounds[1])
+		const max_radius = Math.min (bounds[2] - bounds[0], bounds[3] - bounds[1])
 		if (radius > max_radius) {
 			exponent *= max_radius / radius
 			radius = max_radius
 		}
 		inner_radius *= radius / outer_radius
 
-		const location = this.getLocation()
-		this.set_uniform_float(location.bounds, 4, bounds)
-		this.set_uniform_float(location.inner_bounds, 4, inner_bounds)
-		this.set_uniform_float(location.pixel_step, 2, pixel_step)
-		this.set_uniform_float(location.border_width, 1, [border_width])
-		this.set_uniform_float(location.exponent, 1, [exponent])
-		this.set_uniform_float(location.clip_radius, 1, [radius])
-		this.set_uniform_float(location.border_color, 4, border_color)
-		this.set_uniform_float(location.inner_clip_radius, 1, [inner_radius])
+		;(this as any).set_uniform_float('bounds', 4, 4, bounds)
+		;(this as any).set_uniform_float('inner_bounds', 4, 4, inner_bounds)
+		;(this as any).set_uniform_float('pixel_step', 2, 2, pixel_step)
+		;(this as any).set_uniform_float('border_width', 1, 1, [border_width])
+		;(this as any).set_uniform_float('exponent', 1, 1, [exponent])
+		;(this as any).set_uniform_float('clip_radius', 1, 1, [radius])
+		;(this as any).set_uniform_float('border_color', 4, 4, border_color)
+		;(this as any).set_uniform_float('inner_clip_radius', 1, 1, [inner_radius])
 		this.queue_repaint()
-	}
-
-	getLocation(): RoundClipEffect.Uniforms {
-		let location = RoundClipEffect.uniforms
-		if (!location) {
-			location = new RoundClipEffect.Uniforms()
-			for (const key in location) {
-				location[key] = this.get_uniform_location(key)
-			}
-			RoundClipEffect.uniforms = location
-		}
-		return location
 	}
 }
 GObject.registerClass(RoundClipEffect)
